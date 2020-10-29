@@ -8,6 +8,8 @@
     "start": "next start"
   },
   "dependencies": {
+    "gl-react": "^4.0.1",
+    "gl-react-dom": "^4.0.1",
     "next": "^10.0.0",
     "react": "16.13.1",
     "react-dom": "16.13.1"
