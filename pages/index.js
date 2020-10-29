@@ -1,31 +1,26 @@
+import { useState, useEffect } from "react";
 import Head from "next/head";
 import { Surface } from "gl-react-dom";
-import { Shaders, Node, GLSL } from "gl-react";
+import * as Day001 from "../day/001";
 
-const shaders = Shaders.create({
-  day001: {
-    frag: GLSL`
-precision highp float;
-varying vec2 uv;
-uniform float blue;
-void main() {
-  gl_FragColor = vec4(uv.x, uv.y, blue, 1.0);
-}`,
-  },
-});
+const Current = Day001;
+const Day = Day001;
 
-class Day001 extends React.Component {
-  static n = 1;
-  static title = "Hello World";
-  render() {
-    const { blue } = this.props;
-    return <Node shader={shaders.day001} uniforms={{ blue }} />;
-  }
-}
+const Refresh = ({ Day }) => {
+  const [time, setTime] = useState(0);
+  useEffect(() => {
+    let startT;
+    function loop(t) {
+      requestAnimationFrame(loop);
+      if (!startT) startT = t;
+      setTime((t - startT) / 1000);
+    }
+    requestAnimationFrame(loop);
+  }, []);
+  return <Day.Shader time={time} />;
+};
 
 export default function Home() {
-  const Current = Day001;
-  const Day = Day001;
   return (
     <div className="container">
       <Head>
@@ -47,7 +42,7 @@ export default function Home() {
 
         <div className="day">
           <Surface width={400} height={400}>
-            <Day blue={0.5} />
+            <Refresh Day={Day} />
           </Surface>
         </div>
 
