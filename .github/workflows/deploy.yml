@@ -13,6 +13,6 @@ jobs:
         with:
           node-version: 8
       - run: yarn global add surge
+      - run: yarn
       - run: yarn next export
       - run: surge ./out ${{ secrets.SURGE_DOMAIN }} --token ${{ secrets.SURGE_TOKEN }}
-
