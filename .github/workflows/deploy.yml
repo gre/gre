@@ -12,7 +12,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12
-      - run: yarn global add surge
+      - run: npm i -g surge
       - run: yarn
       - run: yarn build
       - run: yarn next export
