@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Head from "next/head";
-import Link from "next/Link";
+import Link from "next/link";
 import { Surface } from "gl-react-dom";
 
 const Refresh = ({ Day }) => {
