@@ -17,5 +17,5 @@ jobs:
       - run: yarn build
       - run: yarn next export
       - run: |
-        cp ./out/index.html ./out/200.html
-        surge ./out ${{ secrets.SURGE_DOMAIN }} --token ${{ secrets.SURGE_TOKEN }}
+         cp ./out/index.html ./out/200.html
+         surge ./out ${{ secrets.SURGE_DOMAIN }} --token ${{ secrets.SURGE_TOKEN }}
