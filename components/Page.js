@@ -27,7 +27,11 @@ export function Page({ Day }) {
 
       <main>
         <header>
-          <h1 className="title">One Day, One Shader</h1>
+          <h1 className="title">
+            <Link href="/">
+              <a>One Day, One Shader</a>
+            </Link>
+          </h1>
 
           <p className="description">
             <Link href={`/day/${Day.n}`}>
