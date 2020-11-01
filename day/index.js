@@ -4,6 +4,10 @@ import * as Day003 from "./003";
 
 const days = [Day001, Day002, Day003];
 
+export function getDays() {
+  return days.map((d) => d.n);
+}
+
 export function getToday() {
   return days[days.length - 1];
 }
