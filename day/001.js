@@ -1,6 +1,12 @@
 import Head from "next/head";
-import { Surface } from "gl-react-dom";
 import { Shaders, Node, GLSL } from "gl-react";
+
+export const n = 1;
+export const title = "Hello 2020";
+
+export const Shader = ({ time }) => (
+  <Node shader={shaders.day001} uniforms={{ time }} />
+);
 
 const shaders = Shaders.create({
   day001: {
@@ -40,11 +46,3 @@ void main() {
 }`,
   },
 });
-
-export const Shader = ({ time }) => (
-  <Node shader={shaders.day001} uniforms={{ time }} />
-);
-
-export const n = 1;
-
-export const title = "Hello 2020";

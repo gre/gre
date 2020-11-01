@@ -1,6 +1,12 @@
 import Head from "next/head";
-import { Surface } from "gl-react-dom";
 import { Shaders, Node, GLSL } from "gl-react";
+
+export const n = 2;
+export const title = "stripes";
+
+export const Shader = ({ time }) => (
+  <Node shader={shaders.node} uniforms={{ time }} />
+);
 
 const shaders = Shaders.create({
   node: {
@@ -34,11 +40,3 @@ void main() {
 }`,
   },
 });
-
-export const Shader = ({ time }) => (
-  <Node shader={shaders.node} uniforms={{ time }} />
-);
-
-export const n = 2;
-
-export const title = "stripes";
