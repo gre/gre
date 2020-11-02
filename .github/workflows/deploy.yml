@@ -12,9 +12,10 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12
-      - run: npm i -g surge
-      - run: yarn
-      - run: yarn build
-      - run: yarn next export
       - run: |
+          export NODE_ENV=production
+          npm i -g surge
+          yarn
+          yarn build
+          yarn next export
           surge ./out ${{ secrets.SURGE_DOMAIN }} --token ${{ secrets.SURGE_TOKEN }}
