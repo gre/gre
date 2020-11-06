@@ -6,7 +6,7 @@ import { GameOfLife } from "../../shaders/GameOfLife";
 export const n = 97;
 export const title = "Hexagon of Life";
 
-const SIZE = 50;
+const SIZE = 20;
 
 let firstTime;
 export const Shader = ({ time }) => {
@@ -15,7 +15,7 @@ export const Shader = ({ time }) => {
   }
   const t = time - firstTime;
   const refreshEveryTicks = 50;
-  const tick = Math.floor(t * 10);
+  const tick = Math.floor(t * 5);
   return (
     <Node
       shader={shaders.node}
@@ -41,6 +41,7 @@ varying vec2 uv;
 uniform float time;
 uniform sampler2D t;
 
+#define PI ${Math.PI}
 #define SIZE ${SIZE}.
 
 // from http://glslsandbox.com/e#43182.0
@@ -72,6 +73,10 @@ float sdSegment (in vec3 p, in float L, in float R) {
   return length(p) - R;
 }
 
+float sdSphere (in vec3 p, in float R) {
+  return length(p) - R;
+}
+
 vec2 id;
 float inBound;
 float active;
@@ -81,7 +86,7 @@ float SDF(vec3 p) {
   p.z -= 8.;
   //p.yz *= rot(-1. + 0.1 * pow(.5 + .5*cos(0.9 * time), 4.) + 0.2 * cos(.08 * time));
   //p.xz *= rot(.1 * time);
-  p.yz *= rot(-1.3);
+  p.yz *= rot(-1.6);
   vec4 h = getHex(p.xz);
   id = h.zw;
   vec2 u = id / vec2(SIZE, SIZE / 2.);
@@ -89,8 +94,7 @@ float SDF(vec3 p) {
   active = step(0.1, texture2D(t, u).r);
   p.x = h.x;
   p.z = h.y;
-  p.x += 0.1 * sin(4.*(p.z + p.y + time - 0.03 * id.x));
-  float s = sdSegment(p.xyz, 3., 0.25 + active);
+  float s = sdSphere(p.xyz, 0.1 + 0.3 * active);
   return s;
 }
 

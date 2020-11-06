@@ -5,8 +5,9 @@ import * as Day004 from "./004";
 import * as Day005 from "./005";
 import * as Day006 from "./006";
 import * as Day007 from "./007";
+import * as Day008 from "./008";
 
-const days = [Day001, Day002, Day003, Day004, Day005, Day006, Day007];
+const days = [Day001, Day002, Day003, Day004, Day005, Day006, Day007, Day008];
 
 import * as Day099 from "./ideas/099";
 import * as Day098 from "./ideas/098";
