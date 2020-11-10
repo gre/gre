@@ -9,6 +9,7 @@ import * as Day008 from "./008";
 import * as Day009 from "./009";
 import * as Day010 from "./010";
 import * as Day011 from "./011";
+import * as Day012 from "./012";
 
 const days = [
   Day001,
@@ -22,14 +23,13 @@ const days = [
   Day009,
   Day010,
   Day011,
+  Day012,
 ];
 
 import * as Day099 from "./ideas/099";
-import * as Day098 from "./ideas/098";
 import * as Day097 from "./ideas/097";
 if (process.env.NODE_ENV === "development") {
   days.unshift(Day097);
-  days.unshift(Day098);
   days.unshift(Day099);
 }
 

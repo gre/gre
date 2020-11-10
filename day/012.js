@@ -2,7 +2,7 @@ import Head from "next/head";
 import { Surface } from "gl-react-dom";
 import { Shaders, Node, GLSL } from "gl-react";
 
-export const n = 98;
+export const n = 12;
 export const title = "floor is lava";
 
 export const Shader = ({ time }) => (
