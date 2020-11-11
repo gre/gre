@@ -4,10 +4,10 @@ import { findDay, getDays } from "../../../day";
 
 export function getStaticPaths() {
   return {
-    paths: getDays().map((n) => {
+    paths: getDays().map((Day) => {
       return {
         params: {
-          day: String(n),
+          day: String(Day.n),
         },
       };
     }),

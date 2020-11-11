@@ -1,27 +1,15 @@
 import { useState, useEffect } from "react";
 import Head from "next/head";
 import Link from "next/link";
-import { Surface } from "gl-react-dom";
-
-const Refresh = ({ Day }) => {
-  const [time, setTime] = useState(0);
-  useEffect(() => {
-    let startT;
-    function loop(t) {
-      requestAnimationFrame(loop);
-      if (!startT) startT = t;
-      setTime((t - startT) / 1000);
-    }
-    requestAnimationFrame(loop);
-  }, []);
-  return <Day.Shader time={time} />;
-};
+import { Visual } from "./Visual";
 
 export function Page({ Day }) {
   return (
     <div className="container">
       <Head>
-        <title>One Day One Shader</title>
+        <title>
+          One Day One Shader – Day {Day.n}. "{Day.title}"
+        </title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -34,10 +22,7 @@ export function Page({ Day }) {
           </h1>
 
           <p className="description">
-            <Link href={`/day/${Day.n}`}>
-              <a>Day {Day.n}.</a>
-            </Link>{" "}
-            <span className="daily">"{Day.title}"</span> by{" "}
+            Day {Day.n}. <span className="daily">"{Day.title}"</span> by{" "}
             <a href="https://twitter.com/greweb" target="_blank">
               @greweb
             </a>
@@ -45,9 +30,7 @@ export function Page({ Day }) {
         </header>
 
         <div className="day">
-          <Surface width={400} height={400}>
-            <Refresh Day={Day} />
-          </Surface>
+          <Visual Day={Day} />
         </div>
 
         <footer>

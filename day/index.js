@@ -10,6 +10,7 @@ import * as Day009 from "./009";
 import * as Day010 from "./010";
 import * as Day011 from "./011";
 import * as Day012 from "./012";
+import * as Day013 from "./013";
 
 const days = [
   Day001,
@@ -24,6 +25,7 @@ const days = [
   Day010,
   Day011,
   Day012,
+  Day013,
 ];
 
 import * as Day099 from "./ideas/099";
@@ -34,7 +36,7 @@ if (process.env.NODE_ENV === "development") {
 }
 
 export function getDays() {
-  return days.map((d) => d.n);
+  return days;
 }
 
 export function getToday() {

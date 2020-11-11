@@ -81,6 +81,8 @@ vec2 id;
 float inBound;
 float active;
 
+// IDEA : hexagon tower with a game of life in it? and that repeat itself recursively?
+
 float SDF(vec3 p) {
   // The whole 3D objects are defined in this function
   p.z -= 8.;
