@@ -12,7 +12,7 @@ export const Shader = ({ time }) => (
 
 const shaders = Shaders.create({
   node: {
-    frag: GLSL/* glsl */ `
+    frag: GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -44,7 +44,7 @@ vec4 scene (vec4 h) {
   float one = step(0., p.x+s.y*p.y) * step(0., s.y*p.y-p.x);
   float two = step(0., p.x-s.y*p.y) * step(0., p.x);
   float thr = step(p.x+s.y*p.y, 0.) * step(p.x, 0.);
-  float special = 
+  float special =
       step(mod(id.y, 4.), mod(id.x, 3.5)) *
       step(mod(id.x + 3.*id.y, 5.), 0.5);
   vec3 c =

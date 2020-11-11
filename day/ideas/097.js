@@ -35,7 +35,7 @@ export const Shader = ({ time }) => {
 
 const shaders = Shaders.create({
   node: {
-    frag: GLSL/* glsl */ `
+    frag: GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;

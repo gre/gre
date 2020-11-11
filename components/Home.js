@@ -2,13 +2,13 @@ import { useState, useEffect } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { Visual } from "./Visual";
-
-// TODO how to fetch this?
-const nextYoutubeId = "7_xNlfX2q9c";
-const nextYoutubeTimestamp = 1605362400000;
+import { YoutubeFooter } from "./YoutubeFooter";
+import { useNextYoutube } from "../youtube";
 
 export function Home({ Day }) {
-  const showYoutube = Date.now() > nextYoutubeTimestamp - 60 * 60 * 1000;
+  const nextYoutube = useNextYoutube();
+  const showYoutube =
+    nextYoutube && Date.now() > nextYoutube.timestamp - 60 * 60 * 1000;
 
   return (
     <div className="container">
@@ -17,7 +17,7 @@ export function Home({ Day }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      {showYoutube ? (
+      {showYoutube && nextYoutube ? (
         <main>
           <header>
             <h1 className="title">🎙 “It's Shaderday!”</h1>
@@ -25,7 +25,7 @@ export function Home({ Day }) {
           <iframe
             width="560"
             height="480"
-            src="https://www.youtube.com/embed/7_xNlfX2q9c?controls=0"
+            src={`https://www.youtube.com/embed/${nextYoutube}?controls=0`}
             frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowfullscreen
@@ -74,17 +74,7 @@ export function Home({ Day }) {
             </a>
           </footer>
 
-          <p>
-            <strong>🎙 Youtube Live on Saturday: </strong>“
-            <a
-              className="youtube"
-              href={`https://www.youtube.com/watch?v=${nextYoutubeId}`}
-              target="_blank"
-            >
-              It's Shaderday!
-            </a>
-            ”
-          </p>
+          <YoutubeFooter />
         </main>
       )}
 
@@ -113,10 +103,6 @@ export function Home({ Day }) {
 
         a:hover,
         a:active {
-          text-decoration: underline;
-        }
-
-        a.youtube {
           text-decoration: underline;
         }
 

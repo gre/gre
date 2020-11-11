@@ -53,7 +53,7 @@ const Main = ({ a, b, time }) => (
 
 const shaders = Shaders.create({
   main: {
-    frag: GLSL/* glsl */ `
+    frag: GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -81,7 +81,7 @@ void main() {
   float fade = smoothstep(.01, .011, length(p));
   vec3 c =
     palette(
-      .5 + 
+      .5 +
       fade * (
       0.02 * step(fract(20. * x), 0.5) +
       .1 * sa * wallA -
