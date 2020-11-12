@@ -2,7 +2,7 @@ import Head from "next/head";
 import { Surface } from "gl-react-dom";
 import { Shaders, Node, GLSL } from "gl-react";
 
-export const n = 13;
+export const n = 14;
 export const title = "seizure";
 
 export const Shader = ({ time }) => (
