@@ -18,17 +18,6 @@ uniform float time;
 
 const float PI = ${Math.PI};
 
-float opRepF(in float p, in float s) {
-  return mod(p+s*0.5,s)-s*0.5;
-}
-
-float pMod1(inout float p, float size) {
-	float halfsize = size*0.5;
-	float c = floor((p + halfsize)/size);
-	p = mod(p + halfsize, size) - halfsize;
-	return c;
-}
-
 mat2 rot (float a) {
   float c = cos(a);
   float s = sin(a);
@@ -37,21 +26,6 @@ mat2 rot (float a) {
 
 float sphere (vec3 p, float r) {
   return length(p)-r;
-}
-
-float box (vec3 p, vec3 c) {
-  return length(max(abs(p)-c,0.));
-}
-
-float pModPolar(inout vec2 p, float repetitions) {
-	float angle = 2.*PI/repetitions;
-	float a = atan(p.y, p.x) + angle/2.;
-	float r = length(p);
-	float c = floor(a/angle);
-	a = mod(a,angle) - angle/2.;
-	p = vec2(cos(a), sin(a)) * r;
-	if (abs(c) >= (repetitions/2.)) c = abs(c);
-	return c;
 }
 
 float sdReuleaux(vec3 p, float edge) {
