@@ -129,7 +129,7 @@ float sdScrewHead (vec3 p, vec2 id, float screwW) {
   cut = opU(cut, box(pcut, vec3(.5, .04, .02)));
   float head = fCylinder(p + vec3(.0, h2, 0.), 0.12 + screwW, h2);
 
-  if (mod(29. * r1, 7.) > 1.) {
+  if (mod(29. * r1, 7.) < 1.) {
     pModPolar(p.xz, 6.);
     h += .02;
     p.y -= h;
@@ -147,7 +147,7 @@ float sdScrewHead (vec3 p, vec2 id, float screwW) {
 }
 
 float sdScrew (vec3 p, float w, float k) {
-  float bottom = fCone((p + vec3(.0, 1., .0))*vec3(1., -1., 1.), w, 3. * w);
+  float bottom = fCone((p + vec3(.0, 1., .0)) * vec3(1., -1., 1.), w, 3. * w);
   float c = cos(k*p.y);
   float s = sin(k*p.y);
   mat2  m = mat2(c,-s,s,c);
@@ -163,8 +163,8 @@ float SDF(vec3 p) {
   float res = p.y;
   // repeat
   vec2 id = vec2(
-    pMod1(p.x, 3.),
-    pModInterval1(p.z, 3., -2., 1.)
+    pMod1(p.x, 2.),
+    pModInterval1(p.z, 2., -2., 1.)
   );
   float dig = .5 + .5 * cos(0.5 * time * (random(id) + 0.1 * (0.7 * id.x + 2. * id.y - 3.)));
   float k = 8. + 8. * random(id * .001);
@@ -190,7 +190,7 @@ vec3 color (vec3 p) {
     step(.11, p.y) * mix(
       vec3(.4, .2, -0.2),
       vec3(.0),
-      step(fract(0.25 + (p.x + p.z)/6.), 0.5)
+      step(fract(0.25 + (p.x + p.z)/4.), 0.5)
     );
 
   return col;
@@ -199,7 +199,7 @@ vec3 color (vec3 p) {
 float raycast( in vec3 ro, in vec3 rd ) {
   float res = -1.0;
   float t = 0.;
-  for(int i=0; i<160; i++ ) {
+  for(int i=0; i<200; i++ ) {
     float h = SDF( ro+rd*t );
     if( abs(h)<(0.0001*t) ) {
         res = t;
@@ -214,7 +214,7 @@ float calcSoftshadow( in vec3 ro, in vec3 rd, in float mint, in float tmax ) {
     // bounding volume
     float res = 1.0;
     float t = mint;
-    for( int i=0; i<60; i++ ) {
+    for( int i=0; i<24; i++ ) {
 		float h = SDF( ro + rd*t );
         float s = clamp(8.0*h/t,0.0,1.0);
         res = min( res, s*s*(3.0-2.0*s) );
@@ -248,11 +248,11 @@ float calcAO( in vec3 pos, in vec3 nor ) {
 void main() {
   vec3 p = vec3(0., 0., 0.);
   vec3 dir = normalize(vec3((uv - 0.5) * 2.,1.));
-  p.y += 3.;
+  p.y += 3.5;
   p.x -= 1.5 - time;
   p.z -= 1.5;
   pR(dir.yz, -.9);
-  pR(dir.xz, 0.5 * PI + 0.2 * cos(time));
+  pR(dir.xz, 0.5 * PI + 0.2 * cos(0.5 * time));
 
   float t = raycast(p, dir);
   vec3 pos = p + t * dir;
