@@ -7,8 +7,8 @@ export const title = "trippy tiles";
 
 export const Shader = ({ time }) => (
   <LinearCopy>
-    <Persistence persistence={0.79 + Math.min(.2, .003 * time)}>
-      <Node shader={shaders.node} uniforms={{ time: time }} />
+    <Persistence persistence={.85}>
+      <Node shader={shaders.node} uniforms={{ time }} />
     </Persistence>
   </LinearCopy>
 );
