@@ -2,12 +2,13 @@ import { useState, useEffect, useRef } from "react";
 import vec3 from "gl-vec3";
 import mat3 from "gl-mat3";
 
-// from https://github.com/gre/memocart/blob/master/src/Game/Logic/debugFreeControls.js
+// code adapted from https://github.com/gre/memocart/
 
 function threshold(value, limit) {
   if (Math.abs(value) < limit) return 0;
   return value;
 }
+
 function setMatRot(rot, rotX, rotY) {
   const cx = Math.cos(rotX);
   const sx = Math.sin(rotX);
@@ -32,17 +33,17 @@ function setMatRot(rot, rotX, rotY) {
 
 const defaults = {
   moveSpeed: 0.1,
-  rotSpeed: 0.03,
+  rotSpeed: 0.02,
 };
 
-export function useXboxFreeControls(arg) {
+export function useGamepadFreeControls(arg) {
   const { moveSpeed, rotSpeed } = { ...defaults, ...arg };
 
   const [state, setState] = useState(() => ({
     rotX: 0,
     rotY: 0,
     rotation: mat3.create(),
-    origin: [0, 0, -5],
+    origin: [0, 0, 0],
     buttonsPressed: [0, 0, 0, 0],
     buttonsPressCount: [0, 0, 0, 0],
   }));
