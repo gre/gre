@@ -79,10 +79,10 @@ const shaders = Shaders.create({
     pR(g, PI/3.);
     float m = smoothstep(.48, .52, mod(g.x, sz) / sz);
     vec3 c = color(
-      .5 * smoothstep(.9, .95, mod(.4 * time, 1.)) +
+      .5 * smoothstep(.45, .5, abs(fract(.1 * time)-.5)) +
       i * .1 +
       0.02 * m +
-      -0.03 * (r2.z - r2.w));
+      -0.1 * (r2.z - r2.w));
     gl_FragColor = vec4(c, 1.0);
   }
       `,
