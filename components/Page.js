@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { Visual } from "./Visual";
-import { YoutubeFooter } from "./YoutubeFooter";
+import { LiveFooter } from "./LiveFooter";
 
 export function Page({ Day }) {
   return (
@@ -45,7 +45,7 @@ export function Page({ Day }) {
           </a>
         </footer>
 
-        <YoutubeFooter />
+        <LiveFooter />
       </main>
 
       <style jsx>{`

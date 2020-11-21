@@ -2,14 +2,9 @@ import { useState, useEffect } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { Visual } from "./Visual";
-import { YoutubeFooter } from "./YoutubeFooter";
-import { useNextYoutube } from "../youtube";
+import { LiveFooter } from "./LiveFooter";
 
 export function Home({ Day }) {
-  const nextYoutube = useNextYoutube();
-  const showYoutube =
-    nextYoutube && Date.now() > nextYoutube.timestamp - 60 * 60 * 1000;
-
   return (
     <div className="container">
       <Head>
@@ -17,7 +12,7 @@ export function Home({ Day }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      {showYoutube && nextYoutube ? (
+      {false ? (
         <main>
           <header>
             <h1 className="title">🎙 “It's Shaderday!”</h1>
@@ -25,7 +20,7 @@ export function Home({ Day }) {
           <iframe
             width="560"
             height="480"
-            src={`https://www.youtube.com/embed/${nextYoutube.id}?controls=0`}
+            src={`https://www.youtube.com/embed/?controls=0`}
             frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowfullscreen
@@ -74,7 +69,7 @@ export function Home({ Day }) {
             </a>
           </footer>
 
-          <YoutubeFooter />
+          <LiveFooter />
         </main>
       )}
 

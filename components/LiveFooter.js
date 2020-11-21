@@ -1,17 +1,10 @@
 import { useState, useEffect } from "react";
-import { useNextYoutube } from "../youtube";
 
-export function YoutubeFooter() {
-  const nextYoutube = useNextYoutube();
-  if (!nextYoutube) return null;
+export function LiveFooter() {
   return (
     <p>
-      <strong>🎙 Youtube Live on Saturday: </strong>“
-      <a
-        className="youtube"
-        href={`https://www.youtube.com/watch?v=${nextYoutube.id}`}
-        target="_blank"
-      >
+      <strong>🎙 Livestream each Saturday: </strong>“
+      <a className="live" href={`https://twitch.tv/greweb`} target="_blank">
         It's Shaderday!
       </a>
       ”
@@ -26,7 +19,7 @@ export function YoutubeFooter() {
           text-decoration: underline;
         }
 
-        a.youtube {
+        a.live {
           text-decoration: underline;
         }
       `}</style>
