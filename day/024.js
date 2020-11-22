@@ -3,7 +3,7 @@ import { Surface } from "gl-react-dom";
 import { Shaders, Node, GLSL } from "gl-react";
 
 export const n = 24;
-export const title = "";
+export const title = "dark morph";
 
 export const Shader = ({ time }) => {
   return <Node shader={shaders.node} uniforms={{ time }} />;
