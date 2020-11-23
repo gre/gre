@@ -1,6 +1,7 @@
 import Head from "next/head";
 import { Surface } from "gl-react-dom";
 import { Shaders, Node, GLSL, LinearCopy, Uniform } from "gl-react";
+import { Blur } from "../components/Blur";
 
 export const n = 25;
 export const title = "Mandelbrot";
@@ -8,8 +9,10 @@ export const title = "Mandelbrot";
 export const Shader = ({ time }) => {
   return (
     <LinearCopy>
-      <Persistence persistence={0.96}>
-        <Node shader={shaders.node} uniforms={{ time }} />
+      <Persistence persistence={0.9}>
+        <Blur passes={4} factor={0.1}>
+          <Node shader={shaders.node} uniforms={{ time }} />
+        </Blur>
       </Persistence>
     </LinearCopy>
   );
