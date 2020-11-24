@@ -48,7 +48,9 @@ precision highp float;
 varying vec2 uv;
 uniform float time;
 
-float acc = pow(smoothstep(0., 30., time), 1.4);
+void pR(inout vec2 p, float a) {
+	p = cos(a)*p + sin(a)*vec2(p.y, -p.x);
+}
 
 vec3 palette( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d ) {
   return a + b*cos( 6.28318*(c*t+d) );
@@ -65,14 +67,7 @@ vec3 color (float t) {
   );
 }
 
-void pR(inout vec2 p, float a) {
-	p = cos(a)*p + sin(a)*vec2(p.y, -p.x);
-}
-
-float mandelbrot (vec2 center, float zoom) {
-  vec2 init = 2. * (uv - .5) / zoom;
-  pR(init, .1 * time * (1. - acc));
-  init += center;
+float mandelbrot (vec2 init) {
   vec2 p = init;
   for (float iter = 0.; iter < 400.; iter += 1.) {
     p = vec2(p.x * p.x - p.y * p.y, 2. * p.x * p.y) + init;
@@ -84,11 +79,12 @@ float mandelbrot (vec2 center, float zoom) {
 }
 
 void main() {
-  vec2 center = vec2(.335, .388);
-  float zoom = .5 + .2 * pow(time, 1.8) * acc;
-  float v = mandelbrot(center, zoom);
-  vec3 c = mix(vec3(.0), color(v), step(0., v));
-  gl_FragColor = vec4(c, 1.0);
+  float acc = pow(smoothstep(0., 30., time), 1.4); // 0->1 for first 30s
+  float zoom = .5 + .2 * pow(time, 1.8) * acc; // zoom in
+  vec2 init = 2. * (uv - .5) / zoom;
+  pR(init, .1 * time * (1. - acc)); // rotate a bit on the center
+  init += vec2(.335, .388); // offset to center
+  gl_FragColor = vec4(color(mandelbrot(init)), 1.0);
 }
 `,
   },
