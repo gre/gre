@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { findDay } from "../day";
 
-export function Subtitle({ Day }) {
+export function SubTitle({ Day }) {
   return (
     <>
       <p className="description">
