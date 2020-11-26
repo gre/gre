@@ -18,4 +18,4 @@ jobs:
           yarn
           yarn build
           yarn next export
-          surge ./out ${{ secrets.SURGE_DOMAIN }} --token ${{ secrets.SURGE_TOKEN }}
+          surge ./out ${{ secrets.SURGE_DOMAIN }} --domain shaderday.com --token ${{ secrets.SURGE_TOKEN }}
