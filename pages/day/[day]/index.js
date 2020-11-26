@@ -1,6 +1,16 @@
+import Head from "next/head";
+import Link from "next/link";
 import { useRouter } from "next/router";
-import { Page } from "../../../components/Page";
 import { findDay, getDays } from "../../../day";
+import { Visual } from "../../../components/Visual";
+import { LiveFooter } from "../../../components/LiveFooter";
+import { Subtitle } from "../../../components/Subtitle";
+import { Title } from "../../../components/Title";
+import { SourceCodeFooter } from "../../../components/SourceCodeFooter";
+import { Container } from "../../../components/Container";
+import { Global } from "../../../components/Global";
+import { Main } from "../../../components/Main";
+import { Header } from "../../../components/Header";
 
 export function getStaticPaths() {
   return {
@@ -25,5 +35,25 @@ export function getStaticProps({ params }) {
 export default function Home({ day }) {
   const Day = findDay(parseInt(day, 10));
   if (!Day) return null;
-  return <Page Day={Day} />;
+  return (
+    <Global>
+      <Container>
+        <Head>
+          <title>
+            One Day One Shader – Day {Day.n}. "{Day.title}"
+          </title>
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
+        <Main>
+          <Header>
+            <Title />
+            <Subtitle Day={Day} />
+          </Header>
+          <Visual Day={Day} />
+          <SourceCodeFooter Day={Day} />
+          <LiveFooter />
+        </Main>
+      </Container>
+    </Global>
+  );
 }

@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { Surface } from "gl-react-dom";
 import { Shaders, Node, GLSL, LinearCopy, Uniform } from "gl-react";
-import { Blur } from "../components/Blur";
+import { Blur } from "./Blur";
 
 export const n = 28;
 export const title = "No, I'M Batman";
@@ -9,21 +9,18 @@ export const title = "No, I'M Batman";
 export const Shader = ({ time }) => {
   return (
     <LinearCopy>
-      <Persistence
-        persistence={0.5 + 0.48 * Math.min(1, time / 60)}
-        time={time}
-      >
+      <Persistence persistence={0.5 + 0.48 * Math.min(1, time / 60)}>
         <Node shader={shaders.node} uniforms={{ time }} />
       </Persistence>
     </LinearCopy>
   );
 };
 
-const Persistence = ({ children: t, persistence, time }) => (
+const Persistence = ({ children: t, persistence }) => (
   <Node
     shader={shaders.persistence}
     backbuffering
-    uniforms={{ t, back: Uniform.Backbuffer, persistence, time }}
+    uniforms={{ t, back: Uniform.Backbuffer, persistence }}
   />
 );
 

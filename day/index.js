@@ -55,7 +55,7 @@ const days = [
   Day025,
   Day026,
   Day027,
-  // Day028,
+  Day028,
 ];
 
 import * as Day099 from "./ideas/099";

@@ -18,7 +18,7 @@ const Refresh = ({ Day }) => {
 export function Visual({ Day }) {
   return (
     <Surface width={400} height={400}>
-      <Refresh Day={Day} />
+      <Refresh key={Day.n} Day={Day} />
     </Surface>
   );
 }

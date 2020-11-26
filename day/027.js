@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { Surface } from "gl-react-dom";
 import { Shaders, Node, GLSL, LinearCopy, Uniform } from "gl-react";
-import { Blur } from "../components/Blur";
+import { Blur } from "./Blur";
 
 export const n = 27;
 export const title = "real burning ship";
