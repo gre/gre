@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { Visual } from "../components/Visual";
 import { LiveFooter } from "../components/LiveFooter";
-import { Subtitle } from "../components/Subtitle";
+import { SubTitle } from "../components/SubTitle";
 import { Title } from "../components/Title";
 import { SourceCodeFooter } from "../components/SourceCodeFooter";
 import { Container } from "../components/Container";
@@ -22,7 +22,7 @@ export default function Home() {
         <Main>
           <Header>
             <Title />
-            <Subtitle Day={Day} />
+            <SubTitle Day={Day} />
           </Header>
           <Visual Day={Day} />
           <SourceCodeFooter Day={Day} />
