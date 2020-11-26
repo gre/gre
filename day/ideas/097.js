@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { Surface } from "gl-react-dom";
 import { Shaders, Node, GLSL } from "gl-react";
-import { GameOfLife } from "../../shaders/GameOfLife";
+import { GameOfLife } from "../GameOfLife";
 
 export const n = 97;
 export const title = "Hexagon of Life";
@@ -112,7 +112,7 @@ void main() {
     }
     p += d * dir * 0.5;
   }
-  
+
   // Coloring
   vec3 c = inBound *
     sqrt(vec3(1. - shad));
