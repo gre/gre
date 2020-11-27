@@ -8,14 +8,21 @@ jobs:
     name: Deploying to surge
     steps:
       - uses: actions/checkout@v1
-      - name: Install surge and fire deployment
+      - name: Build project
         uses: actions/setup-node@v1
         with:
           node-version: 12
       - run: |
           export NODE_ENV=production
-          npm i -g surge
           yarn
           yarn build
           yarn next export
+      - name: Deploy to Surge
+        run: |
+          npm i -g surge
           surge ./out ${{ secrets.SURGE_DOMAIN }} --domain shaderday.com --token ${{ secrets.SURGE_TOKEN }}
+      - name: Deploy GH pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./out
