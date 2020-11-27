@@ -5,7 +5,7 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: Deploying to surge
+    name: Build and Deploy
     steps:
       - uses: actions/checkout@v1
       - name: Build project
