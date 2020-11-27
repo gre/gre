@@ -20,7 +20,7 @@ jobs:
       - name: Deploy to Surge
         run: |
           npm i -g surge
-          surge ./out ${{ secrets.SURGE_DOMAIN }} --domain shaderday.com --token ${{ secrets.SURGE_TOKEN }}
+          surge ./out ${{ secrets.SURGE_DOMAIN }} --token ${{ secrets.SURGE_TOKEN }}
       - name: Deploy GH pages
         uses: peaceiris/actions-gh-pages@v3
         with:
