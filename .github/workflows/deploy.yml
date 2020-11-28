@@ -17,10 +17,11 @@ jobs:
           yarn
           yarn build
           yarn next export
+          echo shaderday.com > ./out/CNAME
       - name: Deploy to Surge
         run: |
           npm i -g surge
-          surge ./out ${{ secrets.SURGE_DOMAIN }} --token ${{ secrets.SURGE_TOKEN }}
+          surge ./out ${{ secrets.SURGE_DOMAIN }} --token ${{ secrets.SURGE_TOKEN }} --domain one-day-one-shader.surge.sh
       - name: Deploy GH pages
         uses: peaceiris/actions-gh-pages@v3
         with:
