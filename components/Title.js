@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 
-export function Title() {
+export function Title({ text = "One Day, One Shader" }) {
   return (
     <>
       <h1 className="title">
         <Link href="/">
-          <a>One Day, One Shader</a>
+          <a>{text}</a>
         </Link>
       </h1>
 

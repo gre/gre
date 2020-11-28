@@ -31,3 +31,18 @@ export function Global({ children }) {
     </>
   );
 }
+
+export function GlobalLive({ children }) {
+  return (
+    <Global>
+      {children}
+
+      <style jsx global>{`
+        body {
+          background: #000;
+          color: #fff;
+        }
+      `}</style>
+    </Global>
+  );
+}
