@@ -1,5 +1,36 @@
 
 
+vec3 normal (in vec3 p) {
+	vec3 eps = vec3(0.001, 0.0, 0.0);
+	return normalize(vec3(
+		map(p+eps.xyy).x-map(p-eps.xyy).x,
+		map(p+eps.yxy).x-map(p-eps.yxy).x,
+		map(p+eps.yyx).x-map(p-eps.yyx).x
+	));
+}
+
+float getDiff(vec3 p, vec3 n, vec3 lpos) {
+  vec3 l = normalize(lpos-p);
+  float dif = clamp(dot(n, l), 0.01, 1.);
+  return dif;
+}
+
+vec2 marcher (inout vec3 p, vec3 dir) {
+  vec2 t = vec2(999., 0.);
+  for (int i=0; i<80; i++) {
+    vec2 hit = map(p);
+    p += dir * hit.x;
+    if (hit.x < 0.0001) {
+      t = hit;
+      break;
+    }
+  }
+  return t;
+}
+
+
+
+
 // https://iquilezles.org/www/articles/palettes/palettes.htm
 vec3 palette( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d ) {
   return a + b*cos( 6.28318*(c*t+d) );
