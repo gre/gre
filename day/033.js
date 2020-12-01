@@ -3,7 +3,7 @@ import { Surface } from "gl-react-dom";
 import { Shaders, Node, GLSL, LinearCopy, Uniform } from "gl-react";
 
 export const n = 33;
-export const title = "x(x+2y)%(tN+1)%n";
+export const title = "x(x+32y)%(tN+1)%n";
 
 const SIZE = 100;
 
@@ -36,7 +36,7 @@ vec3 color (float t) {
 
 float cell (vec2 p) {
   float m = 2. + floor(.05 * time);
-  return mod(mod(p.x * (p.x + 2. * p.y), m * floor(time) + 1.), m);
+  return mod(mod(p.x * (p.x + 32. * p.y), m * floor(time) + 1.), m);
 }
 
 void main() {
