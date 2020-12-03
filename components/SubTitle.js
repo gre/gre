@@ -31,8 +31,8 @@ export function SubTitle({ Day }) {
       <style jsx>{`
         .description {
           text-align: center;
-          line-height: 1rem;
-          font-size: 1.5rem;
+          line-height: 1.3rem;
+          font-size: 1.3rem;
           font-weight: 300;
         }
 
