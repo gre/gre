@@ -2,7 +2,7 @@ import Head from "next/head";
 import { Surface } from "gl-react-dom";
 import { Shaders, Node, GLSL, LinearCopy, Uniform } from "gl-react";
 
-export const n = 39;
+export const n = 38;
 export const title = "Golden mandelbulb";
 
 export const Shader = ({ time }) => (
