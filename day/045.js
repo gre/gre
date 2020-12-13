@@ -146,7 +146,7 @@ float diffuse(vec3 p, vec3 n, vec3 lpos) {
 
 vec2 marcher (inout vec3 p, vec3 dir) {
   vec2 t = vec2(999., 0.);
-  for (int i=0; i<100; i++) {
+  for (int i=0; i<150; i++) {
     vec2 hit = map(p);
     p += dir * hit.x;
     if (hit.x < 0.001 || p.z > 20.) {
@@ -346,7 +346,7 @@ vec2 map (vec3 p) {
   float m = sdChessPieceId(id, 0.5 * step(y, 3.5));
   float selected = step(1., abs(y-3.5));
   // tradeoff: as we use pMod, we need to give the marcher a fake distance to next cell..
-  float piece = mix(.4, sdChessPiece(p, id), selected);
+  float piece = mix(0.4, sdChessPiece(p, id), selected);
   s = opU(s, vec2(piece, m));
   return s;
 }
@@ -363,20 +363,32 @@ void main() {
   float zoom = .5 + .5 * cos(.3 * time);
   origin = vec3(0., 3. + 5. * zoom, 0.);
   vec3 c = vec3(0.);
-  vec2 uvP = uv;
-  vec3 dir = normalize(vec3(uvP - .5, 2.5));
+  vec2 dt = vec2(0.);
+  // Anti aliasing
   #if 0
-  // debug ortho camera
-  origin += vec3(3. * (uvP - .5)- vec2(0., 2.), 0.);
-  dir = vec3(0., 0., 1.);
+  for (float x=-.5; x<=.5; x += 1.) {
+    for (float y=-.5; y<=.5; y += 1.) {
+      dt = vec2(x, y) / 800.;
+      #endif
+      vec2 uvP = uv + dt;
+      vec3 dir = normalize(vec3(uvP - .5, 2.5));
+      #if 0
+      // debug ortho camera
+      origin += vec3(3. * (uvP - .5)- vec2(0., 2.), 0.);
+      dir = vec3(0., 0., 1.);
+      #endif
+      origin.x = 6. * cos(.2 * time);
+      origin.z = 10. * sin(.3 * time);
+      dir = lookAt(origin, vec3(0., 1., -1.)) * dir;
+      vec3 p = origin;
+      vec2 hit = marcher(p, dir);
+      vec3 n = normal(p);
+      c += lighting(hit, p, n, dir);
+      #if 0
+    }
+  }
+  c /= 4.;
   #endif
-  origin.x = 6. * cos(.2 * time);
-  origin.z = 10. * sin(.3 * time);
-  dir = lookAt(origin, vec3(0., 1., -1.)) * dir;
-  vec3 p = origin;
-  vec2 hit = marcher(p, dir);
-  vec3 n = normal(p);
-  c += lighting(hit, p, n, dir);
   gl_FragColor = vec4(c, 1.0);
 }`,
   },
