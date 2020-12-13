@@ -145,16 +145,22 @@ float diffuse(vec3 p, vec3 n, vec3 lpos) {
 }
 
 vec2 marcher (inout vec3 p, vec3 dir) {
-  vec2 t = vec2(999., 0.);
-  for (int i=0; i<150; i++) {
-    vec2 hit = map(p);
-    p += dir * hit.x;
-    if (hit.x < 0.001 || p.z > 20.) {
-      t = hit;
+  // raymarching perf technique from https://www.shadertoy.com/view/XsyGWV
+  vec2 hit = vec2(999., 0.);
+  float precis = 0.0001;
+  float t = 0.;
+  for (int i=0; i<100; i++) {
+    vec2 h = map(p + t * dir);
+    precis = t*0.0001;
+    float rl = max(t*.02, 1.);
+    t += h.x * rl;
+    if (abs(h.x) < precis || p.z > 20.) {
+      hit = h;
       break;
     }
   }
-  return t;
+  p += t * dir;
+  return hit;
 }
 
 vec2 opU (vec2 a, vec2 b) {
