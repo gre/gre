@@ -15,7 +15,6 @@ const shaders = Shaders.create({
 precision highp float;
 varying vec2 uv;
 uniform float time;
-
 #define PI ${Math.PI}
 
 vec2 map (vec3 p);
