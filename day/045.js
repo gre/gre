@@ -148,7 +148,7 @@ vec2 marcher (inout vec3 p, vec3 dir) {
   vec2 t = vec2(999., 0.);
   for (int i=0; i<100; i++) {
     vec2 hit = map(p);
-    p += dir * hit.x * .8;
+    p += dir * hit.x;
     if (hit.x < 0.001 || p.z > 20.) {
       t = hit;
       break;
