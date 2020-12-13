@@ -38,6 +38,9 @@ import * as Day037 from "./037";
 import * as Day038 from "./038";
 import * as Day039 from "./039";
 import * as Day040 from "./040";
+import * as Day041 from "./041";
+import * as Day042 from "./042";
+import * as Day043 from "./043";
 
 const days = [
   Day001,
@@ -80,6 +83,9 @@ const days = [
   Day038,
   Day039,
   Day040,
+  Day041,
+  Day042,
+  Day043,
 ];
 
 import * as Day099 from "./ideas/099";
