@@ -47,16 +47,10 @@ uniform float time;
 
 vec2 map (vec3 p);
 vec3 shade (vec2 m);
-float glossyness (float m);
 vec3 lighting (vec2 hit, vec3 p, vec3 n, vec3 dir);
 
 void pR(inout vec2 p, float a) {
 	p = cos(a)*p + sin(a)*vec2(p.y, -p.x);
-}
-
-// https://iquilezles.org/www/articles/palettes/palettes.htm
-vec3 palette( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d ) {
-  return a + b*cos( 6.28318*(c*t+d) );
 }
 
 // from HG_SDF
@@ -101,9 +95,6 @@ float fBox(vec3 p, vec3 b) {
 float fSphere(vec3 p, float r) {
 	return length(p) - r;
 }
-float fTorus(vec3 p, float smallRadius, float largeRadius) {
-	return length(vec2(length(p.xz) - largeRadius, p.y)) - smallRadius;
-}
 float fDisc(vec3 p, float r) {
 	float l = length(p.xz) - r;
 	return l < 0. ? abs(p.y) : length(vec2(p.y, l));
@@ -115,13 +106,9 @@ float fCone(vec3 p, float radius, float height) {
 	float mantle = dot(tip, mantleDir);
 	float d = max(mantle, -q.y);
 	float projected = dot(tip, vec2(mantleDir.y, -mantleDir.x));
-
-	// distance to tip
 	if ((q.y > height) && (projected < 0.)) {
 		d = max(d, length(tip));
 	}
-
-	// distance to base ring
 	if ((q.x > radius) && (projected > length(vec2(height, radius)))) {
 		d = max(d, length(q - vec2(radius, 0.)));
 	}
@@ -165,7 +152,7 @@ vec2 marcher (inout vec3 p, vec3 dir) {
   for (int i=0; i<80; i++) {
     vec2 hit = map(p);
     p += dir * hit.x;
-    if (hit.x < 0.001 || p.z > 40.) {
+    if (hit.x < 0.001 || p.z > 20.) {
       t = hit;
       break;
     }
@@ -173,32 +160,56 @@ vec2 marcher (inout vec3 p, vec3 dir) {
   return t;
 }
 
-// gre's
-vec3 reflection (vec3 p, vec3 n, float maxDist) {
-  vec3 o = vec3(0.);
-  float bounced = 0.;
-  vec3 dir = n;
-  vec2 r;
-  float total = 0.;
-  for (int i=0; i<4; i++) {
-    dir = reflect(dir, n);
-    r = marcher(p, dir);
-    bounced += r.x;
-    if (bounced > maxDist) break;
-    p += r.x * dir;
-    n = normal(p);
-    o += lighting(r, p, n, dir) * clamp((maxDist - bounced) / maxDist, 0., 1.);
-    total += 1.;
-    p += dir; // we need to progress a bit more to not have ray staying at same pos
-    if (glossyness(r.y)<=.0) {
-      break;
-    }
-  }
-	return o / total;
+vec2 opU (vec2 a, vec2 b) {
+  if (a.x < b.x) return a;
+  return b;
 }
 
-float glossyness(float m) {
-  return 0.2 * step(.8, m);
+float inOutCubic (float t) {
+  return mix(4.*t*t*t, (t-1.)*(2.*t-2.)*(2.*t-2.)+1., step(.5, t));
+}
+
+float specularStrength (float m) {
+  if (m<1.) return .1;
+  return 5.0;
+}
+float specularPow (float m) {
+  return 32.0;
+}
+
+float specular (vec3 n, float m, vec3 ldir, vec3 dir) {
+  return specularStrength(m) * pow(max(dot(dir, reflect(-ldir, n)), 0.0), specularPow(m));
+}
+
+vec3 lighting (vec2 hit, vec3 p, vec3 n, vec3 dir) {
+  vec3 c = vec3(0.);
+  vec3 lamp1 = vec3(-4., 1., -6.);
+  vec3 ldir1 = normalize(lamp1 - p);
+  c +=
+    vec3(1., .7, .5) * (
+      // ambient
+      0.2 +
+      // diffuse
+      shade(hit)
+      * (.5 + .5 * diffuse(p, n, lamp1)) // half lambert
+      * softshadow(p, ldir1, 0.02, 8., 16.) +
+      // specular
+      specular(n, hit.y, ldir1, dir)
+    );
+  vec3 lamp2 = vec3(4., 8., -7.);
+  vec3 ldir2 = normalize(lamp2 - p);
+  c +=
+    vec3(.6, .7, .9) * (
+    // ambient
+    0.1 +
+    // diffuse
+    shade(hit)
+    * (.5 + .5 * diffuse(p, n, lamp2)) // half lambert
+    * softshadow(p, ldir2, 0.02, 8., 12.) +
+    // specular
+    specular(n, hit.y, ldir2, dir)
+  );
+  return c;
 }
 
 vec3 shade (vec2 hit) {
@@ -206,12 +217,7 @@ vec3 shade (vec2 hit) {
   if (m < 1.) return vec3(1.);
   return vec3(mix(.05, 1., fract(m) * 2.));
 }
-
-vec2 opU (vec2 a, vec2 b) {
-  if (a.x < b.x) return a;
-  return b;
-}
-
+// height of 1m
 float sdChessKingOrQueen (vec3 p) {
   float d;
   float body = fOpUnionSoft(
@@ -222,11 +228,7 @@ float sdChessKingOrQueen (vec3 p) {
   d = fOpUnionSoft(.1, body, fDisc(p, .15)-.01);
   vec3 q = p;
   float discs;
-  q.y += 0.02;
-  /*
-  fTorus(q, .02, .12);
-  */
-  q.y += 0.2;
+  q.y += 0.22;
   discs = fDisc(q, .06) - .01;
   q.y += 0.06;
   discs = min(discs, fDisc(q, .07) - .01);
@@ -268,17 +270,8 @@ vec2 sdChessPiece(vec3 p, float id, float white) {
   return vec2(sdChessQueen((p - vec3(0., 1.4, 0.)) / 1.4), id + .5 * white);
 }
 
-float inOutCubic (float t) {
-  return mix(4.*t*t*t, (t-1.)*(2.*t-2.)*(2.*t-2.)+1., step(.5, t));
-}
-
 vec2 map (vec3 p) {
-  vec2 ground = vec2(p.y, 0.1);
-  vec2 s = ground;
-  p.y -= .04;
-  s = opU(s, sdChessboard(p));
-  p.y -= .04;
-  p.xz += vec2(3.5);
+  // animation timings
   float phase = mod(time, 4.);
   float whiteMove = inOutCubic(min(
       1.5 * min(1., phase),
@@ -289,59 +282,17 @@ vec2 map (vec3 p) {
       min(1., 1.5 * max(0., phase)),
       max(0., 1. - 1.5 * max(0., phase-2.))
     ));
+
+  vec2 s = vec2(p.y, 0.1); // ground
+  p.y -= .04;
+  s = opU(s, sdChessboard(p));
+  p.y -= .04;
+  p.xz += vec2(3.5);
   p.x -= 3.;
   s = opU(s, sdChessPiece(p - vec3(whiteMove, 0., 0.), 10., 0.5));
   p.z -= 7.;
   s = opU(s, sdChessPiece(p - vec3(blackMove, 0., 0.), 10., 0.));
   return s;
-}
-
-float specularStrength (float m) {
-  if (m<1.) return .1;
-  return 5.0;
-}
-float specularPow (float m) {
-  return 32.0;
-}
-
-float specular (vec3 n, float m, vec3 ldir, vec3 dir) {
-  return specularStrength(m) * pow(max(dot(dir, reflect(-ldir, n)), 0.0), specularPow(m));
-}
-
-vec3 emitColor(vec2 hit) {
-  float m = hit.y;
-  return vec3(0.);
-}
-
-vec3 lighting (vec2 hit, vec3 p, vec3 n, vec3 dir) {
-  vec3 c = emitColor(hit);
-  vec3 lamp1 = vec3(-4., 1., -6.);
-  vec3 ldir1 = normalize(lamp1 - p);
-  c +=
-    vec3(1., .7, .5) * (
-      // ambient
-      0.2 +
-      // diffuse
-      shade(hit)
-      * (.5 + .5 * diffuse(p, n, lamp1)) // half lambert
-      * softshadow(p, ldir1, 0.02, 8., 16.) +
-      // specular
-      specular(n, hit.y, ldir1, dir)
-    );
-  vec3 lamp2 = vec3(4., 8., -7.);
-  vec3 ldir2 = normalize(lamp2 - p);
-  c +=
-    vec3(.6, .7, .9) * (
-    // ambient
-    0.1 +
-    // diffuse
-    shade(hit)
-    * (.5 + .5 * diffuse(p, n, lamp2)) // half lambert
-    * softshadow(p, ldir2, 0.02, 8., 12.) +
-    // specular
-    specular(n, hit.y, ldir2, dir)
-  );
-  return c;
 }
 
 void main() {
@@ -355,8 +306,6 @@ void main() {
   vec2 hit = marcher(p, dir);
   vec3 n = normal(p);
   c += lighting(hit, p, n, dir);
-  // float glossy = glossyness(hit.y); // TODO fresnel
-  // c = mix(c, reflection(p, n, 10.), glossy);
   gl_FragColor = vec4(c, 1.0);
 }`,
   },
