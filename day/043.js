@@ -6,10 +6,37 @@ export const n = 43;
 export const title = "irreconcilable queens";
 
 export const Shader = ({ time }) => (
-  <Node shader={shaders.node} uniforms={{ time }} />
+  <LinearCopy>
+    <Persistence persistence={0.4}>
+      <Node shader={shaders.node} uniforms={{ time }} />
+    </Persistence>
+  </LinearCopy>
+);
+
+const Persistence = ({ children: t, persistence }) => (
+  <Node
+    shader={shaders.persistence}
+    backbuffering
+    uniforms={{ t, back: Uniform.Backbuffer, persistence }}
+  />
 );
 
 const shaders = Shaders.create({
+  persistence: {
+    frag: GLSL`
+    precision highp float;
+    varying vec2 uv;
+    uniform sampler2D t, back;
+    uniform float persistence;
+    void main () {
+      gl_FragColor = mix(
+        texture2D(t, uv),
+        texture2D(back, uv),
+        persistence
+      );
+    }
+        `,
+  },
   node: {
     frag: GLSL`
 precision highp float;
@@ -204,7 +231,7 @@ float sdChessKingOrQueen (vec3 p) {
   q.y += 0.06;
   discs = min(discs, fDisc(q, .07) - .01);
   q.y += 0.04;
-  discs = min(discs, fDisc(q, .1) - .03);
+  discs = min(discs, fDisc(q, .08) - .03);
   q.y += 0.49;
   discs = min(discs, fDisc(q, .11) - .02);
   q.y += 0.11;
@@ -221,7 +248,7 @@ float sdChessQueen (vec3 p) {
   pModPolar(p.xz, 14.);
   p.y -= .08;
   p.x -= .2;
-  s = max(s, -fSphere(p, 0.09));
+  s = max(s, -fSphere(p, 0.1));
   return s;
 }
 
@@ -254,13 +281,13 @@ vec2 map (vec3 p) {
   p.xz += vec2(3.5);
   float phase = mod(time, 4.);
   float whiteMove = inOutCubic(min(
-      min(1., phase),
-      max(0., 1. - max(0., phase-2.))
+      1.5 * min(1., phase),
+      max(0., 1. - 1.5 * max(0., phase-2.))
     ));
   phase -= 1.;
   float blackMove = inOutCubic(min(
-      min(1., max(0., phase)),
-      max(0., 1. - max(0., phase-2.))
+      min(1., 1.5 * max(0., phase)),
+      max(0., 1. - 1.5 * max(0., phase-2.))
     ));
   p.x -= 3.;
   s = opU(s, sdChessPiece(p - vec3(whiteMove, 0., 0.), 10., 0.5));
@@ -270,11 +297,11 @@ vec2 map (vec3 p) {
 }
 
 float specularStrength (float m) {
-  if (m<1.) return .7;
-  return 2.0;
+  if (m<1.) return .1;
+  return 5.0;
 }
 float specularPow (float m) {
-  return 64.0;
+  return 32.0;
 }
 
 float specular (vec3 n, float m, vec3 ldir, vec3 dir) {
@@ -293,24 +320,24 @@ vec3 lighting (vec2 hit, vec3 p, vec3 n, vec3 dir) {
   c +=
     vec3(1., .7, .5) * (
       // ambient
-      0.1 +
+      0.2 +
       // diffuse
       shade(hit)
-      * diffuse(p, n, lamp1)
-      * softshadow(p, ldir1, 0.02, 10., 16.) +
+      * (.5 + .5 * diffuse(p, n, lamp1)) // half lambert
+      * softshadow(p, ldir1, 0.02, 8., 16.) +
       // specular
       specular(n, hit.y, ldir1, dir)
     );
   vec3 lamp2 = vec3(4., 8., -7.);
   vec3 ldir2 = normalize(lamp2 - p);
   c +=
-    vec3(.6, .7, .8) * (
+    vec3(.6, .7, .9) * (
     // ambient
     0.1 +
     // diffuse
     shade(hit)
-    * diffuse(p, n, lamp2)
-    * softshadow(p, ldir2, 0.02, 10., 8.) +
+    * (.5 + .5 * diffuse(p, n, lamp2)) // half lambert
+    * softshadow(p, ldir2, 0.02, 8., 12.) +
     // specular
     specular(n, hit.y, ldir2, dir)
   );
@@ -319,8 +346,7 @@ vec3 lighting (vec2 hit, vec3 p, vec3 n, vec3 dir) {
 
 void main() {
   vec3 origin = vec3(0., 2., -6.);
-  origin.x += 1. * sin(2. * PI * time / 4.);
-  // origin.z += 7. * smoothstep(.5, 1., sin(.5 * time));
+  origin.x += sin(2. * PI * time / 4.);
   vec3 c = vec3(0.);
   vec2 uvP = uv;
   vec3 dir = normalize(vec3(uvP - .5, 1.));
