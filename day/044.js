@@ -290,8 +290,8 @@ vec2 map (vec3 p) {
   p.xz += vec2(3.5);
   float x = pModInterval1(p.x, 1., 0., 8.);
   float y = pModInterval1(p.z, 1., 0., 8.);
-  float id = 10.+step(1., mod(x+y, 2.));
-  float m = sdChessPieceId(id, 0.5 * step(1., mod(x+y, 2.)));
+  float id = 10. + step(1., mod(x, 2.));
+  float m = sdChessPieceId(id, 0.5 * step(mod(x+y, 2.), .9));
   float hill = step(3., x) * step(x, 4.) * step(3., y) * step(y, 4.);
   // tradeoff: as we use pMod, we need to give the marcher a fake distance to next cell..
   float piece = mix(.4, sdChessPiece(p, id), hill);
