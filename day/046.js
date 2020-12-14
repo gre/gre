@@ -2,15 +2,14 @@ import Head from "next/head";
 import { Surface } from "gl-react-dom";
 import { Shaders, Node, GLSL, LinearCopy, Uniform } from "gl-react";
 
-export const n = 45;
-export const title = "wood pawns army";
+export const n = 46;
+export const title = "Bank of Bicoin";
 
 export const Shader = ({ time }) => (
   <Node
     shader={shaders.node}
     uniforms={{
       time,
-      wood: "/images/seamless-wood-background-1.jpg",
     }}
   />
 );
@@ -21,7 +20,6 @@ const shaders = Shaders.create({
 precision highp float;
 varying vec2 uv;
 uniform float time;
-uniform sampler2D wood;
 
 #define PI ${Math.PI}
 
@@ -169,9 +167,7 @@ vec2 opU (vec2 a, vec2 b) {
 }
 
 float specularStrength (float m) {
-  if (m<1.) return .1;
-  if (m<10.) return .1;
-  return 1.;
+  return 0.;
 }
 
 float specular (vec3 n, float m, vec3 ldir, vec3 dir, float p) {
@@ -180,176 +176,125 @@ float specular (vec3 n, float m, vec3 ldir, vec3 dir, float p) {
 
 vec3 lighting (vec2 hit, vec3 p, vec3 n, vec3 dir) {
   vec3 c = vec3(0.);
-  vec3 lamp1 = vec3(-4., 3., -6.);
+  vec3 lamp1 = vec3(-6., 10., -6.);
   vec3 lamp1dir = normalize(lamp1 - p);
   c +=
-    vec3(.6, .7, .8) * (
+    vec3(1., .7, .4) * (
       // ambient
-      0.105+
+      0.1+
       // diffuse
       shade(hit, p)
       * (.5 + .5 * diffuse(p, n, lamp1)) // half lambert
-      * softshadow(p, lamp1dir, 0.02, 8., 20.) +
+      * softshadow(p, lamp1dir, 0.02, 8., 12.) +
       // specular
-      .5 * specular(n, hit.y, lamp1dir, dir, 60.)
+      specular(n, hit.y, lamp1dir, dir, 40.)
     );
-  vec3 lamp2 = vec3(4., 7., -7.);
+  vec3 lamp2 = vec3(4., 6., 6.);
   vec3 lamp2dir = normalize(lamp2 - p);
   c +=
-    vec3(1., .85, .7) * (
-    // ambient
-    0.05 +
-    // diffuse
-    shade(hit, p)
-    * (.5 + .5 *diffuse(p, n, lamp2)) // half lambert
-    * softshadow(p, lamp2dir, 0.02, 8., 20.) +
-    // specular
-    specular(n, hit.y, lamp2dir, dir, 30.)
-  );
-  vec3 lamp3 = vec3(0., 8., 10.);
-  vec3 lamp3dir = normalize(lamp3 - p);
-  c +=
-    vec3(.3) * (
-    // ambient
-    0.1 +
-    // diffuse
-    shade(hit, p)
-    * (.5 + .5 *diffuse(p, n, lamp3)) // half lambert
-    +
-    // specular
-    specular(n, hit.y, lamp3dir, dir, 80.)
-  );
+    .8 * vec3(.0,.6,1.) * (
+      // ambient
+      0.1 +
+      // diffuse
+      shade(hit, p)
+      * (.5 + .5 * diffuse(p, n, lamp2)) // half lambert
+      * softshadow(p, lamp2dir, 0.02, 8., 30.) +
+      // specular
+      specular(n, hit.y, lamp2dir, dir, 40.)
+    );
   return c;
 }
 
 vec3 shade (vec2 hit, vec3 p) {
   float m = hit.y;
-  if (m < 1.) return vec3(1.);
-  float wFactor = fract(m) * 2.;
-  p *= 1.2;
-  vec2 tUV = vec2(
-    fract(p.x + .3 * p.y),
-    fract(p.z - .7 * p.y)
+  if (m==0.1) return vec3(.7);
+  if (m==2.) return vec3(.2);
+  return vec3(1.);
+}
+
+float sdSegment (in vec3 p, in float L, in float R) {
+  p.y -= min(L, max(0.0, p.y));
+  return length(p) - R;
+}
+float sdBox( vec3 p, vec3 b ) {
+  vec3 q = abs(p) - b;
+  return length(max(q,0.0)) + min(max(q.x,max(q.y,q.z)),0.0);
+}
+float sdBox (vec2 p, vec2 sz) {
+  return max(abs(p.x) - sz.x, abs(p.y) - sz.y);
+}
+float sdD (vec2 p, float w, float h) {
+  return min(sdBox(p, vec2(w, h)), length(p-vec2(w, .0))-h);
+}
+float sdUpperD (vec2 p) {
+  p.x += .02;
+  p.y -= .1;
+  float inner = sdD(p + vec2(-0.025, 0.012), 0.037, 0.055);
+  float outer = sdD(p, 0.1, 0.1);
+  return max(-inner, outer);
+}
+float sdLowerD (vec2 p) {
+  p.x += .01;
+  p.y += .085;
+  float outer = sdD(p, 0.11, 0.11);
+  float inner = sdD(p - vec2(0.023, 0.01), 0.045, 0.058);
+  return max(-inner, outer);
+}
+float sdRevCornerRadius(vec2 p) {
+  return max(
+    sdBox(p, vec2(.5)),
+    -min(
+      (p.x - p.y) / 2.,
+      length(p + vec2(.5, -.5)) - 1.
+    )
   );
-  float piece = step(10.,m);
-  vec3 c = mix(
-    vec3(.18, .05, .03),
-    vec3(.7, .5, .3) + piece * vec3(.3, .45, .4),
-    wFactor);
-  vec3 t = texture2D(wood, tUV).r * c;
-  return t;
 }
-
-// height of 1m
-float sdChessKingOrQueen (vec3 p) {
-  float d;
-  float body = fOpUnionSoft(
-    .1,
-    fCone(p * vec3(1., -1., 1.), .12, .5),
-    fCone(p + vec3(0., 1., 0.), .16, .8)
+float sdBitcoin2D (vec2 p) {
+  float bottom = sdLowerD(p);
+  bottom = min(bottom, max(
+    sdBox(p + vec2(.15, .165), vec2(.04, .03)), // bottom-left shape
+    -(p.x - .216 * p.y + 0.142)) // 12.5° cut
   );
-  d = fOpUnionSoft(.1, body, fDisc(p, .15)-.01);
-  vec3 q = p;
-  float discs;
-  q.y += 0.22;
-  discs = fDisc(q, .06) - .01;
-  q.y += 0.06;
-  discs = min(discs, fDisc(q, .07) - .01);
-  q.y += 0.04;
-  discs = min(discs, fDisc(q, .08) - .03);
-  q.y += 0.49;
-  discs = min(discs, fDisc(q, .11) - .02);
-  q.y += 0.11;
-  discs = min(discs, fDisc(q, .12) - .05);
-  d = fOpUnionSoft(.015, d, discs);
-  return d;
-}
-
-// height of 1m + crawn
-float sdChessQueen (vec3 p) {
-  float s = sdChessKingOrQueen(p);
-  float ball = fSphere((p-vec3(0., 0.05, 0.)) * vec3(1., 2., 1.), .05);
-  s = min(s, ball);
-  pModPolar(p.xz, 14.);
-  p.y -= .08;
-  p.x -= .2;
-  s = max(s, -fSphere(p, 0.1));
-  return s;
-}
-
-float sdChessKing (vec3 p) {
-  float s = sdChessKingOrQueen(p);
-  p.y -= .12;
-  p.y *= 1.1; // a bit stretched
-  float cross = length(p.xy)-.04;
-  pModPolar(p.xy, 4.);
-  pR(p.xy, .5 * PI);
-  p.y += 0.07;
-
-  vec3 q = abs(p);
-  float sz = .04;
-  cross = fOpUnionSoft(.02, cross, max(.5*q.x+.5*p.y,-p.y)-sz*0.5);
-  // cross = min(cross, p.x+p.y-0.2);
-  s = fOpUnionSoft(.02, s, max(cross, q.z-.02));
-  return s;
-}
-
-float sdChessPawn (vec3 p) {
-  float d;
-  p.y += .5;
-  float body = fOpUnionSoft(
-    .01,
-    fSphere(p, .1),
-    fCone(p + vec3(0., .5, 0.), .16, .5)
+  bottom = min(bottom, sdRevCornerRadius((p + vec2(0.135, -0.135)) * vec2(1., -1.) * 30.));
+  float top = sdUpperD(p);
+  top = min(top, sdBox(p - vec2(-.15, .175), vec2(.034, .025)));
+  top = min(top, sdRevCornerRadius((p + vec2(0.135, 0.12)) * vec2(1., 1.) * 30.));
+  p.x += .01;
+  float hash = max(
+    sdBox(p, vec2(0.07, .285)),
+    -min(
+      sdBox(p, vec2(0.022, 1.)),
+      sdBox(p, vec2(1., .15))
+    )
   );
-  p.y += .11;
-  d = min(body, fDisc(p, .08)-.02);
-  p.y += 0.27;
-  float base = min(fDisc(p, .04) - .08, fDisc(p+vec3(.0, .05, .0), .12) - .04);
-  d = fOpUnionSoft(.05, d, base);
-  return d;
+  return min(min(top, bottom), hash);
 }
 
-
-// tiles are of 1m x 1m
-vec2 sdChessboard (vec3 p) {
-  float manhattan = max(abs(p.x), abs(p.z));
-  float o = step(4., manhattan);
-  float m = mix(
-    2. + .5 * step(1., mod(floor(p.x)+floor(p.z), 2.)),
-    3. + .5 * step(4.38, manhattan),
-    o
-  );
-  return vec2(fBox(p, vec3(4.4, 0.2, 4.4)), m);
-}
-
-float sdChessPiece(vec3 p, float id) {
-  float s = 99.;
-  p = (p - vec3(0., 1.4, 0.)) / 1.4;
-  if (id == 10.) s = sdChessKing(p);
-  if (id == 11.) s = sdChessQueen(p);
-  if (id == 15.) s = sdChessPawn(p);
-  return s;
-}
-
-float sdChessPieceId(float id, float white) {
-  return id + .5 * white;
+float sdBitcoin (in vec3 p, in float L, in float sz) {
+  p.y += 0.05;
+  p.y -= min(L, max(0.0, p.y));
+  float plane = abs(p.y);
+  return max(sdBitcoin2D(-p.xz / sz), plane);
 }
 
 vec2 map (vec3 p) {
+  // TODO:add antenna
+  // TODO:creuser logo
+  // what else
   vec2 s = vec2(p.y, 0.1); // ground
-  p.y -= .1;
-  s = opU(s, sdChessboard(p));
-  p.y -= .1;
-  p.xz += vec2(3.5);
-  float x = pModInterval1(p.x, 1., 0., 7.);
-  float y = pModInterval1(p.z, 1., 0., 7.);
-  float id = 15.;
-  float m = sdChessPieceId(id, 0.5 * step(y, 3.5));
-  float selected = step(1., abs(y-3.5));
-  // tradeoff: as we use pMod, we need to give the marcher a fake distance to next cell..
-  float piece = mix(0.4, sdChessPiece(p, id), selected);
-  s = opU(s, vec2(piece, m));
+  float f = min(
+    sdBitcoin((p+vec3(.5,0.,0.)).zyx, 1.5, 1.),
+    sdBitcoin((p-vec3(.5,0.,0.)).zyx * vec3(-1.,1.,1.), 1.8, 1.)
+  );
+  f = fOpUnionSoft(.1, f, sdBitcoin(p, 2., 2.));
+  f = min(f, sdSegment(p - vec3(.16, 0., -.02), 2.5, .01));
+  s = opU(s, vec2(f, 1.));
+  s = opU(s, vec2(
+    min(
+      sdBitcoin((p-vec3(-1.5,0.,.5)).zyx, .1, 20.),
+      sdBox(p-vec3(.01, 0., 0.), vec3(.12, .05, 2.))
+    )
+  , 2.));
   return s;
 }
 
@@ -362,8 +307,7 @@ mat3 lookAt (vec3 ro, vec3 ta) {
 }
 
 void main() {
-  float zoom = .5 + .5 * cos(.3 * time);
-  origin = vec3(0., 3. + 5. * zoom, 0.);
+  origin = vec3(0., 6., 0.);
   vec3 c = vec3(0.);
   vec2 dt = vec2(0.);
   vec2 uvP = uv + dt;
@@ -373,9 +317,9 @@ void main() {
   origin += vec3(3. * (uvP - .5)- vec2(0., 2.), 0.);
   dir = vec3(0., 0., 1.);
   #endif
-  origin.x = 6. * cos(.2 * time);
-  origin.z = 10. * sin(.3 * time);
-  dir = lookAt(origin, vec3(0., 1., -1.)) * dir;
+  origin.x += 6. * sin(.5 + .2 * time);
+  origin.z += 4. * cos(.2 * time);
+  dir = lookAt(origin, vec3(0., 1., 0.)) * dir;
   vec3 p = origin;
   vec2 hit = marcher(p, dir);
   vec3 n = normal(p);
