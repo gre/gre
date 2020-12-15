@@ -278,9 +278,6 @@ float sdBitcoin (in vec3 p, in float L, in float sz) {
 }
 
 vec2 map (vec3 p) {
-  // TODO:add antenna
-  // TODO:creuser logo
-  // what else
   vec2 s = vec2(p.y, 0.1); // ground
   float f = min(
     sdBitcoin((p+vec3(.5,0.,0.)).zyx, 1.5, 1.),
