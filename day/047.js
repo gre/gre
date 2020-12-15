@@ -35,41 +35,8 @@ void pR(inout vec2 p, float a) {
 }
 
 // from HG_SDF
-float vmax(vec2 v) {
-	return max(v.x, v.y);
-}
 float vmax(vec3 v) {
 	return max(max(v.x, v.y), v.z);
-}
-float vmax(vec4 v) {
-	return max(max(v.x, v.y), max(v.z, v.w));
-}
-float vmin(vec2 v) {
-	return min(v.x, v.y);
-}
-float vmin(vec3 v) {
-	return min(min(v.x, v.y), v.z);
-}
-float vmin(vec4 v) {
-	return min(min(v.x, v.y), min(v.z, v.w));
-}
-float pModInterval1(inout float p, float size, float start, float stop) {
-	float halfsize = size*0.5;
-	float c = floor((p + halfsize)/size);
-	p = mod(p+halfsize, size) - halfsize;
-	if (c > stop) { //yes, this might not be the best thing numerically.
-		p += size*(c - stop);
-		c = stop;
-	}
-	if (c <start) {
-		p += size*(c - start);
-		c = start;
-	}
-	return c;
-}
-float fOpUnionSoft(float r, float a, float b) {
-	float e = max(r - abs(a - b), 0.);
-	return min(a, b) - e*e*0.25/r;
 }
 float fBox(vec3 p, vec3 b) {
 	vec3 d = abs(p) - b;
@@ -150,14 +117,6 @@ vec2 opU (vec2 a, vec2 b) {
   return b;
 }
 
-float specularStrength (float m) {
-  return 0.;
-}
-
-float specular (vec3 n, float m, vec3 ldir, vec3 dir, float p) {
-  return specularStrength(m) * pow(max(dot(dir, reflect(ldir, n)), 0.0), p);
-}
-
 vec3 lighting (vec2 hit, vec3 p, vec3 n, vec3 dir) {
   vec3 clr = shade(hit);
   float glow = step(1., hit.y);
@@ -178,9 +137,7 @@ vec3 lighting (vec2 hit, vec3 p, vec3 n, vec3 dir) {
       // glow have half lambert
       mix(diffuse(p, n, lamp1), 1., .5 * glow)  *
       // glow don't receive shadows
-      mix(softshadow(p, lamp1dir, 0.02, 8., 20.), 1., glow) +
-      // specular
-      specular(n, hit.y, lamp1dir, dir, 40.)
+      mix(softshadow(p, lamp1dir, 0.02, 8., 20.), 1., glow)
     );
   c +=
     .8 *
@@ -193,9 +150,7 @@ vec3 lighting (vec2 hit, vec3 p, vec3 n, vec3 dir) {
       // glow have half lambert
       mix(diffuse(p, n, lamp2), 1., .5 * glow)  *
       // glow don't receive shadows
-      mix(softshadow(p, lamp2dir, 0.02, 8., 10.), 1., glow) +
-      // specular
-      specular(n, hit.y, lamp2dir, dir, 40.)
+      mix(softshadow(p, lamp2dir, 0.02, 8., 10.), 1., glow)
     );
   return c;
 }
