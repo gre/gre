@@ -206,11 +206,11 @@ vec3 palette( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d ) {
 }
 vec3 color (float t) {
   return palette(
-    t,
+    t + time,
     vec3(.5),
     vec3(.5),
-    vec3(1.),
-    vec3(.0, .33, .66)
+    vec3(1., 1.1, 1.),
+    vec3(.1, .3, .5)
   );
 }
 
