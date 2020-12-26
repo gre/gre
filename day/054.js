@@ -248,7 +248,7 @@ HIT sdChessboard (vec3 p) {
   float manhattan = max(abs(p.x), abs(p.z));
   float o = step(4., manhattan);
   float m = mix(
-    2. + .5 * step(1., mod(floor(p.x)+floor(p.z), 2.)),
+    2. + .5 * step(1., mod(1.+floor(p.x)+floor(p.z), 2.)),
     3. + .5 * step(4.1, manhattan),
     o
   );
@@ -454,7 +454,6 @@ HIT piece (vec3 p, float id, float w) {
 }
 
 HIT board (vec3 p) {
-  vec3 q = p+vec3(-.4,0.,0.);
   p.y -= .05;
   HIT s = sdChessboard(p);
   p.y -= .05;
