@@ -51,10 +51,6 @@ float pModPolar(inout vec2 p, float repetitions) {
 	if (abs(c) >= (repetitions/2.)) c = abs(c);
 	return c;
 }
-float fOpUnionSoft(float r, float a, float b) {
-	float e = max(r - abs(a - b), 0.);
-	return min(a, b) - e*e*0.25/r;
-}
 void pR(inout vec2 p, float a) {
 	p = cos(a)*p + sin(a)*vec2(p.y, -p.x);
 }
@@ -63,15 +59,9 @@ void pR(inout vec2 p, float a) {
 float vmax(vec3 v) {
 	return max(max(v.x, v.y), v.z);
 }
-float fBoxCheap(vec3 p, vec3 b) {
-	return vmax(abs(p) - b);
-}
 float fBox(vec3 p, vec3 b) {
 	vec3 d = abs(p) - b;
 	return length(max(d, vec3(0))) + vmax(min(d, vec3(0)));
-}
-float fSphere(vec3 p, float r) {
-	return length(p) - r;
 }
 float fCylinder(vec3 p, float r, float height) {
 	float d = length(p.xz) - r;
