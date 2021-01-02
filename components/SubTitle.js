@@ -6,7 +6,7 @@ export function SubTitle({ Day }) {
   return (
     <>
       <p className="description">
-        <Link href={`/day/${Day.n}`}>
+        <Link href={`/${Day.n}`}>
           <a>Day {Day.n}.</a>
         </Link>{" "}
         <span className="daily">"{Day.title}"</span> by{" "}
@@ -16,14 +16,14 @@ export function SubTitle({ Day }) {
       </p>
       <nav>
         {findDay(Day.n - 1) ? (
-          <Link href={`/day/${Day.n - 1}`}>
+          <Link href={`/${Day.n - 1}`}>
             <a>← previous day</a>
           </Link>
         ) : (
           <span />
         )}
         {findDay(Day.n + 1) ? (
-          <Link href={`/day/${Day.n + 1}`}>
+          <Link href={`/${Day.n + 1}`}>
             <a>next day →</a>
           </Link>
         ) : null}
