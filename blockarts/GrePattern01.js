@@ -15,8 +15,8 @@ Rarity Features
 Styles
 
 - swap: it allows to ajust the alignment of the "low frequency" pattern
-- lense: it allows to adjust the anti aliasing which can produce a "pixel blur" effect sometimes desired
 - soul: it highlights even more the high frequency patterns. use with caution!
+- lense: it allows to adjust the anti aliasing which can produce a "pixel blur" effect sometimes desired
 */
 
 export const styleMetadata = {
@@ -28,8 +28,8 @@ export const styleMetadata = {
     // comment seed when going production!
     // seed: 0.5, // this was used for debug
     swap: 0.5,
-    lense: 0.1,
     soul: 0.3,
+    lense: 0.1,
   },
 };
 
@@ -100,7 +100,8 @@ void main() {
   }
   c /= 4.;
 
-  float gold = pow(s6, 8.0);
+  float gold = pow(s6, 6.0);
+  gold *= step(0.8, gold);
   c = mix(
     c,
     mix(vec3(0.0), vec3(1.0, 0.8, 0.0), 1.5 * smoothstep(0.5, 1.0, c.r)),
