@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import useDimensions from "react-cool-dimensions";
 import { proxy, useProxy } from "valtio";
 import { EthBlockArtVisual } from "../components/EthBlockArtVisual";
@@ -12,7 +12,7 @@ import { Global } from "../components/Global";
 import { Main } from "../components/Main";
 import { Header } from "../components/Header";
 import Sidebar from "../components/ethblockart/Sidebar";
-import * as BlockArt from "../blockarts/GrePattern01";
+import * as BlockArt from "../blockarts/current";
 import blocks from "../blocks";
 
 const store = proxy({
@@ -35,6 +35,18 @@ export default function Home() {
     };
   });
 
+  useEffect(() => {
+    let i = setInterval(() => {
+      let m = mods.find((m) => m.key === "seed");
+      if (m) {
+        m.set(Math.random());
+      }
+    }, 1000);
+    return () => {
+      clearInterval(i);
+    };
+  }, [mods]);
+
   return (
     <Global>
       <Container>
@@ -43,7 +55,12 @@ export default function Home() {
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <Main>
-          <Header>ethblock.art sandbox</Header>
+          <Header>
+            <h1>{BlockArt.styleMetadata.name}</h1>
+            <p style={{ maxWidth: 800 }}>
+              {BlockArt.styleMetadata.description}
+            </p>
+          </Header>
           <div style={{ display: "flex", flexDirection: "row" }}>
             <div
               ref={ref}

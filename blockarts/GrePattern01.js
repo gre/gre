@@ -14,14 +14,15 @@ Rarity Features
 
 Styles
 
-- swap: it allows to ajust the alignment of the "low frequency" pattern
-- soul: it highlights even more the high frequency patterns. use with caution!
+- swap: finetune coloring and slide the low frequency layer
+- soul: highlights more the high frequency patterns.
 - lense: it allows to adjust the anti aliasing which can produce a "pixel blur" effect sometimes desired
 */
 
 export const styleMetadata = {
   name: "Pattern 01",
-  description: "",
+  description:
+    "Welcome to the realm of pixel patterns. Explore different harmonies of patterns and color palettes. Block determines most of the pattern, creators are able to finetune things. Black color is uncommon, harlequin palette is rare, high frequency noise is very rare, having a full square color is extremly rare, but you are the luckiest if you mint some GOLD!",
   image: "",
   creator_name: "gre",
   options: {
@@ -44,7 +45,7 @@ out vec4 color;
 uniform float swap;
 uniform float lense;
 uniform float soul;
-uniform float s1, s2, s3, s4, s5, s6;
+uniform float s1, s2, s3, s4, s5, s6, s7;
 
 #define PI ${Math.PI}
 
@@ -78,12 +79,12 @@ vec2 project (vec2 op, float unzoom) {
   return floor(p);
 }
 vec3 shade (vec2 op) {
-  float s = 0.8 * pow(s4, 0.5) + pow(s1 * s2 * s3, 3.0) * 20.0;
+  float s = pow(s4, 0.5) - pow(s7, 4.) + pow(s1 * s2 * s3, 3.0) * 20.0;
   float c1 = cell(project(op, 64. * s));
   float c2 = cell(project(op, 16. * s));
   float c3 = cell(project(op, 8. * s));
   float cR = cell(s3 + project(op, s));
-  float a = soul * 0.02;
+  float a = soul * 0.015;
   float b = a * 0.5;
   float c = 1.0 - a - b;
   float final = a * c1 + b * c2 + c * c3 + cR;
@@ -100,7 +101,7 @@ void main() {
   }
   c /= 4.;
 
-  float gold = pow(s6, 6.0);
+  float gold = s2 * s6 * s6;
   gold *= step(0.8, gold);
   c = mix(
     c,
@@ -121,7 +122,7 @@ const CustomStyle = ({ block, attributesRef, swap, lense, seed, soul }) => {
 
   const rng = new MersenneTwister(
     // when seed is not provided, it means we're in "production" and the seed is actually the block hash
-    (seed || 1) * parseInt(hash.slice(0, 16), 16)
+    (seed ? seed * 0xffffffff : 0) + parseInt(hash.slice(0, 16), 16)
   );
   const s1 = rng.random();
   const s2 = rng.random();
@@ -129,6 +130,7 @@ const CustomStyle = ({ block, attributesRef, swap, lense, seed, soul }) => {
   const s4 = rng.random();
   const s5 = rng.random();
   const s6 = rng.random();
+  const s7 = rng.random();
 
   return (
     <Node
@@ -143,6 +145,7 @@ const CustomStyle = ({ block, attributesRef, swap, lense, seed, soul }) => {
         s4,
         s5,
         s6,
+        s7,
       }}
     />
   );
