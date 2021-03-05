@@ -6,7 +6,7 @@ import MersenneTwister from "mersenne-twister";
 Rarity Features
 
 - common: variety of zooms and fractals
-- a bit rare: seeing the full mandelbrot "cell"
+- a bit rare: seeing great silhouettes
 - rare: access to patterns that no longer looks mandelbrot at all!
 - very rare: having a non glitched mandelbrot!
 
@@ -19,15 +19,16 @@ Styles
 
 export const styleMetadata = {
   name: "Mandelglitch",
-  description: "",
+  description:
+    "Welcome to the realm of mandelbrot fractal glitches. Explore a great variety of fractal patterns. Every block is unique, mesmerizing shapes could appear, sometimes even not recognizable as Mandelbrot's fractal. The rarest item you may hunt for is to find a non-glitched Mandelbrot's original!",
   image: "",
-  creator_name: "gre",
+  creator_name: "greweb",
   options: {
     // comment seed when going production!
     seed: 0.5, // this was used for debug
     travel: 0.1,
     love: 0.5,
-    dark: 0.2,
+    dark: 0.1,
   },
 };
 
@@ -120,8 +121,6 @@ const CustomStyle = ({
   dark,
   lightness,
 }) => {
-  useAttributes(attributesRef);
-
   const { hash } = block;
 
   const rng = new MersenneTwister(
@@ -137,6 +136,19 @@ const CustomStyle = ({
   const s7 = rng.random();
   const s8 = rng.random();
   const s9 = rng.random();
+
+  const zoom = s7;
+
+  useEffect(() => {
+    attributesRef.current = () => ({
+      attributes: [
+        {
+          trait_type: "Depth",
+          value: zoom,
+        },
+      ],
+    });
+  }, [zoom, attributesRef]);
 
   return (
     <Node
@@ -159,26 +171,5 @@ const CustomStyle = ({
     />
   );
 };
-
-function useAttributes(ref) {
-  // Update custom attributes related to style when the modifiers change
-  useEffect(() => {
-    ref.current = () => {
-      return {
-        // This is called when the final image is generated, when creator opens the Mint NFT modal.
-        // should return an object structured following opensea/enjin metadata spec for attributes/properties
-        // https://docs.opensea.io/docs/metadata-standards
-        // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1155.md#erc-1155-metadata-uri-json-schema
-
-        attributes: [
-          {
-            trait_type: "your trait here text",
-            value: "replace me",
-          },
-        ],
-      };
-    };
-  }, [ref]);
-}
 
 export default CustomStyle;

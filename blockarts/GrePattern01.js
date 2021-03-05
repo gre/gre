@@ -24,7 +24,7 @@ export const styleMetadata = {
   description:
     "Welcome to the realm of pixel patterns. Explore different harmonies of patterns and color palettes. Block determines most of the pattern, creators are able to finetune things. Black color is uncommon, harlequin palette is rare, high frequency noise is very rare, having a full square color is extremly rare, but you are the luckiest if you mint some GOLD!",
   image: "",
-  creator_name: "gre",
+  creator_name: "greweb",
   options: {
     // comment seed when going production!
     // seed: 0.5, // this was used for debug
@@ -78,7 +78,7 @@ vec2 project (vec2 op, float unzoom) {
   pR(p, PI/4.);
   return floor(p);
 }
-vec3 shade (vec2 op) {
+float shade (vec2 op) {
   float s = pow(s4, 0.5) - pow(s7, 4.) + pow(s1 * s2 * s3, 3.0) * 20.0;
   float c1 = cell(project(op, 64. * s));
   float c2 = cell(project(op, 16. * s));
@@ -88,7 +88,7 @@ vec3 shade (vec2 op) {
   float b = a * 0.5;
   float c = 1.0 - a - b;
   float final = a * c1 + b * c2 + c * c3 + cR;
-  return pal(final);
+  return final;
 }
 void main() {
   vec3 c = vec3(0.);
@@ -96,7 +96,7 @@ void main() {
     for (float y=-.5; y<=.5; y += 1.) {
       vec2 uvP = uv;
       uvP += vec2(x, y) * 0.02 * (0.1 + lense * lense);
-      c += shade(uvP);
+      c += pal(shade(uvP));
     }
   }
   c /= 4.;
