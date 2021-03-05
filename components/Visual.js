@@ -5,12 +5,14 @@ const Refresh = ({ Day }) => {
   const [time, setTime] = useState(0);
   useEffect(() => {
     let startT;
+    let h;
     function loop(t) {
-      requestAnimationFrame(loop);
+      h = requestAnimationFrame(loop);
       if (!startT) startT = t;
       setTime((t - startT) / 1000);
     }
-    requestAnimationFrame(loop);
+    h = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(loop);
   }, []);
   return <Day.Shader time={time} />;
 };

@@ -5,6 +5,12 @@ import { Shaders, Node, GLSL } from "gl-react";
 export const n = 9;
 export const title = "Virus";
 
+export const gifSize = 400;
+export const gifStart = 16.3;
+export const gifEnd = 26;
+export const gifFramePerSecond = 24;
+export const gifSpeed = 0.8;
+
 export const Shader = ({ time }) => (
   <Node shader={shaders.node} uniforms={{ time }} />
 );

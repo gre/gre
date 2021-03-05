@@ -8,6 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "gifenc": "^1.0.2",
     "gl-mat3": "^2.0.0",
     "gl-react": "^5.0.0",
     "gl-react-dom": "^5.0.0",

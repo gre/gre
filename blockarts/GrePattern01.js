@@ -116,8 +116,6 @@ void main() {
 });
 
 const CustomStyle = ({ block, attributesRef, swap, lense, seed, soul }) => {
-  useAttributes(attributesRef);
-
   const { hash } = block;
 
   const rng = new MersenneTwister(
@@ -131,6 +129,37 @@ const CustomStyle = ({ block, attributesRef, swap, lense, seed, soul }) => {
   const s5 = rng.random();
   const s6 = rng.random();
   const s7 = rng.random();
+
+  const s =
+    Math.pow(s4, 0.5) - Math.pow(s7, 4) + Math.pow(s1 * s2 * s3, 3.0) * 20.0;
+
+  // generating some qualifier like "much gold" or "very harlequin" =)
+  const words = [];
+  if (s > 12) {
+    words.push("ultimate");
+  } else if (s > 5) {
+    words.push("extreme");
+  } else if (s > 2) {
+    words.push("much");
+  } else if (s < -0.1) {
+    words.push("rare");
+  }
+  if (s2 * s6 * s6 > 0.8) {
+    words.push("gold");
+  } else if (s5 > 0.95) {
+    words.push("harlequin");
+  }
+
+  useEffect(() => {
+    attributesRef.current = () => ({
+      attributes: [
+        {
+          trait_type: "Mood",
+          value: words.join(" "),
+        },
+      ],
+    });
+  }, [swap, lense, soul, words, attributesRef]);
 
   return (
     <Node
@@ -150,26 +179,5 @@ const CustomStyle = ({ block, attributesRef, swap, lense, seed, soul }) => {
     />
   );
 };
-
-function useAttributes(ref) {
-  // Update custom attributes related to style when the modifiers change
-  useEffect(() => {
-    ref.current = () => {
-      return {
-        // This is called when the final image is generated, when creator opens the Mint NFT modal.
-        // should return an object structured following opensea/enjin metadata spec for attributes/properties
-        // https://docs.opensea.io/docs/metadata-standards
-        // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1155.md#erc-1155-metadata-uri-json-schema
-
-        attributes: [
-          {
-            trait_type: "your trait here text",
-            value: "replace me",
-          },
-        ],
-      };
-    };
-  }, [ref]);
-}
 
 export default CustomStyle;

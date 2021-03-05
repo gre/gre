@@ -761,6 +761,11 @@ gauge@~2.7.3:
     strip-ansi "^3.0.1"
     wide-align "^1.1.0"
 
+gifenc@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/gifenc/-/gifenc-1.0.2.tgz#6228b94cbff047dd71cdcb31ce58829cc942230c"
+  integrity sha512-aA0ZGsAnfj4H27Yg+/HKC7DQ+OwLegf9MrWtHwFDgLbAasA96jne93gSNrgukzT+w451ZzbB/hVmfkf/7qmg9g==
+
 github-from-package@0.0.0:
   version "0.0.0"
   resolved "https://registry.yarnpkg.com/github-from-package/-/github-from-package-0.0.0.tgz#97fb5d96bfde8973313f20e8288ef9a167fa64ce"
