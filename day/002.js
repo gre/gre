@@ -4,6 +4,12 @@ import { Shaders, Node, GLSL } from "gl-react";
 export const n = 2;
 export const title = "stripes";
 
+export const gifSize = 400;
+export const gifStart = 0;
+export const gifEnd = 60;
+export const gifFramePerSecond = 24;
+export const gifSpeed = 1;
+
 export const Shader = ({ time }) => (
   <Node shader={shaders.node} uniforms={{ time }} />
 );
@@ -14,6 +20,8 @@ const shaders = Shaders.create({
 precision highp float;
 varying vec2 uv;
 uniform float time;
+
+#define GIF
  
 float shape (vec2 p, float d) {
   float t = 0.5 + time * 0.05;
@@ -31,12 +39,23 @@ float shape (vec2 p, float d) {
 }
 
 void main() {
-  gl_FragColor = vec4(
-    shape(uv, -1.),
-    shape(uv, 0.),
-    shape(uv, 1.),
-    1.0
-  );
+  vec3 c = vec3(0.);
+  for (float x=-.5; x<=.5; x += 1.) {
+    for (float y=-.5; y<=.5; y += 1.) {
+      vec2 uvP = uv;
+      uvP += vec2(x, y) / 800.0;
+      c += vec3(
+        shape(uvP, -1.),
+        shape(uvP, 0.),
+        shape(uvP, 1.)
+      );
+    }
+  }
+  c /= 4.;
+  #ifdef GIF
+  c *= smoothstep(60., 59., time) * smoothstep(0., 1., time);
+  #endif
+  gl_FragColor = vec4(c, 1.0);
 }`,
   },
 });
