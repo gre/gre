@@ -7,7 +7,7 @@ export const title = "Virus v2";
 
 export const gifSize = 400;
 export const gifStart = 0;
-export const gifEnd = 30;
+export const gifEnd = 20;
 export const gifFramePerSecond = 24;
 export const gifSpeed = 0.8;
 
@@ -24,7 +24,7 @@ uniform float time;
 
 #define PI ${Math.PI}
 
-float t = 2. * PI * time / 30.0;
+float t = 2. * PI * time / 20.0;
 
 mat2 rot (float a) {
   float c = cos(a);
@@ -113,8 +113,8 @@ float SDF(vec3 p) {
   p += 50.;
   p = opRep(p, vec3(7.4, 5.4, 6.));
   p *= 2.0;
-  p.z *= 10.0 * smoothstep(10., 0., abs(mod(time, 30.0)-15.));
-  p.z += 10.0 * abs(mod(time, 1.0)) * smoothstep(0., 10., abs(mod(time, 30.0)-15.));
+  p.z *= 10.0 * smoothstep(5., 0., abs(mod(time, 30.0)-10.));
+  p.z += 10.0 * abs(mod(time, 1.0)) * smoothstep(0., 5., abs(mod(time, 30.0)-10.));
   s = opSmoothUnion(s, sdVirus(p, gp), 1.0);
   return s;
 }

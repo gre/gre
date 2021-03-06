@@ -6,6 +6,14 @@ import { Blur } from "./Blur";
 export const n = 27;
 export const title = "real burning ship";
 
+export const gifSize = 400;
+export const gifStart = 0;
+export const gifEnd = 60;
+export const gifFramePerSecond = 12;
+export const gifSpeed = 2;
+
+const GIF = 0;
+
 export const Shader = ({ time }) => {
   return (
     <LinearCopy>
@@ -48,6 +56,8 @@ precision highp float;
 varying vec2 uv;
 uniform float time;
 
+float tt = time;
+
 void pR(inout vec2 p, float a) {
 	p = cos(a)*p + sin(a)*vec2(p.y, -p.x);
 }
@@ -62,7 +72,7 @@ vec3 color (float t) {
     vec3(.5),
     vec3(.5),
     vec3(1.),
-    vec3(.7, .2 + min(.1, .01 * time), .2)
+    vec3(.7, .2 + min(.1, .01 * tt), .2)
   );
 }
 
@@ -71,7 +81,7 @@ float mandelbrot (vec2 init) {
   for (float iter = 0.; iter < 400.; iter += 1.) {
     p = vec2(
       p.x * p.x - p.y * p.y,
-      2. * abs(p.x * p.y) + 0.0003 * time
+      2. * abs(p.x * p.y) + 0.0003 * tt
     ) + init;
     if (length(p) >= 2.0) {
       return iter / 400.;
@@ -85,10 +95,14 @@ void main() {
   vec2 init = 2. * (uv - .5) / zoom;
   init.x *= -1.;
   pR(init, -3.14);
-  init += vec2(-1.76, -.03 - 0.0003 * time);
+  init += vec2(-1.76, -.03 - 0.0003 * tt);
   float f = mandelbrot(init);
   vec3 clr = color(f); // vec3(1.-pow(f, 0.5)))
   vec3 c = mix(clr, vec3(0.), step(f, -0.1));
+
+  #if ${GIF}
+  c *= smoothstep(59., 58., time);
+  #endif
   gl_FragColor = vec4(c, 1.0);
 }
 `,

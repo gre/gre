@@ -68,6 +68,7 @@ export function Capture({
   const ref = useRef();
   const totalFrames = Math.floor(((end - start) * framePerSecond) / speed);
   const [frame, setFrame] = useState(0);
+  const [ready, setReady] = useState(false);
   const time = start + (end - start) * (frame / totalFrames);
 
   const [recorder] = useState(() => {
@@ -92,8 +93,11 @@ export function Capture({
     let index;
     let gif;
     let frame = 0;
+    let ready = false;
 
-    function onDraw() {
+    let onDraw = () => {
+      if (!ready) return;
+
       const { width, height, data } = capture();
       if (!gif) {
         gif = GIFEncoder();
@@ -111,16 +115,28 @@ export function Capture({
       } else {
         setFrame(++frame);
       }
-    }
+    };
+
+    let onLoad = () => {
+      ready = true;
+      setReady(true);
+    };
 
     return {
       onDraw,
+      onLoad,
     };
   });
 
   return (
     <>
-      <Surface ref={ref} width={size} height={size} pixelRatio={1}>
+      <Surface
+        onLoad={recorder.onLoad}
+        ref={ref}
+        width={size}
+        height={size}
+        pixelRatio={1}
+      >
         <NearestCopy onDraw={recorder.onDraw}>
           <Day.Shader time={time} />
         </NearestCopy>

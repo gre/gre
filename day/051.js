@@ -5,6 +5,12 @@ import { Shaders, Node, GLSL, LinearCopy, Uniform } from "gl-react";
 export const n = 51;
 export const title = "symmetry chess";
 
+export const gifSize = 400;
+export const gifStart = 0;
+export const gifEnd = 20;
+export const gifFramePerSecond = 24;
+export const gifSpeed = 1;
+
 export const Shader = ({ time }) => (
   <Node
     shader={shaders.node}
@@ -211,7 +217,7 @@ vec3 lighting (HIT hit, vec3 p, vec3 n, vec3 dir) {
       * softshadow(p, lamp2dir, 0.02, 4., 32.)
     + specular(n, hit.y, lamp2dir, dir, 20.)
   );
-  vec3 lamp3 = vec3(0., 1.5 + cos(time), 10.);
+  vec3 lamp3 = vec3(0., 1.5 + cos(2. * PI * time), 10.);
   vec3 lamp3dir = normalize(lamp3 - p);
   c +=
     vec3(.5) * (
@@ -416,17 +422,29 @@ mat3 lookAt (vec3 ro, vec3 ta) {
 }
 
 void main() {
-  float zoom = 4. + sin(.1 * time);
+  float zoom = 4. + sin(2. * PI * .05 * time);
   origin = vec3(
-    zoom * cos(.2 * time),
-    1.6 + cos(.3 * time),
-    zoom * sin(.2 * time)
+    zoom * cos(.1 * 2. * PI * time),
+    1.6 + cos(.1 * 2. * PI * time),
+    zoom * sin(.1 * 2. * PI * time)
   );
   vec3 c = vec3(0.);
-  vec2 dt = vec2(0.);
-  vec2 uvP = uv + dt;
-  vec3 dir = normalize(vec3(uvP - .5, .8));
-  dir = lookAt(origin, vec3(0., 1.6, 0.)) * dir;
+  vec3 dir;
+  vec2 uvP = uv;
+
+  #if 0
+  for (float x=-.5; x<=.5; x += 1.) {
+    for (float y=-.5; y<=.5; y += 1.) {
+      uvP = uv + vec2(x, y) / 800.0;
+  #endif
+      dir = normalize(vec3(uvP - .5, .8));
+      dir = lookAt(origin, vec3(0., 1.6, 0.)) * dir;
+
+  #if 0
+    }
+  }
+  c /= 4.0;
+  #endif
 
   // debug ortho camera
   #if 0
