@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Shaders, Node, GLSL } from "gl-react";
+import { Shaders, Node, GLSL, Uniform } from "gl-react";
 import MersenneTwister from "mersenne-twister";
 
 /*
@@ -25,7 +25,7 @@ export const styleMetadata = {
   creator_name: "greweb",
   options: {
     // comment seed when going production!
-    // seed: 0.5, // this was used for debug
+    seed: -4, // this was used for debug
     travel: 0.1,
     love: 0.5,
     dark: 0.1,
@@ -40,6 +40,7 @@ precision highp float;
 in vec2 uv;
 out vec4 color;
 
+uniform vec2 resolution;
 uniform float love, travel, dark;
 uniform float s1, s2, s3, s4, s5, s6, s7, s8, s9;
 
@@ -94,13 +95,16 @@ vec3 shade (vec2 uv) {
   init += focusAmp * vec2(cos(focusAngle), sin(focusAngle));
   return pal(pow(run(init), .5));
 }
+
 void main() {
+  vec2 ratio = resolution / min(resolution.x, resolution.y);
+  vec2 uvRatio = 0.5 + (uv - 0.5) * ratio;
   vec3 c = vec3(0.);
   float total = 0.0;
   for (float x=-.5; x<=.5; x += 1.) {
     for (float y=-.5; y<=.5; y += 1.) {
-      vec2 uvP = uv;
-      uvP += vec2(x, y) / 1024.0;
+      vec2 uvP = uvRatio;
+      uvP += 0.5 * vec2(x, y) / resolution;
       c += shade(uvP);
       total += 1.0;
     }
@@ -154,6 +158,7 @@ const CustomStyle = ({
     <Node
       shader={shaders.main}
       uniforms={{
+        resolution: Uniform.Resolution,
         love,
         travel,
         dark,

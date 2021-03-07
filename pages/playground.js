@@ -19,6 +19,10 @@ const store = proxy({
   ...BlockArt.styleMetadata,
 });
 
+const seed = BlockArt.styleMetadata.options.seed || 0;
+const shouldAutoSeed = seed < 0 && -seed % 2 == 0;
+const shouldBeMinimal = seed < 0 && (-seed >> 1) % 2 == 0;
+
 export default function Home() {
   const { ref, width, height } = useDimensions({});
   const [blockNumber, setBlockNumber] = useState(1);
@@ -36,9 +40,9 @@ export default function Home() {
   });
 
   useEffect(() => {
-    let i = setInterval(() => {
-      let m = mods.find((m) => m.key === "seed");
-      if (m) {
+    const m = mods.find((m) => m.key === "seed");
+    const i = setInterval(() => {
+      if (m && shouldAutoSeed) {
         m.set(Math.random());
       }
     }, 1000);
@@ -55,19 +59,28 @@ export default function Home() {
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <Main>
-          <Header>
-            <h1>{BlockArt.styleMetadata.name}</h1>
-            <p style={{ maxWidth: 800 }}>
-              {BlockArt.styleMetadata.description}
-            </p>
-          </Header>
+          {shouldBeMinimal ? null : (
+            <Header>
+              <h1>{BlockArt.styleMetadata.name}</h1>
+              <p style={{ maxWidth: 800 }}>
+                {BlockArt.styleMetadata.description}
+              </p>
+            </Header>
+          )}
           <div style={{ display: "flex", flexDirection: "row" }}>
             <div
               ref={ref}
-              style={{
-                width: "60vw",
-                height: "60vw",
-              }}
+              style={
+                shouldBeMinimal
+                  ? {
+                      width: "100vw",
+                      height: "100vh",
+                    }
+                  : {
+                      width: "60vw",
+                      height: "60vw",
+                    }
+              }
             >
               <EthBlockArtVisual
                 width={width}
@@ -78,14 +91,36 @@ export default function Home() {
                 attributesRef={attributesRef}
               />
             </div>
-            <Sidebar
-              blocks={blocks}
-              blockNumber={blockNumber}
-              attributes={attributesRef.current || {}}
-              mods={mods}
-              handleBlockChange={(i) => setBlockNumber(i)}
-            />
+            <div
+              style={shouldBeMinimal ? { position: "fixed", right: 0 } : null}
+            >
+              <Sidebar
+                blocks={blocks}
+                blockNumber={blockNumber}
+                attributesRef={attributesRef}
+                mods={mods}
+                handleBlockChange={(i) => setBlockNumber(i)}
+              />
+            </div>
           </div>
+          {!shouldBeMinimal ? null : (
+            <div
+              style={{
+                color: "#666",
+                position: "fixed",
+                bottom: 0,
+                padding: 10,
+              }}
+            >
+              <span>
+                {width}x{height}
+              </span>{" "}
+              <strong>{BlockArt.styleMetadata.name}</strong>{" "}
+              <em style={{ fontSize: "0.8em" }}>
+                {BlockArt.styleMetadata.description}
+              </em>
+            </div>
+          )}
         </Main>
       </Container>
     </Global>

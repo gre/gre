@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ControlSlider from "./ControlSlider";
 
 const Sidebar = function ({
   mods,
   blockNumber,
   blocks,
-  attributes,
+  attributesRef,
   handleBlockChange,
 }) {
   const [isVisible, toggleVisibility] = useState(true);
@@ -13,16 +13,25 @@ const Sidebar = function ({
     toggleVisibility(!isVisible);
   };
 
+  const [attributes, setAttributes] = useState({});
+  useEffect(() => {
+    const i = setInterval(() => {
+      setAttributes(attributesRef.current());
+    }, 100);
+    return () => clearInterval(i);
+  }, []);
+
   return (
     <>
       <style jsx global>
         {`
           .sidebar {
-            width: 225px;
+            width: 200px;
             border-left: #e0e0e0 1px solid;
             background-color: #fff;
             margin-right: 0px;
             transition: margin-right 0.3s ease-in-out;
+            opacity: 0.4;
           }
 
           .sidebar.hidden {
@@ -31,13 +40,12 @@ const Sidebar = function ({
 
           .sidebar .toggle-button {
             position: fixed;
-            top: 0px;
-            right: 0px;
+            top: 10px;
+            right: 10px;
             display: inline-block;
             width: 20px;
             height: 20px;
             cursor: pointer;
-            padding: 10px;
             z-index: 1;
           }
 
@@ -84,7 +92,12 @@ const Sidebar = function ({
 
       <div className={`sidebar ${isVisible ? "" : "hidden"}`}>
         <div className="toggle-button" onClick={handleToggleVisibility}>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 484.4 479.2">
+          <svg
+            width="20"
+            height="20"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 484.4 479.2"
+          >
             <path d="M382.4 479.2h102V0h-102v479.2zM338 239.6L206.1 126.3v64.9H0v97.9h206.1V353" />
           </svg>
         </div>

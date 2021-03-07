@@ -9,7 +9,7 @@ const ControlSlider = function (props) {
     <>
       <style jsx global>{`
         .control-slider {
-          margin: 5px 0;
+          margin: 0;
           font-size: 12px;
         }
 
@@ -124,7 +124,6 @@ const ControlSlider = function (props) {
       <div className="control-slider">
         <label>{props.controlLabel}</label>
         <div className="control-input">
-          <div className="value-label">{props.modValue}</div>
           <input
             id="controlSlider"
             type="range"
