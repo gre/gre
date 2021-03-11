@@ -1,16 +1,16 @@
-import Head from "next/head";
-import { Surface } from "gl-react-dom";
+
+
 import { Shaders, Node, GLSL, LinearCopy, Uniform } from "gl-react";
 import { Blur } from "./Blur";
 
 export const n = 27;
 export const title = "real burning ship";
 
-export const gifSize = 400;
-export const gifStart = 0;
-export const gifEnd = 60;
-export const gifFramePerSecond = 12;
-export const gifSpeed = 2;
+export const exportSize = 400;
+export const exportStart = 0;
+export const exportEnd = 60;
+export const exportFramePerSecond = 12;
+export const exportSpeed = 2;
 
 const GIF = 0;
 

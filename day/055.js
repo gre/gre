@@ -1,9 +1,16 @@
-import Head from "next/head";
-import { Surface } from "gl-react-dom";
+
+
 import { Shaders, Node, GLSL, LinearCopy, Uniform } from "gl-react";
 
+const GIF = 0;
 export const n = 55;
 export const title = "cube d'or";
+
+export const exportSize = 400;
+export const exportStart = 0;
+export const exportEnd = 20;
+export const exportFramePerSecond = 24;
+export const exportSpeed = 1;
 
 export const Shader = ({ time }) => (
   <Node
@@ -184,9 +191,9 @@ HIT map (vec3 p) {
 }
 
 void main() {
-  float t = .5 * time;
+  float t = .2 * PI * time;
   float zoom = .4;
-  float h = cos(.3 * t);
+  float h = cos(.5 * t);
   origin = zoom * vec3(
     4. * cos(t),
     2.5 + h,
@@ -194,12 +201,24 @@ void main() {
   );
   vec3 focus = vec3(0., .5 + .5 * h, 0.);
   vec3 c = vec3(0.);
-  vec3 dir = normalize(vec3(uv - .5, 1.));
-  dir = lookAt(origin, focus) * dir;
-  vec3 p = origin;
-  HIT hit = marcher(p, dir);
-  vec3 n = normal(p);
-  c += lighting(hit, p, n, dir);
+
+  vec2 uvP = uv;
+  #if ${GIF}
+  for (float x=-.5; x<=.5; x += 1.) {
+    for (float y=-.5; y<=.5; y += 1.) {
+      uvP = uv + vec2(x, y) / 800.0;
+  #endif
+      vec3 dir = normalize(vec3(uvP - .5, 1.));
+      dir = lookAt(origin, focus) * dir;
+      vec3 p = origin;
+      HIT hit = marcher(p, dir);
+      vec3 n = normal(p);
+      c += lighting(hit, p, n, dir);
+  #if ${GIF}
+    }
+  }
+  c /= 4.;
+  #endif
   color = vec4(c, 1.0);
 }`,
   },

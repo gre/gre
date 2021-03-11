@@ -1,14 +1,14 @@
-import Head from "next/head";
+
 import { Shaders, Node, GLSL } from "gl-react";
 
 export const n = 2;
 export const title = "stripes";
 
-export const gifSize = 400;
-export const gifStart = 0;
-export const gifEnd = 60;
-export const gifFramePerSecond = 24;
-export const gifSpeed = 1;
+export const exportSize = 400;
+export const exportStart = 0;
+export const exportEnd = 60;
+export const exportFramePerSecond = 24;
+export const exportSpeed = 1;
 
 export const Shader = ({ time }) => (
   <Node shader={shaders.node} uniforms={{ time }} />

@@ -57,6 +57,8 @@ async function loadImage(url) {
 }
 
 export function Capture({
+  format,
+  n,
   Day,
   onFinished,
   size,
@@ -72,7 +74,7 @@ export function Capture({
   const time = start + (end - start) * (frame / totalFrames);
 
   const [recorder] = useState(() => {
-    function capture() {
+    function captureNDArray() {
       const nda = ref.current.capture();
       const {
         shape: [height, width],
@@ -94,26 +96,93 @@ export function Capture({
     let gif;
     let frame = 0;
     let ready = false;
+    let worker;
+    let images;
 
     let onDraw = () => {
       if (!ready) return;
 
-      const { width, height, data } = capture();
-      if (!gif) {
-        gif = GIFEncoder();
-      }
-      palette = quantize(data, 256);
-      index = applyPalette(data, palette);
-      gif.writeFrame(index, width, height, {
-        palette,
-        delay: 1000 / framePerSecond,
-      });
+      if (format === "gif") {
+        const { width, height, data } = captureNDArray();
+        if (!gif) {
+          gif = GIFEncoder();
+        }
+        palette = quantize(data, 256);
+        index = applyPalette(data, palette);
+        gif.writeFrame(index, width, height, {
+          palette,
+          delay: 1000 / framePerSecond,
+        });
 
-      if (frame >= totalFrames) {
-        gif.finish();
-        onFinished(gif.bytes());
+        if (frame >= totalFrames) {
+          gif.finish();
+          onFinished(new Blob([gif.bytes()], { type: "image/gif" }));
+        } else {
+          setFrame(++frame);
+        }
       } else {
-        setFrame(++frame);
+        if (!worker) {
+          worker = new Worker("/ffmpeg-worker-mp4.js");
+          images = [];
+        }
+        const imageStr = ref.current.captureAsDataURL("image/jpeg", 1);
+        const data = convertDataURIToBinary(imageStr);
+        images.push({
+          name: "img" + frame.toString().padStart(4, 0) + ".jpeg",
+          data,
+        });
+
+        if (frame >= totalFrames) {
+          let start_time = Date.now();
+          worker.onmessage = function (e) {
+            var msg = e.data;
+            switch (msg.type) {
+              case "stdout":
+              case "stderr":
+                console.log(msg.data);
+                break;
+              case "exit":
+                console.log("Process exited with code " + msg.data);
+                // worker.terminate();
+                break;
+
+              case "done":
+                console.log("reached done");
+                const blob = new Blob([msg.data.MEMFS[0].data], {
+                  type: "video/mp4",
+                });
+                onFinished(blob);
+                break;
+            }
+          };
+
+          // https://trac.ffmpeg.org/wiki/Slideshow
+          // https://semisignal.com/tag/ffmpeg-js/
+          worker.postMessage({
+            type: "run",
+            TOTAL_MEMORY: 268435456,
+            arguments: [
+              "-r",
+              String(framePerSecond),
+              "-i",
+              "img%04d.jpeg",
+              "-c:v",
+              "libx264",
+              "-crf",
+              "1",
+              //"-vf",
+              //"scale=150:150",
+              "-pix_fmt",
+              "yuv420p",
+              "-vb",
+              Day.exportMP4vb || "5M",
+              "out.mp4",
+            ],
+            MEMFS: images,
+          });
+        } else {
+          setFrame(++frame);
+        }
       }
     };
 
@@ -131,6 +200,7 @@ export function Capture({
   return (
     <>
       <Surface
+        webglContextAttributes={{ preserveDrawingBuffer: true }}
         onLoad={recorder.onLoad}
         ref={ref}
         width={size}
@@ -138,7 +208,7 @@ export function Capture({
         pixelRatio={1}
       >
         <NearestCopy onDraw={recorder.onDraw}>
-          <Day.Shader time={time} />
+          <Day.Shader exporting time={time} n={n} />
         </NearestCopy>
       </Surface>
       {frame + " / " + totalFrames}
@@ -146,7 +216,7 @@ export function Capture({
   );
 }
 
-export function Previewing({ Day, start, end, framePerSecond, speed }) {
+export function Previewing({ n, Day, start, end, framePerSecond, speed }) {
   const [time, setTime] = useState(0);
   useEffect(() => {
     let startT;
@@ -169,7 +239,7 @@ export function Previewing({ Day, start, end, framePerSecond, speed }) {
   return (
     <>
       <Surface width={400} height={400}>
-        <Day.Shader time={t} />
+        <Day.Shader exporting time={t} n={n} />
       </Surface>
       {t.toFixed(3)}
     </>
@@ -177,12 +247,12 @@ export function Previewing({ Day, start, end, framePerSecond, speed }) {
 }
 
 export default function Home({ day }) {
+  const [n, setN] = useState(0);
   const [capturing, setCapturing] = useState();
   const Day = findDay(parseInt(day, 10));
   if (!Day) return null;
 
-  function download(buf, filename, type) {
-    const blob = buf instanceof Blob ? buf : new Blob([buf], { type });
+  function download(blob, filename) {
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement("a");
     anchor.href = url;
@@ -190,16 +260,16 @@ export default function Home({ day }) {
     anchor.click();
   }
 
-  function onFinished(r) {
-    setCapturing(false);
-    download(r, "shaderday_" + day + ".gif", "image/gif");
+  function onFinished(blob) {
+    download(blob, "shaderday_" + day + "_" + n + "." + capturing);
+    setCapturing(null);
   }
 
-  const start = Day.gifStart || 0;
-  const end = Day.gifEnd || 1;
-  const framePerSecond = Day.gifFramePerSecond || 24;
-  const speed = Day.gifSpeed || 1;
-  const size = Day.gifSize || 800;
+  const start = Day.exportStart || 0;
+  const end = Day.exportEnd || 1;
+  const framePerSecond = Day.exportFramePerSecond || 24;
+  const speed = Day.exportSpeed || 1;
+  const size = Day.exportSize || 800;
 
   return (
     <Global>
@@ -215,6 +285,8 @@ export default function Home({ day }) {
           <SubTitleExport Day={Day} />
           {capturing ? (
             <Capture
+              format={capturing}
+              n={n}
               start={start}
               end={end}
               framePerSecond={framePerSecond}
@@ -225,6 +297,7 @@ export default function Home({ day }) {
             />
           ) : (
             <Previewing
+              n={n}
               start={start}
               end={end}
               framePerSecond={framePerSecond}
@@ -232,9 +305,29 @@ export default function Home({ day }) {
               Day={Day}
             />
           )}
-          <button onClick={() => setCapturing(true)}>generate</button>
+          <input
+            style={{ margin: 10 }}
+            value={n}
+            range={1}
+            onChange={(e) => setN(parseInt(e.target.value, 10))}
+            type="number"
+          ></input>
+          <button onClick={() => setCapturing("gif")}>gif</button>
+          <button onClick={() => setCapturing("mp4")}>mp4</button>
         </Main>
       </Container>
     </Global>
   );
+}
+
+function convertDataURIToBinary(dataURI) {
+  var base64 = dataURI.replace(/^data[^,]+,/, "");
+  var raw = window.atob(base64);
+  var rawLength = raw.length;
+
+  var array = new Uint8Array(new ArrayBuffer(rawLength));
+  for (let i = 0; i < rawLength; i++) {
+    array[i] = raw.charCodeAt(i);
+  }
+  return array;
 }

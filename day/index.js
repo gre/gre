@@ -55,6 +55,7 @@ import * as Day054 from "./054";
 import * as Day055 from "./055";
 import * as Day056 from "./056";
 import * as Day057 from "./057";
+import * as Day058 from "./058";
 
 const days = [
   Day001,
@@ -114,6 +115,7 @@ const days = [
   Day055,
   Day056,
   Day057,
+  Day058,
 ];
 
 import * as Day099 from "./ideas/099";

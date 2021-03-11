@@ -1,4 +1,4 @@
-import Head from "next/head";
+
 import { Shaders, Node, GLSL } from "gl-react";
 
 export const n = 3;

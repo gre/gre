@@ -1,5 +1,5 @@
-import Head from "next/head";
-import { Surface } from "gl-react-dom";
+
+
 import { Shaders, Node, GLSL } from "gl-react";
 
 export const n = 11;

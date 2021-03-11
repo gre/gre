@@ -1,15 +1,13 @@
-import Head from "next/head";
-import { Surface } from "gl-react-dom";
 import { Shaders, Node, GLSL, LinearCopy, Uniform } from "gl-react";
 
 export const n = 51;
 export const title = "symmetry chess";
 
-export const gifSize = 400;
-export const gifStart = 0;
-export const gifEnd = 20;
-export const gifFramePerSecond = 24;
-export const gifSpeed = 1;
+export const exportSize = 400;
+export const exportStart = 0;
+export const exportEnd = 20;
+export const exportFramePerSecond = 24;
+export const exportSpeed = 1;
 
 export const Shader = ({ time }) => (
   <Node

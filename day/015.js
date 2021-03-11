@@ -1,5 +1,5 @@
-import Head from "next/head";
-import { Surface } from "gl-react-dom";
+
+
 import { Shaders, Node, GLSL, Uniform, LinearCopy } from "gl-react";
 import { Blur } from "./Blur";
 // Kudos to 0xB0nnaz for the idea and the formula

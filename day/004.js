@@ -1,4 +1,4 @@
-import Head from "next/head";
+
 import { Shaders, Node, GLSL, LinearCopy, NearestCopy } from "gl-react";
 import { GameOfLife } from "./GameOfLife";
 

@@ -1,15 +1,15 @@
-import Head from "next/head";
-import { Surface } from "gl-react-dom";
+
+
 import { Shaders, Node, GLSL } from "gl-react";
 
 export const n = 9;
 export const title = "Virus";
 
-export const gifSize = 400;
-export const gifStart = 16.3;
-export const gifEnd = 26;
-export const gifFramePerSecond = 24;
-export const gifSpeed = 0.8;
+export const exportSize = 400;
+export const exportStart = 16.3;
+export const exportEnd = 26;
+export const exportFramePerSecond = 24;
+export const exportSpeed = 0.8;
 
 export const Shader = ({ time }) => (
   <Node shader={shaders.node} uniforms={{ time }} />

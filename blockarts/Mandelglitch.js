@@ -25,7 +25,7 @@ export const styleMetadata = {
   creator_name: "greweb",
   options: {
     // comment seed when going production!
-    // seed: -4, // this was used for debug
+    seed: -1, // this was used for debug
     travel: 0.1,
     love: 0.5,
     dark: 0.1,

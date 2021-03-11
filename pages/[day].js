@@ -51,7 +51,7 @@ export default function Home({ day }) {
           </Header>
           <Visual Day={Day} />
           <SourceCodeFooter Day={Day} />
-          <LiveFooter />
+          <LiveFooter Day={Day} />
         </Main>
       </Container>
     </Global>

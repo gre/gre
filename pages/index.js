@@ -26,7 +26,7 @@ export default function Home() {
           </Header>
           <Visual Day={Day} />
           <SourceCodeFooter Day={Day} />
-          <LiveFooter />
+          <LiveFooter Day={Day} />
         </Main>
       </Container>
     </Global>
