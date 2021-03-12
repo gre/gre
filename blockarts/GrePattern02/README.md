@@ -1,0 +1,7 @@
+## Pattern 02 – designed for ethblock.art
+
+[source code](index.js)
+
+> Welcome to the realm of hexagonal & triangular patterns. Have fun exploring the great variety of patterns and color palettes. The block hash drives the main shape, creators are able to finetune things. Many colors at same time is uncommon, Grayscale is rare, and as in Pattern 01, good luck to mint a GOLD pattern!
+
+<img width="200" src="1.png"/> <img width="200" src="2.png"/> <img width="200" src="3.png"/> <img width="200" src="4.png"/> <img width="200" src="5.png"/> <img width="200" src="6.png"/> <img width="200" src="7.png"/> <img width="200" src="8.png"/> <img width="200" src="9.png"/> <img width="200" src="a.png"/> <img width="200" src="z.png"/> <img width="200" src="e.png"/> <img width="200" src="r.png"/> <img width="200" src="t.png"/> <img width="200" src="y.png"/> <img width="200" src="u.png"/> <img width="200" src="i.png"/> <img width="200" src="o.png"/> <img width="200" src="p.png"/> <img width="200" src="m.png"/> <img width="200" src="l.png"/> <img width="200" src="k.png"/> <img width="200" src="j.png"/> <img width="200" src="h.png"/> <img width="200" src="g.png"/> <img width="200" src="f.png"/> <img width="200" src="d.png"/> <img width="200" src="s.png"/> <img width="200" src="q.png"/> <img width="200" src="w.png"/> <img width="200" src="x.png"/> <img width="200" src="c.png"/> <img width="200" src="v.png"/> <img width="200" src="b.png"/> <img width="200" src="n.png"/>
