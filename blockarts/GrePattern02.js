@@ -2,21 +2,15 @@ import React, { useEffect } from "react";
 import { Shaders, Node, GLSL, Uniform } from "gl-react";
 import MersenneTwister from "mersenne-twister";
 
-/*
-Rarity Features
-
-Styles
-
-*/
-
 export const styleMetadata = {
   name: "Pattern 02",
-  description: "",
+  description:
+    "Welcome to the realm of hexagonal & triangular patterns. Have fun exploring the great variety of patterns and color palettes. The block hash drives the main shape, creators are able to finetune things. Many colors at same time is uncommon, Grayscale is rare, and as in Pattern 01, good luck to mint a GOLD pattern!",
   image: "",
   creator_name: "greweb",
   options: {
     // comment seed when going production!
-    seed: -2, // this was used for debug
+    // seed: -3, // this was used for debug
     tune: 0.5,
     zoom: 0.5,
     mood: 0.05,
@@ -87,7 +81,7 @@ vec3 pal (float t) {
       step(s7, 0.9)
     );
     c = mix(
-      (1. + s1) * vec3(1.3, 1.0, 0.1) * (c + 0.4 * (mood-0.5)),
+      (0.5 + t + mood) * (vec3(1.0, 0.8, 0.0) + 0.5 * mood),
       c,
       step(s7, 0.99)
     );
@@ -106,7 +100,7 @@ vec3 tile (vec2 p, float t) {
 vec3 shade (vec2 p, vec2 pAbs) {
   float frame = step(0.4 + 0.2 * pow(tune, 2.0), max(abs(pAbs.x-.5), abs(pAbs.y-.5)));
   pR(p, 10. * s4 + zoom);
-  vec2 g = p * (2. + 40. * pow(s3, ${ZOOM_POW.toFixed(
+  vec2 g = p * (2. + 30. * pow(s3, ${ZOOM_POW.toFixed(
     1
   )})) * (1. - 0.5 * zoom) + vec2(0.5 * zoom, s6);
   vec4 r = getHex(g);
@@ -183,7 +177,7 @@ const CustomStyle = ({
   const s8 = rng.random();
   const s9 = rng.random();
 
-  const mphase = Math.floor(3 - s7 * s7 + 5 * s8 * s8 * s8 * s8);
+  const mphase = Math.floor(3 - s9 * s9 + 5 * s8 * s8 * s8 * s8);
   const zoomFactor = Math.pow(s3, ZOOM_POW);
 
   useEffect(() => {
