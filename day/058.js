@@ -16,7 +16,12 @@ export const n = 58;
 export const title = "Mandelglitch";
 
 export const nfts = [
-  { url: "https://ethblock.art/create/17" },
+  { url: "https://ethblock.art/create/17", text: "Mint on ethblock.art" },
+  {
+    url:
+      "https://ghostmarket.io/asset/pha/ghost/3008841254969814369262311336331954453497120774334547905246474374493804042898/",
+    text: "ghostmarket.io: 400 KCAL",
+  },
   {
     url: "https://www.hicetnunc.xyz/objkt/3063",
     text: "hicetnunc.xyz: Mandelglitch #1 (5 XTZ)",

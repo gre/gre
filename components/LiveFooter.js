@@ -30,7 +30,7 @@ export function LiveFooter({ Day }) {
             {Day.nfts.map(({ url, text }) => {
               return (
                 <li>
-                  <a href={url}>{text || `Mint on ${new URL(url).host}`}</a>
+                  <a href={url}>{text}</a>
                 </li>
               );
             })}

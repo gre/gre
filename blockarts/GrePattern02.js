@@ -37,7 +37,7 @@ out vec4 color;
 uniform vec2 resolution;
 uniform float mood, tune, zoom, dephase;
 uniform float mphase;
-uniform float s1, s2, s3, s4, s5, s6;
+uniform float s1, s2, s3, s4, s5, s6, s7;
 
 const float PI = ${Math.PI};
 // https://iquilezles.org/www/articles/palettes/palettes.htm
@@ -73,13 +73,25 @@ void pR(inout vec2 p, float a) {
 //////
 vec3 pal (float t) {
   float d = dephase * s3 * 0.3 * length(uv-zoom);
-  return palette(
+  vec3 c = palette(
     t + (mood + 0.2 * d) * (1. + d),
     vec3(0.5),
     vec3(0.5 + mood),
     vec3(1., 0.5, 0.2),
     vec3(1., mod(s1, .4), s2)
   );
+    // grayscale
+    c = mix(
+      vec3(mod(t + s3, 1.0)),
+      c,
+      step(s7, 0.9)
+    );
+    c = mix(
+      (1. + s1) * vec3(1.3, 1.0, 0.1) * (c + 0.4 * (mood-0.5)),
+      c,
+      step(s7, 0.99)
+    );
+    return c;
 }
 
 vec3 tile (vec2 p, float t) {
@@ -105,18 +117,27 @@ vec3 shade (vec2 p, vec2 pAbs) {
   );
 }
 
-void main() {
+vec3 render(vec2 off) {
   vec3 c = vec3(0.);
   vec2 ratio = resolution / min(resolution.x, resolution.y);
   vec2 uvRatio = 0.5 + (uv - 0.5) * ratio;
   for (float x=-.5; x<=.5; x += 1.) {
     for (float y=-.5; y<=.5; y += 1.) {
       vec2 d = 0.5 * vec2(x,y) / resolution;
-      vec2 p = uvRatio - .5 + d;
+      vec2 p = uvRatio - .5 + d + off;
       c += shade(p, uv + d);
     }
   }
   c /= 4.0;
+  return c;
+}
+
+void main() {
+  float dt = 0.02 * max(0., 0.5 * s7 * s7 + dephase - 0.5);
+  vec3 c1 = render(vec2(-dt, 0.));
+  vec3 c2 = render(vec2(0., 0.));
+  vec3 c3 = render(vec2(dt, 0.));
+  vec3 c = vec3(c1.r, c2.g, c3.b);
   color = vec4(c, 1.0);
 }
   `,
@@ -164,37 +185,45 @@ const CustomStyle = ({
 
   const mphase = Math.floor(3 - s7 * s7 + 5 * s8 * s8 * s8 * s8);
   const zoomFactor = Math.pow(s3, ZOOM_POW);
-  const words = [];
-  if (zoomFactor > 0.1) {
-    if (zoomFactor < 0.15) {
-      words.push("multi");
-    } else if (zoomFactor < 0.3) {
-      words.push("mega");
-    } else if (zoomFactor < 0.6) {
-      words.push("ultra");
-    } else {
-      words.push("noisy");
-    }
-  }
-  words.push(mphasesWord[mphase] || "");
-  const attributes = [
-    {
-      trait_type: "Modulo",
-      value: mphase,
-    },
-    {
-      trait_type: "Mood",
-      value: words.join(" "),
-    },
-  ];
-
-  console.log(words.join(" "));
 
   useEffect(() => {
+    const words = [];
+    if (zoomFactor > 0.1) {
+      if (zoomFactor < 0.15) {
+        words.push("multi");
+      } else if (zoomFactor < 0.3) {
+        words.push("mega");
+      } else if (zoomFactor < 0.6) {
+        words.push("ultra");
+      } else {
+        words.push("noisy");
+      }
+    }
+    if (s7 > 0.99) {
+      words.push("gold");
+    } else if (s7 > 0.9) {
+      words.push("gray");
+    }
+    if (words.length > 0) {
+      words.push(mphasesWord[mphase] || "");
+    }
+    const attributes = [
+      {
+        trait_type: "Modulo",
+        value: mphase,
+      },
+    ];
+    if (words.length) {
+      attributes.push({
+        trait_type: "Mood",
+        value: words.join(" "),
+      });
+    }
+
     attributesRef.current = () => ({
       attributes,
     });
-  }, [attributes, attributesRef]);
+  }, [mphase, zoomFactor, s7, attributesRef]);
 
   return (
     <Node
@@ -212,6 +241,7 @@ const CustomStyle = ({
         s4,
         s5,
         s6,
+        s7,
         mphase,
       }}
     />
