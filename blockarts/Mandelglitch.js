@@ -35,10 +35,8 @@ export const styleMetadata = {
 const shaders = Shaders.create({
   main: {
     frag: GLSL`
-  #version 300 es
 precision highp float;
-in vec2 uv;
-out vec4 color;
+varying vec2 uv;
 
 uniform vec2 resolution;
 uniform float love, travel, dark;
@@ -63,7 +61,8 @@ vec3 pal (float t) {
 float run (vec2 init) {
   float iterations = 2. + 500. * pow(love, 2.0);
   vec2 p = init;
-  for (float iter = 0.; iter < iterations; iter += 1.) {
+  for (float iter = 0.; iter < 502.; iter += 1.) {
+    if (iter >= iterations) break;
     // original mandelbrot formula is: p = vec2(p.x * p.x - p.y * p.y, 2. * p.x * p.y) + init;
     float x2 = p.x * p.x;
     float y2 = p.y * p.y;
@@ -90,7 +89,7 @@ vec3 shade (vec2 uv) {
   float focusAngle = 4. * travel;
   float focusAmp = 0.4 * s7;
   vec2 init = 2. * (uv - .5) / zoom;
-  pR(init, PI * round(8. * s3) / 4.);
+  pR(init, PI * floor(0.5 + 8. * s3) / 4.);
   init -= vec2(.8, .0);
   init += focusAmp * vec2(cos(focusAngle), sin(focusAngle));
   return pal(pow(run(init), .5));
@@ -110,7 +109,7 @@ void main() {
     }
   }
   c /= total;
-  color = vec4(c, 1.0);
+  gl_FragColor = vec4(c, 1.0);
 }
   `,
   },

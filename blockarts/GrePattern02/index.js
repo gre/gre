@@ -23,10 +23,8 @@ const ZOOM_POW = 10;
 const shaders = Shaders.create({
   main: {
     frag: GLSL`
-  #version 300 es
 precision highp float;
-in vec2 uv;
-out vec4 color;
+varying vec2 uv;
 
 uniform vec2 resolution;
 uniform float mood, tune, zoom, dephase;
@@ -132,7 +130,7 @@ void main() {
   vec3 c2 = render(vec2(0., 0.));
   vec3 c3 = render(vec2(dt, 0.));
   vec3 c = vec3(c1.r, c2.g, c3.b);
-  color = vec4(c, 1.0);
+  gl_FragColor = vec4(c, 1.0);
 }
   `,
   },

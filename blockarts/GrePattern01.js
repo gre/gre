@@ -37,10 +37,8 @@ export const styleMetadata = {
 const shaders = Shaders.create({
   main: {
     frag: GLSL`
-  #version 300 es
 precision highp float;
-in vec2 uv;
-out vec4 color;
+varying vec2 uv;
 
 uniform float swap;
 uniform float lense;
@@ -95,7 +93,7 @@ void main() {
   for (float x=-.5; x<=.5; x += 1.) {
     for (float y=-.5; y<=.5; y += 1.) {
       vec2 uvP = uv;
-      uvP += vec2(x, y) * 0.02 * (0.1 + lense * lense);
+      uvP += vec2(x, y) * 0.02 * (0.01 + lense * lense);
       c += pal(shade(uvP));
     }
   }
@@ -109,7 +107,7 @@ void main() {
     gold
   );
 
-  color = vec4(c, 1.0);
+  gl_FragColor = vec4(c, 1.0);
 }
   `,
   },

@@ -1,3 +1,3 @@
-export * from "./GrePattern02";
-import Default from "./GrePattern02";
+export * from "./Mandelglitch";
+import Default from "./Mandelglitch";
 export default Default;
