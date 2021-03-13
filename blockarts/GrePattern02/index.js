@@ -114,11 +114,11 @@ vec3 shade (vec2 p, vec2 pAbs) {
 vec3 render(vec2 off) {
   vec3 c = vec3(0.);
   vec2 ratio = resolution / min(resolution.x, resolution.y);
-  vec2 uvRatio = 0.5 + (uv - 0.5) * ratio;
+  vec2 base = 0.5 + (uv - 0.5) * ratio - .4 + off;
   for (float x=-.5; x<=.5; x += 1.) {
     for (float y=-.5; y<=.5; y += 1.) {
       vec2 d = 0.5 * vec2(x,y) / resolution;
-      vec2 p = uvRatio - .5 + d + off;
+      vec2 p = base + d;
       c += shade(p, uv + d);
     }
   }
