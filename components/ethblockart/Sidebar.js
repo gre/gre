@@ -16,7 +16,7 @@ const Sidebar = function ({
   const [attributes, setAttributes] = useState({});
   useEffect(() => {
     const i = setInterval(() => {
-      setAttributes(attributesRef.current());
+      if (attributesRef.current) setAttributes(attributesRef.current());
     }, 100);
     return () => clearInterval(i);
   }, []);
