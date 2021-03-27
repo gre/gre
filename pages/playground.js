@@ -45,7 +45,7 @@ export default function Home() {
       if (m && shouldAutoSeed) {
         m.set(Math.random());
       }
-    }, 1000);
+    }, 5000);
     return () => {
       clearInterval(i);
     };

@@ -12,9 +12,9 @@ Rarity Features
 
 Styles
 
-- travel: makes you see dynamically navigate to other places
-- love: finetune the mandelbrot precision and coloring
-- dark: allows to explore a high variety of palettes. Going into darkness.
+- mod1: makes you see dynamically navigate to other places
+- mod2: finetune the mandelbrot precision and coloring
+- mod3: allows to explore a high variety of palettes. Going into darkness.
 */
 
 export const styleMetadata = {
@@ -26,9 +26,9 @@ export const styleMetadata = {
   options: {
     // comment seed when going production!
     seed: -1, // this was used for debug
-    travel: 0.1,
-    love: 0.5,
-    dark: 0.1,
+    mod1: 0.1,
+    mod2: 0.5,
+    mod3: 0.1,
   },
 };
 
@@ -39,7 +39,7 @@ precision highp float;
 varying vec2 uv;
 
 uniform vec2 resolution;
-uniform float love, travel, dark;
+uniform float mod2, mod1, mod3;
 uniform float s1, s2, s3, s4, s5, s6, s7, s8, s9;
 
 const float PI = ${Math.PI};
@@ -51,15 +51,15 @@ vec3 palette( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d ) {
 }
 vec3 pal (float t) {
   return palette(
-    t + 0.5 * dark * dark,
-    vec3(.85 - .5 * dark),
+    t + 0.5 * mod3 * mod3,
+    vec3(.85 - .5 * mod3),
     vec3(.5),
     vec3(1.),
     vec3(0.8 + 0.2 * s1, 0.2 * s2, .2)
   );
 }
 float run (vec2 init) {
-  float iterations = 2. + 500. * pow(love, 2.0);
+  float iterations = 2. + 500. * pow(mod2, 2.0);
   vec2 p = init;
   for (float iter = 0.; iter < 502.; iter += 1.) {
     if (iter >= iterations) break;
@@ -85,8 +85,8 @@ float run (vec2 init) {
   return 0.;
 }
 vec3 shade (vec2 uv) {
-  float zoom = (0.3 + 12. * s7 * s7 * s7) * (1. + 3. * travel);
-  float focusAngle = 4. * travel;
+  float zoom = (0.3 + 12. * s7 * s7 * s7) * (1. + 3. * mod1);
+  float focusAngle = 4. * mod1;
   float focusAmp = 0.4 * s7;
   vec2 init = 2. * (uv - .5) / zoom;
   pR(init, PI * floor(0.5 + 8. * s3) / 4.);
@@ -119,9 +119,9 @@ const CustomStyle = ({
   block,
   attributesRef,
   seed,
-  love,
-  travel,
-  dark,
+  mod2,
+  mod1,
+  mod3,
   lightness,
 }) => {
   const { hash } = block;
@@ -158,9 +158,9 @@ const CustomStyle = ({
       shader={shaders.main}
       uniforms={{
         resolution: Uniform.Resolution,
-        love,
-        travel,
-        dark,
+        mod2,
+        mod1,
+        mod3,
         lightness,
         s1,
         s2,

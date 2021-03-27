@@ -1,3 +1,3 @@
-export * from "./Mandelglitch";
-import Default from "./Mandelglitch";
+export * from "./CryptoAliens";
+import Default from "./CryptoAliens";
 export default Default;

@@ -1,9 +1,13 @@
-
-
 import { Shaders, Node, GLSL, LinearCopy, Uniform } from "gl-react";
 
 export const n = 49;
 export const title = "chinese lantern";
+
+export const exportSize = 400;
+export const exportStart = 0;
+export const exportEnd = 20;
+export const exportFramePerSecond = 24;
+export const exportSpeed = 1.1;
 
 export const Shader = ({ time }) => (
   <LinearCopy>
