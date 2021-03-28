@@ -115,15 +115,7 @@ void main() {
   },
 });
 
-const CustomStyle = ({
-  block,
-  attributesRef,
-  seed,
-  mod2,
-  mod1,
-  mod3,
-  lightness,
-}) => {
+const CustomStyle = ({ block, attributesRef, seed, mod2, mod1, mod3 }) => {
   const { hash } = block;
 
   const rng = new MersenneTwister(
@@ -161,7 +153,6 @@ const CustomStyle = ({
         mod2,
         mod1,
         mod3,
-        lightness,
         s1,
         s2,
         s3,

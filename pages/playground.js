@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { useState, useRef, useEffect } from "react";
 import useDimensions from "react-cool-dimensions";
-import { proxy, useProxy } from "valtio";
+import { proxy, useSnapshot } from "valtio";
 import { EthBlockArtVisual } from "../components/EthBlockArtVisual";
 import { LiveFooter } from "../components/LiveFooter";
 import { SubTitle } from "../components/SubTitle";
@@ -26,7 +26,7 @@ const shouldBeMinimal = seed < 0 && (-seed >> 1) % 2 == 0;
 export default function Home() {
   const { ref, width, height } = useDimensions({});
   const [blockNumber, setBlockNumber] = useState(1);
-  const snap = useProxy(store);
+  const snap = useSnapshot(store);
   const attributesRef = useRef();
 
   const mods = Object.keys(store.options).map((k) => {

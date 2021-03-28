@@ -1,42 +1,105 @@
+// @flow
 import React, { useEffect, useRef } from "react";
 import { Shaders, Node, GLSL, Uniform } from "gl-react";
+import { GameOfLife } from "../GameOfLife";
+import Mandelglitch from "../../blockarts/Mandelglitch";
 import MersenneTwister from "mersenne-twister";
-import Mandelglitch from "./Mandelglitch";
 
-// NB: IMPORTANT notes for integrator:
-// - i have to use WebGL2 otherwise v1 is just not performant enough. it means this blockstyle don't work in Safari. hopefully safari support WebGL2 later this year (it's experimental right now)
-// - you will need to see if it's ok to have a dependency from this block to Mandelglitch block.
-//   - if not, i can also embed the shader of Mandelglitch here, but essentially it's composition.
-// - you will need to inject "highQuality" props to true only when generating the snapshot to get a very good quality one (anti aliasing). doing it on real time controls is not recommended because perf.
+export const n = 424242;
+export const title = "CryptoAliens";
 
-export const styleMetadata = {
-  name: "CryptoAliens",
-  description:
-    "Every single Ethereum block yields a unique CryptoAliens creature. From the most adorable to the creepiest, which one are you going to chose? Raymarched in WebGL, every CryptoAliens take their texture from Mandelglitch's blockstyle which therefore share the same rarity scheme.",
-  image: "",
-  creator_name: "greweb",
-  options: {
-    // comment seed when going production!
-    // seed: 0, // this was used for debug
-    // highQuality: 0, // used for debug
-    mod1: 0.5,
-    mod2: 0.5,
-    mod3: 0.5,
-    mod4: 0.5,
-  },
+export const exportSize = 400;
+export const exportStart = 0;
+export const exportEnd = 10;
+export const exportFramePerSecond = 24;
+export const exportSpeed = 1;
+export const exportMP4vb = "5M";
+
+const SIZE = 20;
+
+let firstTime;
+export const Shader = ({ time, n, exporting }) => {
+  const mod1 = 0.5;
+  const mod2 = Math.sin((time * 2 * Math.PI) / 10);
+  const mod3 = 0.5;
+  const mod4 = 0.5;
+  const seed = n;
+  const highQuality = !!exporting;
+
+  const block = { hash: "" + seed };
+  const { hash } = block;
+
+  const noopRef = useRef();
+
+  const rng = new MersenneTwister(
+    // when seed is not provided, it means we're in "production" and the seed is actually the block hash
+    (seed || 1) * parseInt(hash.slice(0, 16), 16)
+  );
+  const s1 = rng.random();
+  const s2 = rng.random();
+  const s3 = rng.random();
+  const s4 = rng.random();
+  const s5 = rng.random();
+  const s6 = rng.random();
+  const s7 = rng.random();
+  const s8 = rng.random();
+  const s9 = rng.random();
+  const sbg = rng.random();
+
+  let background = [0.1, 0.11, 0.13];
+  if (block.number % 2 < 1) {
+    background = [0.92, 0.93, 0.96];
+  }
+
+  return (
+    <Node
+      shader={shaders.main}
+      uniforms={{
+        resolution: Uniform.Resolution,
+        t: (
+          <Mandelglitch
+            block={block}
+            seed={seed}
+            mod1={mod1}
+            mod2={mod2}
+            mod3={mod3}
+            mod4={mod4}
+            attributesRef={noopRef}
+          />
+        ),
+        highQuality,
+        background,
+        mod1,
+        mod2,
+        mod3,
+        mod4,
+        // from seed (block hash)
+        s1,
+        s2,
+        s3,
+        s4,
+        s5,
+        s6,
+        s7,
+        s8,
+        s9,
+      }}
+    />
+  );
 };
 
 const shaders = Shaders.create({
   main: {
     frag: GLSL`
-#version 300 es
+
+    #version 300 es
 precision highp float;
 in vec2 uv;
 out vec4 color;
 uniform vec2 resolution;
 
 uniform vec3 background;
-uniform float s1,s2,s3,s4,s5,s6,s7,s8;
+uniform float s1,s2,s3,s4,s5,s6,s7,s8,s9;
 uniform float mod1,mod2,mod3,mod4;
 uniform sampler2D t;
 uniform bool highQuality;
@@ -315,87 +378,6 @@ void main() {
   }
   color = vec4(c, 1.0);
 }
-  `,
+    `,
   },
 });
-
-const CustomStyle = (props) => {
-  const {
-    block,
-    attributesRef,
-    seed,
-    mod1,
-    mod2,
-    mod3,
-    mod4,
-    highQuality,
-  } = props;
-  const { hash } = block;
-
-  const noopRef = useRef();
-
-  const rng = new MersenneTwister(
-    // when seed is not provided, it means we're in "production" and the seed is actually the block hash
-    (seed || 1) * parseInt(hash.slice(0, 16), 16)
-  );
-  const s1 = rng.random();
-  const s2 = rng.random();
-  const s3 = rng.random();
-  const s4 = rng.random();
-  const s5 = rng.random();
-  const s6 = rng.random();
-  const s7 = rng.random();
-  const s8 = rng.random();
-  const sbg = rng.random();
-
-  let theme = "dark";
-  let background = [0.1, 0.11, 0.13];
-  if (block.number % 2 < 1) {
-    background = [0.92, 0.93, 0.96];
-    theme = "light";
-  }
-
-  useEffect(() => {
-    let creepiness = Math.pow(1 - s6, 2);
-    const attributes = [
-      {
-        trait_type: "Theme",
-        value: theme,
-      },
-      {
-        trait_type: "creepiness",
-        value: Math.round(100 * creepiness),
-      },
-    ];
-    attributesRef.current = () => ({
-      attributes,
-    });
-  }, [attributesRef, s6]);
-
-  return (
-    <Node
-      shader={shaders.main}
-      uniforms={{
-        resolution: Uniform.Resolution,
-        t: <Mandelglitch {...props} attributesRef={noopRef} />,
-        highQuality: !!highQuality,
-        background,
-        mod1,
-        mod2,
-        mod3,
-        mod4,
-        // from seed (block hash)
-        s1,
-        s2,
-        s3,
-        s4,
-        s5,
-        s6,
-        s7,
-        s8,
-      }}
-    />
-  );
-};
-
-export default CustomStyle;
