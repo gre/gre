@@ -10,9 +10,9 @@ import Mandelglitch from "./Mandelglitch";
 // - you will need to inject "highQuality" props to true only when generating the snapshot to get a very good quality one (anti aliasing). doing it on real time controls is not recommended because perf.
 
 export const styleMetadata = {
-  name: "CryptoAliens",
+  name: "CryptoAliens: Genesis",
   description:
-    "Every single Ethereum block yields a unique CryptoAliens creature. From the most adorable to the creepiest, which one are you going to chose? Raymarched in WebGL, every CryptoAliens take their texture from Mandelglitch's blockstyle which therefore share the same rarity scheme.",
+    "Every single Ethereum block yields a unique CryptoAliens creature. From the most adorable to the creepiest, which one are you going to chose? Raymarched in WebGL, every CryptoAliens take their texture from Mandelglitch's blockstyle which therefore share the same rarity scheme. It's up to you to chose the species of the first 'CryptoAliens: Genesis' series!",
   image: "",
   creator_name: "greweb",
   options: {
