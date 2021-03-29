@@ -12,7 +12,7 @@ import Mandelglitch from "./Mandelglitch";
 export const styleMetadata = {
   name: "CryptoAliens: Genesis",
   description:
-    "Every single Ethereum block yields a unique CryptoAliens creature. From the most adorable to the creepiest, which one are you going to chose? Raymarched in WebGL, every CryptoAliens take their texture from Mandelglitch's blockstyle which therefore share the same rarity scheme. It's up to you to chose the species of the first 'CryptoAliens: Genesis' series!",
+    "From the most adorable to the creepiest, which one are you going to chose? It's up to you to establish the species of the first 'CryptoAliens: Genesis' series! Every single Ethereum block yields a unique CryptoAliens creature. Raymarched in WebGL, every CryptoAliens take their texture from Mandelglitch's blockstyle which therefore share the same rarity scheme.",
   image: "",
   creator_name: "greweb",
   options: {
