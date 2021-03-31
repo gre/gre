@@ -113,6 +113,7 @@ const Sidebar = function ({
               handleBlockChange(e);
             }}
           />
+          {parseInt(blocks[blockNumber].number)}
         </div>
 
         <div className="section-header">Change Style</div>

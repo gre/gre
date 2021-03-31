@@ -1,10 +1,17 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useMemo } from "react";
 import { Shaders, Node, GLSL, Uniform } from "gl-react";
 import MersenneTwister from "mersenne-twister";
 
 // NB: IMPORTANT notes for integrator:
 // - i have to use WebGL2 otherwise v1 is just not performant enough. it means this blockstyle don't work in Safari. hopefully safari support WebGL2 later this year (it's experimental right now)
 // - you will need to inject "highQuality" props to true only when generating the snapshot to get a very good quality one (anti aliasing). doing it on real time controls is not recommended because perf.
+
+// Blocks criteria used:
+// - hash of block is a general seed that gives a unique shape.
+// - timestamp: during UTC night, the visual will be in dark mode.
+// - number: some rarity features are increased every 100 blocks.
+// - number of transactions in block: make the aliens thin or large.
+// - expectionally big amount transferred in a block => will make alien having a very huge "head"
 
 export const styleMetadata = {
   name: "CryptoAliens: Genesis",
@@ -116,6 +123,9 @@ uniform vec3 background;
 uniform float s1,s2,s3,s4,s5,s6,s7,s8;
 uniform float mod1,mod2,mod3,mod4;
 uniform sampler2D t;
+uniform float heavy;
+uniform float head;
+uniform float armsLen,armsMin,armsMax,armsIncr;
 uniform bool highQuality;
 
 #define PI ${Math.PI}
@@ -260,7 +270,7 @@ vec3 shade (HIT hit, vec3 g) {
   vec2 p = hit.zw;
   vec2 tUV = fract(p);
   return palette(
-    s6 + mod3 * s5 * s5 * texture(t, tUV).r,
+    s6 + mod4 * s5 * s5 * texture(t, tUV).r,
     vec3(0.5),
     vec3(0.5),
     vec3(1.0),
@@ -312,36 +322,35 @@ HIT obj (vec3 p) {
   float ss1 = s1;
   float ss2 = s2;
 
-  float stepR = (s3 - 0.5) * pow(s4, 8.0) + (mod2 - .5);
+  float stepR = (s3 - 0.5) * pow(s4, 8.0) + (mod3 - .5);
   float stepR2 = s3 * 7.;
   float w = 0.04 + 0.05 * s6 * s6;
   float h = 0.3 + 0.2 * s5;
   float incr = 0.1 + 0.2 * pow(s6, 3.0);
-  int iterations = int(2. + 20. * pow(1. - s6, 4.));
+  int iterations = int(armsLen);
   float initialL = incr + s5;
   float arms = sdSegment(p, initialL, 0.1);
   p.y -= initialL;
   vec3 q;
-  for (float f = 0.0; f<1.0; f+=0.1) {
+  for (float f = 0.; f<max(1., armsMax); f+=armsIncr) {
     pR(p.xy, stepR);
     pR(p.xz, stepR2);
     s = fOpUnionSoft(0.1, s, sdSegment(p, incr, 0.1));
     q = p;
     pR(q.xy, PI / 2.0);
-    if (abs(f-s4) < s5) {
+    if (armsMin <= f && f <= armsMax) {
       arms = fOpUnionSoft(0.1, arms, worm(q, w, h, k, iterations, ss1, ss2));
     }
     p.y -= incr;
   }
-  s = fOpUnionSoft(0.01 + mod4 * mod4, s, arms);
+  s = fOpUnionSoft(0.01 + heavy, s, arms);
 
-  float sz = 0.2 * (pow(s6, 2.0)-0.2) + 0.3 * pow(s3, 8.0);
-  if (sz > 0.0) {
+  if (head > 0.0) {
     pR(q.xy, 100.0 * s2);
-    q.y -= sz;
+    q.y -= head;
     q.y += 0.05 * s5 * cos(30. * s4 * q.x);
     q.z += 0.05 * s5 * cos(30. * s4 * q.x);
-    s = fOpUnionSoft(0.2, s, length(q) - sz);
+    s = fOpUnionSoft(0.2, s, length(q) - head);
   }
   return HIT(s, 2.0, xy);
 }
@@ -360,9 +369,10 @@ mat3 lookAt (vec3 ro, vec3 ta) {
 }
 
 vec3 scene(vec2 uvP) {
-  float dy = 0.2 * sin(4. * PI * mod1);
-  vec3 origin = vec3(16. * (mod1 - 0.5), 3.0 + dy, -5.0);
-  vec3 poi = vec3(0.0, 1.5 + 2. * dy, 0.0);
+  float amp = 5.;
+  float a = 2. * PI * mod1;
+  vec3 origin = vec3(amp * cos(a), 0.5 + 4. * mod2, amp * sin(a));
+  vec3 poi = vec3(0.0, 1. + mod2, 0.0);
   vec3 c = vec3(0.);
   vec3 dir = normalize(vec3(uvP - .5, 1.5));
   dir = lookAt(origin, poi) * dir;
@@ -396,6 +406,30 @@ void main() {
   },
 });
 
+var dayMs = 1000 * 60 * 60 * 24,
+  J1970 = 2440588,
+  J2000 = 2451545,
+  PI = Math.PI;
+function toJulian(date) {
+  return date.valueOf() / dayMs - 0.5 + J1970;
+}
+function fromJulian(j) {
+  return new Date((j + 0.5 - J1970) * dayMs);
+}
+function toDays(date) {
+  return toJulian(date) - J2000;
+}
+
+const TX_UPPER_BOUND = 500;
+const TX_MIN_THRESHOLD = 100 * Math.pow(10, 18);
+const TX_LIGHT_VALUE = 10 * Math.pow(10, 18);
+
+const safeParseInt = (a) => {
+  const v = parseInt(a);
+  if (isNaN(v) || !isFinite(a)) return 0;
+  return v;
+};
+
 const CustomStyle = (props) => {
   const {
     block,
@@ -407,41 +441,152 @@ const CustomStyle = (props) => {
     mod4,
     highQuality,
   } = props;
-  const { hash } = block;
+
+  const {
+    isDay,
+    isSpecialBlock,
+    txCountLightFactor,
+    txCountHeavyFactor,
+    expectionalTxAmountFactor,
+    rngSeed,
+    txsCount,
+  } = useMemo(() => {
+    let { hash, number, timestamp, transactions } = block;
+    const days = toDays(timestamp * 1000);
+    const remaining = days - Math.floor(days); // 0 at 13:00, 0.5 at 01:00, 1 at 12:59
+    const isDay = remaining < 0.3 || remaining > 0.7; // ~ between 6am and 10pm UTC
+    const isSpecialBlock = number % 100 === 0;
+    const txCountHeavyFactor = Math.pow(
+      Math.min(TX_UPPER_BOUND, transactions.length) / TX_UPPER_BOUND,
+      2.0
+    );
+    let expectionalTxAmountFactor = 0;
+    let txCountLightFactor = 0;
+    const allGas = transactions.map(
+      (t) => safeParseInt(t.gas) * safeParseInt(t.gasPrice)
+    );
+    const allNonZeroValues = transactions
+      .map((t) => safeParseInt(t.value))
+      .filter(Boolean);
+    allGas.sort((a, b) => a - b);
+    allNonZeroValues.sort((a, b) => a - b);
+    if (allNonZeroValues.length > 50) {
+      // let valueMean = allNonZeroValues[Math.floor(allNonZeroValues.length / 2)];
+      let valueMax = allNonZeroValues[allNonZeroValues.length - 1];
+      let valueMaxSecond = allNonZeroValues[allNonZeroValues.length - 2];
+      // let valueSum = allNonZeroValues.reduce((sum, v) => sum + v, 0);
+      // let valueAvg = valueSum / allNonZeroValues.length;
+      if (valueMax > TX_MIN_THRESHOLD) {
+        expectionalTxAmountFactor = Math.pow(
+          (valueMax - TX_MIN_THRESHOLD) / valueMax,
+          8
+        );
+      }
+      if (valueMax < TX_LIGHT_VALUE) {
+        txCountLightFactor = Math.pow(1 - valueMax / TX_LIGHT_VALUE, 0.5);
+      }
+    }
+    const rngSeed = (seed || 1) * parseInt(hash.slice(0, 16), 16); // when seed is not provided, it means we're in "production" and the seed is actually the block hash
+    return {
+      isDay,
+      isSpecialBlock,
+      txCountLightFactor,
+      txCountHeavyFactor,
+      expectionalTxAmountFactor,
+      rngSeed,
+      txsCount: transactions.length,
+    };
+  }, [block]);
 
   const noopRef = useRef();
 
-  const rng = new MersenneTwister(
-    // when seed is not provided, it means we're in "production" and the seed is actually the block hash
-    (seed || 1) * parseInt(hash.slice(0, 16), 16)
-  );
-  const s1 = rng.random();
-  const s2 = rng.random();
-  const s3 = rng.random();
-  const s4 = rng.random();
-  const s5 = rng.random();
-  const s6 = rng.random();
-  const s7 = rng.random();
-  const s8 = rng.random();
-  const sbg = rng.random();
+  const rng = new MersenneTwister(rngSeed);
+  let s1 = rng.random();
+  let s2 = rng.random();
+  let s3 = rng.random();
+  let s4 = rng.random();
+  let s5 = rng.random(); // general height of base
+  let s6 = rng.random(); // thin of bones
+  let s7 = rng.random();
+  let s8 = rng.random();
+  let sbg = rng.random();
 
-  let theme = "dark";
+  /*
+  let armsLen =
+    2 + 10 * (Math.pow(1 - s6, 2) + (1 - Math.exp(-txsCount / 100)));
+  const armsNeeded = Math.ceil((0.1 * txsCount) / armsLen);
+  let armsMin = 0.5 * rng.random();
+  let armsIncr = 0.1 + 0.5 * rng.random() * Math.exp(-armsNeeded / 10);
+  const armsMax = Math.min(armsMin + 1 + rng.random(), armsNeeded * armsIncr);
+  */
+
+  /*
+  let armsLen =
+    8 - 6 * Math.pow(rng.random(), 2) + 20 * Math.pow(rng.random(), 2);
+  armsLen *= 1 - Math.exp(-txsCount / 100);
+  let armsMin = 0.5 * rng.random() * rng.random();
+  let armsIncr = 0.1 + 0.1 * rng.random() + 0.3 * txCountLightFactor;
+  let armsMax = armsMin + 0.2 + 0.8 * rng.random();
+  */
+  let m = rng.random();
+  let txsFactor = 1 - Math.exp(-txsCount / 100);
+  let armsLen = 8 - 6 * Math.pow(rng.random(), 2) + 20 * m * txsFactor;
+  let armsMin = 0.3 * rng.random() * rng.random();
+  let armsMax = armsMin + 0.2 * txsFactor + 0.2 * rng.random();
+  let armsIncr = Math.max(
+    0.05,
+    ((0.1 + 0.05 * rng.random() + 0.3 * txCountLightFactor) * (1 - m)) /
+      txsFactor
+  );
+
+  console.log({
+    txsCount,
+  });
+
+  s6 *= 1 - txCountLightFactor;
+
+  let heavy = txCountHeavyFactor;
+  let head =
+    0.1 * (Math.pow(rng.random(), 2.0) - 0.2) +
+    0.2 * Math.pow(rng.random(), 8.0) +
+    0.8 * expectionalTxAmountFactor;
+
+  if (isSpecialBlock) {
+    s5 = 1;
+    s8 = 1 - 0.1 * (1 - s8);
+  }
+
+  let theme = "night";
   let background = [0.1, 0.11, 0.13];
-  if (block.number % 2 < 1) {
+  if (isDay) {
     background = [0.92, 0.93, 0.96];
-    theme = "light";
+    theme = "day";
   }
 
   useEffect(() => {
-    let creepiness = Math.pow(1 - s6, 2);
+    let words = [];
+    if (heavy > 0.8) {
+      words.push("big");
+    } else if (heavy > 0.9) {
+      words.push("heavy");
+    } else if (heavy > 0.99) {
+      words.push("huge");
+    }
+    if (heavy > 0.8) {
+      words.push("big");
+    } else if (heavy > 0.9) {
+      words.push("heavy");
+    } else if (heavy > 0.99) {
+      words.push("huge");
+    }
     const attributes = [
       {
         trait_type: "Theme",
         value: theme,
       },
       {
-        trait_type: "creepiness",
-        value: Math.round(100 * creepiness),
+        trait_type: "Name",
+        value: words.join(" "),
       },
     ];
     attributesRef.current = () => ({
@@ -470,6 +615,13 @@ const CustomStyle = (props) => {
         s6,
         s7,
         s8,
+        // other controls
+        heavy,
+        head,
+        armsLen,
+        armsMin,
+        armsMax,
+        armsIncr,
       }}
     />
   );

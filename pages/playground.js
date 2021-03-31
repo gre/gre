@@ -19,15 +19,54 @@ const store = proxy({
   ...BlockArt.styleMetadata,
 });
 
+let id = 1;
+async function rpc(method, params = []) {
+  const r = await fetch(
+    `https://eth-mainnet.alchemyapi.io/v2/Z1sYlBWMorPqRSMevhoOJgcgweL0_rE2`,
+    {
+      method: "POST",
+      body: JSON.stringify({
+        id: id++,
+        jsonrpc: "2.0",
+        method,
+        params,
+      }),
+    }
+  );
+  const res = await r.json();
+  return res.result;
+}
+
+function useCurrentBlock() {
+  const [block, setBlock] = useState(blocks[0]);
+  useEffect(() => {
+    async function refresh() {
+      const blockNumber = await rpc("eth_blockNumber");
+      const block = await rpc("eth_getBlockByNumber", [blockNumber, true]);
+      setBlock(block);
+    }
+    const interval = setInterval(refresh, 15000);
+    refresh();
+    return () => clearInterval(interval);
+  }, []);
+  return block;
+}
+
 const seed = BlockArt.styleMetadata.options.seed || 0;
 const shouldAutoSeed = seed < 0 && -seed % 2 == 0;
 const shouldBeMinimal = seed < 0 && (-seed >> 1) % 2 == 0;
 
 export default function Home() {
   const { ref, width, height } = useDimensions({});
-  const [blockNumber, setBlockNumber] = useState(1);
+  const [blockNumber, setBlockNumber] = useState(0);
   const snap = useSnapshot(store);
   const attributesRef = useRef();
+  const block = useCurrentBlock();
+  if (!blocks.some((b) => b.number === block.number)) {
+    blocks.unshift(block);
+    console.log("BLOCKS", blocks);
+  }
+  console.log(block);
 
   const mods = Object.keys(store.options).map((k) => {
     return {
