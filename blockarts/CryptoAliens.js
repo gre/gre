@@ -9,7 +9,7 @@ import MersenneTwister from "mersenne-twister";
 export const styleMetadata = {
   name: "CryptoAliens: Genesis",
   description:
-    "From the most adorable to the creepiest, which one are you going to chose? It's up to you to establish the species of the first 'CryptoAliens: Genesis' series! Every single Ethereum block yields a unique CryptoAliens creature. Raymarched in WebGL, every CryptoAliens take their texture from Mandelglitch's blockstyle which therefore share the same rarity scheme.",
+    "From the most adorable to the creepiest, which one are you going to chose? It's up to you to establish the species of the first 'CryptoAliens: Genesis' series! Every single Ethereum block yields a unique CryptoAliens creature. Raymarched in WebGL, every CryptoAliens take their texture from Mandelglitch's blockstyle which therefore share the same rarity scheme. This first 'Genesis' series will establish the embryon species, new generation of CryptoAliens may come in future to make evolution from the chosen ones.",
   image: "",
   creator_name: "greweb",
   options: {
