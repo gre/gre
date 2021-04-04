@@ -626,7 +626,7 @@ vec3 shade (HIT hit, vec3 g) {
   vec2 p = hit.zw;
   vec2 tUV = fract(p);
   return palette(
-    s6 + mod4 * s5 * s5 * texture(t, tUV).r,
+    s6 + mod4 * s5 * texture(t, tUV).r,
     vec3(0.5),
     vec3(0.5),
     vec3(1.0),
