@@ -27,6 +27,8 @@ export const styleMetadata = {
     "From the most adorable to the creepiest, 'Genesis' establishes the first embryonic species of CryptoAliens. Which one are you going to chose? Each CryptoAliens creature gets born on an Ethereum block which nourishes its shape: the number of transactions gives more bones, total ETH value transferred gives weight, exceptionally big transfers gives big heads, it will be dark when born at UTC night time,... CryptoAliens also take their unique texture from Mandelglitch's blockstyle, therefore including the same rarity scheme. More generations of CryptoAliens will follow in future and may evolved from the chosen ones.",
   image: "",
   creator_name: "greweb",
+
+  // debug_noRefresh: 1, // debug
   options: {
     // comment seed when going production!
     // highQuality: 0, // used for debug
@@ -496,8 +498,9 @@ vec3 palette( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d ) {
   return a + b*cos( 6.28318*(c*t+d) );
 }
 void pR(inout vec2 p, float a) {
-p = cos(a)*p + sin(a)*vec2(p.y, -p.x);
+  p = cos(a) * p + sin(a) * vec2(p.y, -p.x);
 }
+
 float fOpUnionSoft(float r, float a, float b) {
   float e = max(r - abs(a - b), 0.);
   return min(a, b) - e*e*0.25/r;
@@ -688,8 +691,7 @@ HIT obj (vec3 p) {
     pR(p.xy, stepR);
     pR(p.xz, stepR2);
     s = fOpUnionSoft(0.1, s, sdSegment(p, incr, 0.1));
-    q = p;
-    pR(q.xy, PI / 2.0);
+    q = vec3(p.y, -p.x, p.z);
     if (abs(f-armsCenter) < armsSpread) {
       arms = fOpUnionSoft(0.1, arms, worm(q, w, h, ss1, ss2));
     }

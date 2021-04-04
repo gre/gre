@@ -38,8 +38,9 @@ async function rpc(method, params = []) {
 }
 
 function useCurrentBlock() {
-  const [block, setBlock] = useState(blocks[0]);
+  const [block, setBlock] = useState(blocks[2]);
   useEffect(() => {
+    if (BlockArt.styleMetadata.debug_noRefresh) return;
     async function refresh() {
       const blockNumber = await rpc("eth_blockNumber");
       const block = await rpc("eth_getBlockByNumber", [blockNumber, true]);
@@ -58,7 +59,7 @@ const shouldBeMinimal = seed < 0 && (-seed >> 1) % 2 == 0;
 
 export default function Home() {
   const { ref, width, height } = useDimensions({});
-  const [blockNumber, setBlockNumber] = useState(0);
+  const [blockNumber, setBlockNumber] = useState(2);
   const snap = useSnapshot(store);
   const attributesRef = useRef();
   const block = useCurrentBlock();
