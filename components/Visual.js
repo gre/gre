@@ -12,7 +12,7 @@ const Refresh = ({ Day, ...rest }) => {
       setTime((t - startT) / 1000);
     }
     h = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(loop);
+    return () => cancelAnimationFrame(h);
   }, []);
   return <Day.Shader time={time} {...rest} />;
 };
