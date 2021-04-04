@@ -10,7 +10,13 @@ export function EthBlockArtVisual({
 }) {
   return (
     <Surface width={width} height={height}>
-      <BlockStyle attributesRef={attributesRef} block={block} {...values} />
+      <BlockStyle
+        attributesRef={attributesRef}
+        block={block}
+        width={width}
+        height={height}
+        {...values}
+      />
     </Surface>
   );
 }

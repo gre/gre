@@ -64,9 +64,8 @@ export default function Home() {
   const block = useCurrentBlock();
   if (!blocks.some((b) => b.number === block.number)) {
     blocks.unshift(block);
-    console.log("BLOCKS", blocks);
+    console.log("BLOCKS", blocks, block);
   }
-  console.log(block);
 
   const mods = Object.keys(store.options).map((k) => {
     return {
