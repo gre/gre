@@ -382,7 +382,7 @@ void main () {
   vec2 sampleCoord = sourceCoord;
   sampleCoord = videoRollCoords(sampleCoord, 10., 0.004, 8.0);
   sampleCoord = bulgeCoords(sampleCoord, sourceCoord, 0.1);
-  vec4 outputColor = sampleRGBVignette(children, sampleCoord, sourceCoord, 0.07, 3.0);
+  vec4 outputColor = sampleRGBVignette(children, sampleCoord, sourceCoord, 0.05, 3.0);
   outputColor = mix(outputColor, vec4(background, 1.0), 0.8 * smoothstep(0.06, 0.03, borderDist));
   outputColor = vec4(mix(outputColor.rgb, 1. - background, textC), 1.0);
   float vignetteAmount = 0.8 + 0.05 * cos(30. * time);
