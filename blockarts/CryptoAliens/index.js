@@ -43,83 +43,18 @@ const CustomStyle = (props) => {
     []
   );
   const resolutionCap = isMobile ? 128 : 1024;
-
-  const {
-    block,
-    attributesRef,
-    mod1,
-    mod2,
-    mod3,
-    mod4,
-    highQuality,
-    width,
-    height,
-  } = props;
-
-  const {
-    kg,
-    bones,
-    theme,
-    background,
-    s1,
-    s2,
-    s3,
-    s4,
-    s5,
-    s6,
-    s7,
-    s8,
-    heavy,
-    head,
-    bonesK,
-    armsLen,
-    armsSpread,
-    armsCenter,
-    armsEndW,
-    dateText,
-    blockNumber,
-  } = useBlockDerivatedData(block, mod1, mod2, mod3, mod4);
-
-  useAttributesSync(attributesRef, kg, bones, theme);
-
-  let scene = (
-    <Scene
-      t={<Mandelglitch block={block} mod1={mod1} mod2={mod2} mod3={mod3} />}
-      {...{
-        mod1,
-        mod2,
-        mod3,
-        mod4,
-        background,
-        s1,
-        s2,
-        s3,
-        s4,
-        s5,
-        s6,
-        s7,
-        s8,
-        heavy,
-        head,
-        bonesK,
-        armsLen,
-        armsSpread,
-        armsCenter,
-        armsEndW,
-        highQuality,
-      }}
-    />
-  );
-
   const maxDim = Math.max(width, height);
   const max = Math.min(resolutionCap, maxDim);
   const w = Math.round((max * width) / maxDim);
   const h = Math.round((max * height) / maxDim);
-  scene = (
-    <NearestCopy width={w} height={h}>
-      {scene}
-    </NearestCopy>
-  );
+
+  // prettier-ignore
+  const { block, attributesRef, mod1, mod2, mod3, mod4, highQuality, width, height } = props;
+  // prettier-ignore
+  const { kg, bones, theme, background, s1, s2, s3, s4, s5, s6, s7, s8, heavy, head, bonesK, armsLen, armsSpread, armsCenter, armsEndW, dateText, blockNumber } =
+    useBlockDerivatedData(block, mod1, mod2, mod3, mod4);
+
+  useAttributesSync(attributesRef, kg, bones, theme);
 
   return (
     <LiveTV
@@ -137,7 +72,32 @@ const CustomStyle = (props) => {
       width={width}
       height={height}
     >
-      {scene}
+      <NearestCopy width={w} height={h}>
+        <Scene
+          t={<Mandelglitch block={block} mod1={mod1} mod2={mod2} mod3={mod3} />}
+          mod1={mod1}
+          mod2={mod2}
+          mod3={mod3}
+          mod4={mod4}
+          background={background}
+          s1={s1}
+          s2={s2}
+          s3={s3}
+          s4={s4}
+          s5={s5}
+          s6={s6}
+          s7={s7}
+          s8={s8}
+          heavy={heavy}
+          head={head}
+          bonesK={bonesK}
+          armsLen={armsLen}
+          armsSpread={armsSpread}
+          armsCenter={armsCenter}
+          armsEndW={armsEndW}
+          highQuality={highQuality}
+        />
+      </NearestCopy>
     </LiveTV>
   );
 };
