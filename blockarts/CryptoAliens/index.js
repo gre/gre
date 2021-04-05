@@ -8,19 +8,10 @@ import React, {
 import { Shaders, Node, GLSL, Uniform, NearestCopy } from "gl-react";
 import MersenneTwister from "mersenne-twister";
 
-// NB: IMPORTANT notes for integrator:
+// Notes
 // - i have to use WebGL2 otherwise v1 is just not performant enough. it means this blockstyle don't work in Safari. hopefully safari support WebGL2 later this year (it's experimental right now)
 // - for mobile, the shader is pretty challenging so i decided to downscale to 128px. The mobile is essentially a different experience (pixelated one) which still looks pretty cool imo.
-// - you will need to inject "highQuality" props to true only when generating the snapshot to get a very good quality one (anti aliasing). doing it on real time controls is not recommended because perf.
-
-// Blocks criteria used:
-// - hash of block is a general seed that gives a unique shape.
-// - timestamp: during UTC night, the visual will be in dark mode.
-// - every 100 blocks: the "theme" turns into a special mode (not light, not dark)
-// - number of transactions in block: impacts the number of arms and bones
-// - expectionally big amount transferred in a block => will make alien having a very huge "head"
-// - expectionally low amount in a block => arms will be very thin
-// - ratio of total gas / total amount: makes bigger "hands" at the end of arms
+// - you can inject "highQuality" props to true only when generating the snapshot to get a very good quality one (anti aliasing). doing it on real time controls is not recommended because perf.
 
 export const styleMetadata = {
   name: "CryptoAliens: Genesis",
