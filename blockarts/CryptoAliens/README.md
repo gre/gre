@@ -6,16 +6,17 @@
 
 CryptoAliens are digital creatures generated from Ethereum blockchain blocks. They can be minted on [ethblock.art](https://ethblock.art/styles) by anyone, which establishes a limited set of CryptoAliens species. Each block produced on Ethereum have unique elements that can be visualized in creative ways.
 
-**CryptoAliens are born and nourished from transactions, transactions are bones, ETH is flesh,... and many other aspects that this article will explain!**
-
 <img src="previews/014.png" width="50%" /><img src="previews/017.png" width="50%" />
+
+> **CryptoAliens are born and nourished from transactions, transactions are bones, ETH is flesh,... and many other aspects that this article will explain!**
+
 <img src="previews/032.png" width="50%" /><img src="previews/013.png" width="50%" />
 
 ### So I decide which ones are the CryptoAliens?
 
 **Yes! As a NFT minter, you are the creator and you contribute at establishing the first 'Genesis' series of CryptoAliens.** You decide which creature deserve to live. You are the curator and it is your responsible to do a lot of research and find the most adorable (or the creepiest?) creature!
 
-<img src="previews/006.png" width="50%" /><img src="previews/004.png" width="50%" />
+<img src="previews/036.png" width="50%" /><img src="previews/004.png" width="50%" />
 
 ### How many CryptoAliens are there?
 
@@ -69,7 +70,7 @@ There are a lot of special cases are rare conditions that can happen. I will not
 Finally, the block hash gives variety in the results. It's necessary in order to have truly unique 12 millions species. But it's only complementary to the various other criteria. There are many features that are getting impacted by it, including the skin texturing (see _Mandelglitch BlockStyle_ section).
 
 <img src="previews/043.png" width="50%" /><img src="previews/042.png" width="50%" />
-<img src="previews/036.png" width="50%" /><img src="previews/038.png" width="50%" />
+<img src="previews/012.png" width="50%" /><img src="previews/038.png" width="50%" />
 
 ### What controls does the creator have?
 
@@ -94,7 +95,7 @@ The visibility of Mandelglitch on the skin has been intentionally contained, but
 
 ## How is it implemented technically?
 
-First of all, I would like to point out the source code is available here next to this `README.md`.
+First of all, I would like to point out the [source code is available here on Github](https://github.com/gre/shaderday.com/tree/master/blockarts/CryptoAliens).
 
 It is implemented with [`gl-react`](https://github.com/gre/gl-react) which is convenient to write and compose [_GLSL Fragment Shaders_](https://www.khronos.org/opengl/wiki/Fragment_Shader).
 
@@ -130,4 +131,6 @@ The way Mandelglitch texturing is used however is that I will only use the "red"
 
 Who knows what's next! As everything is available on the blockchain, what you mint is saved immutably and forever. Me or other artists could fork the code to make animated version of the CryptoAliens that were chosen (as this code is open source). Also we can imagine doing crossover between species or doing "evolution" of these species over time. Everything is possible!
 
-**For any question, feel free to ping me on Twitter [@greweb](https://twitter.com/greweb)**
+---
+
+My name is Gaëtan Renaudeau, and I'm a noise explorer. **feel free to ping me on Twitter [@greweb](https://twitter.com/greweb)**
