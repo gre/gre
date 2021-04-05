@@ -1,6 +1,6 @@
 # CryptoAliens: Genesis
 
-<img src="previews/001.png" width="50%" /><img src="previews/005.png" width="50%" />
+<img src="previews/005.png" width="50%" /><img src="previews/001.png" width="50%" />
 
 ## What are CryptoAliens?
 
@@ -85,9 +85,9 @@ At creation time, the minter also have the ability to move a bit the specimen:
 
 ### mmh, Mandelglitch BlockStyle?
 
-[Mandelglitch BlockStyle](https://ethblock.art/create/17) is another BlockStyle on [ethblock.art](https://ethblock.art/create/17). It's derived from Mandelbrot fractal.
+<a href="https://ethblock.art/create/17"><img src="previews/mandelglitch.png" width="20%" /></a>
 
-<img src="previews/mandelglitch.png" width="50%" />
+[Mandelglitch BlockStyle](https://ethblock.art/create/17) is another BlockStyle on [ethblock.art](https://ethblock.art/create/17). It's derived from Mandelbrot fractal.
 
 The visibility of Mandelglitch on the skin has been intentionally contained, but sometimes it is more visible. Here are two examples:
 
