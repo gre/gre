@@ -37,20 +37,77 @@ async function rpc(method, params = []) {
   return res.result;
 }
 
+function sortBlocks() {
+  blocks.sort((a, b) => parseInt(b.number) - parseInt(a.number));
+}
+
+function useBlock(blockNumber) {
+  const [block, setBlock] = useState(blocks[0]);
+  useEffect(() => {
+    let cancelled;
+    async function main() {
+      const block = await rpc("eth_getBlockByNumber", [
+        "0x" + blockNumber.toString(16),
+        true,
+      ]);
+      if (!block || cancelled) return;
+      setBlock(block);
+    }
+    main();
+    return () => {
+      cancelled = true;
+    };
+  }, [block]);
+  return block;
+}
+
 function useCurrentBlock() {
   const [block, setBlock] = useState(blocks[0]);
   useEffect(() => {
     if (BlockArt.styleMetadata.debug_noRefresh) return;
     async function refresh() {
       const blockNumber = await rpc("eth_blockNumber");
+      if (!blockNumber) return;
       const block = await rpc("eth_getBlockByNumber", [blockNumber, true]);
+      if (!block) return;
+      blocks.push(block);
+      sortBlocks();
       setBlock(block);
+      console.log(blocks, block);
     }
-    const interval = setInterval(refresh, 15000);
+    const interval = setInterval(refresh, 10000);
     refresh();
     return () => clearInterval(interval);
   }, []);
   return block;
+}
+
+function useRandomLoadingBlocks(count = 10, interval = 120000, delay = 100) {
+  useEffect(() => {
+    if (BlockArt.styleMetadata.debug_noRefresh) return;
+    async function refresh() {
+      const blockNumber = await rpc("eth_blockNumber");
+      if (!blockNumber) return;
+      const n = parseInt(blockNumber);
+      const pick = Math.floor(n * Math.random());
+      for (let i = pick; i >= 1 && i > pick - count; i--) {
+        if (blocks.some((b) => b && parseInt(b.number) === i)) continue;
+        const block = await rpc("eth_getBlockByNumber", [
+          "0x" + i.toString(16),
+          true,
+        ]);
+        if (!block) return;
+        blocks.push(block);
+        sortBlocks();
+        await new Promise((success) => setTimeout(success, delay));
+      }
+      console.log(blocks);
+    }
+    const interval = setInterval(refresh, 60000);
+    refresh();
+
+    return () => clearInterval(interval);
+  }, []);
 }
 
 const seed = BlockArt.styleMetadata.options.seed || 0;
@@ -59,14 +116,12 @@ const shouldBeMinimal = seed < 0 && (-seed >> 1) % 2 == 0;
 
 export default function Home() {
   const { ref, width, height } = useDimensions({});
-  const [blockNumber, setBlockNumber] = useState(0);
+  const [blockNumber, setBlockNumber] = useState(12179460);
   const snap = useSnapshot(store);
   const attributesRef = useRef();
-  const block = useCurrentBlock();
-  if (!blocks.some((b) => b.number === block.number)) {
-    blocks.unshift(block);
-    console.log("BLOCKS", blocks, block);
-  }
+  const block = useBlock(blockNumber);
+  // useCurrentBlock();
+  // useRandomLoadingBlocks();
 
   const mods = Object.keys(store.options).map((k) => {
     return {
@@ -126,7 +181,7 @@ export default function Home() {
                 height={height}
                 BlockStyle={BlockArt.default}
                 values={snap.options}
-                block={blocks[blockNumber]}
+                block={block}
                 attributesRef={attributesRef}
               />
             </div>
@@ -134,7 +189,6 @@ export default function Home() {
               style={shouldBeMinimal ? { position: "fixed", right: 0 } : null}
             >
               <Sidebar
-                blocks={blocks}
                 blockNumber={blockNumber}
                 attributesRef={attributesRef}
                 mods={mods}

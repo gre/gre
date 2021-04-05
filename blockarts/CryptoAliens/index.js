@@ -754,7 +754,7 @@ mat3 lookAt (vec3 ro, vec3 ta) {
 }
 
 vec3 scene(vec2 uvP) {
-  float amp = 5.;
+  float amp = 4. + 3. * pow(mod2, 1.5);
   float a = 2. * PI * mod1;
   vec3 origin = vec3(amp * cos(a), 0.5 + 4. * mod2, amp * sin(a));
   vec3 poi = vec3(0.0, 1. + mod2, 0.0);

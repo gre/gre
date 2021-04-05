@@ -4,7 +4,6 @@ import ControlSlider from "./ControlSlider";
 const Sidebar = function ({
   mods,
   blockNumber,
-  blocks,
   attributesRef,
   handleBlockChange,
 }) {
@@ -104,16 +103,12 @@ const Sidebar = function ({
 
         <div className="section-header">Change Block</div>
         <div className="section-body">
-          <ControlSlider
-            modValue={blockNumber}
-            modValueMin="0"
-            modValueMax={blocks.length - 1}
-            modValueStep="1"
-            onChange={(e) => {
-              handleBlockChange(e);
-            }}
+          <input
+            type="number"
+            value={blockNumber}
+            onChange={(e) => handleBlockChange(parseInt(e.target.value))}
+            range="1"
           />
-          {parseInt(blocks[blockNumber].number)}
         </div>
 
         <div className="section-header">Change Style</div>
