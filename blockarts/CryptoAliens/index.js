@@ -5,11 +5,12 @@ import React, {
   useMemo,
   useCallback,
 } from "react";
-import { Shaders, Node, GLSL, Uniform } from "gl-react";
+import { Shaders, Node, GLSL, Uniform, NearestCopy } from "gl-react";
 import MersenneTwister from "mersenne-twister";
 
 // NB: IMPORTANT notes for integrator:
 // - i have to use WebGL2 otherwise v1 is just not performant enough. it means this blockstyle don't work in Safari. hopefully safari support WebGL2 later this year (it's experimental right now)
+// - for mobile, the shader is pretty challenging so i decided to downscale to 128px. The mobile is essentially a different experience (pixelated one) which still looks pretty cool imo.
 // - you will need to inject "highQuality" props to true only when generating the snapshot to get a very good quality one (anti aliasing). doing it on real time controls is not recommended because perf.
 
 // Blocks criteria used:
@@ -31,6 +32,7 @@ export const styleMetadata = {
   // debug_noRefresh: 1, // debug
   options: {
     // comment seed when going production!
+    // seed: -4, // used for internal debug
     // highQuality: 0, // used for debug
     mod1: 0.5,
     mod2: 0.5,
@@ -42,6 +44,15 @@ export const styleMetadata = {
 //// MAIN COMPOSITION PART ////
 
 const CustomStyle = (props) => {
+  const isMobile = useMemo(
+    () =>
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent
+      ),
+    []
+  );
+  const resolutionCap = isMobile ? 128 : 1024;
+
   const {
     block,
     attributesRef,
@@ -53,6 +64,7 @@ const CustomStyle = (props) => {
     width,
     height,
   } = props;
+
   const {
     kg,
     bones,
@@ -79,29 +91,46 @@ const CustomStyle = (props) => {
 
   useAttributesSync(attributesRef, kg, bones, theme);
 
-  const sceneProps = {
-    mod1,
-    mod2,
-    mod3,
-    mod4,
-    background,
-    s1,
-    s2,
-    s3,
-    s4,
-    s5,
-    s6,
-    s7,
-    s8,
-    heavy,
-    head,
-    bonesK,
-    armsLen,
-    armsSpread,
-    armsCenter,
-    armsEndW,
-    highQuality,
-  };
+  let scene = (
+    <Scene
+      t={<Mandelglitch block={block} mod1={mod1} mod2={mod2} mod3={mod3} />}
+      {...{
+        mod1,
+        mod2,
+        mod3,
+        mod4,
+        background,
+        s1,
+        s2,
+        s3,
+        s4,
+        s5,
+        s6,
+        s7,
+        s8,
+        heavy,
+        head,
+        bonesK,
+        armsLen,
+        armsSpread,
+        armsCenter,
+        armsEndW,
+        highQuality,
+      }}
+    />
+  );
+
+  if (!highQuality) {
+    const maxDim = Math.max(width, height);
+    const max = Math.min(resolutionCap, maxDim);
+    const w = Math.round((max * width) / maxDim);
+    const h = Math.round((max * height) / maxDim);
+    scene = (
+      <NearestCopy width={w} height={h}>
+        {scene}
+      </NearestCopy>
+    );
+  }
 
   return (
     <LiveTV
@@ -119,10 +148,7 @@ const CustomStyle = (props) => {
       width={width}
       height={height}
     >
-      <Scene
-        t={<Mandelglitch block={block} mod1={mod1} mod2={mod2} mod3={mod3} />}
-        {...sceneProps}
-      />
+      {scene}
     </LiveTV>
   );
 };
@@ -400,6 +426,11 @@ function LiveTV({ width, height, children, text, background }) {
   return (
     <Node
       shader={liveTVShaders.tv}
+      uniformsOptions={{
+        children: {
+          interpolation: "nearest",
+        },
+      }}
       uniforms={{
         resolution: Uniform.Resolution,
         children,
