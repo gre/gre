@@ -35,6 +35,14 @@ export const styleMetadata = {
 //// MAIN COMPOSITION PART ////
 
 const CustomStyle = (props) => {
+  // prettier-ignore
+  const { block, attributesRef, mod1, mod2, mod3, mod4, highQuality, width, height } = props;
+  // prettier-ignore
+  const { kg, bones, theme, background, s1, s2, s3, s4, s5, s6, s7, s8, heavy, head, bonesK, armsLen, armsSpread, armsCenter, armsEndW, dateText, blockNumber } =
+    useBlockDerivedData(block, mod1, mod2, mod3, mod4);
+
+  useAttributesSync(attributesRef, kg, bones, theme);
+
   const isMobile = useMemo(
     () =>
       /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
@@ -47,14 +55,6 @@ const CustomStyle = (props) => {
   const max = Math.min(resolutionCap, maxDim);
   const w = Math.round((max * width) / maxDim);
   const h = Math.round((max * height) / maxDim);
-
-  // prettier-ignore
-  const { block, attributesRef, mod1, mod2, mod3, mod4, highQuality, width, height } = props;
-  // prettier-ignore
-  const { kg, bones, theme, background, s1, s2, s3, s4, s5, s6, s7, s8, heavy, head, bonesK, armsLen, armsSpread, armsCenter, armsEndW, dateText, blockNumber } =
-    useBlockDerivedData(block, mod1, mod2, mod3, mod4);
-
-  useAttributesSync(attributesRef, kg, bones, theme);
 
   return (
     <LiveTV
