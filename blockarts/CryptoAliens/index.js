@@ -1,10 +1,4 @@
-import React, {
-  useEffect,
-  useRef,
-  useState,
-  useMemo,
-  useCallback,
-} from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Shaders, Node, GLSL, Uniform, NearestCopy } from "gl-react";
 import MersenneTwister from "mersenne-twister";
 
@@ -69,8 +63,6 @@ const CustomStyle = (props) => {
         />
       }
       background={background}
-      width={width}
-      height={height}
     >
       <NearestCopy width={w} height={h}>
         <Scene
@@ -128,13 +120,9 @@ function useAttributesSync(attributesRef, kg, bones, theme) {
 
 var dayMs = 1000 * 60 * 60 * 24,
   J1970 = 2440588,
-  J2000 = 2451545,
-  PI = Math.PI;
+  J2000 = 2451545;
 function toJulian(date) {
   return date.valueOf() / dayMs - 0.5 + J1970;
-}
-function fromJulian(j) {
-  return new Date((j + 0.5 - J1970) * dayMs);
 }
 function toDays(date) {
   return toJulian(date) - J2000;
@@ -181,11 +169,7 @@ function useBlockDerivedData(block) {
         : allGas.reduce((acc, n) => acc + n, 0) /
           allNonZeroValues.reduce((acc, n) => acc + n, 0);
     if (allNonZeroValues.length > 50) {
-      // let valueMean = allNonZeroValues[Math.floor(allNonZeroValues.length / 2)];
       let valueMax = allNonZeroValues[allNonZeroValues.length - 1];
-      let valueMaxSecond = allNonZeroValues[allNonZeroValues.length - 2];
-      // let valueSum = allNonZeroValues.reduce((sum, v) => sum + v, 0);
-      // let valueAvg = valueSum / allNonZeroValues.length;
       if (valueMax > TX_MIN_THRESHOLD) {
         expectionalTxAmountFactor = Math.pow(
           (valueMax - TX_MIN_THRESHOLD) / valueMax,
@@ -207,7 +191,6 @@ function useBlockDerivedData(block) {
     let s6 = rng.random(); // height
     let s7 = rng.random();
     let s8 = rng.random();
-    let sbg = rng.random();
     s4 -= txCountLightFactor;
     let r = 0.1 + 0.8 * rng.random(); // random balance between # of arms vs length
     let armsLen = Math.floor(2 + Math.min(0.1 * txsCount * r, 30));
@@ -370,7 +353,7 @@ void main () {
   },
 });
 
-function LiveTV({ width, height, children, text, background }) {
+function LiveTV({ children, text, background }) {
   const time = useTime();
   return (
     <Node
@@ -898,8 +881,6 @@ const Mandelglitch = ({ block, mod2, mod1, mod3 }) => {
   const s7 = rng.random();
   const s8 = rng.random();
   const s9 = rng.random();
-
-  const zoom = s7;
 
   return (
     <Node
