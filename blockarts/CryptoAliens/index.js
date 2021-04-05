@@ -52,7 +52,7 @@ const CustomStyle = (props) => {
   const { block, attributesRef, mod1, mod2, mod3, mod4, highQuality, width, height } = props;
   // prettier-ignore
   const { kg, bones, theme, background, s1, s2, s3, s4, s5, s6, s7, s8, heavy, head, bonesK, armsLen, armsSpread, armsCenter, armsEndW, dateText, blockNumber } =
-    useBlockDerivatedData(block, mod1, mod2, mod3, mod4);
+    useBlockDerivedData(block, mod1, mod2, mod3, mod4);
 
   useAttributesSync(attributesRef, kg, bones, theme);
 
@@ -150,7 +150,7 @@ const safeParseInt = (a) => {
   return v;
 };
 
-function useBlockDerivatedData(block) {
+function useBlockDerivedData(block) {
   return useMemo(() => {
     let { hash, number, timestamp, transactions } = block;
     const blockNumber = parseInt(number);
