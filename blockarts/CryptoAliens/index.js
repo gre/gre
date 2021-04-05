@@ -120,17 +120,15 @@ const CustomStyle = (props) => {
     />
   );
 
-  if (!highQuality) {
-    const maxDim = Math.max(width, height);
-    const max = Math.min(resolutionCap, maxDim);
-    const w = Math.round((max * width) / maxDim);
-    const h = Math.round((max * height) / maxDim);
-    scene = (
-      <NearestCopy width={w} height={h}>
-        {scene}
-      </NearestCopy>
-    );
-  }
+  const maxDim = Math.max(width, height);
+  const max = Math.min(resolutionCap, maxDim);
+  const w = Math.round((max * width) / maxDim);
+  const h = Math.round((max * height) / maxDim);
+  scene = (
+    <NearestCopy width={w} height={h}>
+      {scene}
+    </NearestCopy>
+  );
 
   return (
     <LiveTV
