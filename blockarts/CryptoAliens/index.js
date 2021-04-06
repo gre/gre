@@ -66,7 +66,14 @@ const CustomStyle = (props) => {
     >
       <NearestCopy width={w} height={h}>
         <Scene
-          t={<Mandelglitch block={block} mod1={mod1} mod2={mod2} mod3={mod3} />}
+          t={
+            <MandelglitchCached
+              block={block}
+              mod1={mod1}
+              mod2={mod2}
+              mod3={mod3}
+            />
+          }
           mod1={mod1}
           mod2={mod2}
           mod3={mod3}
@@ -903,5 +910,7 @@ const Mandelglitch = ({ block, mod2, mod1, mod3 }) => {
     />
   );
 };
+
+const MandelglitchCached = React.memo(Mandelglitch);
 
 export default CustomStyle;
