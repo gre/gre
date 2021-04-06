@@ -57,7 +57,7 @@ function useBlock(blockNumber) {
     return () => {
       cancelled = true;
     };
-  }, [block]);
+  }, [blockNumber]);
   return block;
 }
 
