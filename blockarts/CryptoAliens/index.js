@@ -72,6 +72,7 @@ const CustomStyle = (props) => {
               mod1={mod1}
               mod2={mod2}
               mod3={mod3}
+              dim={max}
             />
           }
           mod1={mod1}
@@ -875,7 +876,7 @@ const shadersMandelglitch = Shaders.create({
   },
 });
 
-const Mandelglitch = ({ block, mod2, mod1, mod3 }) => {
+const Mandelglitch = ({ block, mod2, mod1, mod3, dim }) => {
   const { hash } = block;
 
   const rng = new MersenneTwister(parseInt(hash.slice(0, 16), 16));
@@ -891,6 +892,8 @@ const Mandelglitch = ({ block, mod2, mod1, mod3 }) => {
 
   return (
     <Node
+      width={dim}
+      height={dim}
       shader={shadersMandelglitch.mandelglitch}
       uniforms={{
         resolution: Uniform.Resolution,
