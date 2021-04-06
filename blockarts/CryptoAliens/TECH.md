@@ -6,8 +6,9 @@ First of all, I would like to point out the [source code is available here on Gi
 
 It is implemented with [`gl-react`](https://github.com/gre/gl-react) which is convenient to write and compose [_GLSL Fragment Shaders_](https://www.khronos.org/opengl/wiki/Fragment_Shader).
 
-> There are actually 3 shaders and a Canvas 2D texture at stake, here is the big picture of the pipeline:
-> **TODO**
+There are actually 3 shaders and a Canvas 2D texture at stake, here is the big picture of the pipeline:
+
+![](previews/graph.gif)
 
 It also uses `mersenne-twister` library, a [PRNG](https://en.wikipedia.org/wiki/Pseudorandom_number_generator) used to get a wide and deterministic variety of shapes, initialized with the block hash. That said, as pointed in the previous section, the main features of the shape are determined by Ethereum block information itself (number of transactions, timestamp, transfers, gas used,...).
 
