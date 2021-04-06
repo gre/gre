@@ -3,6 +3,8 @@
 
 # CryptoAliens: Genesis [[ethblock.art]][create]
 
+> See also [CryptoAliens: Genesis, a technical look](TECH.md).
+
 <img src="previews/021.png" width="50%" /><img src="previews/001.png" width="50%" />
 
 > _From the most adorable to the creepiest, 'Genesis' establishes the first embryonic species of CryptoAliens. Which one are you going to chose? Each CryptoAliens creature gets born on an Ethereum block which nourishes its shape: the number of transactions gives more bones, total ETH value transferred gives weight, exceptionally big transfers gives big heads, it will be dark when born at UTC night time,... CryptoAliens also take their unique texture from Mandelglitch's blockstyle, therefore including the same rarity scheme. More generations of CryptoAliens will follow in future and may evolved from the chosen ones._
@@ -108,6 +110,6 @@ Who knows what's next! As everything is available on the blockchain, what you mi
 
 ---
 
-For technical write up, see also [this small article](TECH.md).
+See also [CryptoAliens: Genesis, a technical look](TECH.md).
 
 My name is Gaëtan Renaudeau, and I'm a noise explorer. **feel free to ping me on Twitter [@greweb](https://twitter.com/greweb)**

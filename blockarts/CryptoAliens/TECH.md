@@ -1,5 +1,7 @@
 # CryptoAliens: Genesis, a technical look
 
+> See also [CryptoAliens: Genesis](README.md) main article.
+
 This article explains how [CryptoAliens: Genesis (ethblock.art)](README.md) works in technical depth.
 
 <img src="previews/032.png" width="50%" /><img src="previews/036.png" width="50%" />
