@@ -44,7 +44,7 @@ const CustomStyle = (props) => {
       ),
     []
   );
-  const resolutionCap = isMobile ? 128 : 1024;
+  const resolutionCap = isMobile ? 128 : 512;
   const maxDim = Math.max(width, height);
   const max = Math.min(resolutionCap, maxDim);
   const w = Math.round((max * width) / maxDim);
@@ -64,40 +64,40 @@ const CustomStyle = (props) => {
       }
       background={background}
     >
-      <NearestCopy width={w} height={h}>
-        <Scene
-          t={
-            <MandelglitchCached
-              block={block}
-              mod1={mod1}
-              mod2={mod2}
-              mod3={mod3}
-              dim={max}
-            />
-          }
-          mod1={mod1}
-          mod2={mod2}
-          mod3={mod3}
-          mod4={mod4}
-          background={background}
-          s1={s1}
-          s2={s2}
-          s3={s3}
-          s4={s4}
-          s5={s5}
-          s6={s6}
-          s7={s7}
-          s8={s8}
-          heavy={heavy}
-          head={head}
-          bonesK={bonesK}
-          armsLen={armsLen}
-          armsSpread={armsSpread}
-          armsCenter={armsCenter}
-          armsEndW={armsEndW}
-          highQuality={highQuality}
-        />
-      </NearestCopy>
+      <Scene
+        width={w}
+        height={h}
+        t={
+          <MandelglitchCached
+            block={block}
+            mod1={mod1}
+            mod2={mod2}
+            mod3={mod3}
+            dim={max}
+          />
+        }
+        mod1={mod1}
+        mod2={mod2}
+        mod3={mod3}
+        mod4={mod4}
+        background={background}
+        s1={s1}
+        s2={s2}
+        s3={s3}
+        s4={s4}
+        s5={s5}
+        s6={s6}
+        s7={s7}
+        s8={s8}
+        heavy={heavy}
+        head={head}
+        bonesK={bonesK}
+        armsLen={armsLen}
+        armsSpread={armsSpread}
+        armsCenter={armsCenter}
+        armsEndW={armsEndW}
+        highQuality={highQuality}
+      />
     </LiveTV>
   );
 };
@@ -343,18 +343,19 @@ vec4 applyVignette(vec4 color, vec2 sourceCoord, float amount, float scale, floa
 void main () {
   vec2 ratio = resolution / min(resolution.x, resolution.y);
   float borderDist = ratio.y * min(1. - uv.y, uv.y); // min(min(1. - uv.x, uv.x), ratio.y * min(1. - uv.y, uv.y));
+  float div = 0.05 - 0.03 * cos(0.5 * time);
   float textC = texture(text, uv).r;
   vec2 sourceCoord = uv;
   vec2 sampleCoord = sourceCoord;
   sampleCoord = videoRollCoords(sampleCoord, 10., 0.004, 8.0);
   sampleCoord = bulgeCoords(sampleCoord, sourceCoord, 0.1);
-  vec4 outputColor = sampleRGBVignette(children, sampleCoord, sourceCoord, 0.05, 3.0);
+  vec4 outputColor = sampleRGBVignette(children, sampleCoord, sourceCoord, div, 3.0);
   outputColor = mix(outputColor, vec4(background, 1.0), 0.8 * smoothstep(0.06, 0.03, borderDist));
   outputColor = vec4(mix(outputColor.rgb, 1. - background, textC), 1.0);
-  float vignetteAmount = 0.8 + 0.05 * cos(30. * time);
+  float vignetteAmount = 0.9 + 0.1 * cos(24. * time);
   outputColor = applyVignette(outputColor, sourceCoord, vignetteAmount, 1.5, 3.0);
-  vec2 scanLineCoord = bulgeCoords(sourceCoord, sourceCoord, 0.2);
-  outputColor = applyScanLines(outputColor, scanLineCoord, 150.0, 0.05, 1.0, 0.05);
+  vec2 scanLineCoord = bulgeCoords(sourceCoord, sourceCoord, 0.5);
+  outputColor = applyScanLines(outputColor, scanLineCoord, 150.0, div, 1.0, 0.05);
   color = outputColor;
 }
       `,
@@ -722,6 +723,8 @@ void main() {
 });
 
 function SceneRaw({
+  width,
+  height,
   t,
   highQuality,
   background,
@@ -749,6 +752,8 @@ function SceneRaw({
 }) {
   return (
     <Node
+      width={width}
+      height={height}
       shader={sceneShaders.scene}
       uniforms={{
         resolution: Uniform.Resolution,
