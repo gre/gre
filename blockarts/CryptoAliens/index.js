@@ -608,24 +608,17 @@ vec3 shade (HIT hit, vec3 g) {
   );
 }
 
-float random1 (float a) {
-  return fract(sin(a * 12.9898) * 43758.5453123); // very very light version of randomness
-}
-
-float worm (
-  inout vec3 p,
-  float w,
-  float h,
-  inout float ss1,
-  inout float ss2
-) {
+float arm (inout vec3 p, float index, float w, float h) {
   float s = sdSegment(p, h, w);
+  float base1 = 305.53 * s1 + 77.21 * index;
+  float base2 = 403.53 * s2 + 69.71 * index;
   for (int i = 0; i < armsLen; i++) {
+    float fi = float(i);
+    float ss1 = fract(base1 + 9.412 * fi);
+    float ss2 = fract(base2 + 8.823 * fi);
     pR(p.xy, 8. * s4 * (ss2-.5));
     pR(p.xz, 6. * s5 * (ss1-.5));
     s = fOpUnionSoft(bonesK, s, sdSegment(p, h, w));
-    ss1 = random1(ss1);
-    ss2 = random1(ss2);
     h *= .9;
     w *= .9;
     p.y -= 1.2 * h;
@@ -646,9 +639,6 @@ HIT obj (vec3 p) {
   p.x += 0.1 * twistAmp * cos(twistFreq);
   p.z += 0.1 * twistAmp * sin(twistFreq);
 
-  float ss1 = s1;
-  float ss2 = s2;
-
   float stepR = (s3 - 0.5) * pow(s4, 8.0) + (mod3 - .5);
   float stepR2 = s3 * 7.;
   float w = 0.04 + 0.05 * s3 * s4;
@@ -663,8 +653,8 @@ HIT obj (vec3 p) {
     pR(p.xz, stepR2);
     s = fOpUnionSoft(0.1, s, sdSegment(p, incr, 0.1));
     q = vec3(p.y, -p.x, p.z);
-    if (abs(f-armsCenter) < armsSpread) {
-      arms = fOpUnionSoft(0.1, arms, worm(q, w, h, ss1, ss2));
+    if (abs(f - armsCenter) < armsSpread) {
+      arms = fOpUnionSoft(0.1, arms, arm(q, f, w, h));
     }
     p.y -= incr;
   }

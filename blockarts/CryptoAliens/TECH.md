@@ -161,6 +161,72 @@ function useTime() {
 }
 ```
 
+### Arms joints rotation, GLSL random and determinism
+
+Ok, this is a hard topic. But it's extremely important that every blockart reliably produce the same result with the same block data. And regardless of the computer used.
+
+That last part has challenged me at the last minute, JavaScript don't have this problem because it's stable between implementations (computers, engines) but **this is not the case from GLSL**: every computer, every hardware (GPU) or possibly the "backend" implementation for WebGL ([ANGLE](https://github.com/google/angle) have different backends) can differ when it comes to float precision and primitive results.
+
+In my shader, I initially used the classical function that is documented at https://thebookofshaders.com/10/
+
+```cpp
+float random (vec2 st) {
+  return fract(sin(dot(st.xy, vec2(12.9898,78.233))) * 43758.5453123);
+}
+```
+
+It works very well when you need a nice 2D distributed noise for basic effects **but it is not working well at all if you strongly rely on a stable & consistent noise to generate different shapes**.
+
+Empirically, i've been able to observe that `sin()` yield different results on different computers.
+
+This was impacting me badly because I was able to see very various shapes:
+
+<img src="previews/rand1.png" width="33%"/><img src="previews/rand2.png" width="33%"/><img src="previews/rand3.png" width="33%"/>
+
+What I need to varies a bit here is just the angle at each joint points of the arms. This is very important for the uniqueness of the creature. The problem is that if each value changes a tiny bit, the whole thing diverge VERY QUICKLY, as the rotation angle will accumulate.
+
+Worse than that, I had a bad pattern to accumulate randomness like this:
+
+```cpp
+for (int i = 0; i < armsLen; i++) {
+  ss1 = random(ss1);
+  ...
+}
+```
+
+Actually I don't need that, instead i can just do a simple polynomial lookup:
+
+```cpp
+float arm (inout vec3 p, float index, float w, float h) {
+  float s = sdSegment(p, h, w);
+  float base1 = 305.53 * s1 + 77.21 * index;
+  float base2 = 403.53 * s2 + 69.71 * index;
+  for (int i = 0; i < armsLen; i++) {
+    float fi = float(i);
+    float ss1 = fract(base1 + 9.412 * fi);
+    float ss2 = fract(base2 + 8.823 * fi);
+    pR(p.xy, 8. * s4 * (ss2-.5));
+    pR(p.xz, 6. * s5 * (ss1-.5));
+    s = fOpUnionSoft(bonesK, s, sdSegment(p, h, w));
+    h *= .9;
+    w *= .9;
+    p.y -= 1.2 * h;
+  }
+  s = fOpUnionSoft(bonesK + 0.2 * s5, s, length(p) - armsEndW);
+  return s;
+}
+```
+
+Note that here it's very arbitrary numbers, the point is to obtain variety and unpredictability in the results. `fract` is a very simple operation (take the fractional part of the number). Indeed i'm still prone to approximation, but the risk is limited by the fact i don't go too high in values here.
+
+As said before and as seen in this code, the number will be used to do rotations (that `pR` is transforming `p` with some rotations). I use `s4` and `s5` values to give the magnitude of rotations. if both s4 and s5 are very near 0.0, it will be straight arms (it's a rare case therefore).
+
+<img src="previews/042.png" width="50%"/><img src="previews/033.png" width="50%"/>
+
+If one of the s4 or s5 are 0.0, it will be only happening on one "plan", or slightly diverging spirals, which I assume also to be rare cases:
+
+<img src="previews/017.png" width="50%"/><img src="previews/020.png" width="50%"/>
+
 ---
 
 My name is Gaëtan Renaudeau, and I'm a noise explorer. **feel free to ping me on Twitter [@greweb](https://twitter.com/greweb)**
