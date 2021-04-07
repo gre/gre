@@ -376,7 +376,7 @@ function LiveTV({ children, text, background }) {
         children,
         text,
         background,
-        time: time < 1 ? 0 : time, // NB: for 1s the time will be static so we have time to capture a same image
+        time: Math.max(0, time - 8),
       }}
     />
   );
