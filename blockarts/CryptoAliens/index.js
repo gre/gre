@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { Shaders, Node, GLSL, Uniform, NearestCopy } from "gl-react";
+import { Shaders, Node, GLSL, Uniform } from "gl-react";
 import MersenneTwister from "mersenne-twister";
 
 // Notes
@@ -37,16 +37,6 @@ const CustomStyle = (props) => {
 
   useAttributesSync(attributesRef, kg, bones, theme);
 
-  /*
-  const isMobile = useMemo(
-    () =>
-      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-        navigator.userAgent
-      ),
-    []
-  );
-  const resolutionCap = isMobile ? 128 : 512;
-  */
   const resolutionCap = 128;
   const maxDim = Math.max(width, height);
   const max = Math.min(resolutionCap, maxDim);
@@ -430,11 +420,12 @@ function FrameText({ blockNumber, dateText, width, height, kg, bones }) {
     );
     ctx.restore();
   };
+  const dpr = window.devicePixelRatio || 1;
   return (
     <canvas
       ref={onCanvasRef}
-      width={String(width * 2)}
-      height={String(height * 2)}
+      width={String(width * dpr)}
+      height={String(height * dpr)}
     />
   );
 }
