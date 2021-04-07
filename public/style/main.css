@@ -293,22 +293,20 @@ article > header {
 }
 
 /**style**/
-a {
+article a {
   color: #58b;
   text-decoration: none;
 }
-a:hover {
-  text-decoration: underline;
-}
-a:hover,
-a:active,
-a:focus {
+article a:hover,
+article a:active,
+article a:focus {
   color: #369;
+  text-decoration: underline;
 }
 html,
 body {
   font-family: Roboto, Arial, sans-serif;
-  background: #000;
+  background: #eee;
   color: #fff;
 }
 
@@ -320,6 +318,7 @@ body {
   color: #000;
   max-width: 1000px;
   margin: 0 auto;
+  padding: 20px;
 }
 
 article > header {
@@ -358,7 +357,6 @@ article > header h1 a:hover,
 article > header h1 a:focus,
 article > header h1 a:active {
   color: inherit;
-  text-decoration: none;
 }
 article > header h1:hover {
   color: #147;
