@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { findDay } from "../day";
+import { findDay } from "../shaderdays";
 
 export function SubTitleExport({ Day }) {
   return (

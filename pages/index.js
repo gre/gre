@@ -8,7 +8,7 @@ import { Container } from "../components/Container";
 import { Global } from "../components/Global";
 import { Main } from "../components/Main";
 import { Header } from "../components/Header";
-import { getToday } from "../day";
+import { getToday } from "../shaderdays";
 
 export default function Home() {
   const Day = getToday();

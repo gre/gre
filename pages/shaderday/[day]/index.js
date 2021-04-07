@@ -1,6 +1,6 @@
 import React from "react";
 import Head from "next/head";
-import { findDay, getDays } from "../../../day";
+import { findDay, getDays } from "../../../shaderdays";
 import { Visual } from "../../../components/Visual";
 import { LiveFooter } from "../../../components/LiveFooter";
 import { SubTitle } from "../../../components/SubTitle";

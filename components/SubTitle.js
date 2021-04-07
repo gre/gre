@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { findDay } from "../day";
+import { findDay } from "../shaderdays";
 
 export function SubTitle({ Day }) {
   return (
     <>
       <p className="description">
-        <Link href={`/${Day.n}`}>
+        <Link href={`/shaderday/${Day.n}`}>
           <a>Day {Day.n}.</a>
         </Link>{" "}
         <span className="daily">"{Day.title}"</span> by{" "}
@@ -16,14 +16,14 @@ export function SubTitle({ Day }) {
       </p>
       <nav>
         {findDay(Day.n - 1) ? (
-          <Link href={`/${Day.n - 1}`}>
+          <Link href={`/shaderday/${Day.n - 1}`}>
             <a>← previous day</a>
           </Link>
         ) : (
           <span />
         )}
         {findDay(Day.n + 1) ? (
-          <Link href={`/${Day.n + 1}`}>
+          <Link href={`/shaderday/${Day.n + 1}`}>
             <a>next day →</a>
           </Link>
         ) : null}

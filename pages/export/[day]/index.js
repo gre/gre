@@ -5,7 +5,7 @@ import { GIFEncoder, quantize, applyPalette } from "gifenc";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Surface } from "gl-react-dom";
 import { NearestCopy } from "gl-react";
-import { findDay, getDays } from "../../../day";
+import { findDay, getDays } from "../../../shaderdays";
 import { Visual } from "../../../components/Visual";
 import { LiveFooter } from "../../../components/LiveFooter";
 import { SubTitle } from "../../../components/SubTitle";

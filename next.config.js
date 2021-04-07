@@ -8,7 +8,7 @@ module.exports = {
     return [
       {
         source: "/day/:day",
-        destination: "/:day",
+        destination: "/shaderday/:day",
         permanent: true,
       },
     ];

@@ -1,5 +1,5 @@
-import * as dayPage from "../day/[day]";
-import Home from "../day/[day]";
+import * as dayPage from "../shaderday/[day]";
+import Home from "../shaderday/[day]";
 
 // fallbacks to day for shaderday!
 

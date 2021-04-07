@@ -12,7 +12,7 @@ tags:
 
 > See also [CryptoAliens: Genesis, a technical look][tech].
 >
-> NB: screenshot available here are not representative of the actual EthBlock.art pieces. Due to performance, the real time NFTs are rendered with 128 pixels square resolution ([see technical article][tech]). **However, it's technically possible to recreate such high quality rendering and even high quality video!** It's just technically too slow for today's GPUs.
+> NB: screenshot available here are not representative of the actual EthBlock.art pieces. The real time NFTs as available on [ethblock.art][create] are using a 128 pixels square resolution ([see technical article][tech]). **However, it's technically possible to recreate such high quality rendering and even high quality video!** It's just technically too slow for today's GPUs to be done in real time and supported across slower devices.
 
 <img src="/images/posts/cryptoaliens/021.png" width="50%" /><img src="/images/posts/cryptoaliens/001.png" width="50%" />
 

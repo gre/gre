@@ -2,18 +2,18 @@ import Head from "next/head";
 import { useState, useRef, useEffect } from "react";
 import useDimensions from "react-cool-dimensions";
 import { proxy, useSnapshot } from "valtio";
-import { EthBlockArtVisual } from "../components/EthBlockArtVisual";
-import { LiveFooter } from "../components/LiveFooter";
-import { SubTitle } from "../components/SubTitle";
-import { Title } from "../components/Title";
-import { SourceCodeFooter } from "../components/SourceCodeFooter";
-import { Container } from "../components/Container";
-import { Global } from "../components/Global";
-import { Main } from "../components/Main";
-import { Header } from "../components/Header";
-import Sidebar from "../components/ethblockart/Sidebar";
-import * as BlockArt from "../blockarts/current";
-import blocks from "../blocks";
+import { EthBlockArtVisual } from "../../components/EthBlockArtVisual";
+import { LiveFooter } from "../../components/LiveFooter";
+import { SubTitle } from "../../components/SubTitle";
+import { Title } from "../../components/Title";
+import { SourceCodeFooter } from "../../components/SourceCodeFooter";
+import { Container } from "../../components/Container";
+import { Global } from "../../components/Global";
+import { Main } from "../../components/Main";
+import { Header } from "../../components/Header";
+import Sidebar from "../../components/ethblockart/Sidebar";
+import * as BlockArt from "../../blockarts/current";
+import blocks from "../../blockarts/blocks";
 
 const store = proxy({
   ...BlockArt.styleMetadata,
