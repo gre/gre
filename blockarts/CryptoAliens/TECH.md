@@ -161,7 +161,7 @@ function useTime() {
 }
 ```
 
-### Arms joints rotation, GLSL random and determinism
+## Arms joints rotation, GLSL random and determinism
 
 Ok, this is a hard topic. But it's extremely important that every BlockArt reliably produce the same result with the same block data, regardless of the computer used.
 
@@ -236,6 +236,20 @@ Otherwise, most of the times, it will be relatively random:
 
 <img src="previews/029.png" width="50%"/><img src="previews/032.png" width="50%"/>
 <img src="previews/028.png" width="50%"/><img src="previews/026.png" width="50%"/>
+
+## going 128px. Last minute decision, hard tradeoff
+
+Due to concerns on the "deterministic rendering" from Ethblock.art folks, I had to make a choice regarding the fact it was too slow on mobile... I've decided to switch to 128x128 rendering for ALL platforms so it's consistent.
+
+All the images on that article were done on 1024x1024 which is slow on computer and not even working on my mobile phone. (OnePlus)
+
+It's hard to have efficient raymarching today when you have many items.
+
+**Ultimately, I like how it finally looks, there were some minimalism / cell shaded styles,.. now it embraces Pixel Art even more!**
+
+<img src="previews/r02.png" width="50%" /><img src="previews/r01.png" width="50%" />
+
+It's also always possible to make higher quality version of these rendering and I'm excited to experiment more of these in future.
 
 ---
 

@@ -4,6 +4,8 @@
 # CryptoAliens: Genesis [[ethblock.art]][create]
 
 > See also [CryptoAliens: Genesis, a technical look](TECH.md).
+>
+> NB: screenshot available here are not representative of the actual EthBlock.art pieces. Due to performance, I've decided to go 128 pixels ([see technical article](TECH.md)). **However, it's technically possible to recreate such high quality rendering and even high quality video!** It's just technically too slow for today's GPUs.
 
 <img src="previews/021.png" width="50%" /><img src="previews/001.png" width="50%" />
 
