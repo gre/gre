@@ -1,10 +1,18 @@
-# CryptoAliens: Genesis, a technical look
+---
+title: "CryptoAliens: Genesis, a technical look"
+description: "Technical aspects of CryptoAliens digital creatures generated with Ethereum blockchain blocks. They can be minted on ethblock.at by anyone, which establishes a limited set of CryptoAliens species."
+tags:
+  - NFT
+  - shaders
+---
 
-> See also [CryptoAliens: Genesis](README.md) main article.
+[main]: /2021/04/cryptoaliens
 
-This article explains how [CryptoAliens: Genesis (ethblock.art)](README.md) works in technical depth.
+> See also [CryptoAliens: Genesis][main] main article.
 
-<img src="previews/032.png" width="50%" /><img src="previews/036.png" width="50%" />
+This article explains how [CryptoAliens: Genesis (ethblock.art)][main] works in technical depth.
+
+<img src="/images/posts/cryptoaliens/032.png" width="50%" /><img src="/images/posts/cryptoaliens/036.png" width="50%" />
 
 First of all, I would like to point out the [source code is available here on Github](https://github.com/gre/shaderday.com/tree/master/blockarts/CryptoAliens).
 
@@ -18,7 +26,7 @@ The project aims to create a virtuous ecosystem of "deterministic art", code vis
 
 **This is a virtuous ecosystem, similar to [Supply Chain Transformation concepts](https://en.wikipedia.org/wiki/Value_chain): each actor in this ecosystem add value and get retributed for it, as I tried to explain in this schema:**
 
-![](previews/ethblockart.png)
+![](/images/posts/cryptoaliens/ethblockart.png)
 
 `CryptoAliens: Genesis` is one possible BlockStyle that I've designed, as a creative coder. It tries to visualize what happened in the Ethereum Block and will take mods into account to try to be as good as possible to deliver interesting possibilities to BlockArt minters.
 
@@ -30,7 +38,7 @@ More precisely, it is implemented with [`gl-react`](https://github.com/gre/gl-re
 
 **here is the big picture of the pipeline:**
 
-![](previews/graph.gif)
+![](/images/posts/cryptoaliens/graph.gif)
 
 There are 2 main shaders: Mandelglitch (for skin texturing) and Scene (the main raymarching shader). Each of them take a bunch of parameters. `mod1..4` are values from the creator. The rest are inferred from the Block information, they are split into multiple parameters for convenience.
 
@@ -181,7 +189,7 @@ Empirically, I can observe that `sin()` yields different results on different co
 
 This was impacting me badly because I was able to see very various shapes:
 
-<img src="previews/rand1.png" width="33%"/><img src="previews/rand2.png" width="33%"/><img src="previews/rand3.png" width="33%"/>
+<img src="/images/posts/cryptoaliens/rand1.png" width="33%"/><img src="/images/posts/cryptoaliens/rand2.png" width="33%"/><img src="/images/posts/cryptoaliens/rand3.png" width="33%"/>
 
 What I need to varies a bit here is just the angle at each joint of the arms. This is very important for the uniqueness of the creature. The problem is that if each value changes a tiny bit, the whole thing diverge VERY QUICKLY, as the rotation angle will accumulate.
 
@@ -226,16 +234,16 @@ As said before and as seen in this code, the number will be used to do rotations
 
 If both s4 and s5 are very near 0.0, it will be straight arms (it's a rare case therefore).
 
-<img src="previews/042.png" width="50%"/><img src="previews/033.png" width="50%"/>
+<img src="/images/posts/cryptoaliens/042.png" width="50%"/><img src="/images/posts/cryptoaliens/033.png" width="50%"/>
 
 If one of the s4 or s5 are 0.0, it will be only happening on one "plan", or slightly diverging spirals, which I assume also to be rare cases:
 
-<img src="previews/017.png" width="50%"/><img src="previews/020.png" width="50%"/>
+<img src="/images/posts/cryptoaliens/017.png" width="50%"/><img src="/images/posts/cryptoaliens/020.png" width="50%"/>
 
 Otherwise, most of the times, it will be relatively random:
 
-<img src="previews/029.png" width="50%"/><img src="previews/032.png" width="50%"/>
-<img src="previews/028.png" width="50%"/><img src="previews/026.png" width="50%"/>
+<img src="/images/posts/cryptoaliens/029.png" width="50%"/><img src="/images/posts/cryptoaliens/032.png" width="50%"/>
+<img src="/images/posts/cryptoaliens/028.png" width="50%"/><img src="/images/posts/cryptoaliens/026.png" width="50%"/>
 
 ## going 128px. Last minute decision, hard tradeoff
 
@@ -247,7 +255,7 @@ It's hard to have efficient raymarching today when you have many items.
 
 **Ultimately, I like how it finally looks, there were some minimalism / cell shaded styles,.. now it embraces Pixel Art even more!**
 
-<img src="previews/r02.png" width="50%" /><img src="previews/r01.png" width="50%" />
+<img src="/images/posts/cryptoaliens/r02.png" width="50%" /><img src="/images/posts/cryptoaliens/r01.png" width="50%" />
 
 It's also always possible to make higher quality version of these rendering and I'm excited to experiment more of these in future.
 
