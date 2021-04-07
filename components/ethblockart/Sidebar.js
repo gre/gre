@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import ControlSlider from "./ControlSlider";
 
 const Sidebar = function ({
+  block,
   mods,
   blockNumber,
   attributesRef,
@@ -109,6 +110,7 @@ const Sidebar = function ({
             onChange={(e) => handleBlockChange(parseInt(e.target.value))}
             range="1"
           />
+          <strong>{block ? parseInt(block.number) : null}</strong>
         </div>
 
         <div className="section-header">Change Style</div>

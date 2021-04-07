@@ -37,6 +37,7 @@ const CustomStyle = (props) => {
 
   useAttributesSync(attributesRef, kg, bones, theme);
 
+  /*
   const isMobile = useMemo(
     () =>
       /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
@@ -45,6 +46,8 @@ const CustomStyle = (props) => {
     []
   );
   const resolutionCap = isMobile ? 128 : 512;
+  */
+  const resolutionCap = 128;
   const maxDim = Math.max(width, height);
   const max = Math.min(resolutionCap, maxDim);
   const w = Math.round((max * width) / maxDim);

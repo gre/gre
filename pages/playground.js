@@ -61,25 +61,20 @@ function useBlock(blockNumber) {
   return block;
 }
 
-function useCurrentBlock() {
-  const [block, setBlock] = useState(blocks[0]);
+function useCurrentBlockNumber() {
+  const [blockNumber, setBlockNumber] = useState(0);
   useEffect(() => {
     if (BlockArt.styleMetadata.debug_noRefresh) return;
     async function refresh() {
       const blockNumber = await rpc("eth_blockNumber");
       if (!blockNumber) return;
-      const block = await rpc("eth_getBlockByNumber", [blockNumber, true]);
-      if (!block) return;
-      blocks.push(block);
-      sortBlocks();
-      setBlock(block);
-      console.log(blocks, block);
+      setBlockNumber(parseInt(blockNumber));
     }
-    const interval = setInterval(refresh, 10000);
+    const interval = setInterval(refresh, 3000);
     refresh();
     return () => clearInterval(interval);
   }, []);
-  return block;
+  return blockNumber;
 }
 
 function useRandomLoadingBlocks(count = 10, interval = 120000, delay = 100) {
@@ -116,10 +111,11 @@ const shouldBeMinimal = seed < 0 && (-seed >> 1) % 2 == 0;
 
 export default function Home() {
   const { ref, width, height } = useDimensions({});
-  const [blockNumber, setBlockNumber] = useState(12179460);
+  const [blockNumber, setBlockNumber] = useState(0);
+  const currentBlockNumber = useCurrentBlockNumber();
   const snap = useSnapshot(store);
   const attributesRef = useRef();
-  const block = useBlock(blockNumber);
+  const block = useBlock(blockNumber || currentBlockNumber);
   // useCurrentBlock();
   // useRandomLoadingBlocks();
 
@@ -189,6 +185,7 @@ export default function Home() {
               style={shouldBeMinimal ? { position: "fixed", right: 0 } : null}
             >
               <Sidebar
+                block={block}
                 blockNumber={blockNumber}
                 attributesRef={attributesRef}
                 mods={mods}
