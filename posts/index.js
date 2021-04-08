@@ -2,26 +2,38 @@ import matter from "gray-matter";
 import marked from "marked";
 
 export async function getAllPosts() {
-  const context = require.context("../posts", true, /\.md$/);
+  const context = require.context("../posts", false, /\.md$/);
   const posts = [];
   for (const key of context.keys()) {
     const post = key.slice(2);
+    const m = post.match(/^(\d+)-(\d+)-(\d+)-(.*).md$/);
+    if (!m) continue;
+    const [, year, month, day, slug] = m;
     const content = await import(`../posts/${post}`);
     const meta = matter(content.default);
     posts.push({
-      slug: post.replace(".md", ""),
+      id: post.replace(".md", ""),
+      year,
+      month,
+      day,
+      slug,
+      content: meta.content,
       data: meta.data,
     });
   }
+  posts.reverse();
   return posts;
 }
 
-export async function getPostBySlug(slug) {
-  const fileContent = await import(`../posts/${slug}.md`);
-  const meta = matter(fileContent.default);
-  const content = marked(meta.content);
+export async function getPost(year, month, slug) {
+  const all = await getAllPosts();
+  const m = all.find(
+    (p) => p.year === year && p.month === month && p.slug === slug
+  );
+  if (!m) throw new Error("not found");
+  const content = marked(m.content);
   return {
-    data: meta.data,
+    ...m,
     content,
   };
 }

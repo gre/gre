@@ -1,0 +1,32 @@
+[package]
+name = "gre"
+version = "0.1.0"
+authors = ["Gaëtan Renaudeau <renaudeau.gaetan@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+name = "gre"
+path = "src/lib.rs"
+
+[dependencies]
+lyon = "0.17"
+travelling_salesman = "1.0"
+voronoi = "0.1"
+time = "0.1"
+geo = "0.17"
+num-traits = "0.2"
+svg = "0.8.0"
+image = "0.23"
+rand = "0.5.6"
+kiss3d = "0.29"
+noise = "0.7"
+tokio = { version = "0.2", features = ["macros"] }
+reqwest = { version = "0.10", features = ["json"] }
+serde = { version = "1.0", features = ["derive"] }
+rayon = "1.5"
+rkm = "0.8"
+ndarray = "0.12.1"
+clap = "3.0.0-beta.2"
+byteorder = "1"

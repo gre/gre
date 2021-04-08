@@ -1,30 +1,27 @@
 import React from "react";
 import Head from "next/head";
+import Link from "next/link";
 import { Container } from "../../../../components/Container";
 import { Global } from "../../../../components/Global";
-import { getPostBySlug, getAllPosts } from "../../../../posts";
+import { getPost, getAllPosts } from "../../../../posts";
 
 export async function getStaticPaths() {
   const posts = await getAllPosts();
+  const paths = posts.map(({ year, month, slug }) => ({
+    params: {
+      year,
+      month,
+      slug,
+    },
+  }));
   return {
-    paths: posts
-      .map((p) => p.slug.split("/"))
-      .filter((p) => p.length === 3)
-      .map(([year, month, slug]) => ({
-        params: {
-          year,
-          month,
-          slug,
-        },
-      })),
+    paths,
     fallback: false,
   };
 }
 
 export async function getStaticProps({ params }) {
-  const post = await getPostBySlug(
-    params.year + "/" + params.month + "/" + params.slug
-  );
+  const post = await getPost(params.year, params.month, params.slug);
   return {
     props: post,
   };
@@ -33,6 +30,9 @@ export async function getStaticProps({ params }) {
 const siteURL = "https://shaderday.com";
 
 export default function Home({
+  year,
+  month,
+  day,
   data: { title, description, tags, thumbnail },
   content,
 }) {
@@ -80,24 +80,35 @@ export default function Home({
             <div id="content">
               <article>
                 <header>
-                  <h1>{title}</h1>
-                  {/*
-                <time class="date" datetime="">
-                  ...
-                </time>
-                */}
-                  {/*
-   <span class="tags">
-     <a class="tag" href="{{ tag | tag_url }}">{{tag}}</a>
-     {% endfor %}
-   </span>
-    */}
+                  <h1>
+                    <Link href="/">
+                      <a>{title}</a>
+                    </Link>
+                  </h1>
+
+                  <time className="date" dateTime={`${year}-${month}-${day}`}>
+                    {`${year}-${month}-${day}`}
+                  </time>
+                  <span className="tags">
+                    {tags.map((t) => (
+                      <a key={t} className="tag">
+                        {t}
+                      </a>
+                    ))}
+                  </span>
                 </header>
 
                 <div
                   className="entry-content"
                   dangerouslySetInnerHTML={{ __html: content }}
                 />
+
+                {/*
+                <footer className="comments">
+                  <div id="disqus_thread"></div>
+                </footer>
+                <script src="//greweb.disqus.com/embed.js" />
+*/}
               </article>
             </div>
           </div>
