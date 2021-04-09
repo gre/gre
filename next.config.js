@@ -9,6 +9,7 @@ module.exports = {
       {
         source: "/cryptoaliens",
         destination: "/2021/04/cryptoaliens",
+        permanent: false,
       },
       {
         source: "/day/:day",
