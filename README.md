@@ -1,4 +1,4 @@
-<img src="https://greweb.me/profile.jpg" width="32" /> [**greweb.me**](https://greweb.me) – [@greweb](https://twitter.com/greweb)
+[**greweb.me**](https://greweb.me) – [@greweb](https://twitter.com/greweb)
 
 > 👋 I'm gre (Gaëtan Renaudeau),
 > 
