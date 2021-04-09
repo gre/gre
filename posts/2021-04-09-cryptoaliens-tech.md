@@ -14,7 +14,7 @@ This article explains how [CryptoAliens: Genesis (ethblock.art)][main] works in 
 
 <img src="/images/posts/cryptoaliens/032.png" width="50%" /><img src="/images/posts/cryptoaliens/036.png" width="50%" />
 
-First of all, I would like to point out the [source code is available here on Github](https://github.com/gre/shaderday.com/tree/master/blockarts/CryptoAliens).
+First of all, I would like to point out the [source code is available here on Github](https://github.com/gre/gre/tree/master/blockarts/CryptoAliens).
 
 This whole idea was kicked off on [Twitch](https://twitch.tv/greweb). A recording is [available on Youtube](https://www.youtube.com/watch?v=WUzOlLq0IAo). Apart from the many glitches this 3 hours session had remained to be solved, the main part of this was implemented that night. Indeed I had to work countlessly on polishing the shaders, lighting and post-processing. I also spent a lot of time using the block data in a meaningful way because it's what [EthBlock.art](https://ethblock.art) really is about.
 

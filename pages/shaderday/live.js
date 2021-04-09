@@ -16,12 +16,12 @@ export default function Home() {
     <GlobalLive>
       <Container>
         <Head>
-          <title>shaderday.com</title>
+          <title>greweb.me</title>
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <Main>
           <Header>
-            <Title text="shaderday.com" />
+            <Title text="greweb.me" />
           </Header>
           <Visual Day={Day} />
         </Main>

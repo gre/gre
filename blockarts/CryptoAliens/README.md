@@ -1,2 +1,2 @@
-- [main article](http://shaderday.com/2021/04/cryptoaliens)
-- [technical article](http://shaderday.com/2021/04/cryptoaliens-tech)
+- [main article](https://greweb.me/2021/04/cryptoaliens)
+- [technical article](https://greweb.me/2021/04/cryptoaliens-tech)

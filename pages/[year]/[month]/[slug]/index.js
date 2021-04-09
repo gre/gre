@@ -27,7 +27,7 @@ export async function getStaticProps({ params }) {
   };
 }
 
-const siteURL = "https://shaderday.com";
+const siteURL = "https://greweb.me";
 
 export default function Home({
   year,

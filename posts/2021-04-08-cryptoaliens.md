@@ -115,7 +115,7 @@ The visibility of Mandelglitch on the skin has been intentionally contained, but
 
 ## ...and, What's next?
 
-Who knows what's next! As everything is available on the blockchain, what you mint is saved immutably and forever. Me or other artists could fork the code ([available on Github](https://github.com/gre/shaderday.com/tree/master/blockarts/CryptoAliens)) to make animated version of the CryptoAliens that were chosen (as this code is open source). Also we can imagine doing crossover between species or doing "evolution" of these species over time. Everything is possible!
+Who knows what's next! As everything is available on the blockchain, what you mint is saved immutably and forever. Me or other artists could fork the code ([available on Github](https://github.com/gre/gre/tree/master/blockarts/CryptoAliens)) to make animated version of the CryptoAliens that were chosen (as this code is open source). Also we can imagine doing crossover between species or doing "evolution" of these species over time. Everything is possible!
 
 ---
 

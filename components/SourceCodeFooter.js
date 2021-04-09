@@ -6,7 +6,7 @@ export function SourceCodeFooter({ Day }) {
       <footer>
         <a
           target="_blank"
-          href={`https://github.com/gre/shaderday.com/blob/master/day/${(
+          href={`https://github.com/gre/gre/blob/master/shaderdays/${(
             Day.n + ""
           ).padStart(3, "0")}.js`}
         >

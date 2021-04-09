@@ -28,7 +28,7 @@ fn make_svg() -> Document {
 }
 
 ///// raymarching a "Signed Distance Function" ///// (see http://jamie-wong.com/2016/07/15/ray-marching-signed-distance-functions/)
-// This implements a raymarcher, similar to the one used at https://shaderday.com/56
+// This implements a raymarcher, similar to the one used at https://greweb.me/shaderday/56
 
 // this is the "main" coloring function. for a given uv, returns a color.
 fn get_color(uv: vec2) -> vec3 {
