@@ -1,0 +1,58 @@
+body {
+  background: radial-gradient(#222, #000);
+  color: white;
+  width: 100vw;
+  height: 100vh;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+}
+
+#pinyin {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 6.5vw;
+  width: 100vw;
+  position: fixed;
+  left: 0px;
+  top: 2vw;
+  opacity: 0;
+  animation: appears 2s 1s 1 linear forwards;
+}
+
+#translation {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 3vw;
+  width: 100vw;
+  position: fixed;
+  left: 0px;
+  bottom: 2vw;
+  opacity: 0;
+  animation: appears 2s 2s 1 linear forwards;
+}
+
+@keyframes appears {
+  to {
+    opacity: 1;
+  }
+}
+
+path {
+  stroke-dasharray: 0 400;
+  stroke-dashoffset: 0%;
+  animation: draw 0.5s infinite linear, load 30s 5s 1 linear forwards;
+}
+
+@keyframes load {
+  to {
+    stroke-dasharray: 1000 0;
+  }
+}
+
+@keyframes draw {
+  from {
+    stroke-dashoffset: 0%;
+  }
+  to {
+    stroke-dashoffset: 100%;
+  }
+}
