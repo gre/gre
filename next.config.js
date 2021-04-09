@@ -7,6 +7,10 @@ module.exports = {
   async redirects() {
     return [
       {
+        source: "/cryptoaliens",
+        destination: "/2021/04/cryptoaliens",
+      },
+      {
         source: "/day/:day",
         destination: "/shaderday/:day",
         permanent: true,

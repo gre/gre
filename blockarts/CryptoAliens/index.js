@@ -10,7 +10,7 @@ import MersenneTwister from "mersenne-twister";
 export const styleMetadata = {
   name: "CryptoAliens: Genesis",
   description:
-    "From the most adorable to the creepiest, 'Genesis' establishes the first embryonic species of CryptoAliens. Which one are you going to chose? Each CryptoAliens creature gets born on an Ethereum block which nourishes its shape: the number of transactions gives more bones, total ETH value transferred gives weight, exceptionally big transfers gives big heads, it will be dark when born at UTC night time,... CryptoAliens also take their unique texture from Mandelglitch's blockstyle, therefore including the same rarity scheme. More generations of CryptoAliens will follow in future and may evolved from the chosen ones.",
+    "CryptoAliens: Genesis establishes the first embryonic species of CryptoAliens. Which one are you going to chose? Each creature gets born on an Ethereum block that nourishes its shape: transactions, ETH value transferred, gas,... their unique skin comes from Mandelglitch's BlockStyle with the same rarity scheme. See greweb.me/cryptoaliens",
   image: "",
   creator_name: "greweb",
 
