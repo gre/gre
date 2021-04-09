@@ -6,7 +6,7 @@
 > 
 > I'm a creative coder at night. (shaders, plots)
 > 
-> maintainer [gl-react](https://gl-react-cookbook.surge.sh/) and [gl-transitions](https://gl-transitions.com/)
+> I'm known as creator of [gl-react](https://gl-react-cookbook.surge.sh/) and [gl-transitions](https://gl-transitions.com/)
 
 **https://github.com/gre/gre is home for:**
 
