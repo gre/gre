@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Iframeception</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta property="og:image" content="thumbnail.png" />
+    <style>
+      html, body {
+        width: 100vw;
+        height: 100vh;
+      }
+      iframe {
+        transform: scale(0.85) rotate(20deg);
+        animation: 3s infinite alternate anim;
+      }
+      @keyframes anim {
+        from {
+          transform: scale(0.85) rotate(20deg);
+        }
+        to {
+          transform: scale(0.9) rotate(10deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      const m =  location.search.match("depth=([0-9]+)");
+      const depth = m ? parseInt(m[1]) : 20;
+      if( depth > 0) {
+        document.body.innerHTML = `<iframe width="100%" height="100%" style="background:hsl(${(Math.floor(Date.now()/1000) + 5*depth) % 360},50%,${5*depth}%)" src=".?depth=${depth-1}"/>`;
+      }
+    </script>
+  </body>
+</html>

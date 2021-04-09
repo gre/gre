@@ -1,0 +1,37 @@
+body {
+  background-color: rgb(7, 37, 49);
+  color: rgb(213, 231, 238);
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-sizing: border-box;
+  padding: 8vw;
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+    "Lucida Sans", Arial, sans-serif;
+}
+
+.main {
+  font-size: 12vw;
+  text-shadow: 2px 2px 0px black;
+  letter-spacing: -0.02em;
+}
+
+header,
+footer {
+  text-align: center;
+  width: 100vw;
+  position: fixed;
+  left: 0px;
+  font-size: 6.5vw;
+  font-family: "Courier New", Courier, monospace;
+}
+
+header {
+  top: 2vh;
+}
+footer {
+  bottom: 2vh;
+}
