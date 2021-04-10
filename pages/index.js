@@ -57,9 +57,11 @@ export default function Home({ posts, plots }) {
             <img width="200" src="/profile.jpg" />
             <Title text="greweb.me" />
             <p className="social">
-              <a href="https//twitter.com/greweb">Twitter</a>
+              <a href="https://twitter.com/greweb">Twitter</a>
               {" – "}
-              <a href="https//github.com/gre">Github</a>
+              <a href="https://github.com/gre">Github</a>
+              {" – "}
+              <a href="https://twitch.tv/greweb">Twitch</a>
             </p>
             <blockquote>
               Gaëtan Renaudeau (greweb). French developer at Ledger. creative
