@@ -7,7 +7,6 @@ import { Content } from "../../../components/Content";
 import { Global } from "../../../components/Global";
 import { Main } from "../../../components/Main";
 import { Header } from "../../../components/Header";
-import { getOBJKT } from "../../../api/hicetnunc";
 
 export async function getStaticPaths() {
   return {
@@ -32,19 +31,8 @@ export async function getStaticProps({ params }) {
   };
 }
 
-const emptyArray = [];
-function useObjkts(ids) {
-  const [objktData, setObjktData] = useState(emptyArray);
-  useEffect(() => {
-    if (ids.length === 0) return;
-    setObjktData(emptyArray);
-    Promise.all(ids.map(getOBJKT)).then(setObjktData);
-  }, ids);
-  return objktData;
-}
-
 export default function Home({ plot }) {
-  const { content, data, thumbnail } = plot;
+  const { content, data } = plot;
 
   return (
     <Global>
