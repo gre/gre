@@ -13,6 +13,7 @@
 /.next/
 /out/
 /dist/
+dist.zip
 
 # production
 /build
