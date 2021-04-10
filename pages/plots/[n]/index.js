@@ -1,15 +1,13 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Head from "next/head";
 import { getPlots } from "../../../plots";
-import { Visual } from "../../../components/Visual";
-import { LiveFooter } from "../../../components/LiveFooter";
-import { SubTitle } from "../../../components/SubTitle";
 import { Title } from "../../../components/Title";
-import { SourceCodeFooter } from "../../../components/SourceCodeFooter";
 import { Container } from "../../../components/Container";
+import { Content } from "../../../components/Content";
 import { Global } from "../../../components/Global";
 import { Main } from "../../../components/Main";
 import { Header } from "../../../components/Header";
+import { getOBJKT } from "../../../api/hicetnunc";
 
 export async function getStaticPaths() {
   return {
@@ -34,8 +32,20 @@ export async function getStaticProps({ params }) {
   };
 }
 
+const emptyArray = [];
+function useObjkts(ids) {
+  const [objktData, setObjktData] = useState(emptyArray);
+  useEffect(() => {
+    if (ids.length === 0) return;
+    setObjktData(emptyArray);
+    Promise.all(ids.map(getOBJKT)).then(setObjktData);
+  }, ids);
+  return objktData;
+}
+
 export default function Home({ plot }) {
-  const { content } = plot;
+  const { content, data, thumbnail } = plot;
+
   return (
     <Global>
       <Container>
@@ -45,13 +55,54 @@ export default function Home({ plot }) {
         </Head>
         <Main>
           <Header>
-            <Title text="One Day, One Plot" />
+            <style jsx>{`
+              dt {
+                font-weight: bold;
+              }
+              dd {
+                display: inline;
+                margin: 0;
+              }
+              dd + dd:before {
+                content: ", ";
+              }
+            `}</style>
+            {data.thumbnail ? <img src={data.thumbnail} width="300" /> : null}
+            <Title
+              text={`Plot #${plot.n}${data.title ? " – " + data.title : ""}`}
+            />
+            {data.objkts ? (
+              <dl>
+                <dt>hicetnunc NFTs</dt>
+                {data.objkts.map((objkt) => (
+                  <dd key={objkt}>
+                    <a href={`https://www.hicetnunc.xyz/objkt/${objkt}`}>
+                      OBJKT#{objkt}
+                    </a>
+                  </dd>
+                ))}
+              </dl>
+            ) : null}
           </Header>
+          <Content>
+            <div
+              className="entry-content"
+              dangerouslySetInnerHTML={{ __html: content }}
+            />
 
-          <div
-            className="entry-content"
-            dangerouslySetInnerHTML={{ __html: content }}
-          />
+            {data.tweet ? (
+              <>
+                <blockquote className="twitter-tweet">
+                  <a href={data.tweet}></a>
+                </blockquote>
+                <script
+                  async
+                  src="https://platform.twitter.com/widgets.js"
+                  charSet="utf-8"
+                ></script>
+              </>
+            ) : null}
+          </Content>
         </Main>
       </Container>
     </Global>

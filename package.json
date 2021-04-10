@@ -10,6 +10,7 @@
     "start-doodle": "parcel"
   },
   "dependencies": {
+    "axios": "^0.21.1",
     "gifenc": "^1.0.3",
     "gl-mat3": "^2.0.0",
     "gl-react": "^5.0.0",

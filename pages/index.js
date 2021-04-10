@@ -140,7 +140,7 @@ export default function Home({ posts, plots }) {
             <script
               async
               src="https://platform.twitter.com/widgets.js"
-              charset="utf-8"
+              charSet="utf-8"
             ></script>
           </div>
         </Main>
