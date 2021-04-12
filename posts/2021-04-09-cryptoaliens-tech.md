@@ -12,7 +12,7 @@ tags:
 
 This article explains how [CryptoAliens: Genesis (ethblock.art)][main] works in technical depth.
 
-<img src="/images/posts/cryptoaliens/032.png" width="50%" /><img src="/images/posts/cryptoaliens/036.png" width="50%" />
+<img src="/images/posts/cryptoaliens/032_px.png" width="50%" /><img src="/images/posts/cryptoaliens/036_px.png" width="50%" />
 
 First of all, I would like to point out the [source code is available here on Github](https://github.com/gre/gre/tree/master/blockarts/CryptoAliens).
 
@@ -234,16 +234,16 @@ As said before and as seen in this code, the number will be used to do rotations
 
 If both s4 and s5 are very near 0.0, it will be straight arms (it's a rare case therefore).
 
-<img src="/images/posts/cryptoaliens/042.png" width="50%"/><img src="/images/posts/cryptoaliens/033.png" width="50%"/>
+<img src="/images/posts/cryptoaliens/042_px.png" width="50%"/><img src="/images/posts/cryptoaliens/033_px.png" width="50%"/>
 
 If one of the s4 or s5 are 0.0, it will be only happening on one "plan", or slightly diverging spirals, which I assume also to be rare cases:
 
-<img src="/images/posts/cryptoaliens/017.png" width="50%"/><img src="/images/posts/cryptoaliens/020.png" width="50%"/>
+<img src="/images/posts/cryptoaliens/017_px.png" width="50%"/><img src="/images/posts/cryptoaliens/020_px.png" width="50%"/>
 
 Otherwise, most of the times, it will be relatively random:
 
-<img src="/images/posts/cryptoaliens/029.png" width="50%"/><img src="/images/posts/cryptoaliens/032.png" width="50%"/>
-<img src="/images/posts/cryptoaliens/028.png" width="50%"/><img src="/images/posts/cryptoaliens/026.png" width="50%"/>
+<img src="/images/posts/cryptoaliens/029_px.png" width="50%"/><img src="/images/posts/cryptoaliens/032_px.png" width="50%"/>
+<img src="/images/posts/cryptoaliens/028_px.png" width="50%"/><img src="/images/posts/cryptoaliens/026_px.png" width="50%"/>
 
 ## going 128px. Last minute decision, hard tradeoff
 
