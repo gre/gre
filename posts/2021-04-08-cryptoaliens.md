@@ -6,7 +6,7 @@ tags:
   - shaders
 ---
 
-[create]: https://ethblock.art/create/
+[create]: https://ethblock.art/create/24
 [opensea]: https://opensea.io
 [tech]: /2021/04/cryptoaliens-tech
 
@@ -16,11 +16,11 @@ tags:
 
 <img src="/images/posts/cryptoaliens/021.png" width="50%" /><img src="/images/posts/cryptoaliens/001.png" width="50%" />
 
-> _From the most adorable to the creepiest, 'Genesis' establishes the first embryonic species of CryptoAliens. Which one are you going to chose? Each CryptoAliens creature gets born on an Ethereum block which nourishes its shape: the number of transactions gives more bones, total ETH value transferred gives weight, exceptionally big transfers gives big heads, it will be dark when born at UTC night time,... CryptoAliens also take their unique texture from Mandelglitch's blockstyle, therefore including the same rarity scheme. More generations of CryptoAliens will follow in future and may evolved from the chosen ones._
+> CryptoAliens: Genesis establishes the first embryonic species. Which CryptoAliens are you going to chose? Each creature gets born on an Ethereum block that nourishes its shape: transactions, ETH value transferred, gas,... their unique skin comes from Mandelglitch's BlockStyle with the same rarity scheme.
 
 ## What are CryptoAliens?
 
-CryptoAliens are digital creatures generated from Ethereum blockchain blocks. They can be minted on [ethblock.art][create] by anyone, which establishes a limited set of CryptoAliens species. Each block produced on Ethereum have unique elements that can be visualized in creative ways.
+CryptoAliens are digital creatures generated from Ethereum blockchain blocks. They can be minted on [ethblock.art][create] by anyone, to establishes a limited set of CryptoAliens species in a decentralized matter. Each block produced on Ethereum have unique elements that can be visualized in creative ways.
 
 <img src="/images/posts/cryptoaliens/014.png" width="50%" /><img src="/images/posts/cryptoaliens/017.png" width="50%" />
 
