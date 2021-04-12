@@ -73,6 +73,14 @@ export default function Home({
             rel="stylesheet"
             type="text/css"
           />
+          <link
+            rel="stylesheet"
+            href="https://unpkg.com/@highlightjs/cdn-assets@10.7.2/styles/default.min.css"
+          />
+          <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.2/highlight.min.js"></script>
+          <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.2/languages/javascript.min.js"></script>
+          <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.2/languages/cpp.min.js"></script>
+          <script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.2/languages/glsl.min.js"></script>
           <link rel="stylesheet" href="/style/main.css" />
         </Head>
         <div id="container">
@@ -113,6 +121,7 @@ export default function Home({
             </div>
           </div>
         </div>
+        <script>hljs.highlightAll();</script>
       </Container>
     </Global>
   );
