@@ -274,10 +274,8 @@ function useBlockDerivedData(block) {
 const liveTVShaders = Shaders.create({
   tv: {
     frag: GLSL`
-#version 300 es
 precision highp float;
-in vec2 uv;
-out vec4 color;
+varying vec2 uv;
 
 uniform float time;
 uniform vec2 resolution;
@@ -308,11 +306,11 @@ vec4 sampleRGBVignette(sampler2D source, vec2 coord, vec2 sourceCoord, float amo
     float centerDist = getCenterDistance(sourceCoord);
     centerDist = pow(centerDist, power);
     vec2 sampleCoord = coord;
-    vec4 outputColor = texture(source, sampleCoord);
+    vec4 outputColor = texture2D(source, sampleCoord);
     sampleCoord = bulgeCoords(coord, sourceCoord, amount * centerDist);
-    outputColor.g = texture(source, sampleCoord).g;
+    outputColor.g = texture2D(source, sampleCoord).g;
     sampleCoord = bulgeCoords(coord, sourceCoord, amount * 2.0 * centerDist);
-    outputColor.b = texture(source, sampleCoord).b;
+    outputColor.b = texture2D(source, sampleCoord).b;
     return outputColor;
 }
 
@@ -337,7 +335,7 @@ void main () {
   vec2 ratio = resolution / min(resolution.x, resolution.y);
   float borderDist = ratio.y * min(1. - uv.y, uv.y); // min(min(1. - uv.x, uv.x), ratio.y * min(1. - uv.y, uv.y));
   float div = 0.05 - 0.03 * cos(0.5 * time);
-  float textC = texture(text, uv).r;
+  float textC = texture2D(text, uv).r;
   vec2 sourceCoord = uv;
   vec2 sampleCoord = sourceCoord;
   sampleCoord = videoRollCoords(sampleCoord, 10., 0.004, 8.0);
@@ -349,7 +347,7 @@ void main () {
   outputColor = applyVignette(outputColor, sourceCoord, vignetteAmount, 1.5, 3.0);
   vec2 scanLineCoord = bulgeCoords(sourceCoord, sourceCoord, 0.5);
   outputColor = applyScanLines(outputColor, scanLineCoord, 150.0, div, 1.0, 0.05);
-  color = outputColor;
+  gl_FragColor = outputColor;
 }
       `,
   },
@@ -436,10 +434,9 @@ const FrameTextCached = React.memo(FrameText);
 const sceneShaders = Shaders.create({
   scene: {
     frag: GLSL`
-#version 300 es
 precision highp float;
-in vec2 uv;
-out vec4 color;
+varying vec2 uv;
+
 uniform vec2 resolution;
 
 uniform vec3 background;
@@ -484,8 +481,10 @@ float sdSegment (in vec3 p, in float L, in float R) {
 float softshadow( in vec3 ro, in vec3 rd, float mint, float maxt, float k ) {
   float res = 1.0;
   float ph = 1e20;
-  for(float t=mint; t<maxt; ) {
+  float t = mint;
+  for (int i=0; i<30; i++) {
     float h = map(ro + rd*t).x;
+    if (t>=maxt) break;
     if( h<0.001) return 0.0;
     float y = h*h/(2.0*ph);
     float d = sqrt(h*h-y*y);
@@ -595,7 +594,7 @@ vec3 shade (HIT hit, vec3 g) {
   vec2 p = hit.zw;
   vec2 tUV = fract(p);
   return palette(
-    s6 + mod4 * s5 * texture(t, tUV).r,
+    s6 + mod4 * s5 * texture2D(t, tUV).r,
     vec3(0.5),
     vec3(0.5),
     vec3(1.0),
@@ -607,7 +606,8 @@ float arm (inout vec3 p, float index, float w, float h) {
   float s = sdSegment(p, h, w);
   float base1 = 305.53 * s1 + 77.21 * index;
   float base2 = 403.53 * s2 + 69.71 * index;
-  for (int i = 0; i < armsLen; i++) {
+  for (int i = 0; i < 32; i++) {
+    if (i >= armsLen) break;
     float fi = float(i);
     float ss1 = fract(base1 + 9.412 * fi);
     float ss2 = fract(base2 + 8.823 * fi);
@@ -710,7 +710,7 @@ void main() {
     }
     c /= 5.0;
   }
-  color = vec4(c, 1.0);
+  gl_FragColor = vec4(c, 1.0);
 }
   `,
   },
