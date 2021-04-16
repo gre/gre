@@ -6,6 +6,8 @@
 .pnp.js
 .cache/
 
+plots/results
+
 # testing
 /coverage
 
