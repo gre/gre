@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Head from "next/head";
 import { getPlots } from "../../../plots";
 import { Title } from "../../../components/Title";
@@ -7,6 +7,10 @@ import { Content } from "../../../components/Content";
 import { Global } from "../../../components/Global";
 import { Main } from "../../../components/Main";
 import { Header } from "../../../components/Header";
+import {
+  HighlightAll,
+  highlightAllResources,
+} from "../../../components/HighlightAll";
 
 export async function getStaticPaths() {
   return {
@@ -22,16 +26,16 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
-  const n = parseInt(params.n, 10);
+  const nNumber = parseInt(params.n, 10);
   const plots = await getPlots();
-  const plot = plots.find((p) => parseInt(p.n) === n);
+  const plot = plots.find((p) => parseInt(p.n) === nNumber);
   if (!plot) throw new Error("plot not found!");
   return {
-    props: { n, plot },
+    props: { n: params.n, plot },
   };
 }
 
-export default function Home({ plot }) {
+export default function Home({ n, plot }) {
   const { content, data } = plot;
 
   return (
@@ -40,6 +44,7 @@ export default function Home({ plot }) {
         <Head>
           <title>One Day, One Plot – Plot {plot.n}</title>
           <link rel="icon" href="/favicon.ico" />
+          {highlightAllResources}
         </Head>
         <Main>
           <Header>
@@ -71,6 +76,16 @@ export default function Home({ plot }) {
                 ))}
               </dl>
             ) : null}
+            <dl>
+              <dt>Rust sourcecode</dt>
+              <dd>
+                <a
+                  href={`https://github.com/gre/gre/blob/master/plots/examples/${n}/main.rs`}
+                >
+                  main.rs
+                </a>
+              </dd>
+            </dl>
           </Header>
           <Content>
             <div
@@ -92,6 +107,7 @@ export default function Home({ plot }) {
             ) : null}
           </Content>
         </Main>
+        <HighlightAll />
       </Container>
     </Global>
   );
