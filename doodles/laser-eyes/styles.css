@@ -35,5 +35,6 @@ h2 {
 }
 
 a {
-  font-size: 1vw;
+  font-size: 2vw;
+  text-decoration: underline;
 }

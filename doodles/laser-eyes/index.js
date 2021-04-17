@@ -6,6 +6,7 @@ import { Surface } from "gl-react-dom";
 import useDimensions from "react-cool-dimensions";
 import { useControls, buttonGroup } from "leva";
 import * as faceLandmarksDetection from "./face-landmarks-detection";
+// import * as faceLandmarksDetection from "@tensorflow-models/face-landmarks-detection";
 import "@tensorflow/tfjs-backend-cpu";
 import { FaceEyesEffect } from "./FaceEyesEffect";
 import { ToastContainer, toast } from "react-toastify";
@@ -15,7 +16,6 @@ import blazerface from "./blazerface.raw";
 import facemesh from "./facemesh.raw";
 import iris from "./iris.raw";
 
-console.log(location);
 window.HACKURL = {
   blazerface: "./" + blazerface,
   facemesh: "./" + facemesh,
@@ -169,7 +169,7 @@ const Rendering = ({ image }) => {
     const anchor = document.createElement("a");
     toast(
       <a href={url} rel="noreferrer">
-        {url} (right click, new tab)
+        Open Result (URL)
       </a>
     );
     anchor.href = url;
@@ -212,7 +212,7 @@ const Rendering = ({ image }) => {
 
   return (
     <div ref={viewport.observe} style={viewportStyle}>
-      <ToastContainer position="top-left" />
+      <ToastContainer position="top-left" autoClose={false} />
 
       {capturing ? (
         <CaptureMemo
@@ -270,7 +270,7 @@ function Capture({
     function captureNDArray() {
       const nda = ref.current.capture();
       const {
-        shape: [height, width],
+        shape: [width, height],
       } = nda;
       const data = new Uint8Array(height * width * 4);
       for (let y = 0; y < height; y++) {

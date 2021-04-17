@@ -71,7 +71,7 @@ void main () {
         speed *= -1.2 + fract(5.4 * l);
         pR(b, speed * i * time);
         x = pModPolar(b, 100. * pow(mod1, 4.));
-        l = (4. * fract(56. * l + x * 4578.7459) + 1.) * mod2;
+        l = (6. * fract(56. * l + x * 4578.7459) + 2.) * mod2;
         s += max(0., 2. * mod2 - 6. * length(b)) * smoothstep(0.005, 0.0, sdSegment(b, vec2(0.0, 0.0), vec2(l, 0.0)));
         return s;
       }
