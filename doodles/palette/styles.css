@@ -1,0 +1,42 @@
+body {
+  background: radial-gradient(#000, #111);
+  color: white;
+  padding: 0;
+  margin: 0;
+  font-size: 2vw;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  width: 100vw;
+  height: 100vh;
+}
+h1 {
+  padding: 0.2em;
+  margin: 0;
+  font-weight: bold;
+  font-size: 10vw;
+}
+h2 {
+  padding: 0.1em;
+  margin: 0;
+  font-weight: normal;
+  font-size: 3vw;
+}
+a {
+  font-size: 2vw;
+  text-decoration: underline;
+}
+
+textarea {
+  width: 100%;
+  min-height: 90px;
+  box-sizing: border-box;
+  border: solid #666 1px;
+  background-color: #222;
+  color: #eee;
+  padding: 5px 10px;
+}
+
+footer {
+  font-size: 1vw;
+  margin-top: 1em;
+}
