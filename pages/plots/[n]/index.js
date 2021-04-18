@@ -3,10 +3,7 @@ import Head from "next/head";
 import { getPlots } from "../../../plots";
 import { Title } from "../../../components/Title";
 import { Container } from "../../../components/Container";
-import { Content } from "../../../components/Content";
 import { Global } from "../../../components/Global";
-import { Main } from "../../../components/Main";
-import { Header } from "../../../components/Header";
 import {
   HighlightAll,
   highlightAllResources,
@@ -46,48 +43,85 @@ export default function Home({ n, plot }) {
           <link rel="icon" href="/favicon.ico" />
           {highlightAllResources}
         </Head>
-        <Main>
-          <Header>
-            <style jsx>{`
-              dt {
-                font-weight: bold;
-              }
-              dd {
-                display: inline;
-                margin: 0;
-              }
-              dd + dd:before {
-                content: ", ";
-              }
-            `}</style>
-            {data.thumbnail ? <img src={data.thumbnail} width="300" /> : null}
-            <Title
-              text={`Plot #${plot.n}${data.title ? " – " + data.title : ""}`}
-            />
-            {data.objkts ? (
+
+        <style jsx>{`
+          main {
+            display: flex;
+            flex-direction: row;
+          }
+          aside {
+            flex: 0.8;
+            padding: 10px;
+            text-align: center;
+          }
+          h1 {
+          }
+          div.content {
+            flex: 1;
+            max-width: 500px;
+            padding: 10px;
+          }
+          @media screen and (max-width: 900px) {
+            main {
+              flex-direction: column;
+            }
+          }
+          div.properties {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+          }
+          dl {
+            display: inline-block;
+            max-width: 300px;
+          }
+          dt {
+            font-weight: bold;
+          }
+          dd {
+            display: inline;
+            margin: 0;
+          }
+          dd + dd:before {
+            content: ", ";
+          }
+        `}</style>
+        <main>
+          <aside>
+            <h1>
+              Plot #{plot.n}
+              {data.title ? " – " + data.title : ""}
+            </h1>
+            {data.thumbnail ? <img src={data.thumbnail} width="100%" /> : null}
+
+            <div className="properties">
+              <span />
+              {data.objkts ? (
+                <dl>
+                  <dt>hicetnunc NFTs</dt>
+                  {data.objkts.map((objkt) => (
+                    <dd key={objkt}>
+                      <a href={`https://www.hicetnunc.xyz/objkt/${objkt}`}>
+                        OBJKT#{objkt}
+                      </a>
+                    </dd>
+                  ))}
+                </dl>
+              ) : null}
               <dl>
-                <dt>hicetnunc NFTs</dt>
-                {data.objkts.map((objkt) => (
-                  <dd key={objkt}>
-                    <a href={`https://www.hicetnunc.xyz/objkt/${objkt}`}>
-                      OBJKT#{objkt}
-                    </a>
-                  </dd>
-                ))}
+                <dt>Rust sourcecode</dt>
+                <dd>
+                  <a
+                    href={`https://github.com/gre/gre/blob/master/plots/examples/${n}/main.rs`}
+                  >
+                    main.rs
+                  </a>
+                </dd>
               </dl>
-            ) : null}
-            <dl>
-              <dt>Rust sourcecode</dt>
-              <dd>
-                <a
-                  href={`https://github.com/gre/gre/blob/master/plots/examples/${n}/main.rs`}
-                >
-                  main.rs
-                </a>
-              </dd>
-            </dl>
-          </Header>
-          <Content>
+              <span />
+            </div>
+          </aside>
+          <div className="content">
             <div
               className="entry-content"
               dangerouslySetInnerHTML={{ __html: content }}
@@ -105,8 +139,8 @@ export default function Home({ n, plot }) {
                 ></script>
               </>
             ) : null}
-          </Content>
-        </Main>
+          </div>
+        </main>
         <HighlightAll />
       </Container>
     </Global>
