@@ -3,6 +3,8 @@ title: "Perlin mountains"
 thumbnail: /images/plots/108.jpg
 objkts:
   - 36604
+plotterfiles:
+  - https://plotterfiles.com/profile/files/5e43a751-6fef-4abc-a92d-253fe5c890c8
 ---
 
 <img width="100%" src="/images/plots/108.gif" />

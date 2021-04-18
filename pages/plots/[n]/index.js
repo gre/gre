@@ -101,8 +101,24 @@ export default function Home({ n, plot }) {
                   <dt>hicetnunc NFTs</dt>
                   {data.objkts.map((objkt) => (
                     <dd key={objkt}>
-                      <a href={`https://www.hicetnunc.xyz/objkt/${objkt}`}>
+                      <a
+                        target="_blank"
+                        href={`https://www.hicetnunc.xyz/objkt/${objkt}`}
+                        rel="noreferrer"
+                      >
                         OBJKT#{objkt}
+                      </a>
+                    </dd>
+                  ))}
+                </dl>
+              ) : null}
+              {data.plotterfiles ? (
+                <dl>
+                  <dt>Plotterfiles</dt>
+                  {data.plotterfiles.map((p) => (
+                    <dd key={p}>
+                      <a target="_blank" href={p} rel="noreferrer">
+                        link
                       </a>
                     </dd>
                   ))}
