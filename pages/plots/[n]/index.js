@@ -40,7 +40,7 @@ export default function Home({ n, plot }) {
     <Global>
       <Container>
         <Head>
-          <title>One Day, One Plot – Plot {plot.n}</title>
+          <title>greweb.me – {title}</title>
           <link rel="icon" href="/favicon.ico" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <meta name="twitter:card" content="summary" />
