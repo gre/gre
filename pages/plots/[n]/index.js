@@ -33,6 +33,8 @@ export async function getStaticProps({ params }) {
 
 export default function Home({ n, plot }) {
   const { content, data } = plot;
+  const { thumbnail } = data;
+  const title = `Plot #${plot.n} ${data.title ? " – " + data.title : ""}`;
 
   return (
     <Global>
@@ -40,6 +42,21 @@ export default function Home({ n, plot }) {
         <Head>
           <title>One Day, One Plot – Plot {plot.n}</title>
           <link rel="icon" href="/favicon.ico" />
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
+          <meta name="twitter:card" content="summary" />
+          <meta name="twitter:site" content="@greweb" />
+          <meta name="twitter:title" content={title} />
+          <meta name="twitter:creator" content="@greweb" />
+          {thumbnail ? (
+            <>
+              <meta
+                name="twitter:image:src"
+                content={`https://greweb.me/${thumbnail}`}
+              />
+              <link rel="image_src" href={`https://greweb.me/${thumbnail}`} />
+            </>
+          ) : null}
+
           {highlightAllResources}
         </Head>
 
@@ -101,11 +118,8 @@ export default function Home({ n, plot }) {
         </style>
         <main>
           <aside>
-            <h1>
-              Plot #{plot.n}
-              {data.title ? " – " + data.title : ""}
-            </h1>
-            {data.thumbnail ? <img src={data.thumbnail} width="100%" /> : null}
+            <h1>{title}</h1>
+            {thumbnail ? <img src={thumbnail} width="100%" /> : null}
 
             <div className="properties">
               <span />
