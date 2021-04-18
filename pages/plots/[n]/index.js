@@ -51,10 +51,10 @@ export default function Home({ n, plot }) {
             <>
               <meta
                 name="twitter:image"
-                content={`https://greweb.me/${thumbnail}`}
+                content={`https://greweb.me${thumbnail}`}
               />
-              <link rel="image_src" href={`https://greweb.me/${thumbnail}`} />
-              <meta property="og:image" content={thumbnail} />
+              <link rel="image_src" href={`https://greweb.me${thumbnail}`} />
+              <meta property="og:image" content={`https://greweb.me${thumbnail}} />
             </>
           ) : null}
 
