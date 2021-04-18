@@ -1,7 +1,6 @@
 import React from "react";
 import Head from "next/head";
 import { getPlots } from "../../../plots";
-import { Title } from "../../../components/Title";
 import { Container } from "../../../components/Container";
 import { Global } from "../../../components/Global";
 import {
@@ -85,7 +84,21 @@ export default function Home({ n, plot }) {
           dd + dd:before {
             content: ", ";
           }
+          .content {
+            padding: 10px;
+          }
         `}</style>
+
+        <style>
+          {
+            /* TMP hack */ `
+          pre {
+            overflow-y: hidden;
+            overflow: scroll;
+            max-width: 90vw;
+          }`
+          }
+        </style>
         <main>
           <aside>
             <h1>

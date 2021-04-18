@@ -51,34 +51,68 @@ export default function Home({ posts, plots }) {
             dd.inline + dd.inline:before {
               content: ", ";
             }
+            .social {
+              padding: 0px;
+              list-style: none;
+            }
+            .social li {
+              padding: 5px 0;
+            }
+            .social img {
+              vertical-align: middle;
+            }
+            .header-top {
+              display: flex;
+              flex-direction: row;
+            }
+            .avatarbox {
+              padding-right: 20px;
+            }
+            .content {
+              padding-top: 10px;
+              margin-top: 10px;
+              border-top: 4px solid #000;
+            }
           `}</style>
 
           <Header>
-            <img width="200" src="/profile.jpg" />
-            <Title text="greweb.me" />
-            <p className="social">
-              <a href="https://twitter.com/greweb">Twitter</a>
-              {" – "}
-              <a href="https://github.com/gre">Github</a>
-              {" – "}
-              <a href="https://twitch.tv/greweb">Twitch</a>
-            </p>
+            <div className="header-top">
+              <div className="avatarbox">
+                <img width="200" src="/profile.jpg" />
+              </div>
+              <div>
+                <Title text="greweb.me" />
+                <ul className="social">
+                  <li>
+                    <a href="https://twitter.com/greweb">
+                      <img alt="" src="/icons/twitter.svg" height="16" />{" "}
+                      @greweb
+                    </a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/gre">
+                      <img alt="" src="/icons/github.svg" height="16" /> gre
+                    </a>
+                  </li>
+                  <li>
+                    <a href="https://twitch.tv/greweb">
+                      <img alt="" src="/icons/twitch.svg" height="16" /> greweb
+                    </a>
+                  </li>
+                  <li>
+                    <a href="https://hic.link/greweb">
+                      <img alt="" src="/icons/hic.svg" height="16" />{" "}
+                      hic.link/greweb
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
             <blockquote>
               Gaëtan Renaudeau (greweb). French developer at Ledger. creative
               coder experimenting with GLSL shaders, Rust and fountain pens
-              robot plots. infinite noise explorer. learn Chinese.
+              robot plots. infinite noise explorer.
             </blockquote>
-            <div
-              style={{
-                background: "black",
-                color: "white",
-                padding: "0.2em 0.5em",
-                marginBottom: 10,
-                fontSize: "0.8em",
-              }}
-            >
-              ⚠ greweb.me under construction!
-            </div>
           </Header>
 
           <div className="content">
@@ -106,9 +140,7 @@ export default function Home({ posts, plots }) {
               </dt>
               {plots.map((d) => (
                 <dd className="inline" key={d.key}>
-                  <Link
-                    href={`https://github.com/gre/gre/tree/master/plots/examples/${d.rustFile}`}
-                  >
+                  <Link href={`/plots/${d.n}`}>
                     <a>{String(d.n)}</a>
                   </Link>
                 </dd>
