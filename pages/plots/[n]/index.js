@@ -43,14 +43,14 @@ export default function Home({ n, plot }) {
           <title>greweb.me – {title}</title>
           <link rel="icon" href="/favicon.ico" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <meta name="twitter:card" content="summary" />
+          <meta name="twitter:card" content="summary_large_image" />
           <meta name="twitter:site" content="@greweb" />
           <meta name="twitter:title" content={title} />
           <meta name="twitter:creator" content="@greweb" />
           {thumbnail ? (
             <>
               <meta
-                name="twitter:image:src"
+                name="twitter:image"
                 content={`https://greweb.me/${thumbnail}`}
               />
               <link rel="image_src" href={`https://greweb.me/${thumbnail}`} />

@@ -63,10 +63,7 @@ export default function Home({
           <meta name="twitter:creator" content="@greweb" />
           {thumbnail ? (
             <>
-              <meta
-                name="twitter:image:src"
-                content={`${siteURL}/${thumbnail}`}
-              />
+              <meta name="twitter:image" content={`${siteURL}/${thumbnail}`} />
               <link rel="image_src" href={`${siteURL}/${thumbnail}`} />
             </>
           ) : null}
