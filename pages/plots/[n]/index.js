@@ -54,7 +54,10 @@ export default function Home({ n, plot }) {
                 content={`http://greweb.me${thumbnail}`}
               />
               <link rel="image_src" href={`http://greweb.me${thumbnail}`} />
-              <meta property="og:image" content={`http://greweb.me${thumbnail}} />
+              <meta
+                property="og:image"
+                content={`http://greweb.me${thumbnail}`}
+              />
             </>
           ) : null}
 
