@@ -55,11 +55,11 @@ export default function Home({ posts, plots }) {
               padding: 0px;
               list-style: none;
             }
-            .social li {
-              padding: 5px 0;
-            }
             .social img {
               vertical-align: middle;
+            }
+            .social li {
+              padding: 5px 0;
             }
             .header-top {
               display: flex;
@@ -103,6 +103,17 @@ export default function Home({ posts, plots }) {
                     <a href="https://hic.link/greweb">
                       <img alt="" src="/icons/hic.svg" height="16" />{" "}
                       hic.link/greweb
+                    </a>
+                  </li>
+                  <li>
+                    <a href="https://greweb.itch.io">
+                      <img
+                        alt=""
+                        src="/icons/iconmonstr-gamepad-3.svg"
+                        height="22"
+                        style={{ verticalAlign: "-20%" }}
+                      />{" "}
+                      games gallery
                     </a>
                   </li>
                 </ul>
