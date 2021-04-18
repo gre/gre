@@ -57,12 +57,14 @@ export default function Home({
           <meta name="twitter:card" content="summary" />
           <meta name="twitter:site" content="@greweb" />
           <meta name="twitter:title" content={title} />
+          <meta name="og:title" content={title} />
           {description ? (
             <meta name="twitter:description" content={description} />
           ) : null}
           <meta name="twitter:creator" content="@greweb" />
           {thumbnail ? (
             <>
+              <meta name="og:image" content={`${siteURL}/${thumbnail}`} />
               <meta name="twitter:image" content={`${siteURL}/${thumbnail}`} />
               <link rel="image_src" href={`${siteURL}/${thumbnail}`} />
             </>
