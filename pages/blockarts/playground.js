@@ -4,7 +4,7 @@ import useDimensions from "react-cool-dimensions";
 import { proxy, useSnapshot } from "valtio";
 import { EthBlockArtVisual } from "../../components/EthBlockArtVisual";
 import { LiveFooter } from "../../components/LiveFooter";
-import { SubTitle } from "../../components/SubTitle";
+import { SubTitle } from "../../components/ShaderdaySubTitle";
 import { Title } from "../../components/Title";
 import { SourceCodeFooter } from "../../components/SourceCodeFooter";
 import { Container } from "../../components/Container";
