@@ -7,6 +7,9 @@ objkts:
   - 28238
   - 28263
   - 28264
+tags:
+  - planet-holes
+  - collection
 ---
 
 Inspiration came from work from [@mellogood](https://twitter.com/mellogood) who made these: https://twitter.com/mellogood/status/1376565566283120645.

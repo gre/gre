@@ -1,6 +1,9 @@
 ---
 title: "Gold disc"
 thumbnail: /images/plots/110.jpg
+tags:
+  - polar
+  - disc
 ---
 
 This is a continuation of [plot#107](/plots/107), but this time it projects it with polar coordinate, essentially making it a disc.

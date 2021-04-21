@@ -66,6 +66,7 @@ export default function Home({ n, plot }) {
 
         <style jsx>{`
           main {
+            align-self: stretch;
             display: flex;
             flex-direction: row;
           }
@@ -176,7 +177,7 @@ export default function Home({ n, plot }) {
 
             {data.tweet ? (
               <>
-                <blockquote className="twitter-tweet">
+                <blockquote className="twitter-tweet" data-conversation="none">
                   <a href={data.tweet}></a>
                 </blockquote>
                 <script
