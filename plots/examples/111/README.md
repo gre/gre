@@ -1,5 +1,6 @@
 ---
 title: "Growing parametric"
+description: "stacking multiple parametric functions, fountain pen with 'Bloody Brexit' ink which produces an interesting reflection. A4 bristol."
 thumbnail: /images/plots/111.jpg
 tags:
   - parametric
@@ -14,6 +15,6 @@ This is however the first time I think about stacking parametic functions: It mi
 
 I might not have taken the best parametric for this plot but it's still fun. Indeed, the pen digged a bit too much in the paper and I might try again with other parametric functions in future.
 
-The ink used is "Bloody Brexit" by Diamine, like on [plot#109](/plots/109), which produces interesting reflection in combination with a good paper and lamp.
+The ink used is "Bloody Brexit" by Diamine, like on [plot#109](/plots/109), which produces interesting reflection in combination with a good paper (A4 Canson 250g/mm Bristol) and lamp.
 
 <img src="/images/plots/bloodybrexit.jpg" width="100%" />

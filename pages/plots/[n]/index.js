@@ -39,6 +39,7 @@ export default function Home({ n, plot, prev, next }) {
   const { content, data } = plot;
   const { thumbnail } = data;
   const title = `Plot #${plot.n} ${data.title ? " – " + data.title : ""}`;
+  const description = data.description || "";
 
   useEffect(() => {
     if (window.twttr) {
@@ -52,9 +53,13 @@ export default function Home({ n, plot, prev, next }) {
         <title>greweb.me – {title}</title>
         <link rel="icon" href="/favicon.ico" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="author" content="Gaëtan Renaudeau" />
+        <meta name="description" content={description} />
+        <meta name="keywords" content={data.tags?.join(", ")} />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@greweb" />
         <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
         <meta name="twitter:creator" content="@greweb" />
         {thumbnail ? (
           <>
