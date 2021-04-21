@@ -163,7 +163,7 @@ export default function Home({ n, plot, prev, next }) {
               </dl>
             ) : null}
             <dl>
-              <dt>Rust sourcecode</dt>
+              <dt>Rustlang</dt>
               <dd>
                 <a
                   href={`https://github.com/gre/gre/blob/master/plots/examples/${n}/main.rs`}
