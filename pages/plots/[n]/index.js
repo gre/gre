@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import Head from "next/head";
 import { getPlots } from "../../../plots";
 import { SubTitle } from "../../../components/PlotSubTitle";
-import { Container } from "../../../components/Container";
 import { Global } from "../../../components/Global";
 import {
   HighlightAll,
@@ -27,7 +26,6 @@ export async function getStaticProps({ params }) {
   const plots = await getPlots();
   const plot = plots.find((p) => parseInt(p.n) === nNumber);
   if (!plot) throw new Error("plot not found!");
-  const i = plots.indexOf(plot);
   const prev = plots.find((p) => parseInt(p.n) === nNumber - 1) || null;
   const next = plots.find((p) => parseInt(p.n) === nNumber + 1) || null;
   return {
@@ -80,11 +78,10 @@ export default function Home({ n, plot, prev, next }) {
 
       <style jsx>{`
         main {
-          align-self: stretch;
-          display: flex;
-          flex-direction: row;
+          max-width: 550px;
+          margin: 0px auto;
         }
-        aside {
+        header {
           flex: 1;
           padding: 10px;
           text-align: center;
@@ -94,11 +91,6 @@ export default function Home({ n, plot, prev, next }) {
         div.content {
           flex: 1;
           padding: 10px;
-        }
-        @media screen and (max-width: 900px) {
-          main {
-            flex-direction: column;
-          }
         }
         div.properties {
           display: flex;
@@ -135,7 +127,7 @@ export default function Home({ n, plot, prev, next }) {
         }
       </style>
       <main>
-        <aside>
+        <header>
           <SubTitle plot={plot} prev={prev} next={next} />
           <div className="properties">
             <span />
@@ -181,14 +173,14 @@ export default function Home({ n, plot, prev, next }) {
               <dl>
                 <dt>Tags</dt>
                 {data.tags.map((t) => (
-                  <dd>{t}</dd>
+                  <dd key={t}>{t}</dd>
                 ))}
               </dl>
             ) : null}
             <span />
           </div>
           {thumbnail ? <img src={thumbnail} width="100%" /> : null}
-        </aside>
+        </header>
         <div className="content" key={plot.n}>
           <div
             className="entry-content"
