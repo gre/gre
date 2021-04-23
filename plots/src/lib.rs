@@ -13,6 +13,10 @@ use time::Duration;
 
 pub mod line_intersection;
 
+pub fn mix(a: f64, b: f64, x: f64) -> f64 {
+    (1. - x) * a + x * b
+}
+
 // usual scale is 1.0 for A4
 pub fn signature(
     scale: f64,
