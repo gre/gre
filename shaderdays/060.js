@@ -30,35 +30,66 @@ vec3 color (float t) {
 
 const float PI = ${Math.PI};
 
-float rect2d (vec2 p, vec2 sz) {
+float sdSegment (in vec3 p, in float L, in float R) {
+  p.y -= min(L, max(0.0, p.y));
+  return length(p) - R;
+}
+float sdBox( vec3 p, vec3 b ) {
+  vec3 q = abs(p) - b;
+  return length(max(q,0.0)) + min(max(q.x,max(q.y,q.z)),0.0);
+}
+float sdBox (vec2 p, vec2 sz) {
   return max(abs(p.x) - sz.x, abs(p.y) - sz.y);
 }
-float d2d (vec2 p, float w, float h) {
-  return min(rect2d(p, vec2(w, h)), length(p-vec2(w, .0))-h);
+float sdD (vec2 p, float w, float h) {
+  return min(sdBox(p, vec2(w, h)), length(p-vec2(w, .0))-h);
 }
-float bitcoin2d (vec2 p) {
-  p.y -= 0.1;
+float sdUpperD (vec2 p) {
   p.x += .02;
-  float inner = d2d(p, 0.04, 0.06);
-  float outer = d2d(p, 0.1, 0.1);
-  float top = max(-inner, outer);
-  top = min(top, rect2d(p - vec2(-.12, .08), vec2(.02)));
-  top = min(top, rect2d(p - vec2(-.06, .14), vec2(.02, .04)));
-  top = min(top, rect2d(p - vec2(.04, .14), vec2(.02, .04)));
-  p.x -= .01;
-  p.y += 0.2;
-  inner = d2d(p, 0.04, 0.06);
-  outer = d2d(p, 0.11, 0.12);
-  float bottom = max(-inner, outer);
-  bottom = min(bottom, rect2d(p - vec2(-.13, -.09), vec2(.03)));
-  bottom = min(bottom, rect2d(p - vec2(-.06, -.16), vec2(.02, .04)));
-  bottom = min(bottom, rect2d(p - vec2(.04, -.16), vec2(.02, .04)));
-  float f = min(top, bottom);
-  return f;
+  p.y -= .1;
+  float inner = sdD(p + vec2(-0.025, 0.012), 0.037, 0.055);
+  float outer = sdD(p, 0.1, 0.1);
+  return max(-inner, outer);
+}
+float sdLowerD (vec2 p) {
+  p.x += .01;
+  p.y += .085;
+  float outer = sdD(p, 0.11, 0.11);
+  float inner = sdD(p - vec2(0.023, 0.01), 0.045, 0.058);
+  return max(-inner, outer);
+}
+float sdRevCornerRadius(vec2 p) {
+  return max(
+    sdBox(p, vec2(.5)),
+    -min(
+      (p.x - p.y) / 2.,
+      length(p + vec2(.5, -.5)) - 1.
+    )
+  );
+}
+float sdBitcoin2D (vec2 p) {
+  float bottom = sdLowerD(p);
+  bottom = min(bottom, max(
+    sdBox(p + vec2(.15, .165), vec2(.04, .03)), // bottom-left shape
+    -(p.x - .216 * p.y + 0.142)) // 12.5° cut
+  );
+  bottom = min(bottom, sdRevCornerRadius((p + vec2(0.135, -0.135)) * vec2(1., -1.) * 30.));
+  float top = sdUpperD(p);
+  top = min(top, sdBox(p - vec2(-.15, .175), vec2(.034, .025)));
+  top = min(top, sdRevCornerRadius((p + vec2(0.135, 0.12)) * vec2(1., 1.) * 30.));
+  p.x += .01;
+  float hash = max(
+    sdBox(p, vec2(0.07, .285)),
+    -min(
+      sdBox(p, vec2(0.022, 1.)),
+      sdBox(p, vec2(1., .15))
+    )
+  );
+  return min(min(top, bottom), hash);
 }
 
 void main() {
-  float v = bitcoin2d(uv-.5);
+  float v = sdBitcoin2D(uv-.5);
   v = max(-step(fract(time), 0.5), v); // blink 500ms
   gl_FragColor = vec4(
     step(v, 0.) * color(1.6 * (uv.y + time)) +
