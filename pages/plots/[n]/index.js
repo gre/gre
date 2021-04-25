@@ -78,7 +78,7 @@ export default function Home({ n, plot, prev, next }) {
 
       <style jsx>{`
         main {
-          max-width: 550px;
+          max-width: 680px;
           margin: 0px auto;
         }
         header {
