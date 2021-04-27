@@ -2,7 +2,7 @@
 title: "Pink fibers"
 thumbnail: /images/plots/112.jpg
 tags:
-  - clothes
+  - fibers
 ---
 
 This is a continuation of exploration started at [plot#109](/plots/109).

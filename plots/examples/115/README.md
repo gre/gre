@@ -2,7 +2,7 @@
 title: "Yellow fibers"
 thumbnail: /images/plots/115.jpg
 tags:
-  - clothes
+  - fibers
 ---
 
 This is a continuation of exploration started at [plot#112](/plots/112).

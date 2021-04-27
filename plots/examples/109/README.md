@@ -2,7 +2,7 @@
 title: "Clothes"
 thumbnail: /images/plots/109.jpg
 tags:
-  - clothes
+  - fibers
 ---
 
 This is a continuation of exploration started at [plot#107](/plots/107), but this time alternating between horizontal and vertical lines. As before, it uses a tiny bit of perlin noise to diverge a bit the lines. The randomness distribution has been customized to approach more the edges.
