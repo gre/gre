@@ -147,7 +147,14 @@ export default function Home({ posts, plots }) {
           <div className="content">
             <dl>
               <dt>Latest work</dt>
-              <div style={{ display: "flex", flexDirection: "row" }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexFlow: "row wrap",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
                 <a href={`/plots/${plots[0].n}`}>
                   <img
                     src={plots[0].data.thumbnail}
