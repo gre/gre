@@ -24,12 +24,27 @@ export default function Home({ posts, plots }) {
     .slice()
     .sort((a, b) => b.n - a.n);
 
+  const siteURL = "http://greweb.me";
+  const title = "greweb.me";
+  const description =
+    "Gaëtan Renaudeau (greweb). French developer at Ledger. creative coder experimenting with GLSL shaders, Rust and fountain pens robot plots. infinite noise explorer.";
+  const thumbnail = "/profile.jpg";
+
   return (
     <Global>
       <Container>
         <Head>
-          <title>greweb.me</title>
+          <title>{title}</title>
           <link rel="icon" href="/favicon.ico" />
+          <meta name="twitter:card" content="summary" />
+          <meta name="twitter:site" content="@greweb" />
+          <meta name="twitter:title" content={title} />
+          <meta name="og:title" content={title} />
+          <meta name="twitter:description" content={description} />
+          <meta name="twitter:creator" content="@greweb" />
+          <meta name="og:image" content={`${siteURL}/${thumbnail}`} />
+          <meta name="twitter:image" content={`${siteURL}/${thumbnail}`} />
+          <link rel="image_src" href={`${siteURL}/${thumbnail}`} />
         </Head>
         <Main>
           <style jsx>{`
@@ -80,7 +95,7 @@ export default function Home({ posts, plots }) {
           <Header>
             <div className="header-top">
               <div className="avatarbox">
-                <img width="200" src="/profile.jpg" />
+                <img width="200" src={thumbnail} />
               </div>
               <div>
                 <ul className="social">
@@ -126,11 +141,7 @@ export default function Home({ posts, plots }) {
                 </ul>
               </div>
             </div>
-            <blockquote>
-              Gaëtan Renaudeau (greweb). French developer at Ledger. creative
-              coder experimenting with GLSL shaders, Rust and fountain pens
-              robot plots. infinite noise explorer.
-            </blockquote>
+            <blockquote>{description}</blockquote>
             <Title text="greweb.me" />
           </Header>
           <div className="content">

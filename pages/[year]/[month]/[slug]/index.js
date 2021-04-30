@@ -31,7 +31,7 @@ export async function getStaticProps({ params }) {
   };
 }
 
-const siteURL = "https://greweb.me";
+const siteURL = "http://greweb.me";
 
 export default function Home({
   year,
