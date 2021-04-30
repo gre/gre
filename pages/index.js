@@ -6,6 +6,7 @@ import { Container } from "../components/Container";
 import { Global } from "../components/Global";
 import { Main } from "../components/Main";
 import { Header } from "../components/Header";
+import { Visual } from "../components/Visual";
 import { getDays } from "../shaderdays";
 import { getAllPosts } from "../posts";
 import { getPlots } from "../plots";
@@ -19,6 +20,10 @@ export async function getStaticProps() {
 }
 
 export default function Home({ posts, plots }) {
+  const days = getDays()
+    .slice()
+    .sort((a, b) => b.n - a.n);
+
   return (
     <Global>
       <Container>
@@ -30,10 +35,6 @@ export default function Home({ posts, plots }) {
           <style jsx>{`
             blockquote {
               max-width: 500px;
-            }
-            .content {
-              max-width: 600px;
-              padding: 0 10px;
             }
             dl {
             }
@@ -69,6 +70,7 @@ export default function Home({ posts, plots }) {
               padding-right: 20px;
             }
             .content {
+              max-width: 600px;
               padding-top: 10px;
               margin-top: 10px;
               border-top: 4px solid #000;
@@ -81,12 +83,17 @@ export default function Home({ posts, plots }) {
                 <img width="200" src="/profile.jpg" />
               </div>
               <div>
-                <Title text="greweb.me" />
                 <ul className="social">
                   <li>
                     <a href="https://twitter.com/greweb">
                       <img alt="" src="/icons/twitter.svg" height="16" />{" "}
                       @greweb
+                    </a>
+                  </li>
+                  <li>
+                    <a href="https://instagram.com/greweb">
+                      <img alt="" src="/icons/instagram.svg" height="16" />{" "}
+                      greweb
                     </a>
                   </li>
                   <li>
@@ -100,12 +107,6 @@ export default function Home({ posts, plots }) {
                     </a>
                   </li>
                   <li>
-                    <a href="https://hic.link/greweb">
-                      <img alt="" src="/icons/hic.svg" height="16" />{" "}
-                      hic.link/greweb
-                    </a>
-                  </li>
-                  <li>
                     <a href="https://greweb.itch.io">
                       <img
                         alt=""
@@ -113,7 +114,13 @@ export default function Home({ posts, plots }) {
                         height="22"
                         style={{ verticalAlign: "-20%" }}
                       />{" "}
-                      games gallery
+                      greweb.itch.io
+                    </a>
+                  </li>
+                  <li>
+                    <a href="https://hic.link/greweb">
+                      <img alt="" src="/icons/hic.svg" height="16" />{" "}
+                      hic.link/greweb
                     </a>
                   </li>
                 </ul>
@@ -124,29 +131,26 @@ export default function Home({ posts, plots }) {
               coder experimenting with GLSL shaders, Rust and fountain pens
               robot plots. infinite noise explorer.
             </blockquote>
+            <Title text="greweb.me" />
           </Header>
-
           <div className="content">
             <dl>
-              <dt>
-                <Link href="/shaderday">
-                  <a>Shaders</a>
-                </Link>
-              </dt>
-              {getDays()
-                .slice()
-                .sort((a, b) => b.n - a.n)
-                .map((d) => (
-                  <dd className="inline" key={d.n}>
-                    <Link href={`/shaderday/${d.n}`}>
-                      <a>{String(d.n)}</a>
-                    </Link>
-                  </dd>
-                ))}
+              <dt>Latest work</dt>
+              <div style={{ display: "flex", flexDirection: "row" }}>
+                <a href={`/plots/${plots[0].n}`}>
+                  <img
+                    src={plots[0].data.thumbnail}
+                    style={{ width: 300, height: 300, objectFit: "cover" }}
+                  />
+                </a>
+                <a href={`/shaderday/${days[0].n}`}>
+                  <Visual width={300} height={300} Day={days[0]} />
+                </a>
+              </div>
 
               <dt>
                 <Link href="https://github.com/gre/gre/tree/master/plots">
-                  <a>Plots</a>
+                  <a>All plots...</a>
                 </Link>
               </dt>
               {plots.map((d) => (
@@ -158,17 +162,48 @@ export default function Home({ posts, plots }) {
               ))}
 
               <dt>
+                <Link href="/shaderday">
+                  <a>All shaders...</a>
+                </Link>
+              </dt>
+              {days.map((d) => (
+                <dd className="inline" key={d.n}>
+                  <Link href={`/shaderday/${d.n}`}>
+                    <a>{String(d.n)}</a>
+                  </Link>
+                </dd>
+              ))}
+
+              <dt>
                 <Link href="/posts">
                   <a>Latest blog posts</a>
                 </Link>
               </dt>
+
               {posts.slice(0, 3).map((p, i) => (
-                <dd key={i}>
-                  <Link href={`/${p.year}/${p.month}/${p.slug}`}>
-                    <a>{p.data.title}</a>
-                  </Link>
-                </dd>
+                <div
+                  key={i}
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                  }}
+                >
+                  <img
+                    src={p.data.thumbnail}
+                    alt=""
+                    style={{ width: 150, height: 150, objectFit: "cover" }}
+                  />
+                  <div style={{ padding: 10 }}>
+                    <Link href={`/${p.year}/${p.month}/${p.slug}`}>
+                      <a>
+                        <strong>{p.data.title}</strong>
+                      </a>
+                    </Link>
+                    <p>{p.data.description}</p>
+                  </div>
+                </div>
               ))}
+
               <dd>
                 <Link href="/posts">
                   <a>...more</a>

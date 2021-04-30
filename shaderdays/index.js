@@ -122,15 +122,6 @@ const days = [
   Day060,
 ];
 
-import * as Day099 from "./ideas/099";
-import * as Day097 from "./ideas/097";
-import * as DayAliens from "./ideas/aliens";
-if (process.env.NODE_ENV === "development") {
-  days.unshift(Day097);
-  days.unshift(Day099);
-  days.unshift(DayAliens);
-}
-
 export function getDays() {
   return days;
 }

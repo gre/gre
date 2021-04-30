@@ -1,5 +1,6 @@
 ---
 title: "CryptoAliens: Genesis [ethblock.art]"
+thumbnail: "/images/blockstyles/24.png"
 description: "CryptoAliens are digital creatures generated from Ethereum blockchain blocks. They can be minted on ethblock.at by anyone, which establishes a limited set of CryptoAliens species. Each block produced on Ethereum have unique elements that can be visualized in creative ways."
 tags:
   - NFT
