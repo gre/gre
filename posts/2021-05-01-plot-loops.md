@@ -67,7 +67,7 @@ She is also creating impressive drawing work as seen on her website: https://www
 
 ### Maks Surguy [@msurguy](https://twitter.com/msurguy)
 
-who is being the great plotterfiles.com. He also does a lot of great plotting art and thought about similar concept recently! [Checkout this article about his work.](https://medium.com/poptwig/artist-in-focus-maks-surguy-26277c95b197)
+who is behind [plotterfiles.com](https://plotterfiles.com/) platform. He also does a lot of great plotting art and thought about similar concept recently! [Checkout this article about his work.](https://medium.com/poptwig/artist-in-focus-maks-surguy-26277c95b197)
 
 ### Thomas Lin Pedersen [@thomasp85](https://twitter.com/thomasp85)
 
