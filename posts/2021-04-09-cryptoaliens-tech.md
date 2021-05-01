@@ -1,6 +1,6 @@
 ---
 title: "CryptoAliens: Genesis, a technical look"
-thumbnail: "/images/blockstyles/24.png"
+thumbnail: "/images/posts/cryptoaliens/026_px.png"
 description: "Technical aspects of CryptoAliens digital creatures generated with Ethereum blockchain blocks. They can be minted on ethblock.at by anyone, which establishes a limited set of CryptoAliens species."
 tags:
   - NFT

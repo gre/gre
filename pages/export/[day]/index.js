@@ -2,7 +2,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { GIFEncoder, quantize, applyPalette } from "gifenc";
-import { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Surface } from "gl-react-dom";
 import { NearestCopy } from "gl-react";
 import { findDay, getDays } from "../../../shaderdays";
@@ -56,7 +56,7 @@ async function loadImage(url) {
   });
 }
 
-export function Capture({
+function Capture({
   format,
   n,
   Day,
@@ -66,6 +66,7 @@ export function Capture({
   end,
   framePerSecond,
   speed,
+  preload,
 }) {
   const ref = useRef();
   const totalFrames = Math.floor(((end - start) * framePerSecond) / speed);
@@ -206,6 +207,7 @@ export function Capture({
         width={size}
         height={size}
         pixelRatio={1}
+        preload={preload}
       >
         <NearestCopy onDraw={recorder.onDraw}>
           <Day.Shader exporting time={time} n={n} />
@@ -215,6 +217,8 @@ export function Capture({
     </>
   );
 }
+
+const CaptureMemo = React.memo(Capture);
 
 export function Previewing({ n, Day, start, end, framePerSecond, speed }) {
   const [time, setTime] = useState(0);
@@ -270,6 +274,7 @@ export default function Home({ day }) {
   const framePerSecond = Day.exportFramePerSecond || 24;
   const speed = Day.exportSpeed || 1;
   const size = Day.exportSize || 800;
+  const preload = Day.preload || [];
 
   return (
     <Global>
@@ -284,7 +289,7 @@ export default function Home({ day }) {
           <Header>Export tools</Header>
           <SubTitleExport Day={Day} />
           {capturing ? (
-            <Capture
+            <CaptureMemo
               format={capturing}
               n={n}
               start={start}
@@ -294,6 +299,7 @@ export default function Home({ day }) {
               size={size}
               Day={Day}
               onFinished={onFinished}
+              preload={preload}
             />
           ) : (
             <Previewing
