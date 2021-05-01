@@ -4,6 +4,7 @@ thumbnail: /images/plots/121.gif
 description: "Releasing my first 'plot loop', generative animation plotted and published as an NFT."
 tags:
   - plot
+  - plotloop
   - NFT
 ---
 

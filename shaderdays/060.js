@@ -1,7 +1,7 @@
 import { Shaders, Node, GLSL } from "gl-react";
 
 export const n = 60;
-export const title = "bitcoin";
+export const title = "Bitcoin rainbow";
 
 export const Shader = ({ time }) => (
   <Node shader={shaders.node} uniforms={{ time }} />
