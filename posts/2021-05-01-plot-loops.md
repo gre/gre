@@ -55,7 +55,7 @@ It's taking a lot of time to plot all frames so there are great challenges: firs
 
 # Please also checkout other great artists
 
-I believe a lot of this hybrid idea of mixing plot, animation and NFTs. I believe ideas are just all there to be taken and often in the past we see ideas happen a lot at same times. I'm not the only one exploring this and I want to do a big kudos to these great artists:
+I believe a lot of this hybrid idea of mixing plot, animation and NFTs. It was very funny for me to see all coïncidence and convergence of ideas on this topic. It's one of these moment when we have the exact same ideas at the same time. I'm not the only one exploring this and I want to do a big kudos to these great artists.
 
 ### Marion [@atelier_marion](https://twitter.com/atelier_marion/status/1388071908575490048)
 
@@ -80,3 +80,5 @@ He recently did a very cool NFT in collaboration with **Lionel Radisson** [@MAKI
 ### ...so many other artists!
 
 Let's chat! You can join us on [hicetnunc's discord](https://discord.gg/jKNy6PynPK) on channel #phygital-objkts which explore very similar idea and where other artists will be active!
+
+I'm also available for collaboration.
