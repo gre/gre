@@ -3,6 +3,7 @@ import Head from "next/head";
 import { getPlots } from "../../../plots";
 import { SubTitle } from "../../../components/PlotSubTitle";
 import { Global } from "../../../components/Global";
+import MeBlock from "../../../components/MeBlock";
 import {
   HighlightAll,
   highlightAllResources,
@@ -114,8 +115,15 @@ export default function Home({ n, plot, prev, next }) {
         .content {
           padding: 10px;
         }
+        .content a {
+          text-decoration: underline;
+        }
+        footer {
+          margin-top: 20px;
+          padding-top: 10px;
+          border-top: 2px solid #000;
+        }
       `}</style>
-
       <style>
         {
           /* TMP hack */ `
@@ -192,6 +200,10 @@ export default function Home({ n, plot, prev, next }) {
               <a href={data.tweet}></a>
             </blockquote>
           ) : null}
+
+          <footer>
+            <MeBlock />
+          </footer>
         </div>
       </main>
       <HighlightAll />

@@ -3,6 +3,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { Container } from "../../../../components/Container";
 import { Global } from "../../../../components/Global";
+import MeBlock from "../../../../components/MeBlock";
 import { getPost, getAllPosts } from "../../../../posts";
 import {
   HighlightAll,
@@ -106,6 +107,10 @@ export default function Home({
                   className="entry-content"
                   dangerouslySetInnerHTML={{ __html: content }}
                 />
+
+                <footer>
+                  <MeBlock />
+                </footer>
 
                 {/*
                 <footer className="comments">

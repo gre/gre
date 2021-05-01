@@ -10,6 +10,7 @@ import { Visual } from "../components/Visual";
 import { getDays } from "../shaderdays";
 import { getAllPosts } from "../posts";
 import { getPlots } from "../plots";
+import me from "../me";
 
 export async function getStaticProps() {
   const posts = await getAllPosts();
@@ -24,11 +25,8 @@ export default function Home({ posts, plots }) {
     .slice()
     .sort((a, b) => b.n - a.n);
 
-  const siteURL = "http://greweb.me";
-  const title = "greweb.me";
-  const description =
-    "Gaëtan Renaudeau (greweb). French developer at Ledger. creative coder experimenting with GLSL shaders, Rust and fountain pens robot plots. infinite noise explorer.";
-  const thumbnail = "/profile.jpg";
+  const siteURL = me.thumbnailDomain;
+  const { title, description, thumbnail } = me;
 
   return (
     <Global>
@@ -99,45 +97,13 @@ export default function Home({ posts, plots }) {
               </div>
               <div>
                 <ul className="social">
-                  <li>
-                    <a href="https://twitter.com/greweb">
-                      <img alt="" src="/icons/twitter.svg" height="16" />{" "}
-                      @greweb
-                    </a>
-                  </li>
-                  <li>
-                    <a href="https://instagram.com/greweb">
-                      <img alt="" src="/icons/instagram.svg" height="16" />{" "}
-                      greweb
-                    </a>
-                  </li>
-                  <li>
-                    <a href="https://github.com/gre">
-                      <img alt="" src="/icons/github.svg" height="16" /> gre
-                    </a>
-                  </li>
-                  <li>
-                    <a href="https://twitch.tv/greweb">
-                      <img alt="" src="/icons/twitch.svg" height="16" /> greweb
-                    </a>
-                  </li>
-                  <li>
-                    <a href="https://greweb.itch.io">
-                      <img
-                        alt=""
-                        src="/icons/iconmonstr-gamepad-3.svg"
-                        height="22"
-                        style={{ verticalAlign: "-20%" }}
-                      />{" "}
-                      greweb.itch.io
-                    </a>
-                  </li>
-                  <li>
-                    <a href="https://hic.link/greweb">
-                      <img alt="" src="/icons/hic.svg" height="16" />{" "}
-                      hic.link/greweb
-                    </a>
-                  </li>
+                  {me.social.map(({ id, url, icon, text }) => (
+                    <li key={id}>
+                      <a href={url}>
+                        <img alt="" src={icon} height="16" /> {text}
+                      </a>
+                    </li>
+                  ))}
                 </ul>
               </div>
             </div>
