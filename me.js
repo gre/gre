@@ -1,7 +1,7 @@
 export default {
   title: "greweb.me",
   description:
-    "Gaëtan Renaudeau (greweb). French developer at Ledger. creative coder experimenting with GLSL shaders, Rust and fountain pens robot plots. infinite noise explorer.",
+    "Gaëtan Renaudeau (greweb). French developer at Ledger. creative coder experimenting with GLSL shaders, Rust, and fountain pens robot plots. infinite noise explorer.",
   thumbnail: "/profile.jpg",
   thumbnailDomain: "http://greweb.me",
   siteDomain: "https://greweb.me",
