@@ -6,12 +6,12 @@ export const n = 63;
 export const title = "Relics";
 
 const speed = 20;
-const loopMul = 60;
+const loopMul = 2;
 const loop = loopMul * speed;
 
 export const exportSize = 400;
-export const exportStart = 0;
-export const exportEnd = loopMul;
+export const exportStart = loopMul;
+export const exportEnd = 2 * loopMul;
 export const exportFramePerSecond = speed;
 export const exportSpeed = 1;
 export const exportMP4vb = "5M";
@@ -26,16 +26,13 @@ const defaults = {
   seed: 0.0,
 };
 
-export const Logic = ({
-  freq,
-  g,
-  size,
-  seed,
-  amp,
-  base,
-  persistance,
-  delta,
-}) => {
+console.log(
+  Object.keys(defaults)
+    .map((k) => String(defaults[k]))
+    .join("_")
+);
+
+export const Logic = ({ g, size, seed, amp, base, persistance, delta }) => {
   return (
     <Node
       key={size}
@@ -45,7 +42,6 @@ export const Logic = ({
       uniforms={{
         amp,
         base,
-        freq,
         g,
         prev: Uniform.Backbuffer,
         size,

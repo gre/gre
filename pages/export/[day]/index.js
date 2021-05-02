@@ -72,7 +72,8 @@ function Capture({
   const totalFrames = Math.floor(((end - start) * framePerSecond) / speed);
   const [frame, setFrame] = useState(0);
   const [ready, setReady] = useState(false);
-  const time = start + (end - start) * (frame / totalFrames);
+  const time = (end - start) * (frame / totalFrames);
+  const f = Math.floor(frame - start * framePerSecond);
 
   const [recorder] = useState(() => {
     function captureNDArray() {
@@ -102,6 +103,12 @@ function Capture({
 
     let onDraw = () => {
       if (!ready) return;
+      const f = Math.floor(frame - start * framePerSecond);
+
+      if (f < 0) {
+        setFrame(++frame);
+        return;
+      }
 
       if (format === "gif") {
         const { width, height, data } = captureNDArray();
@@ -115,7 +122,7 @@ function Capture({
           delay: 1000 / framePerSecond,
         });
 
-        if (frame >= totalFrames) {
+        if (f >= totalFrames) {
           gif.finish();
           onFinished(new Blob([gif.bytes()], { type: "image/gif" }));
         } else {
@@ -133,7 +140,7 @@ function Capture({
           data,
         });
 
-        if (frame >= totalFrames) {
+        if (f >= totalFrames) {
           let start_time = Date.now();
           worker.onmessage = function (e) {
             var msg = e.data;
@@ -213,7 +220,7 @@ function Capture({
           <Day.Shader exporting time={time} n={n} />
         </NearestCopy>
       </Surface>
-      {frame + " / " + totalFrames}
+      {f + " / " + totalFrames}
     </>
   );
 }
