@@ -5,7 +5,7 @@ export const n = 62;
 export const title = "Overgrowth";
 export const exportEnd = 20;
 export const exportFramePerSecond = 40;
-export const exportSpeed = 2;
+export const exportSpeed = 1;
 
 export const Logic = ({ generation, size, n }) => {
   return (
