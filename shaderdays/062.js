@@ -3,7 +3,9 @@ import { Shaders, Node, GLSL, Uniform } from "gl-react";
 
 export const n = 62;
 export const title = "Overgrowth";
-export const exportEnd = 2;
+export const exportEnd = 20;
+export const exportFramePerSecond = 40;
+export const exportSpeed = 2;
 
 export const Logic = ({ generation, size, n }) => {
   return (
@@ -20,7 +22,7 @@ export const Logic = ({ generation, size, n }) => {
 const LogicMemo = React.memo(Logic);
 
 const Main = ({ time, generation, n }) => {
-  const logicSize = 100;
+  const logicSize = 140;
   return (
     <Node
       shader={shaders.render}
@@ -39,7 +41,7 @@ const Main = ({ time, generation, n }) => {
 
 const MainMemo = React.memo(Main);
 
-const speed = 50;
+const speed = 20;
 const seed = 1000 * Math.random();
 
 export const Shader = ({ time, n }) => (

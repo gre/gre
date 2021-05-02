@@ -1,4 +1,5 @@
 import Head from "next/head";
+import { Leva } from "leva";
 import { Visual } from "../../components/Visual";
 import { LiveFooter } from "../../components/LiveFooter";
 import { SubTitle } from "../../components/ShaderdaySubTitle";

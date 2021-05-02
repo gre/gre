@@ -1,6 +1,7 @@
 import React from "react";
 import Head from "next/head";
 import Link from "next/link";
+import { Leva } from "leva";
 import { Title } from "../components/Title";
 import { Container } from "../components/Container";
 import { Global } from "../components/Global";
@@ -44,6 +45,8 @@ export default function Home({ posts, plots }) {
           <meta name="twitter:image" content={`${siteURL}/${thumbnail}`} />
           <link rel="image_src" href={`${siteURL}/${thumbnail}`} />
         </Head>
+
+        <Leva hidden />
         <Main>
           <style jsx>{`
             blockquote {
