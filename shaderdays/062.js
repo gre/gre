@@ -41,7 +41,7 @@ const Main = ({ time, generation, n }) => {
 
 const MainMemo = React.memo(Main);
 
-const speed = 20;
+const speed = 30;
 const seed = 1000 * Math.random();
 
 export const Shader = ({ time, n }) => (
