@@ -25,10 +25,10 @@ export async function getStaticPaths() {
 export async function getStaticProps({ params }) {
   const nNumber = parseInt(params.n, 10);
   const plots = await getPlots();
-  const plot = plots.find((p) => parseInt(p.n) === nNumber);
+  const plot = plots.find((p) => parseInt(p.n, 10) === nNumber);
   if (!plot) throw new Error("plot not found!");
-  const prev = plots.find((p) => parseInt(p.n) === nNumber - 1) || null;
-  const next = plots.find((p) => parseInt(p.n) === nNumber + 1) || null;
+  const prev = plots.find((p) => parseInt(p.n, 10) === nNumber - 1) || null;
+  const next = plots.find((p) => parseInt(p.n, 10) === nNumber + 1) || null;
   return {
     props: { n: params.n, plot, prev, next },
   };
