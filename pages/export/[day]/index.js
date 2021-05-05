@@ -65,6 +65,7 @@ function Capture({
   start,
   end,
   framePerSecond,
+  exportSkipFrame,
   speed,
   preload,
 }) {
@@ -72,8 +73,8 @@ function Capture({
   const totalFrames = Math.floor(((end - start) * framePerSecond) / speed);
   const [frame, setFrame] = useState(0);
   const [ready, setReady] = useState(false);
-  const time = (end - start) * (frame / totalFrames);
-  const f = Math.floor(frame - start * framePerSecond);
+  const time = ((end - start) * (frame / totalFrames)) / (1 + exportSkipFrame);
+  const f = Math.floor(frame / (1 + exportSkipFrame) - start * framePerSecond);
 
   const [recorder] = useState(() => {
     function captureNDArray() {
@@ -100,22 +101,27 @@ function Capture({
     let ready = false;
     let worker;
     let images;
+    let lastF;
 
     let onDraw = () => {
       if (!ready) return;
-      const f = Math.floor(frame - start * framePerSecond);
-
-      if (f < 0) {
+      const f = Math.floor(
+        frame / (1 + exportSkipFrame) - start * framePerSecond
+      );
+      if (f < 0 || f === lastF) {
         setFrame(++frame);
         return;
       }
+      lastF = f;
 
       if (format === "gif") {
         const { width, height, data } = captureNDArray();
         if (!gif) {
           gif = GIFEncoder();
         }
-        palette = quantize(data, 256);
+        if (!palette || !Day.exportPaletteGenOnce) {
+          palette = quantize(data, Day.exportPaletteSize || 256);
+        }
         index = applyPalette(data, palette);
         gif.writeFrame(index, width, height, {
           palette,
@@ -279,6 +285,7 @@ export default function Home({ day }) {
   const start = Day.exportStart || 0;
   const end = Day.exportEnd || 1;
   const framePerSecond = Day.exportFramePerSecond || 24;
+  const exportSkipFrame = Day.exportSkipFrame || 0;
   const speed = Day.exportSpeed || 1;
   const size = Day.exportSize || 800;
   const preload = Day.preload || [];
@@ -302,6 +309,7 @@ export default function Home({ day }) {
               start={start}
               end={end}
               framePerSecond={framePerSecond}
+              exportSkipFrame={exportSkipFrame}
               speed={speed}
               size={size}
               Day={Day}

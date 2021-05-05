@@ -3,6 +3,7 @@ import { Shaders, Node, GLSL, Uniform } from "gl-react";
 
 export const n = 64;
 export const title = "Intersection";
+export const exportEnd = 8 * Math.PI;
 
 export const nfts = [
   { url: "https://www.hicetnunc.xyz/objkt/28592", text: "hic et nunc NFT" },
