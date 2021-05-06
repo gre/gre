@@ -12,6 +12,9 @@ export const exportSpeed = 1;
 export const exportSkipFrame = 3;
 export const exportPaletteGenOnce = true;
 export const exportPaletteSize = 16;
+export const nfts = [
+  { url: "https://hicetnunc.xyz/objkt/64326", text: "hic et nunc NFT" },
+];
 
 export const Shader = ({ time }) => (
   <NearestCopy>
