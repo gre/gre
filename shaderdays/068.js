@@ -1,7 +1,7 @@
 import React from "react";
 import { Shaders, Node, GLSL, Uniform, NearestCopy } from "gl-react";
 
-export const n = 67;
+export const n = 68;
 export const title = "Jumping blob";
 export const exportSize = 800;
 export const exportStart = 2;
