@@ -128,6 +128,18 @@ pub fn base_a4_landscape(bg: &str) -> Document {
         .set("style", format!("background:{}", bg))
 }
 
+pub fn base_a5_landscape(bg: &str) -> Document {
+    Document::new()
+        .set(
+            "xmlns:inkscape",
+            "http://www.inkscape.org/namespaces/inkscape",
+        )
+        .set("viewBox", (0, 0, 210, 297. / 2.))
+        .set("height", "148.5mm")
+        .set("width", "210mm")
+        .set("style", format!("background:{}", bg))
+}
+
 pub fn base_24x30_portrait(bg: &str) -> Document {
     Document::new()
         .set(
@@ -172,6 +184,7 @@ pub fn base_path(
         .set("stroke", color)
         .set("stroke-width", stroke_width)
         .set("d", data)
+        .set("style", "mix-blend-mode: multiply;")
 }
 
 pub fn project_in_boundaries(
@@ -236,7 +249,7 @@ pub fn render_polygon_stroke(
 fn samples_polygon(
     poly: Polygon<f64>,
     samples: usize,
-    rng: &mut SmallRng,
+    rng: &mut impl Rng,
 ) -> Vec<(f64, f64)> {
     let bounds = poly.bounding_rect().unwrap();
     let sz = 32;
@@ -335,7 +348,7 @@ pub fn render_polygon_fill_tsp(
     data: Data,
     poly: Polygon<f64>,
     samples: usize,
-    rng: &mut SmallRng,
+    rng: &mut impl Rng,
     duration: Duration,
 ) -> Data {
     let candidates = samples_polygon(poly, samples, rng);
@@ -390,7 +403,7 @@ pub fn render_polygon_fill_spiral(
     data: Data,
     poly: Polygon<f64>,
     samples: usize,
-    rng: &mut SmallRng,
+    rng: &mut impl Rng,
 ) -> Data {
     let candidates = samples_polygon(poly, samples, rng);
     render_fill_spiral(data, candidates)
@@ -400,7 +413,7 @@ pub fn sample_2d_candidates(
     f: &dyn Fn((f64, f64)) -> bool,
     dim: usize,
     samples: usize,
-    rng: &mut SmallRng,
+    rng: &mut impl Rng,
 ) -> Vec<(f64, f64)> {
     let mut candidates = Vec::new();
     for x in 0..dim {
