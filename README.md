@@ -1,6 +1,6 @@
 [**greweb.me**](https://greweb.me) – [@greweb](https://twitter.com/greweb)
 
-> 👋 I'm gre (Gaëtan Renaudeau),
+> 👋  I'm **gre** (Gaëtan Renaudeau),
 > 
 > I work at Ledger as tech lead dev on [Ledger Live](https://github.com/ledgerhq/ledger-live-desktop),
 > 
