@@ -8,6 +8,8 @@ export const exportStart = 0;
 export const exportEnd = 20;
 export const exportFramePerSecond = 20;
 export const exportSpeed = 1;
+export const exportPaletteGenOnce = true;
+export const exportPaletteSize = 128;
 
 export const Shader = ({ time }) => (
   <Node

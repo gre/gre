@@ -6,7 +6,7 @@ use ndarray::Array2;
 use prelude::{BoundingRect, Contains};
 use rand::prelude::*;
 use std::f64::{consts::PI, INFINITY};
-use svg::node::element::path::Data;
+use svg::node::element::{path::Data, Rectangle};
 use svg::node::element::{Circle, Group, Path};
 use svg::Document;
 use time::Duration;
@@ -184,6 +184,17 @@ pub fn base_path(
         .set("stroke", color)
         .set("stroke-width", stroke_width)
         .set("d", data)
+        .set("style", "mix-blend-mode: multiply;")
+}
+
+pub fn base_rect(
+    color: &str,
+    stroke_width: f64,
+) -> Rectangle {
+    Rectangle::new()
+        .set("fill", "none")
+        .set("stroke", color)
+        .set("stroke-width", stroke_width)
         .set("style", "mix-blend-mode: multiply;")
 }
 
