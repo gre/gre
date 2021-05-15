@@ -26,6 +26,7 @@ varying vec2 uv;
 
 uniform vec2 resolution;
 uniform float time;
+#define PI ${Math.PI}
 
 // adapted work from https://www.iquilezles.org/
 float hash1( vec2 p ) {

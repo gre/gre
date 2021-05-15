@@ -1,5 +1,7 @@
 use byteorder::*;
+use contour::ContourBuilder;
 use geo::*;
+use geojson::Feature;
 use image::io::Reader as ImageReader;
 use image::GenericImageView;
 use ndarray::Array2;
@@ -1148,4 +1150,103 @@ pub fn rng_from_seed(s: f64) -> impl Rng {
         rng.gen::<f64>();
     }
     return rng;
+}
+
+pub fn rasterize_1d<F: FnMut((f64, f64)) -> f64>(
+    width: u32,
+    height: u32,
+    mut f: F,
+) -> Vec<f64> {
+    (0..height)
+        .flat_map(|y| {
+            (0..width)
+                .map(|x| {
+                    f((
+                        x as f64 / width as f64,
+                        y as f64 / height as f64,
+                    ))
+                })
+                .collect::<Vec<f64>>()
+        })
+        .collect::<Vec<f64>>()
+}
+
+pub fn contour<F: FnMut((f64, f64)) -> f64>(
+    width: u32,
+    height: u32,
+    mut f: F,
+    thresholds: &Vec<f64>,
+) -> Vec<Feature> {
+    let c = ContourBuilder::new(width, height, true);
+    let values = rasterize_1d(width, height, &mut f);
+    c.contours(&values, &thresholds).unwrap_or(Vec::new())
+}
+
+pub fn features_to_routes(
+    features: Vec<Feature>,
+    precision: f64,
+) -> Vec<Vec<(f64, f64)>> {
+    let mut routes = Vec::new();
+    for f in features {
+        for g in f.geometry {
+            let value = g.value;
+            match value {
+                geojson::Value::MultiPolygon(all) => {
+                    for poly in all {
+                        for lines in poly {
+                            let mut points = lines
+                                .iter()
+                                .map(|p| {
+                                    (
+                                        precision * p[0],
+                                        precision * p[1],
+                                    )
+                                })
+                                .collect::<Vec<(f64, f64)>>(
+                                );
+                            let len = points.len();
+                            if len < 3 {
+                                continue;
+                            }
+                            if euclidian_dist(
+                                points[0],
+                                points[len - 1],
+                            ) <= precision
+                            {
+                                points.push(points[0]);
+                            }
+                            routes.push(points);
+                        }
+                    }
+                }
+                _ => {}
+            }
+        }
+    }
+    routes
+}
+
+pub fn crop_route(
+    route: &Vec<(f64, f64)>,
+    boundaries: (f64, f64, f64, f64),
+) -> Option<Vec<(f64, f64)>> {
+    // for now, we just will consider ALL points to be out to remove all points of route. could be improved later.
+    if route.len() < 2
+        || !route
+            .iter()
+            .all(|&p| strictly_in_boundaries(p, boundaries))
+    {
+        return None;
+    }
+    return Some(route.clone());
+}
+
+pub fn crop_routes(
+    routes: &Vec<Vec<(f64, f64)>>,
+    boundaries: (f64, f64, f64, f64),
+) -> Vec<Vec<(f64, f64)>> {
+    return routes
+        .iter()
+        .filter_map(|route| crop_route(&route, boundaries))
+        .collect();
 }
