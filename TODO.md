@@ -1,0 +1,10 @@
+- /
+  - header with: about, plots, shaders, games, blog, contact
+- "latest plot loop"
+- /about: present my work
+- /plots/N
+  - thumbnail + title + content + rust code
+  - NFT urls
+  - tweet URL as alternative
+  - make it referenced correctly
+  - ? preview of .svgs
