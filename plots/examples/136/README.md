@@ -1,7 +1,7 @@
 ---
 title: "White Protozoa (8 frames)"
 thumbnail: "/images/plots/136.gif"
-description: "8 frames plotted making an animated loop of a jumping blob. A 1920p video and A4 physical art is available as an NFT."
+description: "8 frames plotted making an animated loop. A 1920p video and A4 physical art is available as an NFT."
 tags:
   - plotloop
 objkts:
