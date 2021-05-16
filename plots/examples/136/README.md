@@ -19,3 +19,9 @@ like in [plot#135](/plots/135), this is an exploration of domain warping and mar
 The ending of #1 being plotted, speed x5:
 
 <img width="100%" src="/images/plots/136plot.gif" />
+
+If you like bonus, I had considered many different animations, and they are viewable as GIF (digital black on white) on https://github.com/gre/gre/tree/master/plots/examples/136
+
+You can also find the full source code, open sourced as 99% of my work. I essentially have a generator of plot loops and I ran it to generate 500 gif and chose among them! It was very hard to decide!
+
+Enjoy!
