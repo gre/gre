@@ -69,6 +69,7 @@ import * as Day068 from "./068";
 import * as Day069 from "./069";
 import * as Day070 from "./070";
 import * as Day071 from "./071";
+import * as Day072 from "./072";
 
 const days = [
   Day001,
@@ -142,6 +143,7 @@ const days = [
   Day069,
   Day070,
   Day071,
+  Day072,
 ];
 
 export function getDays() {
@@ -149,9 +151,11 @@ export function getDays() {
 }
 
 export function getToday() {
+  let days = getDays();
   return days[days.length - 1];
 }
 
 export function findDay(n) {
+  let days = getDays();
   return days.find((d) => d.n === n);
 }
