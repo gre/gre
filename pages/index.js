@@ -115,26 +115,6 @@ export default function Home({ posts, plots }) {
           </Header>
           <div className="content">
             <dl>
-              <dt>Plot loops</dt>
-              <div
-                style={{
-                  display: "flex",
-                  flexFlow: "row wrap",
-                  alignItems: "center",
-                }}
-              >
-                {plots
-                  .filter((p) => p.data.tags?.some((t) => t === "plotloop"))
-                  .map((p) => (
-                    <a key={p.n} href={`/plots/${p.n}`}>
-                      <img
-                        src={p.data.thumbnail}
-                        style={{ width: 300, height: 300, objectFit: "cover" }}
-                      />
-                    </a>
-                  ))}
-              </div>
-
               <dt>Latest work</dt>
               <div
                 style={{
@@ -154,32 +134,6 @@ export default function Home({ posts, plots }) {
                   <Visual width={300} height={300} Day={days[0]} />
                 </a>
               </div>
-
-              <dt>
-                <Link href="https://github.com/gre/gre/tree/master/plots">
-                  <a>All plots...</a>
-                </Link>
-              </dt>
-              {plots.map((d) => (
-                <dd className="inline" key={d.key}>
-                  <Link href={`/plots/${d.n}`}>
-                    <a>{String(d.n)}</a>
-                  </Link>
-                </dd>
-              ))}
-
-              <dt>
-                <Link href="/shaderday">
-                  <a>All shaders...</a>
-                </Link>
-              </dt>
-              {days.map((d) => (
-                <dd className="inline" key={d.n}>
-                  <Link href={`/shaderday/${d.n}`}>
-                    <a>{String(d.n)}</a>
-                  </Link>
-                </dd>
-              ))}
 
               <dt>
                 <Link href="/posts">
@@ -209,6 +163,55 @@ export default function Home({ posts, plots }) {
                     <p>{p.data.description}</p>
                   </div>
                 </div>
+              ))}
+
+              <dt>Plot loops</dt>
+              <div
+                style={{
+                  display: "grid",
+                  gridGap: "10px",
+                }}
+              >
+                {plots
+                  .filter((p) => p.data.tags?.some((t) => t === "plotloop"))
+                  .map((p) => (
+                    <a key={p.n} href={`/plots/${p.n}`}>
+                      <img
+                        src={p.data.thumbnail}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                        }}
+                      />
+                    </a>
+                  ))}
+              </div>
+
+              <dt>
+                <Link href="https://github.com/gre/gre/tree/master/plots">
+                  <a>All plots...</a>
+                </Link>
+              </dt>
+              {plots.map((d) => (
+                <dd className="inline" key={d.key}>
+                  <Link href={`/plots/${d.n}`}>
+                    <a>{String(d.n)}</a>
+                  </Link>
+                </dd>
+              ))}
+
+              <dt>
+                <Link href="/shaderday">
+                  <a>All shaders...</a>
+                </Link>
+              </dt>
+              {days.map((d) => (
+                <dd className="inline" key={d.n}>
+                  <Link href={`/shaderday/${d.n}`}>
+                    <a>{String(d.n)}</a>
+                  </Link>
+                </dd>
               ))}
 
               <dd>
