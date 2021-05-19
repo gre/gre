@@ -11,6 +11,10 @@ export const exportSpeed = 1;
 export const exportPaletteGenOnce = false;
 export const exportPaletteSize = 256;
 
+export const nfts = [
+  { url: "https://hicetnunc.xyz/objkt/87918", text: "hic et nunc NFT" },
+];
+
 export const Shader = ({ time, n }) => {
   const rng = new MersenneTwister(n);
   const a = 0.2 + 3 * rng.random() * rng.random();
