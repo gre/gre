@@ -115,6 +115,26 @@ export default function Home({ posts, plots }) {
           </Header>
           <div className="content">
             <dl>
+              <dt>Plot loops</dt>
+              <div
+                style={{
+                  display: "flex",
+                  flexFlow: "row wrap",
+                  alignItems: "center",
+                }}
+              >
+                {plots
+                  .filter((p) => p.data.tags?.some((t) => t === "plotloop"))
+                  .map((p) => (
+                    <a key={p.n} href={`/plots/${p.n}`}>
+                      <img
+                        src={p.data.thumbnail}
+                        style={{ width: 300, height: 300, objectFit: "cover" }}
+                      />
+                    </a>
+                  ))}
+              </div>
+
               <dt>Latest work</dt>
               <div
                 style={{
