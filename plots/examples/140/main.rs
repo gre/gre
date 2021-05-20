@@ -78,9 +78,9 @@ fn art(opts: Opts) -> Vec<Group> {
 #[derive(Clap)]
 #[clap()]
 struct Opts {
-    #[clap(short, long, default_value = "20.0")]
+    #[clap(short, long, default_value = "5.0")]
     size: f64,
-    #[clap(short, long, default_value = "0.8")]
+    #[clap(short, long, default_value = "0.7")]
     plus_size: f64, // in %
     #[clap(
         short,
