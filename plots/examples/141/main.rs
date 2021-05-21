@@ -1,6 +1,6 @@
 use clap::Clap;
 use gre::*;
-use std::f64::consts::PI;
+use rand::prelude::*;
 use svg::node::element::path::Data;
 use svg::node::element::*;
 
@@ -9,28 +9,34 @@ use svg::node::element::*;
 struct Opts {
     #[clap(short, long, default_value = "1.0")]
     step: f64,
+    #[clap(short, long, default_value = "220")]
+    count: usize,
 }
 
-fn draw(step: f64) -> Data {
+fn draw(opts: Opts) -> Data {
     let mut data = Data::new();
+    let mut rng = rng_from_seed(4.0);
     let boundaries = (10., 10., 200., 200.);
     let mut y = boundaries.1;
     let mut ltr = true;
+    let mut routes = Vec::new();
     loop {
         if y > boundaries.3 {
             break;
         }
         if ltr {
-            data = data
-                .move_to((boundaries.0, y))
-                .line_to((boundaries.2, y));
+            routes.push(vec![
+                (boundaries.0, y),
+                (boundaries.2, y),
+            ]);
         } else {
-            data = data
-                .move_to((boundaries.2, y))
-                .line_to((boundaries.0, y));
+            routes.push(vec![
+                (boundaries.2, y),
+                (boundaries.0, y),
+            ]);
         }
         ltr = !ltr;
-        y += step;
+        y += opts.step;
     }
     let mut x = boundaries.0;
     let mut ltr = true;
@@ -39,16 +45,23 @@ fn draw(step: f64) -> Data {
             break;
         }
         if ltr {
-            data = data
-                .move_to((x, boundaries.1))
-                .line_to((x, boundaries.3));
+            routes.push(vec![
+                (x, boundaries.1),
+                (x, boundaries.3),
+            ]);
         } else {
-            data = data
-                .move_to((x, boundaries.3))
-                .line_to((x, boundaries.1));
+            routes.push(vec![
+                (x, boundaries.3),
+                (x, boundaries.1),
+            ]);
         }
         ltr = !ltr;
-        x += step;
+        x += opts.step;
+    }
+    rng.shuffle(&mut routes);
+    routes.truncate(opts.count);
+    for route in routes {
+        data = render_route(data, route);
     }
     data
 }
@@ -58,7 +71,7 @@ fn art(opts: Opts) -> Vec<Group> {
         layer("brush").add(base_path(
             "black",
             0.5,
-            draw(opts.step),
+            draw(opts),
         )),
         layer("signature").add(signature(
             2.0,
