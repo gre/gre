@@ -148,7 +148,7 @@ const days = [
   Day071,
   Day072,
   Day073,
-  // Day074,
+  Day074,
   // Day075,
 ];
 

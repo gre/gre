@@ -105,7 +105,7 @@ fn art(opts: Opts) -> Vec<Group> {
                     let passage = passage_mm(next);
                     let ends = euclidian_dist(next, center)
                         > radius
-                        || passage > 3
+                        || passage > 5
                         || i > length
                         || out_of_boundaries(
                             next, boundaries,
