@@ -26,6 +26,7 @@
     "gray-matter": "^4.0.3",
     "js-yaml": "^4.1.0",
     "leva": "^0.9.10",
+    "lodash": "^4.17.21",
     "marked": "^2.0.4",
     "mersenne-twister": "^1.1.0",
     "next": "^10.2.2",

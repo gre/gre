@@ -21,7 +21,7 @@ export default function Home() {
         </Head>
         <Main>
           <Header>
-            <Title text="greweb.me" />
+            <Title withBreadcrumb text="live" />
           </Header>
           <Visual Day={Day} />
         </Main>

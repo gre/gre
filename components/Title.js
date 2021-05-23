@@ -1,21 +1,24 @@
-import { useState, useEffect } from "react";
+import React from "react";
 import Link from "next/link";
 
-export function Title({ text = "One Day, One Shader" }) {
+export function Title({ withBreadcrumb, text }) {
   return (
     <>
       <h1 className="title">
-        <Link href="/">
-          <a>{text}</a>
-        </Link>
+        {withBreadcrumb ? (
+          <Link href="/">
+            <a>greweb.me</a>
+          </Link>
+        ) : null}
+        {withBreadcrumb ? " / " : ""}
+        {text}
       </h1>
 
       <style jsx>{`
         .title {
           text-align: center;
-          margin: 0;
-          line-height: 1.15;
-          font-size: 2rem;
+          margin: 0.5em 0;
+          font-size: 1.5rem;
         }
       `}</style>
     </>

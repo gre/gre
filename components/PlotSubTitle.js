@@ -1,21 +1,16 @@
 import React from "react";
 import Link from "next/link";
+import { Title } from "./Title";
 
 export function SubTitle({ plot, prev, next }) {
   return (
     <>
-      <p className="description">
-        <Link href={`/plots/${plot.n}`}>
-          <a>Plot #{plot.n}</a>
-        </Link>{" "}
-        {plot.data.title ? (
-          <span className="daily">&quot;{plot.data.title}&quot;</span>
-        ) : null}{" "}
-        by{" "}
-        <a href="https://twitter.com/greweb" target="_blank" rel="noreferrer">
-          @greweb
-        </a>
-      </p>
+      <Title
+        withBreadcrumb
+        text={`Plot #${plot.n}${
+          plot.data.title ? ' "' + plot.data.title + '"' : ""
+        }`}
+      />
       <nav>
         {prev ? (
           <Link href={`/plots/${prev.n}`}>

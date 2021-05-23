@@ -22,7 +22,7 @@ export default function Home() {
         </Head>
         <Main>
           <Header>
-            <Title />
+            <Title withBreadcrumb text="Shaderday" />
             <SubTitle Day={Day} />
           </Header>
           <Visual Day={Day} />

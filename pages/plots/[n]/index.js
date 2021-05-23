@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import Head from "next/head";
+import Link from "next/link";
 import { getPlots } from "../../../plots";
 import { SubTitle } from "../../../components/PlotSubTitle";
 import { Global } from "../../../components/Global";
@@ -181,7 +182,11 @@ export default function Home({ n, plot, prev, next }) {
               <dl>
                 <dt>Tags</dt>
                 {data.tags.map((t) => (
-                  <dd key={t}>{t}</dd>
+                  <dd key={t}>
+                    <Link href={`/plots/tags/${t}`}>
+                      <a>{t}</a>
+                    </Link>
+                  </dd>
                 ))}
               </dl>
             ) : null}
