@@ -149,7 +149,7 @@ const days = [
   Day072,
   Day073,
   Day074,
-  // Day075,
+  Day075,
 ];
 
 export function getDays() {

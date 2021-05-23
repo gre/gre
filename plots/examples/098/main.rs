@@ -1,5 +1,4 @@
 use clap::Clap;
-use geo::prelude::EuclideanDistance;
 use gre::*;
 use noise::*;
 use std::f64::consts::PI;
