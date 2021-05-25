@@ -7,14 +7,14 @@ tags:
   - perlin
   - plotloop
 objkts:
-  - 0
+  - 98062
 ---
 
-Here is "Rainbow Roots", my 4th [**plot loop** (see article)](https://greweb.me/2021/05/plot-loops). **The main digital art is a 1920p video loop of 8 frames available as a [Tezos hicetnunc NFT](https://www.hicetnunc.xyz/objkt/0)**. The physical art are 8 frames, plotted with 2 fountain pens on Bristol A4 paper (250g), and offered when [buying the NFT](https://www.hicetnunc.xyz/objkt/71006).
+Here is "Rainbow Roots", my 4th [**plot loop** (see article)](https://greweb.me/2021/05/plot-loops). **The main digital art is a 1920p video loop of 8 frames available as a [Tezos hicetnunc NFT](https://www.hicetnunc.xyz/objkt/98062)**. The physical art are the 8 frames, plotted with 2 fountain pens on Bristol A4 paper (250g), and offered when [buying the NFT](https://www.hicetnunc.xyz/objkt/98062).
 
-There are 8 plots available for sale and there will be no other editions of these plot loop frames. You can chose which frame you buy as the NFT editions are segmented into different prices. 20.1 tez for the first frame, 20.2 for the second and so on.
+There are 8 plots available for sale and there will be no other editions of these plot loop frames. You can chose which frame you buy as the NFT editions are segmented into different prices. 20.1 tez for the first frame, 20.2 for the second and so on up to 20.8.
 
-(PHOTO WITH PLOTS AND # number)
+<img src="/images/plots/143-plots.jpg" width="100%">
 
 This is a reboot of [plot#091](/plots/091) with more lines and better noise technique using domain warping.
 
@@ -26,7 +26,7 @@ I used 8 different inks, all by "Diamine" brand: Turquoise, Aurora Borealis, Blo
 
 <img src="/images/plots/143-inks.jpg" width="100%">
 
-I had a last minute changes after the photo was taken: I replaced Spring Green by Sepia because it would have been too "light" for a plot, but I reserve Spring Green for better usecases in future.
+I had a last minute changes after the photo was taken: I replaced Spring Green by another color because it would have been too "light" for a plot. I actually tried to do one with Sepia and it was also too "light", I decided to go black! I definitely have betterplans for 'Spring Green'.
 
 ### Paper
 
