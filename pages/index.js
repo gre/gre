@@ -165,7 +165,11 @@ export default function Home({ posts, plots }) {
                 </div>
               ))}
 
-              <dt>Plot loops</dt>
+              <dt>
+                <Link href="/plots/tags/plotloop">
+                  <a>Plot loops</a>
+                </Link>
+              </dt>
               <div
                 style={{
                   display: "grid",
@@ -189,7 +193,7 @@ export default function Home({ posts, plots }) {
               </div>
 
               <dt>
-                <Link href="https://github.com/gre/gre/tree/master/plots">
+                <Link href="/plots">
                   <a>All plots...</a>
                 </Link>
               </dt>
