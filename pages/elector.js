@@ -13,11 +13,11 @@ import { getAllPosts } from "../posts";
 import { getPlots } from "../plots";
 import me from "../me";
 
-const ITEMS_SIZE = 6;
-const GRID = 3;
+const ITEMS_SIZE = 4;
+const GRID = 2;
 
-const COLLECTION = "/images/elector/143/{index}.gif";
-const candidates = Array(501)
+const COLLECTION = "/candidates/{index}.gif";
+const candidates = Array(76)
   .fill(null)
   .map((_o, i) => i);
 

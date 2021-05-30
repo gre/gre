@@ -2,12 +2,15 @@ use byteorder::*;
 use contour::ContourBuilder;
 use geo::*;
 use geojson::Feature;
+use image::AnimationDecoder;
+use image::RgbaImage;
+use image::gif::GifDecoder;
 use image::io::Reader as ImageReader;
-use image::GenericImageView;
 use ndarray::Array2;
 use prelude::{BoundingRect, Contains};
 use rand::prelude::*;
 use std::f64::{consts::PI, INFINITY};
+use std::fs::File;
 use svg::node::element::{path::Data, Rectangle};
 use svg::node::element::{Circle, Group, Path};
 use svg::Document;
@@ -85,8 +88,30 @@ pub fn image_get_color(
     image::ImageError,
 > {
     let img = ImageReader::open(path)?.decode()?;
+    return Ok(dynamic_image_get_color(img.to_rgba8()));
+}
+
+pub fn image_gif_get_color(
+    path: &str,
+    index: usize
+) -> Result<
+    impl Fn((f64, f64)) -> (f64, f64, f64),
+    image::ImageError,
+> {
+    let file_in = File::open(path)?;
+    let decoder = GifDecoder::new(file_in).unwrap();
+    let frames = decoder.into_frames();
+    let frames = frames.collect_frames()?;
+    let img = frames.get(index % frames.len()).unwrap();
+    let buffer = img.buffer();
+    return Ok(dynamic_image_get_color(buffer.clone()));
+}
+
+pub fn dynamic_image_get_color(
+    img: RgbaImage
+) -> impl Fn((f64, f64)) -> (f64, f64, f64) {
     let (width, height) = img.dimensions();
-    return Ok(move |(x, y): (f64, f64)| {
+    return move |(x, y): (f64, f64)| {
         let xi = (x.max(0.0).min(1.0)
             * ((width - 1) as f64)) as u32;
         let yi = (y.max(0.0).min(1.0)
@@ -97,7 +122,7 @@ pub fn image_get_color(
         let g = (pixel[1] as f64) / 255.0;
         let b = (pixel[2] as f64) / 255.0;
         return (r, g, b);
-    });
+    };
 }
 
 pub fn layer(id: &str) -> Group {
