@@ -40,6 +40,10 @@ pub fn grayscale((r, g, b): (f64, f64, f64)) -> f64 {
     return 0.299 * r + 0.587 * g + 0.114 * b;
 }
 
+pub fn lerp(a: f64, b: f64, x: f64) -> f64 {
+    (x - a) / (b - a)
+}
+
 pub fn smoothstep(a: f64, b: f64, x: f64) -> f64 {
     let k = ((x - a) / (b - a)).max(0.0).min(1.0);
     return k * k * (3.0 - 2.0 * k);
@@ -325,6 +329,53 @@ pub fn render_route(
     }
     return d;
 }
+
+pub fn render_route_collide(
+    data: Data,
+    route: Vec<(f64, f64)>,
+    // when lines are not to be drawn, you can Some(from)
+    // otherwise you can give the precise collision point of the line
+    // if None we assume we can draw the full line
+    collides: &dyn Fn(
+        (f64, f64),
+        (f64, f64),
+    ) -> Option<(f64, f64)>,
+) -> Data {
+    let mut first = true;
+    let mut up = false;
+    let mut last = (0.0, 0.0);
+    let mut d = data;
+    for p in route {
+        if first {
+            first = false;
+            d = d.move_to(p);
+        } else {
+            if let Some(c) = collides(last, p) {
+                if c.0==last.0 && c.1==last.1 || c.0==p.0 && c.1==p.1 {
+                    // nothing to draw
+                    up = true;
+                }
+                else {
+                    if up {
+                        d = d.move_to(last);
+                    }
+                    d = d.line_to(c);
+                    up = true;
+                }
+            }
+            else {
+                if up {
+                    up = false;
+                    d = d.move_to(last);
+                }
+                d = d.line_to(p);
+            }
+        }
+        last = p;
+    }
+    return d;
+}
+
 
 pub fn render_route_when(
     data: Data,
@@ -785,10 +836,14 @@ pub fn collide_segment_boundaries(
     to: (f64, f64),
     boundaries: (f64, f64, f64, f64),
 ) -> Option<(f64, f64)> {
-    if strictly_in_boundaries(from, boundaries)
-        && strictly_in_boundaries(to, boundaries)
-    {
+    let from_in = strictly_in_boundaries(from, boundaries);
+    let to_in = strictly_in_boundaries(to, boundaries);
+
+    if from_in && to_in {
         return None;
+    }
+    if !from_in && !to_in {
+        return Some(from); // convention to return from when both are out
     }
     let segment =
         line_intersection::LineInterval::line_segment(
@@ -1255,11 +1310,10 @@ pub fn crop_route(
     route: &Vec<(f64, f64)>,
     boundaries: (f64, f64, f64, f64),
 ) -> Option<Vec<(f64, f64)>> {
-    // for now, we just will consider ALL points to be out to remove all points of route. could be improved later.
     if route.len() < 2
-        || !route
+        || route
             .iter()
-            .all(|&p| strictly_in_boundaries(p, boundaries))
+            .all(|&p| !strictly_in_boundaries(p, boundaries))
     {
         return None;
     }
