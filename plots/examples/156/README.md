@@ -21,6 +21,10 @@ let thresholds: Vec<f64> = // in [0..1] range
 
 ```
 
+Here is the formula: (that i'm not sure is correctly normalized by the way)
+
+https://www.desmos.com/calculator/mlngfvssv0
+
 (yeah I also use my fountain pen to do (simple) math =D)
 
 <img src="/images/plots/156math.jpg" width="100%">
