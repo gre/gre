@@ -377,13 +377,13 @@ pub fn render_route_collide(
 }
 
 
-pub fn render_route_when(
+pub fn render_route_when<F: FnMut(
+    (f64, f64),
+    (f64, f64),
+) -> bool>(
     data: Data,
     route: Vec<(f64, f64)>,
-    should_draw_line: &dyn Fn(
-        (f64, f64),
-        (f64, f64),
-    ) -> bool,
+    mut should_draw_line: F,
 ) -> Data {
     let mut first = true;
     let mut up = false;
