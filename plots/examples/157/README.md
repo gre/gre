@@ -37,6 +37,6 @@ Before that result, I had many iterations and 3 prototypes where I adjusted many
 <img src="/images/plots/157proto2.jpg" width="100%">
 <img src="/images/plots/157proto3.jpg" width="100%">
 
-I also had a failure: I forgot to attach the paper!
+I also had this failure: (forgot to attach the paper!)
 
 <img src="/images/plots/157fail.jpg" width="100%">
