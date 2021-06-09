@@ -16,4 +16,5 @@
 
 See you there everyday for daily content 👋
 
+
 > [Ledger is opening a lot of positions => Join me!](https://love.hellotrusty.io/U7M1C25BN)
