@@ -1329,3 +1329,18 @@ pub fn crop_routes(
         .filter_map(|route| crop_route(&route, boundaries))
         .collect();
 }
+
+pub fn sdf_box2 ((x,y): (f64,f64), (w, h): (f64,f64)) -> f64 {
+    let dx = x.abs() - w;
+    let dy = y.abs() - h;
+    euclidian_dist((0., 0.), (dx.max(0.), dy.max(0.))) + dx.min(0.).max(dy.min(0.))
+}
+
+pub fn length(l: (f64, f64)) -> f64 {
+    (l.0 * l.0 + l.1 * l.1).sqrt()
+}
+
+pub fn f_op_union_round(a: f64, b: f64, r: f64) -> f64 {
+    r.max(a.min(b))
+        - length(((r - a).max(0.), (r - b).max(0.)))
+}
