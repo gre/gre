@@ -1344,3 +1344,10 @@ pub fn f_op_union_round(a: f64, b: f64, r: f64) -> f64 {
     r.max(a.min(b))
         - length(((r - a).max(0.), (r - b).max(0.)))
 }
+
+pub fn p_r(p: (f64, f64), a: f64) -> (f64, f64) {
+    (
+        a.cos() * p.0 + a.sin() * p.1,
+        a.cos() * p.1 - a.sin() * p.0,
+    )
+}
