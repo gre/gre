@@ -1175,6 +1175,7 @@ pub fn build_routes_with_collision_par<
 /**
  * utility to count the number of items passing by a position in order to limit too much passage.
  */
+#[derive(Clone)]
 pub struct Passage2DCounter {
     granularity: f64,
     width: f64,
