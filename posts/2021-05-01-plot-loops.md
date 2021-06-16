@@ -15,7 +15,7 @@ I am thrilled to release my first **"plot loop"** and plan to release one every 
 - photographed back into a digital picture,
 - and post-processed back into a video that makes it an artistic creation by itself as well as each physical plot being one "edition" of that plot loop series.
 
-> This concept recently came to me with [plot#108](/plots/108) exploration, now it's time to literally plot frames!
+> **You can see all my plot loops made so far at [https://greweb.me/plots/tags/plotloop](https://greweb.me/plots/tags/plotloop)**
 
 **So there are two creations:**
 
