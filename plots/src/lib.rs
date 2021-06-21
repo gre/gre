@@ -1346,6 +1346,15 @@ pub fn f_op_union_round(a: f64, b: f64, r: f64) -> f64 {
         - length(((r - a).max(0.), (r - b).max(0.)))
 }
 
+pub fn f_op_intersection_round(a: f64, b: f64, r: f64) -> f64 {
+    (-r).min(a.max(b))
+        + length(((r + a).max(0.), (r + b).max(0.)))
+}
+
+pub fn f_op_difference_round(a: f64, b: f64, r: f64) -> f64 {
+    f_op_intersection_round(a, -b, r)
+}
+
 pub fn p_r(p: (f64, f64), a: f64) -> (f64, f64) {
     (
         a.cos() * p.0 + a.sin() * p.1,
