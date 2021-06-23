@@ -1,11 +1,11 @@
 import React from "react";
 import { Shaders, Node, GLSL, Uniform } from "gl-react";
-export const n = 77;
-export const title = "Roses";
+export const n = 78;
+export const title = "Nature";
 export const exportSize = 512;
 export const exportStart = 0;
-export const exportEnd = 8;
-export const exportFramePerSecond = 20;
+export const exportEnd = 10;
+export const exportFramePerSecond = 16;
 export const exportSpeed = 1;
 export const exportPaletteGenOnce = false;
 export const exportPaletteSize = 64;
@@ -71,19 +71,18 @@ vec3 palette(float t,vec3 a,vec3 b,vec3 c,vec3 d){
 vec3 pal(float t){
   return palette(
     t,
+    vec3(0.75),
     vec3(0.5),
-    vec3(0.9),
     vec3(1.),
-    vec3(0.5, 0.1, 0.3)
+    vec3(0.1, 0.2, 0.7)
   );
 }
 
 float scene(in vec2 p) {
-  vec2 q = vec2( fbm( 1. * p ),
-                 fbm( 1. * p + vec2(0.08,.73) ) );
-  vec2 r = vec2( fbm( 6. * q - 0.07 * time ),
-                fbm( q + vec2(.1, .4) ) );
-  return fbm( p + 8. * r + 0.8 * time );
+  vec2 q = vec2( fbm( 8. * p ), fbm( 10. * p + vec2(0.15,8.3) ) );
+  vec2 r = vec2( fbm( 6. * q + time ),
+                fbm( 10.5 * q + vec2(1.71, 5.1) ) );
+  return fbm( 0.4 * p + 0.1 * r + 8. );
 }
 
 void main() {

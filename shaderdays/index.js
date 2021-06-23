@@ -74,7 +74,22 @@ import * as Day073 from "./073";
 import * as Day074 from "./074";
 import * as Day075 from "./075";
 import * as Day076 from "./076";
-//import * as Day077 from "./077";
+import * as Day077 from "./077";
+import * as Day078 from "./078";
+import * as Day079 from "./079";
+import * as Day080 from "./080";
+import * as Day081 from "./081";
+import * as Day082 from "./082";
+import * as Day083 from "./083";
+import * as Day084 from "./084";
+import * as Day085 from "./085";
+import * as Day086 from "./086";
+import * as Day087 from "./087";
+import * as Day088 from "./088";
+import * as Day089 from "./089";
+import * as Day090 from "./090";
+import * as Day091 from "./091";
+import * as Day092 from "./092";
 
 const days = [
   Day001,
@@ -153,7 +168,22 @@ const days = [
   Day074,
   Day075,
   Day076,
-  //Day077,
+  Day077,
+  Day078,
+  Day079,
+  Day080,
+  Day081,
+  Day082,
+  Day083,
+  Day084,
+  Day085,
+  Day086,
+  Day087,
+  Day088,
+  Day089,
+  Day090,
+  Day091,
+  Day092,
 ];
 
 export function getDays() {

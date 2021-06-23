@@ -1,11 +1,11 @@
 import React from "react";
 import { Shaders, Node, GLSL, Uniform } from "gl-react";
-export const n = 77;
-export const title = "Roses";
+export const n = 90;
+export const title = "Square Path";
 export const exportSize = 512;
 export const exportStart = 0;
-export const exportEnd = 8;
-export const exportFramePerSecond = 20;
+export const exportEnd = 10;
+export const exportFramePerSecond = 16;
 export const exportSpeed = 1;
 export const exportPaletteGenOnce = false;
 export const exportPaletteSize = 64;
@@ -72,26 +72,30 @@ vec3 pal(float t){
   return palette(
     t,
     vec3(0.5),
-    vec3(0.9),
+    vec3(0.6),
     vec3(1.),
-    vec3(0.5, 0.1, 0.3)
+    vec3(0.4, 0.6, 0.7)
   );
 }
 
-float scene(in vec2 p) {
-  vec2 q = vec2( fbm( 1. * p ),
-                 fbm( 1. * p + vec2(0.08,.73) ) );
-  vec2 r = vec2( fbm( 6. * q - 0.07 * time ),
-                fbm( q + vec2(.1, .4) ) );
-  return fbm( p + 8. * r + 0.8 * time );
+float fOpUnionRound(float a, float b, float r) {
+	vec2 u = max(vec2(r - a,r - b), vec2(0));
+	return max(r, min (a, b)) - length(u);
+}
+
+float scene(in vec2 p, float t) {
+  vec2 q = vec2( fbm( 3. * p ), fbm( 0.1 * p + vec2(0.15,3.32) ) );
+  vec2 r = vec2( fbm( 8. * q - 0.1 * t ),
+                fbm( 2. * q + vec2(1.71, 5.1) ) );
+  float v = max(max(p.x, p.y), max(-p.x, -p.y)) + 0.4 * fbm( 0.1 * p + r + 8. + 0.6 * t) - 0.1 * t;
+  return pow(fract(2.0 * v), 8.0);
 }
 
 void main() {
   vec2 ratio = resolution / min(resolution.x, resolution.y);
   vec3 c = vec3(0.);
   vec2 p = (uv - 0.5) * ratio;
-  float v = scene(p);
-  c += pal(v);
+  c += pal(scene(p, time));
   gl_FragColor = vec4(c, 1.0);
 }
 `,
