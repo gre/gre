@@ -95,6 +95,11 @@ import * as Day094 from "./094";
 import * as Day095 from "./095";
 import * as Day096 from "./096";
 import * as Day097 from "./097";
+import * as Day098 from "./098";
+import * as Day099 from "./099";
+import * as Day100 from "./100";
+import * as Day101 from "./101";
+import * as Day102 from "./102";
 
 const days = [
   Day001,
@@ -194,6 +199,11 @@ const days = [
   Day095,
   Day096,
   Day097,
+  Day098,
+  Day099,
+  Day100,
+  Day101,
+  Day102,
 ];
 
 export function getDays() {
