@@ -32,7 +32,7 @@ Once the coding was done, the hard part was the precision work of plotting 8 fra
 
 ## Zoom photos
 
-(coming soon!)
+<img src="/images/plots/164zoom.jpg" width="100%" />
 
 ## "Proof of Plot", a very time-consuming creation process
 
