@@ -1361,3 +1361,20 @@ pub fn p_r(p: (f64, f64), a: f64) -> (f64, f64) {
         a.cos() * p.1 - a.sin() * p.0,
     )
 }
+
+pub fn spiral(x: f64, y: f64, radius: f64, dr: f64) -> Vec<(f64, f64)> {
+    let two_pi = 2.0 * PI;
+    let mut route = Vec::new();
+    let mut r = radius;
+    let mut a = 0f64;
+    loop {
+        route.push(round_point(( x + r * a.cos(), y + r * a.sin() ), 0.01));
+        let da = 1.0 / (r + 8.0); // bigger radius is more we have to do angle iterations
+        a = (a + da) % two_pi;
+        r -= dr * da / two_pi;
+        if r < 0.1 {
+            break;
+        }
+    }
+    route
+}
