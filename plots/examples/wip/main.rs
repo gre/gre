@@ -17,29 +17,23 @@ use svg::node::element::*;
 #[derive(Clap)]
 #[clap()]
 struct Opts {
-    #[clap(short, long, default_value = "0.0")]
+    #[clap(short, long, default_value = "18.0")]
     seed: f64,
 }
 
-fn add (a: (f64, f64), b: (f64, f64)) -> (f64, f64) {
-    (a.0 + b.0, a.1 + b.1)
-}
-
-fn rotated_square_as_polygon(x: f64, y: f64, size: f64, angle: f64) -> Polygon<f64> {
-    polygon![
-        p_r((x-size, y-size), angle).into(),
-        p_r((x+size, y-size), angle).into(),
-        p_r((x+size, y+size), angle).into(),
-        p_r((x-size, y+size), angle).into(),
-    ]
-}
-
-fn rotated_tri_as_polygon(x: f64, y: f64, size: f64, angle: f64) -> Polygon<f64> {
-    polygon![
-        add(p_r((0.0, -size), angle), (x, y)).into(),
-        add(p_r((0.0, -size), angle + 2. * PI / 3.0), (x, y)).into(),
-        add(p_r((0.0, -size), angle - 2. * PI / 3.0), (x, y)).into(),
-    ]
+fn hexagon_as_polygon(x: f64, y: f64, size: f64, angle: f64) -> Polygon<f64> {
+    let count = 6;
+    Polygon::new(
+        LineString::from(
+            (0..count)
+            .map(|i| {
+                let a = angle + 2. * PI * i as f64 / (count as f64);
+                (x + size * a.cos(), y + size * a.sin())
+            })
+            .collect::<Vec<(f64, f64)>>()
+        ),
+        vec![]
+    )
 }
 
 fn poly_collides_in_polys(polys: &Vec<Polygon<f64>>, poly: &Polygon<f64>) -> bool {
@@ -97,9 +91,12 @@ fn poly_accumulate<F: FnMut(f64, f64, f64, f64) -> Polygon<f64>>(
     pad: f64,
     container: &Polygon<f64>,
     min_scale: f64,
-    a: f64
+    max_scale: f64,
+    a: f64,
+    fill: f64
 ) -> Vec<Polygon<f64>> {
     let mut polys = Vec::new();
+    let mut shapes = Vec::new();
     let mut rng = rng_from_seed(seed);
     let bounds = container.bounding_rect().unwrap();
     let topleft: Point<f64> = bounds.min().into();
@@ -107,20 +104,34 @@ fn poly_accumulate<F: FnMut(f64, f64, f64, f64) -> Polygon<f64>>(
         x: bounds.width(),
         y: bounds.height()
     );
-    let max_scale = (bounds.width()).max(bounds.height());
+    let max_scale = max_scale.min((bounds.width()).max(bounds.height()));
     for _i in 0..iterations {
         let x: f64 = rng.gen_range(topleft.x(), bottomright.x());
         let y: f64 = rng.gen_range(topleft.y(), bottomright.y());
         if let Some(size) = scaling_search_in_container(&mut make_shape, &container, &polys, x, y, a, min_scale, max_scale) {
             let poly = make_shape(x, y, size - pad, a);
-            polys.push(poly);
+            polys.push(poly.clone());
+            if fill <= 0.0 {
+                shapes.push(poly);
+            }
+            else {
+                shapes.push(poly);
+                let mut s = size - pad - fill;
+                loop {
+                    if s < 0.05 {
+                        break;
+                    }
+                    shapes.push(make_shape(x, y, s, a));
+                    s -= fill;
+                }
+            }
         }
         if polys.len() > desired_count {
             break;
         }
     }
 
-    polys
+    shapes
 }
 
 
@@ -139,13 +150,15 @@ fn art(opts: Opts) -> Vec<Group> {
     ];
 
     let primaries = poly_accumulate(
-        &rotated_tri_as_polygon,
+        &hexagon_as_polygon,
         opts.seed,
-        500000,
-        2000,
-        0.6,
+        20000,
+        200,
+        4.0,
         &bounds_container,
         1.0,
+        50.0,
+        0.0,
         0.0
     );
 
@@ -154,14 +167,16 @@ fn art(opts: Opts) -> Vec<Group> {
         .filter(|p| p.bounding_rect().unwrap().width() > 2.0)
         .map(|p| {
             poly_accumulate(
-                &rotated_square_as_polygon,
+                &hexagon_as_polygon,
                 opts.seed,
-                100000,
-                2000,
-                0.2,
+                30000,
+                300,
+                0.5,
                 &p,
                 0.8,
-                0.0
+                10.0,
+                0.0,
+                0.3
             )
         })
         .collect::<Vec<_>>()
@@ -178,7 +193,7 @@ fn art(opts: Opts) -> Vec<Group> {
     l = l.add(base_path(color, stroke_width, data));
     l = l.add(signature(
         0.8,
-        (258.0, 216.0),
+        (247.0, 214.0),
         color,
     ));
     layers.push(l);
