@@ -7,7 +7,7 @@ rm -rf out/*.gif || true
 mkdir -p out
 
 
-for i in $(seq 100 1 1000); do
+for i in $(seq 0 1 1000); do
   sh $P/gen.sh --seed $i
   cp ./results/out.gif out/${i}.gif
 done

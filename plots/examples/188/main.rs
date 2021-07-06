@@ -13,11 +13,11 @@ use svg::node::element::path::Data;
 #[derive(Clap)]
 #[clap()]
 struct Opts {
-    #[clap(short, long, default_value = "0")]
+    #[clap(short, long, default_value = "3")]
     index: usize,
     #[clap(short, long, default_value = "11")]
     frames: usize,
-    #[clap(short, long, default_value = "154.0")]
+    #[clap(short, long, default_value = "15.0")]
     seed: f64,
 }
 
@@ -273,15 +273,19 @@ fn contours(
     let f = |(x, y): (f64, f64)| {
         let d = euclidian_dist((x, y), (0.5, 0.5));
         0.2 + 2.0 * d + mix(
-            0.6 * perlin.get([
-                3. * x + 0.01 * circle.x,
-                3. * y + 0.01 * circle.y,
-                0.4 * seed + 0.8 * perlin.get([
-                    4. * x,
-                    4. * y + 0.6 * perlin.get([
-                        7. * x,
-                        3. * y,
-                        seed
+            0.7 * perlin.get([
+                2. * x + 0.01 * circle.x,
+                2. * y + 0.01 * circle.y,
+                0.4 * seed + 0.6 * perlin.get([
+                    3. * x + 1. * perlin.get([
+                        6. * x,
+                        6. * y,
+                        5. + seed
+                    ]),
+                    3. * y + 1. * perlin.get([
+                        5. * x,
+                        5. * y,
+                        4. + seed
                     ]),
                     10. + seed
                 ])
@@ -341,6 +345,7 @@ fn poly_accumulate<F: FnMut(f64, f64, f64, f64) -> Polygon<f64>>(
     min_scale: f64,
 ) -> Vec<Polygon<f64>> {
     let mut polys = Vec::new();
+    let mut shapes = Vec::new();
     let mut rng = rng_from_seed(seed);
     let x1 = container.x - container.r;
     let y1 = container.y - container.r;
@@ -354,12 +359,19 @@ fn poly_accumulate<F: FnMut(f64, f64, f64, f64) -> Polygon<f64>>(
         if let Some(size) = scaling_search_in_container(&mut make_shape, container, &polys, x, y, a, min_scale, max_scale) {
             let poly = make_shape(x, y, size - pad, a);
             polys.push(poly);
+            for i in 0..8 {
+                let l = size - pad - (i as f64 * 0.4).powf(2.0);
+                if l < 0.1 {
+                    break;
+                }
+                shapes.push(make_shape(x, y, l, a));
+            }
         }
         if polys.len() > desired_count {
             break;
         }
     }
-    polys
+    shapes
 }
 
 fn add (a: (f64, f64), b: (f64, f64)) -> (f64, f64) {
