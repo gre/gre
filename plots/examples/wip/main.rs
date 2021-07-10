@@ -1,15 +1,20 @@
+use std::f64::consts::PI;
+
 use noise::*;
 use clap::Clap;
 use gre::*;
-use rand::Rng;
 use svg::node::element::*;
 use svg::node::element::path::Data;
 
 #[derive(Clap)]
 #[clap()]
 struct Opts {
-    #[clap(short, long, default_value = "38.")]
+    #[clap(short, long, default_value = "117.0")]
     seed: f64,
+    #[clap(short, long, default_value = "0")]
+    index: usize,
+    #[clap(short, long, default_value = "4")]
+    frames: usize,
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -30,28 +35,24 @@ impl VCircle {
 
 fn waves_in_circle(
     seed: f64,
-    circle: &VCircle
+    circle: &VCircle,
+    dy: f64,
+    p: f64
 ) -> (Vec<Vec<(f64, f64)>>, Vec<f64>) {
     let mut routes = Vec::new();
     let mut base_y = circle.y + 2. * circle.r;
     let perlin = Perlin::new();
-    let mut passage = Passage2DCounter::new(0.4, circle.r * 2.0, circle.r * 2.0);
-    let passage_limit = 8;
+    let mut passage = Passage2DCounter::new(0.35, circle.r * 2.0, circle.r * 2.0);
+    let passage_limit = 10;
+    let precision = 0.2;
     let mut height_map: Vec<f64> = Vec::new();
-    let mut rng = rng_from_seed(seed);
-    let a = rng.gen_range(0.0, 0.8);
-    let b = rng.gen_range(0.2, 2.8);
-    let c = rng.gen_range(0.0, 0.2);
-    let d = rng.gen_range(0.0, 0.01);
-    let e = rng.gen_range(0.01, 0.2);
-    let f = rng.gen_range(0.0, 1.0);
     loop {
-        if base_y < circle.y - circle.r - 10.0 {
+        if base_y < circle.y - 0.5 * circle.r {
             break;
         }
-
-        if perlin.get([ seed, 2. * base_y ]) < 0.0 {
-            let precision = 0.2;
+        let a = p * 2. * PI;
+        let v = perlin.get([ 12. * base_y, seed ]);
+        if v < 0.3 {
             let mut route = Vec::new();
             let mut x = circle.x - circle.r;
             let mut was_outside = true;
@@ -60,19 +61,30 @@ fn waves_in_circle(
                 if x > circle.x + circle.r {
                     break;
                 }
-                let y = base_y + a * (circle.r - euclidian_dist((circle.x, circle.y), (x, base_y))) * perlin.get([
-                    0.5 * d * x,
-                    d * base_y,
-                    seed + b * smoothstep(-0.2, 0.0, perlin.get([
-                        0.5 * e * base_y,
-                        e * x,
-                        10. + 0.3 * seed + c * perlin.get([
-                            f * base_y,
-                            0.5 * f * x,
-                            100. + 7.3 * seed
+                let y = base_y + (circle.r - 0.6 * euclidian_dist((circle.x, circle.y + 0.9 * circle.r), (x, base_y))).max(0.) * (
+                    0.6 * perlin.get([
+                        0.01 * x,
+                        0.01 * base_y,
+                        seed + 2.0 * perlin.get([
+                            0.05 * base_y + 0.003 * perlin.get([
+                                base_y,
+                                0.3 * x,
+                                10. + 5.3 * seed
+                            ]) + 0.05 * a.cos(),
+                            0.02 * x + 0.02 * a.sin(),
+                            1. + 0.7 * seed
                         ])
-                    ]))
-                ]);
+                    ])
+                    - 5.0 * perlin.get([
+                        0.006 * x + 0.05 * a.cos(),
+                        0.005 * base_y,
+                        -7. + 9. * seed + 0.02 * perlin.get([
+                            0.02 * base_y,
+                            0.02 * x,
+                            seed / 7. - 9.
+                        ]) + 0.05 * a.sin()
+                    ]).powf(2.0)
+                );
                 let mut collides = false;
                 if i >= height_map.len() {
                     height_map.push(y);
@@ -107,26 +119,38 @@ fn waves_in_circle(
             routes.push(route);
         }
 
-        base_y -= 0.2;
+        base_y -= dy;
     }
     (routes, height_map)
 }
 
 type WaveballRes = (Vec<VCircle>, Vec<Vec<(f64, f64)>>);
 
-fn waveball(seed: f64, c: &VCircle) -> WaveballRes {
-    let (waves, _height_map) = waves_in_circle(seed, c);
-    (vec![c.clone()], waves)
+fn waveball(n: usize, seed: f64, c: &VCircle, p: f64) -> WaveballRes {
+    if n > 3 {
+        return (Vec::new(), Vec::new());
+    }
+    let (waves, _height_map) = waves_in_circle(seed, c, 0.2, p);
+    let mut circles_acc = Vec::new();
+    let mut routes_acc = Vec::new();
+    circles_acc.push(vec![ c.clone() ]);
+    routes_acc.push(waves);
+    let circles = circles_acc.concat();
+    let routes = routes_acc.concat();
+    (circles, routes)
 }
 
 fn art(opts: Opts) -> Vec<Group> {
     let width = 300.0;
     let height = 240.0;
     let pad = 10.0;
-    let stroke_width = 0.3;
+    let stroke_width = 0.35;
+
+    let p = opts.index as f64 / opts.frames as f64;
+
 
     let circle = VCircle::new(width/2.0, height/2.0, height / 2.0 - pad);
-    let (circles, routes) = waveball(opts.seed, &circle);
+    let (circles, routes) = waveball(0, opts.seed, &circle, p);
 
     let mut layers = Vec::new();
     let color = "black";
