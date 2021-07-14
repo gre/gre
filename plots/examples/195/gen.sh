@@ -1,10 +1,10 @@
 #!/bin/zsh
 
-cargo build --release --example wip
+cargo build --release --example 195
 rm -rf results/*.svg results/out.* results/pngs
 frames=4
 for i in $(seq 0 1 $(($frames - 1))); do
-  ./target/release/examples/wip --frames $frames --index $i $*
+  ./target/release/examples/195 --frames $frames --index $i $*
     cp image.svg results/${i}.svg
 done
 cd results
