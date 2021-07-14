@@ -1,5 +1,5 @@
 ---
-title: "Layered wave (4 frames)"
+title: "Dancing mountain (4 frames)"
 thumbnail: /images/plots/195.gif
 description: "@greweb's #11 plot loop."
 tags:
