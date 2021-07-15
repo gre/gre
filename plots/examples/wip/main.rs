@@ -7,7 +7,7 @@ use svg::node::element::path::Data;
 #[derive(Clap)]
 #[clap()]
 struct Opts {
-    #[clap(short, long, default_value = "5.0")]
+    #[clap(short, long, default_value = "0.0")]
     seed: f64,
 }
 
@@ -35,6 +35,14 @@ fn waves_in_circle(
     let mut routes = Vec::new();
     let mut base_y = circle.y + 2. * circle.r;
     let perlin = Perlin::new();
+    let get_color = image_get_color("images/eye2.png").unwrap();
+    let f = |(x, y): (f64, f64)| {
+        let mut p = (x, y);
+        p.0 = p.0 / 0.8 - 0.1;
+        p.1 = p.1 / 0.8 - 0.1;
+        let c = get_color(p);
+        smoothstep(0.0, 1.0, grayscale(c))
+    };
     let mut passage = Passage2DCounter::new(0.4, circle.r * 2.0, circle.r * 2.0);
     let passage_limit = 10;
     let mut height_map: Vec<f64> = Vec::new();
@@ -52,17 +60,28 @@ fn waves_in_circle(
             if x > circle.x + circle.r {
                 break;
             }
-            let amp = 10.0 + (line % 3) as f64 * 10.0;
-            let freq = 1.0 / ((line % 5) as f64 * 10.0 + 30.0);
-            let y = base_y + amp * perlin.get([
-                freq * x,
-                freq * base_y,
-                0.3 * seed + 0.8 * amp + 1.2 * perlin.get([
-                    0.7 * seed + 0.8 * perlin.get([ 6. * freq * x, seed, 8. * freq * base_y ]),
-                    2. * freq * x,
-                    2. * freq * base_y,
-                ])
-            ]);
+            let l = f(((x - circle.x + circle.r) / (2. * circle.r), (base_y - circle.y + circle.r) / (2. * circle.r)));
+            let mut y = base_y;
+            y += smoothstep(circle.r, circle.r * 0.6, euclidian_dist((circle.x, circle.y), (x, y))) *
+                30.0 * l *
+                perlin.get([
+                    0.01 * x,
+                    0.7 * y,
+                    seed + 3. * l * perlin.get([
+                        0.2 * y,
+                        0.03 * x + l * l * perlin.get([
+                            0.2 * y,
+                            0.06 * x,
+                            100. + 7.3 * seed
+                        ]),
+                        10. + 0.3 * seed
+                    ])
+                ]);
+            y += 1.0 * (1. - l) * perlin.get([
+                    seed,
+                    0.03 * x,
+                    0.02 * base_y,
+                ]);
             let mut collides = false;
             if i >= height_map.len() {
                 height_map.push(y);
@@ -81,6 +100,9 @@ fn waves_in_circle(
             if inside {
                 if was_outside {
                     if route.len() > 2 {
+                        if line % 2 == 0 {
+                            route.reverse();
+                        }
                         routes.push(route);
                     }
                     route = Vec::new();
@@ -108,22 +130,30 @@ type WaveballRes = (Vec<VCircle>, Vec<Vec<(f64, f64)>>);
 
 fn waveball(opts: Opts, c: &VCircle) -> WaveballRes {
     let (waves, _height_map) = waves_in_circle(opts, c);
-    (vec![c.clone(),c.clone(),c.clone()], waves)
+    (vec![c.clone()], waves)
 }
 
 fn art(opts: Opts) -> Vec<Group> {
     let width = 297.0;
     let height = 210.0;
     let pad = 10.0;
-    let stroke_width = 0.3;
+    let stroke_width = 0.35;
 
     let circle = VCircle::new(width/2.0, height/2.0, height / 2.0 - pad);
     let (circles, routes) = waveball(opts, &circle);
 
     let mut layers = Vec::new();
-    let colors = vec!["black"];
+    let colors = vec!["firebrick", "darkblue"];
     for (ci, &color) in colors.iter().enumerate() {
         let mut l = layer(color);
+        let mut data = Data::new();
+        for (i, r) in routes.iter().enumerate() {
+            let route = r.clone();
+            if i % 2 == ci {
+                data = render_route(data, route);
+            }
+        }
+        l = l.add(base_path(color, stroke_width, data));
         if ci == 0 {
             for c in circles.clone() {
                 l = l.add(
@@ -146,11 +176,6 @@ fn art(opts: Opts) -> Vec<Group> {
                 color,
             ));
         }
-        let mut data = Data::new();
-        for r in routes.clone() {
-            data = render_route(data, r);
-        }
-        l = l.add(base_path(color, stroke_width, data));
         layers.push(l);
     }
     

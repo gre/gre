@@ -117,15 +117,22 @@ pub fn dynamic_image_get_color(
 ) -> impl Fn((f64, f64)) -> (f64, f64, f64) {
     let (width, height) = img.dimensions();
     return move |(x, y): (f64, f64)| {
-        let xi = (x.max(0.0).min(1.0)
-            * ((width - 1) as f64)) as u32;
-        let yi = (y.max(0.0).min(1.0)
-            * ((height - 1) as f64))
-            as u32;
-        let pixel = img.get_pixel(xi, yi);
-        let r = (pixel[0] as f64) / 255.0;
-        let g = (pixel[1] as f64) / 255.0;
-        let b = (pixel[2] as f64) / 255.0;
+        // quadratic implementation
+        let xi: f64 = x.max(0.0).min(1.0) * ((width - 1) as f64);
+        let yi: f64 = y.max(0.0).min(1.0) * ((height - 1) as f64);
+        let x1 = xi.floor() as u32;
+        let x2 = xi.ceil() as u32;
+        let y1 = yi.floor() as u32;
+        let y2 = yi.ceil() as u32;
+        let p1 = img.get_pixel(x1, y1);
+        let p2 = img.get_pixel(x2, y1);
+        let p3 = img.get_pixel(x2, y2);
+        let p4 = img.get_pixel(x1, y2);
+        let xp = xi - xi.floor();
+        let yp = yi - yi.floor();
+        let r = (mix(mix(p1[0] as f64, p2[0] as f64, xp), mix(p4[0] as f64, p3[0] as f64, xp), yp)) / 255.0;
+        let g = (mix(mix(p1[1] as f64, p2[1] as f64, xp), mix(p4[1] as f64, p3[1] as f64, xp), yp)) / 255.0;
+        let b = (mix(mix(p1[2] as f64, p2[2] as f64, xp), mix(p4[2] as f64, p3[2] as f64, xp), yp)) / 255.0;
         return (r, g, b);
     };
 }
