@@ -7,7 +7,7 @@ use svg::node::element::path::Data;
 #[derive(Clap)]
 #[clap()]
 struct Opts {
-    #[clap(short, long, default_value = "0.0")]
+    #[clap(short, long, default_value = "8")]
     seed: f64,
 }
 
@@ -35,14 +35,6 @@ fn waves_in_circle(
     let mut routes = Vec::new();
     let mut base_y = circle.y + 2. * circle.r;
     let perlin = Perlin::new();
-    let get_color = image_get_color("images/eye2.png").unwrap();
-    let f = |(x, y): (f64, f64)| {
-        let mut p = (x, y);
-        p.0 = p.0 / 0.8 - 0.1;
-        p.1 = p.1 / 0.8 - 0.1;
-        let c = get_color(p);
-        smoothstep(0.0, 1.0, grayscale(c))
-    };
     let mut passage = Passage2DCounter::new(0.4, circle.r * 2.0, circle.r * 2.0);
     let passage_limit = 10;
     let mut height_map: Vec<f64> = Vec::new();
@@ -60,27 +52,17 @@ fn waves_in_circle(
             if x > circle.x + circle.r {
                 break;
             }
-            let l = f(((x - circle.x + circle.r) / (2. * circle.r), (base_y - circle.y + circle.r) / (2. * circle.r)));
             let mut y = base_y;
-            y += smoothstep(circle.r, circle.r * 0.6, euclidian_dist((circle.x, circle.y), (x, y))) *
-                30.0 * l *
+            y +=
+                5. *
                 perlin.get([
                     0.01 * x,
-                    0.7 * y,
-                    seed + 3. * l * perlin.get([
-                        0.2 * y,
-                        0.03 * x + l * l * perlin.get([
-                            0.2 * y,
-                            0.06 * x,
-                            100. + 7.3 * seed
-                        ]),
+                    0.01 * y,
+                    seed + perlin.get([
+                        0.1 * y,
+                        0.1 * x,
                         10. + 0.3 * seed
                     ])
-                ]);
-            y += 1.0 * (1. - l) * perlin.get([
-                    seed,
-                    0.03 * x,
-                    0.02 * base_y,
                 ]);
             let mut collides = false;
             if i >= height_map.len() {
@@ -143,7 +125,7 @@ fn art(opts: Opts) -> Vec<Group> {
     let (circles, routes) = waveball(opts, &circle);
 
     let mut layers = Vec::new();
-    let colors = vec!["firebrick", "darkblue"];
+    let colors = vec!["firebrick","red"];
     for (ci, &color) in colors.iter().enumerate() {
         let mut l = layer(color);
         let mut data = Data::new();
