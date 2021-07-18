@@ -1,0 +1,1 @@
+(window.webpackJsonp_N_E=window.webpackJsonp_N_E||[]).push([[43],{cjhX:function(i,n,c){"use strict";c.r(n),n.default='---\ntitle: "circles inside circles inside circles in a circle"\nthumbnail: /images/plots/187.jpg\ndescription: "3-level recursion of packing circles"\ntags:\n  - shape-packing\n---\n\n3-level recursion of packing circles'}}]);
