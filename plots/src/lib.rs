@@ -663,6 +663,9 @@ pub fn render_route_curve(
     data: Data,
     route: Vec<(f64, f64)>,
 ) -> Data {
+    if route.len() == 0 {
+        return data;
+    }
     let mut first = true;
     let mut d = data;
     let mut last = route[0];
