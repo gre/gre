@@ -1,9 +1,8 @@
 ---
-title: "circles inside circles inside circles in a circle"
-thumbnail: /images/plots/187.jpg
-description: "3-level recursion of packing circles"
+title: "Oeil pour oeil (4 frames)"
+thumbnail: /images/plots/202.gif
+description: ""
 tags:
-  - shape-packing
+  - plotloop
 ---
 
-3-level recursion of packing circles
