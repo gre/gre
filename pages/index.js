@@ -125,6 +125,7 @@ export default function Home({ posts, plots }) {
                   flexFlow: "row wrap",
                   alignItems: "center",
                   justifyContent: "center",
+                  lineHeight: 0
                 }}
               >
                 <a href={`/plots/${plots[0].n}`}>
@@ -136,19 +137,6 @@ export default function Home({ posts, plots }) {
                 <a href={`/shaderday/${days[0].n}`}>
                   <Visual width={300} height={300} Day={days[0]} />
                 </a>
-              </div>
-
-              <dt>
-                <Link href="/plots/tags/plotloop">
-                  <a>Plot loops</a>
-                </Link>
-              </dt>
-              <div
-                style={{
-                  display: "grid",
-                  gridGap: "10px",
-                }}
-              >
                 {plotLoops.slice(0, 1).map((p) => (
                     <a key={p.n} href={`/plots/${p.n}`}>
                       <img
@@ -161,11 +149,11 @@ export default function Home({ posts, plots }) {
                       />
                     </a>
                   ))}
+              </div>
 
-                <Link href="/plots/tags/plotloop">
+              <Link href="/plots/tags/plotloop">
                   <a style={{ display: "block", textAlign: "center", padding: 10, textDecoration: "underline" }}>{plotLoops.length-1} more plot loops!</a>
                 </Link>
-              </div>
 
               <dt>
                 <Link href="/plots">
