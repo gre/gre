@@ -29,6 +29,9 @@ export default function Home({ posts, plots }) {
   const siteURL = me.thumbnailDomain;
   const { title, description, thumbnail } = me;
 
+  const plotLoops = plots
+  .filter((p) => p.data.tags?.some((t) => t === "plotloop"));
+
   return (
     <Global>
       <Container>
@@ -136,36 +139,6 @@ export default function Home({ posts, plots }) {
               </div>
 
               <dt>
-                <Link href="/posts">
-                  <a>Latest blog posts</a>
-                </Link>
-              </dt>
-
-              {posts.slice(0, 3).map((p, i) => (
-                <div
-                  key={i}
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                  }}
-                >
-                  <img
-                    src={p.data.thumbnail}
-                    alt=""
-                    style={{ width: 150, height: 150, objectFit: "cover" }}
-                  />
-                  <div style={{ padding: 10 }}>
-                    <Link href={`/${p.year}/${p.month}/${p.slug}`}>
-                      <a>
-                        <strong>{p.data.title}</strong>
-                      </a>
-                    </Link>
-                    <p>{p.data.description}</p>
-                  </div>
-                </div>
-              ))}
-
-              <dt>
                 <Link href="/plots/tags/plotloop">
                   <a>Plot loops</a>
                 </Link>
@@ -176,9 +149,7 @@ export default function Home({ posts, plots }) {
                   gridGap: "10px",
                 }}
               >
-                {plots
-                  .filter((p) => p.data.tags?.some((t) => t === "plotloop"))
-                  .map((p) => (
+                {plotLoops.slice(0, 1).map((p) => (
                     <a key={p.n} href={`/plots/${p.n}`}>
                       <img
                         src={p.data.thumbnail}
@@ -190,6 +161,10 @@ export default function Home({ posts, plots }) {
                       />
                     </a>
                   ))}
+
+                <Link href="/plots/tags/plotloop">
+                  <a style={{ display: "block", textAlign: "center", padding: 10, textDecoration: "underline" }}>{plotLoops.length-1} more plot loops!</a>
+                </Link>
               </div>
 
               <dt>
@@ -223,6 +198,41 @@ export default function Home({ posts, plots }) {
                   <a>...more</a>
                 </Link>
               </dd>
+
+
+              <dt>
+                <Link href="/posts">
+                  <a>Latest blog posts</a>
+                </Link>
+              </dt>
+
+              {posts.slice(0, 3).map((p, i) => (
+                <div
+                  key={i}
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                  }}
+                >
+                  <img
+                    src={p.data.thumbnail}
+                    alt=""
+                    style={{ width: 150, height: 150, objectFit: "cover" }}
+                  />
+                  <div style={{ padding: 10 }}>
+                    <Link href={`/${p.year}/${p.month}/${p.slug}`}>
+                      <a>
+                        <strong>{p.data.title}</strong>
+                      </a>
+                    </Link>
+                    <p>{p.data.description}</p>
+                  </div>
+                </div>
+              ))}
+              <Link href="/plots">
+                <a style={{ display: "block", textAlign: "center", padding: 10, textDecoration: "underline" }}>{posts.length-3} more blog posts</a>
+              </Link>
+
             </dl>
 
             <a
