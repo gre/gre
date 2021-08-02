@@ -181,12 +181,6 @@ export default function Home({ posts, plots }) {
                 </dd>
               ))}
 
-              <dd>
-                <Link href="/posts">
-                  <a>...more</a>
-                </Link>
-              </dd>
-
 
               <dt>
                 <Link href="/posts">
@@ -217,7 +211,7 @@ export default function Home({ posts, plots }) {
                   </div>
                 </div>
               ))}
-              <Link href="/plots">
+              <Link href="/posts">
                 <a style={{ display: "block", textAlign: "center", padding: 10, textDecoration: "underline" }}>{posts.length-3} more blog posts</a>
               </Link>
 
