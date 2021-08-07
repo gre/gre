@@ -3,6 +3,9 @@ import { Shaders, Node, GLSL, Uniform } from "gl-react";
 import MersenneTwister from "mersenne-twister";
 import { useSpring, animated } from "react-spring";
 
+// usage: <MandelglitchTransition mint={{ block, mod1, mod2, mod3 }} />
+// it will do its transition between the diff mint states (it's better if 'mint' is not changing ref, used an object here to make it explicit)
+
 // Code adapted from mandelglitch to implement morphing between mints:
 // - rotation morphing: shader code has been slightly adapted to make "rotation" a uniform so it can be morphed too
 // - no antialiasing (for performance of animation)
