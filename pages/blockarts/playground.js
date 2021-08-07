@@ -143,7 +143,7 @@ const shouldAutoSeed = seed < 0 && -seed % 2 == 0;
 const shouldBeMinimal = seed < 0 && (-seed >> 1) % 2 == 0;
 
 export default function Home() {
-  const { ref, width, height } = useDimensions({});
+  const { observe, width, height } = useDimensions({});
   const [blockNumber, setBlockNumber] = useState(0);
   const currentBlockNumber = useCurrentBlockNumber();
   const snap = useSnapshot(store);
@@ -192,7 +192,7 @@ export default function Home() {
           )}
           <div style={{ display: "flex", flexDirection: "row" }}>
             <div
-              ref={ref}
+              ref={observe}
               style={
                 shouldBeMinimal
                   ? {

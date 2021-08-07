@@ -2,11 +2,6 @@ import React, { useEffect, useState, useMemo } from "react";
 import { Shaders, Node, GLSL, Uniform } from "gl-react";
 import MersenneTwister from "mersenne-twister";
 
-// Notes
-// - i have to use WebGL2 otherwise v1 is just not performant enough. it means this blockstyle don't work in Safari. hopefully safari support WebGL2 later this year (it's experimental right now)
-// - for mobile, the shader is pretty challenging so i decided to downscale to 128px. The mobile is essentially a different experience (pixelated one) which still looks pretty cool imo.
-// - you can inject "highQuality" props to true only when generating the snapshot to get a very good quality one (anti aliasing). doing it on real time controls is not recommended because perf.
-
 export const styleMetadata = {
   name: "CryptoAliens: Genesis",
   description:
