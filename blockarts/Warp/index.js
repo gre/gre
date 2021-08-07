@@ -3,6 +3,10 @@ import { Shaders, Node, GLSL, Uniform } from "gl-react";
 import MersenneTwister from "mersenne-twister";
 
 /*
+Technical notes
+- This is implemented in a shader & gl-react
+- This is slightly animated but in a way that the general image is still. so you can have a stable thumbnail but at same time have a very cool viewing experience.
+
 mods feature:
 - mod1 and mod2 allows to control the color palette
 - mod3 adjust a noise feature (but is kept not too intruisive)
@@ -279,7 +283,7 @@ const shaders = Shaders.create({
                     fbm( amps[1] * q) );
       float v = amps[3] * fbm(6. * adjust * p + amps[2] * r + fbmoffset);
       v *= 2. - length(p);
-      v += 0.1 * fbm(q + p + r + 0.5 * vec2(cos(t), sin(t)));
+      v += 0.1 * fbm(q + p + r + vec2(cos(t), sin(t)));
       v += amps[4] * shape(p);
       return smoothstep(lowcutoff, 1.0, fract(v));
     }
