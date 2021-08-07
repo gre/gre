@@ -30,6 +30,7 @@
     "marked": "^2.0.4",
     "mersenne-twister": "^1.1.0",
     "next": "^10.2.2",
+    "prettier": "^2.3.2",
     "raw-loader": "^4.0.2",
     "react": "17.0.2",
     "react-cool-dimensions": "^2.0.6",

@@ -10,7 +10,7 @@ const Shader = () => {
       shader={shaders.node}
       uniforms={{
         resolution: Uniform.Resolution,
-        image: "/images/shaders/algorand.dist.png"
+        image: "/images/shaders/algorand.dist.png",
       }}
     />
   );
@@ -93,9 +93,11 @@ void main() {
 });
 
 function Home() {
-    return <Surface width={res} height={res}>
-        <Shader />
+  return (
+    <Surface width={res} height={res}>
+      <Shader />
     </Surface>
+  );
 }
 
-export default Home
+export default Home;

@@ -106,15 +106,8 @@ export class Paint extends Component {
 
 class Main extends Component {
   render() {
-    const {
-      color,
-      size,
-      drawing,
-      center,
-      brush,
-      drawAngle,
-      ratio,
-    } = this.props;
+    const { color, size, drawing, center, brush, drawAngle, ratio } =
+      this.props;
 
     // some brush will randomly rotate, other will follow touch move
     const angle = shouldRandomizeAngle(brush)

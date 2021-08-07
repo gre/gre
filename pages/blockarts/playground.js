@@ -77,7 +77,11 @@ function useCurrentBlockNumber() {
   return blockNumber;
 }
 
-function useRandomLoadingBlocks(count = 10, interval = 120000, delay = 100) {
+export function useRandomLoadingBlocks(
+  count = 10,
+  interval = 120000,
+  delay = 100
+) {
   useEffect(() => {
     if (BlockArt.styleMetadata.debug_noRefresh) return;
     async function refresh() {
@@ -103,6 +107,35 @@ function useRandomLoadingBlocks(count = 10, interval = 120000, delay = 100) {
 
     return () => clearInterval(interval);
   }, []);
+}
+
+export function useRandomBlocks(
+  count = 10,
+  delay = 100
+) {
+  const [blocks, setBlocks] = useState([]);
+  useEffect(() => {
+    async function refresh() {
+      const blockNumber = await rpc("eth_blockNumber");
+      if (!blockNumber) return;
+      const n = parseInt(blockNumber);
+      const pick = Math.floor(n * Math.random());
+      const blocks = []
+      for (let i = pick; i >= 1 && i > pick - count; i--) {
+        const block = await rpc("eth_getBlockByNumber", [
+          "0x" + i.toString(16),
+          true,
+        ]);
+        if (!block) return;
+        blocks.push(block);
+        sortBlocks();
+        await new Promise((success) => setTimeout(success, delay));
+      }
+      setBlocks(blocks);
+    }
+    refresh();
+  }, []);
+  return blocks;
 }
 
 const seed = BlockArt.styleMetadata.options.seed || 0;

@@ -1,4 +1,4 @@
-import React, { useState,  useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { Surface } from "gl-react-dom";
 import useDimensions from "react-cool-dimensions";
@@ -23,10 +23,10 @@ export function useTime() {
 let startT = Date.now();
 const Root = () => {
   const time = useTime();
-  const [n, setN] = useState(() => Date.now()-startT);
+  const [n, setN] = useState(() => Date.now() - startT);
   const { observe, width, height } = useDimensions({});
   function onClick() {
-    setN(() => Date.now()-startT);
+    setN(() => Date.now() - startT);
   }
   return (
     <div

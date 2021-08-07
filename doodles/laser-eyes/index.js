@@ -124,29 +124,30 @@ const viewportStyle = {
   justifyContent: "center",
 };
 const Rendering = ({ image }) => {
-  const { amount: mod1, size: mod2, tezos_maxi: mod3 } = useControls(
-    "Parameters",
-    {
-      amount: {
-        value: 0.5,
-        step: 0.01,
-        min: 0,
-        max: 1,
-      },
-      size: {
-        step: 0.01,
-        value: 0.5,
-        min: 0,
-        max: 1,
-      },
-      tezos_maxi: {
-        step: 0.01,
-        value: 0,
-        min: 0,
-        max: 1,
-      },
-    }
-  );
+  const {
+    amount: mod1,
+    size: mod2,
+    tezos_maxi: mod3,
+  } = useControls("Parameters", {
+    amount: {
+      value: 0.5,
+      step: 0.01,
+      min: 0,
+      max: 1,
+    },
+    size: {
+      step: 0.01,
+      value: 0.5,
+      min: 0,
+      max: 1,
+    },
+    tezos_maxi: {
+      step: 0.01,
+      value: 0,
+      min: 0,
+      max: 1,
+    },
+  });
   const [capturing, setCapturing] = useState();
 
   const { exportSize, gif_fps, gif_duration } = useControls("Actions", {

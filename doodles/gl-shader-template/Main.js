@@ -17,7 +17,6 @@ const Main = ({ time, values }) => {
 
 const AnimatedMain = animated(Main);
 
-
 const shaders = Shaders.create({
   node: {
     frag: GLSL`
@@ -103,9 +102,7 @@ export const Scene = ({ n, time }) => {
       friction: 20,
     },
   });
-  return (
-    <AnimatedMain time={time} values={values} />
-  );
+  return <AnimatedMain time={time} values={values} />;
 };
 
 export default Scene;

@@ -29,8 +29,9 @@ export default function Home({ posts, plots }) {
   const siteURL = me.thumbnailDomain;
   const { title, description, thumbnail } = me;
 
-  const plotLoops = plots
-  .filter((p) => p.data.tags?.some((t) => t === "plotloop"));
+  const plotLoops = plots.filter((p) =>
+    p.data.tags?.some((t) => t === "plotloop")
+  );
 
   return (
     <Global>
@@ -125,7 +126,7 @@ export default function Home({ posts, plots }) {
                   flexFlow: "row wrap",
                   alignItems: "center",
                   justifyContent: "center",
-                  lineHeight: 0
+                  lineHeight: 0,
                 }}
               >
                 <a href={`/plots/${plots[0].n}`}>
@@ -138,22 +139,31 @@ export default function Home({ posts, plots }) {
                   <Visual width={300} height={300} Day={days[0]} />
                 </a>
                 {plotLoops.slice(0, 1).map((p) => (
-                    <a key={p.n} href={`/plots/${p.n}`}>
-                      <img
-                        src={p.data.thumbnail}
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
-                        }}
-                      />
-                    </a>
-                  ))}
+                  <a key={p.n} href={`/plots/${p.n}`}>
+                    <img
+                      src={p.data.thumbnail}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                      }}
+                    />
+                  </a>
+                ))}
               </div>
 
               <Link href="/plots/tags/plotloop">
-                  <a style={{ display: "block", textAlign: "center", padding: 10, textDecoration: "underline" }}>{plotLoops.length-1} more plot loops!</a>
-                </Link>
+                <a
+                  style={{
+                    display: "block",
+                    textAlign: "center",
+                    padding: 10,
+                    textDecoration: "underline",
+                  }}
+                >
+                  {plotLoops.length - 1} more plot loops!
+                </a>
+              </Link>
 
               <dt>
                 <Link href="/plots">
@@ -180,7 +190,6 @@ export default function Home({ posts, plots }) {
                   </Link>
                 </dd>
               ))}
-
 
               <dt>
                 <Link href="/posts">
@@ -212,9 +221,17 @@ export default function Home({ posts, plots }) {
                 </div>
               ))}
               <Link href="/posts">
-                <a style={{ display: "block", textAlign: "center", padding: 10, textDecoration: "underline" }}>{posts.length-3} more blog posts</a>
+                <a
+                  style={{
+                    display: "block",
+                    textAlign: "center",
+                    padding: 10,
+                    textDecoration: "underline",
+                  }}
+                >
+                  {posts.length - 3} more blog posts
+                </a>
               </Link>
-
             </dl>
 
             <a
