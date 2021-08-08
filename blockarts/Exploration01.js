@@ -3,7 +3,6 @@ import { Shaders, Node, GLSL, Uniform } from "gl-react";
 import MersenneTwister from "mersenne-twister";
 import { words } from "lodash";
 
-
 // MAIN CODE ////////////////////////////////////////////////
 
 export const styleMetadata = {
@@ -20,16 +19,8 @@ export const styleMetadata = {
   },
 };
 
-const CustomStyle = ({
-  block,
-  attributesRef,
-  mod1,
-  mod2,
-  mod3,
-}) => {
-  const {
-  } = useBlockDerivedData(block);
-
+const CustomStyle = ({ block, attributesRef, mod1, mod2, mod3 }) => {
+  const {} = useBlockDerivedData(block);
 
   useEffect(() => {
     const attributes = [
@@ -55,56 +46,54 @@ const CustomStyle = ({
 
 export default CustomStyle;
 
-
 function useBlockDerivedData(block) {
   return useMemo(() => {
     const { hash, transactions } = block;
 
-    let MAX=50*50
+    let MAX = 50 * 50;
 
-    const words = []
-    const all = []
-    transactions.slice(0)
-    .sort((a,b)=>(b.input||"").length-(a.input||"").length)
-    .forEach(t => {
+    const words = [];
+    const all = [];
+    transactions
+      .slice(0)
+      .sort((a, b) => (b.input || "").length - (a.input || "").length)
+      .forEach((t) => {
         if (all.length >= MAX) return;
-        let input = String(t.input||"");
+        let input = String(t.input || "");
         if (input.startsWith("0x")) {
-            input = input.slice(2);
+          input = input.slice(2);
         }
         let word = "";
         for (let i = 0; i < input.length; i += 2) {
-            const c = parseInt(input.slice(i, i+2), 16);
-            if (c && all.length < MAX) {
-                all.push(c);
+          const c = parseInt(input.slice(i, i + 2), 16);
+          if (c && all.length < MAX) {
+            all.push(c);
+          }
+          if (
+            (97 <= c && c <= 122) ||
+            (65 <= c && c <= 90) ||
+            (48 <= c && c <= 57)
+          ) {
+            word += String.fromCharCode(c);
+          } else {
+            if (word.length > 6) {
+              words.push(word);
             }
-            if (97 <= c && c <=122 || 65 <= c && c <= 90 || 48 <= c && c <= 57) {
-              word += String.fromCharCode(c)
-            }
-            else {
-                if (word.length > 6) {
-                    words.push(word);
-                } 
-                word = ""
-            }
+            word = "";
+          }
         }
-    });
+      });
 
-    words.sort((a,b)=>b.length-a.length)
+    words.sort((a, b) => b.length - a.length);
 
-    console.log(Math.floor(Math.sqrt(all.length)))
-    console.log(words)
+    console.log(Math.floor(Math.sqrt(all.length)));
+    console.log(words);
 
-    const rng = new MersenneTwister(
-      parseInt(hash.slice(0, 16), 16)
-    );
+    const rng = new MersenneTwister(parseInt(hash.slice(0, 16), 16));
 
-    
+    console.log(block);
 
-    console.log(block)
-    
-    return {
-    };
+    return {};
   }, [block]);
 }
 
