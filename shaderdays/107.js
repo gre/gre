@@ -3,10 +3,10 @@ import { Shaders, Node, GLSL, Uniform } from "gl-react";
 
 export const n = 107;
 export const title = "SDF fBM";
-export const exportSize = 600;
-export const exportStart = 0;
-export const exportEnd = 10;
-export const exportFramePerSecond = 20;
+export const exportSize = 360;
+export const exportStart = 20;
+export const exportEnd = 36;
+export const exportFramePerSecond = 16;
 export const exportSpeed = 1;
 export const exportPaletteSize = 64;
 
@@ -43,50 +43,9 @@ vec3 shade (HIT m, vec3 p);
 vec3 lighting (HIT hit, vec3 p, vec3 n, vec3 dir);
 float specularStrength (float m);
 
-vec2 pMod2(inout vec2 p, vec2 size) {
-	vec2 c = floor((p + size*0.5)/size);
-	p = mod(p + size*0.5,size) - size*0.5;
-	return c;
-}
-void pR(inout vec2 p, float a) {
-	p = cos(a)*p + sin(a)*vec2(p.y, -p.x);
-}
 float fOpUnionSoft(float a, float b, float r) {
 	float e = max(r - abs(a - b), 0.);
 	return min(a, b) - e*e*0.25/r;
-}
-float vmax(vec2 v) {
-	return max(v.x, v.y);
-}
-float vmax(vec3 v) {
-	return max(max(v.x, v.y), v.z);
-}
-float fBox(vec3 p, vec3 b) {
-	vec3 d = abs(p) - b;
-	return length(max(d, vec3(0.))) + vmax(min(d, vec3(0.)));
-}
-float sdSegment (in vec3 p, in float L, in float R) {
-  p.y -= min(L, max(0.0, p.y));
-  return length(p) - R;
-}
-float mod289(float x){return x - floor(x * (1.0 / 289.0)) * 289.0;}
-vec4 mod289(vec4 x){return x - floor(x * (1.0 / 289.0)) * 289.0;}
-vec4 perm(vec4 x){return mod289(((x * 34.0) + 1.0) * x);}
-float noise(vec3 p){
-    vec3 a = floor(p);
-    vec3 d = p - a;
-    d = d * d * (3.0 - 2.0 * d);
-    vec4 b = a.xxyy + vec4(0.0, 1.0, 0.0, 1.0);
-    vec4 k1 = perm(b.xyxy);
-    vec4 k2 = perm(k1.xyxy + b.zzww);
-    vec4 c = k2 + a.zzzz;
-    vec4 k3 = perm(c);
-    vec4 k4 = perm(c + 1.0);
-    vec4 o1 = fract(k3 * (1.0 / 41.0));
-    vec4 o2 = fract(k4 * (1.0 / 41.0));
-    vec4 o3 = o2 * d.z + o1 * (1.0 - d.z);
-    vec2 o4 = o3.yw * d.x + o3.xz * (1.0 - d.x);
-    return o4.y * d.y + o4.x * (1.0 - d.y);
 }
 
 mat3 lookAt (vec3 ro, vec3 ta) {
