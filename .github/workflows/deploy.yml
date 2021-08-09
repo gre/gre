@@ -15,8 +15,8 @@ jobs:
       - run: |
           export NODE_ENV=production
           yarn
-          yarn build
           yarn build-blockstyle
+          yarn build
           yarn next export
           echo greweb.me > ./out/CNAME
       - name: Deploy GH pages
