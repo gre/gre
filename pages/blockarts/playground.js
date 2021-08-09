@@ -10,7 +10,7 @@ import { Main } from "../../components/Main";
 import Sidebar from "../../components/ethblockart/Sidebar";
 import blocks from "../../blockarts/blocks";
 
-const BlockArt = typeof window === "undefined" ? "div" : dynamic(() => import("../../dist/main.js"));
+const BlockArt = typeof window === "undefined" ? "div" : dynamic(() => import("../../blockarts/current"));
 
 const store = proxy({
   options: {

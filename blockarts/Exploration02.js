@@ -2,20 +2,6 @@ import React, { useRef } from 'react';
 import Sketch from 'react-p5';
 import MersenneTwister from "mersenne-twister";
 
-export const styleMetadata = {
-  name: "",
-  description: "",
-  image: "",
-  creator_name: "greweb",
-  options: {
-    // comment seed when going production!
-    seed: 0, // this was used for debug
-    mod1: 0.5,
-    mod2: 0.5,
-    mod3: 0.1,
-  },
-};
-
 let DEFAULT_SIZE = 500;
 const CustomStyle = ({
   block,
@@ -24,11 +10,13 @@ const CustomStyle = ({
   width,
   height,
   handleResize,
-  mod1 = 0.75, // Example: replace any number in the code with mod1, mod2, or color values
-  mod2 = 0.25,
-  color1 = '#4f83f1',
-  background = '#ccc',
+  mod1 = 0.5,
+  mod2 = 0.5,
+  mod3 = 0.5,
+  mod4 = 0.5,
 }) => {
+  const background = "black";
+  const color1 = "red";
   const shuffleBag = useRef();
   const hoistedValue = useRef();
 
