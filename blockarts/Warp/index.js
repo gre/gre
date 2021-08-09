@@ -83,7 +83,7 @@ export const styleMetadata = {
   creator_name: "greweb",
   options: {
     // comment seed when going production!
-    seed: 0, // this was used for debug
+    // seed: 0, // this was used for debug
     mod1: 0.5,
     mod2: 0.5,
     mod3: 0.5,
@@ -115,7 +115,7 @@ const CustomStyle = ({ block, attributesRef, mod1, mod2, mod3 }) => {
         value: attrs.size,
       },
       {
-        trait_type: "Style",
+        trait_type: "Mood",
         value: attrs.style,
       },
       {
