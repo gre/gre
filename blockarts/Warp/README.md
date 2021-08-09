@@ -7,12 +7,7 @@
 
 Artist's selected images:
 
-<img width="180" src="samples/004.png"/> 
-<img width="180" src="samples/050.png"/> 
-<img width="180" src="samples/039.png"/> 
-<img width="180" src="samples/043.png"/> 
-<img width="180" src="samples/060.png"/> 
-<img width="180" src="samples/065.png"/> 
+<img width="180" src="samples/004.png"/>  <img width="180" src="samples/050.png"/>  <img width="180" src="samples/039.png"/>  <img width="180" src="samples/043.png"/>  <img width="180" src="samples/060.png"/> <img width="180" src="samples/065.png"/> 
 
 ---
 
