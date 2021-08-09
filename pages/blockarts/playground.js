@@ -1,3 +1,4 @@
+import dynamic from "next/dynamic";
 import Head from "next/head";
 import React, { useState, useRef, useEffect } from "react";
 import useDimensions from "react-cool-dimensions";
@@ -6,13 +7,18 @@ import { EthBlockArtVisual } from "../../components/EthBlockArtVisual";
 import { Container } from "../../components/Container";
 import { Global } from "../../components/Global";
 import { Main } from "../../components/Main";
-import { Header } from "../../components/Header";
 import Sidebar from "../../components/ethblockart/Sidebar";
-import * as BlockArt from "../../blockarts/current";
 import blocks from "../../blockarts/blocks";
 
+const BlockArt = typeof window === "undefined" ? "div" : dynamic(() => import("../../dist/main.js"));
+
 const store = proxy({
-  ...BlockArt.styleMetadata,
+  options: {
+    mod1: 0.5,
+    mod2: 0.5,
+    mod3: 0.5,
+    mod4: 0.5,
+  }
 });
 
 let id = 1;
@@ -60,7 +66,6 @@ export function useBlock(blockNumber) {
 export function useCurrentBlockNumber() {
   const [blockNumber, setBlockNumber] = useState(0);
   useEffect(() => {
-    if (BlockArt.styleMetadata.debug_noRefresh) return;
     async function refresh() {
       const blockNumber = await rpc("eth_blockNumber");
       if (!blockNumber) return;
@@ -79,7 +84,6 @@ export function useRandomLoadingBlocks(
   delay = 100
 ) {
   useEffect(() => {
-    if (BlockArt.styleMetadata.debug_noRefresh) return;
     async function refresh() {
       const blockNumber = await rpc("eth_blockNumber");
       if (!blockNumber) return;
@@ -134,7 +138,7 @@ export function useRandomBlocks(
   return blocks;
 }
 
-const seed = BlockArt.styleMetadata.options.seed || 0;
+const seed = 0;
 const shouldAutoSeed = seed < 0 && -seed % 2 == 0;
 const shouldBeMinimal = seed < 0 && (-seed >> 1) % 2 == 0;
 
@@ -178,14 +182,6 @@ export default function Home() {
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <Main>
-          {shouldBeMinimal ? null : (
-            <Header>
-              <h1>{BlockArt.styleMetadata.name}</h1>
-              <p style={{ maxWidth: 800 }}>
-                {BlockArt.styleMetadata.description}
-              </p>
-            </Header>
-          )}
           <div style={{ display: "flex", flexDirection: "row" }}>
             <div
               ref={observe}
@@ -204,7 +200,7 @@ export default function Home() {
               <EthBlockArtVisual
                 width={width}
                 height={height}
-                BlockStyle={BlockArt.default}
+                BlockStyle={BlockArt}
                 values={snap.options}
                 block={block}
                 attributesRef={attributesRef}
@@ -233,11 +229,7 @@ export default function Home() {
             >
               <span>
                 {width}x{height}
-              </span>{" "}
-              <strong>{BlockArt.styleMetadata.name}</strong>{" "}
-              <em style={{ fontSize: "0.8em" }}>
-                {BlockArt.styleMetadata.description}
-              </em>
+              </span>
             </div>
           )}
         </Main>
