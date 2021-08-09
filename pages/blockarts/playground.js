@@ -41,7 +41,7 @@ function sortBlocks() {
   blocks.sort((a, b) => parseInt(b.number) - parseInt(a.number));
 }
 
-function useBlock(blockNumber) {
+export function useBlock(blockNumber) {
   const [block, setBlock] = useState(blocks[0]);
   useEffect(() => {
     let cancelled;
@@ -61,7 +61,7 @@ function useBlock(blockNumber) {
   return block;
 }
 
-function useCurrentBlockNumber() {
+export function useCurrentBlockNumber() {
   const [blockNumber, setBlockNumber] = useState(0);
   useEffect(() => {
     if (BlockArt.styleMetadata.debug_noRefresh) return;
