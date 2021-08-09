@@ -14,6 +14,7 @@ jobs:
           node-version: 12
       - run: |
           export NODE_ENV=production
+          yarn add -D webpack-cli
           yarn
           yarn build-blockstyle
           yarn build
