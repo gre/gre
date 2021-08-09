@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Shaders, Node, GLSL, Uniform } from "gl-react";
+import { Surface } from "gl-react-dom";
 import MersenneTwister from "mersenne-twister";
 
 /*
@@ -147,8 +148,6 @@ const CustomStyle = ({ block, attributesRef, mod1, mod2, mod3 }) => {
     />
   );
 };
-
-export default CustomStyle;
 
 const TX_UPPER_BOUND = 500;
 const TX_MIN_THRESHOLD = 100 * Math.pow(10, 18);
@@ -383,3 +382,13 @@ const shaders = Shaders.create({
   `,
   },
 });
+
+const Outer = function ({ width, height, innerCanvasRef, ...props }) {
+  return (
+    <Surface width={width} height={height} ref={innerCanvasRef}>
+      <CustomStyle width={width} height={height} {...props} />
+    </Surface>
+  );
+};
+
+export default Outer;

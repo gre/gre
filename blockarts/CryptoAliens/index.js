@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { Shaders, Node, GLSL, Uniform } from "gl-react";
 import MersenneTwister from "mersenne-twister";
+import { Surface } from "gl-react-dom";
 
 export const styleMetadata = {
   name: "CryptoAliens: Genesis",
@@ -900,4 +901,13 @@ const Mandelglitch = ({ block, mod2, mod1, mod3, dim }) => {
 
 const MandelglitchCached = React.memo(Mandelglitch);
 
-export default CustomStyle;
+
+const Outer = function ({ width, height, innerCanvasRef, ...props }) {
+  return (
+    <Surface width={width} height={height} ref={innerCanvasRef}>
+      <CustomStyle width={width} height={height} {...props} />
+    </Surface>
+  );
+};
+
+export default Outer;

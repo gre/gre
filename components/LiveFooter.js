@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React from "react";
 
 export function LiveFooter({ Day }) {
   return (
@@ -18,7 +18,7 @@ export function LiveFooter({ Day }) {
       `}</style>
       <p>
         <strong>🎙 Livecoded at </strong>
-        <a href={`https://twitch.tv/greweb`} target="_blank">
+        <a href={`https://twitch.tv/greweb`} target="_blank" rel="noreferrer">
           twitch.tv/greweb
         </a>
       </p>
@@ -29,7 +29,7 @@ export function LiveFooter({ Day }) {
           <ul>
             {Day.nfts.map(({ url, text }) => {
               return (
-                <li>
+                <li key={url}>
                   <a href={url}>{text}</a>
                 </li>
               );

@@ -1,9 +1,7 @@
+import React from "react";
 import Head from "next/head";
 import { Visual } from "../../components/Visual";
-import { LiveFooter } from "../../components/LiveFooter";
-import { SubTitle } from "../../components/ShaderdaySubTitle";
 import { Title } from "../../components/Title";
-import { SourceCodeFooter } from "../../components/SourceCodeFooter";
 import { Container } from "../../components/Container";
 import { GlobalLive } from "../../components/Global";
 import { Main } from "../../components/Main";

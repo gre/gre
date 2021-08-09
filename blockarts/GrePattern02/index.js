@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { Surface } from "gl-react-dom";
 import { Shaders, Node, GLSL, Uniform } from "gl-react";
 import MersenneTwister from "mersenne-twister";
 
@@ -240,4 +241,12 @@ const CustomStyle = ({
   );
 };
 
-export default CustomStyle;
+const Outer = function ({ width, height, innerCanvasRef, ...props }) {
+  return (
+    <Surface width={width} height={height} ref={innerCanvasRef}>
+      <CustomStyle width={width} height={height} {...props} />
+    </Surface>
+  );
+};
+
+export default Outer;

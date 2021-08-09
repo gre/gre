@@ -1,16 +1,10 @@
+/* eslint-disable react/no-unescaped-entities */
 import Head from "next/head";
-import Link from "next/link";
-import { useRouter } from "next/router";
 import { GIFEncoder, quantize, applyPalette } from "gifenc";
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Surface } from "gl-react-dom";
 import { NearestCopy } from "gl-react";
 import { findDay, getDays } from "../../../shaderdays";
-import { Visual } from "../../../components/Visual";
-import { LiveFooter } from "../../../components/LiveFooter";
-import { SubTitle } from "../../../components/ShaderdaySubTitle";
-import { Title } from "../../../components/Title";
-import { SourceCodeFooter } from "../../../components/SourceCodeFooter";
 import { Container } from "../../../components/Container";
 import { Global } from "../../../components/Global";
 import { Main } from "../../../components/Main";
@@ -37,25 +31,6 @@ export function getStaticProps({ params }) {
   };
 }
 
-async function readImage(url) {
-  const img = await loadImage(url);
-  const canvas = document.createElement("canvas");
-  canvas.width = img.width;
-  canvas.height = img.height;
-  const context = canvas.getContext("2d");
-  context.drawImage(img, 0, 0);
-  return context.getImageData(0, 0, img.width, img.height);
-}
-
-async function loadImage(url) {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.onload = () => resolve(img);
-    img.onerror = () => reject(new Error(`Could not load image ${url}`));
-    img.src = url;
-  });
-}
-
 function Capture({
   format,
   n,
@@ -72,7 +47,7 @@ function Capture({
   const ref = useRef();
   const totalFrames = Math.floor(((end - start) * framePerSecond) / speed);
   const [frame, setFrame] = useState(0);
-  const [ready, setReady] = useState(false);
+  const [, setReady] = useState(false);
   const time = ((end - start) * (frame / totalFrames)) / (1 + exportSkipFrame);
   const f = Math.floor(frame / (1 + exportSkipFrame) - start * framePerSecond);
 
@@ -147,7 +122,6 @@ function Capture({
         });
 
         if (f >= totalFrames) {
-          let start_time = Date.now();
           worker.onmessage = function (e) {
             var msg = e.data;
             switch (msg.type) {
@@ -162,6 +136,7 @@ function Capture({
 
               case "done":
                 console.log("reached done");
+                // eslint-disable-next-line no-case-declarations
                 const blob = new Blob([msg.data.MEMFS[0].data], {
                   type: "video/mp4",
                 });

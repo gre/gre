@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react";
-
+import React from "react";
 export function SourceCodeFooter({ Day }) {
   return (
     <>
@@ -8,7 +7,7 @@ export function SourceCodeFooter({ Day }) {
           target="_blank"
           href={`https://github.com/gre/gre/blob/master/shaderdays/${(
             Day.n + ""
-          ).padStart(3, "0")}.js`}
+          ).padStart(3, "0")}.js`} rel="noreferrer"
         >
           source code
         </a>

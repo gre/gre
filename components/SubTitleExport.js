@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+/* eslint-disable react/no-unescaped-entities */
+import React from "react";
 import Link from "next/link";
 import { findDay } from "../shaderdays";
 
@@ -10,7 +11,7 @@ export function SubTitleExport({ Day }) {
           <a>Day {Day.n}.</a>
         </Link>{" "}
         <span className="daily">"{Day.title}"</span> by{" "}
-        <a href="https://twitter.com/greweb" target="_blank">
+        <a href="https://twitter.com/greweb" target="_blank" rel="noreferrer">
           @greweb
         </a>
       </p>

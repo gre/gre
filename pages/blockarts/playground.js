@@ -1,12 +1,8 @@
 import Head from "next/head";
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import useDimensions from "react-cool-dimensions";
 import { proxy, useSnapshot } from "valtio";
 import { EthBlockArtVisual } from "../../components/EthBlockArtVisual";
-import { LiveFooter } from "../../components/LiveFooter";
-import { SubTitle } from "../../components/ShaderdaySubTitle";
-import { Title } from "../../components/Title";
-import { SourceCodeFooter } from "../../components/SourceCodeFooter";
 import { Container } from "../../components/Container";
 import { Global } from "../../components/Global";
 import { Main } from "../../components/Main";
@@ -79,7 +75,7 @@ export function useCurrentBlockNumber() {
 
 export function useRandomLoadingBlocks(
   count = 10,
-  interval = 120000,
+  INTERVAL = 120000,
   delay = 100
 ) {
   useEffect(() => {
@@ -102,7 +98,7 @@ export function useRandomLoadingBlocks(
       }
       console.log(blocks);
     }
-    const interval = setInterval(refresh, 60000);
+    const interval = setInterval(refresh, INTERVAL);
     refresh();
 
     return () => clearInterval(interval);

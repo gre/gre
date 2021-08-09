@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Shaders, Node, GLSL, Uniform } from "gl-react";
+import { Surface } from "gl-react-dom";
 import MersenneTwister from "mersenne-twister";
 import { words } from "lodash";
 
@@ -43,8 +44,6 @@ const CustomStyle = ({ block, attributesRef, mod1, mod2, mod3 }) => {
     />
   );
 };
-
-export default CustomStyle;
 
 function useBlockDerivedData(block) {
   return useMemo(() => {
@@ -129,3 +128,13 @@ const shaders = Shaders.create({
   `,
   },
 });
+
+const Outer = function ({ width, height, innerCanvasRef, ...props }) {
+  return (
+    <Surface width={width} height={height} ref={innerCanvasRef}>
+      <CustomStyle width={width} height={height} {...props} />
+    </Surface>
+  );
+};
+
+export default Outer;

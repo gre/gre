@@ -1,4 +1,4 @@
-import { Surface } from "gl-react-dom";
+import React from "react";
 
 export function EthBlockArtVisual({
   BlockStyle,
@@ -9,14 +9,12 @@ export function EthBlockArtVisual({
   values,
 }) {
   return (
-    <Surface width={width} height={height}>
-      <BlockStyle
-        attributesRef={attributesRef}
-        block={block}
-        width={width}
-        height={height}
-        {...values}
-      />
-    </Surface>
+    <BlockStyle
+      attributesRef={attributesRef}
+      block={block}
+      width={width}
+      height={height}
+      {...values}
+    />
   );
 }

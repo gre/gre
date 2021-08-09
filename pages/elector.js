@@ -1,17 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import Head from "next/head";
-import Link from "next/link";
-import { Leva } from "leva";
-import { Title } from "../components/Title";
 import { Container } from "../components/Container";
 import { Global } from "../components/Global";
-import { Main } from "../components/Main";
-import { Header } from "../components/Header";
-import { Visual } from "../components/Visual";
-import { getDays } from "../shaderdays";
-import { getAllPosts } from "../posts";
-import { getPlots } from "../plots";
-import me from "../me";
 
 const ITEMS_SIZE = 4;
 const GRID = 2;
