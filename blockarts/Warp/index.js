@@ -376,7 +376,7 @@ const shaders = Shaders.create({
       vec2 ratio = resolution / min(resolution.x, resolution.y);
       vec3 c = vec3(0.);
       vec2 p = (uv - 0.5) * ratio;
-      c += pal(scene(p, 0.3 * PI * time));
+      c += pal(scene(p, 0.1 * PI * time));
       gl_FragColor = vec4(c, 1.0);
     }
   `,
