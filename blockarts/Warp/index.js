@@ -161,7 +161,7 @@ const safeParseInt = (a) => {
 function useBlockDerivedData(block) {
   return useMemo(() => {
     const { hash, transactions } = block;
-    const blockNumber = parseInt(block.number);
+    const blockNumber10 = String(safeParseInt(block.number))
     const txsCount = transactions.length;
     const txCountHeavyFactor = Math.pow(
       Math.min(TX_UPPER_BOUND, txsCount) / TX_UPPER_BOUND,
@@ -202,13 +202,11 @@ function useBlockDerivedData(block) {
     ];
     const complexity = amps[0] * amps[1] * amps[2] * amps[3];
 
-    const multicolor =
+    const multicolor = 
+      Math.max(0, rng.random() - 0.5) *
       rng.random() *
-      (Number(blockNumber % 100 === 0) +
-        Number(blockNumber % 1000 === 0) +
-        Number(blockNumber % 10000 === 0) +
-        Number(blockNumber % 100000 === 0));
-    const colordelta = rng.random();
+      [...blockNumber10.slice(Math.max(0, blockNumber10.length-4))].filter(c => c === "0").length;
+      const colordelta = rng.random();
 
     const swtch = +(rng.random() < 0.5);
     const shapearg = [
@@ -234,15 +232,16 @@ function useBlockDerivedData(block) {
     } else if (amps[4] > 8) {
       size = "great";
     }
+    console.log(amps[4])
 
     if (complexity > 1000) {
       style = "noisy";
+    } else if (multicolor > 0.15 && amps[4] > 4) {
+      style = "harlequin";
     } else if (txCountLightFactor > 0.5) {
       style = "thin";
     } else if (complexity < 4) {
       style = "smooth";
-    } else if (multicolor > 0.5) {
-      style = "harlequin";
     } else if (complexity > 200) {
       style = "complex";
     }
@@ -333,7 +332,7 @@ const shaders = Shaders.create({
       return palette(
         t,
         vec3(0.5),
-        vec3(0.5 + 0.2 * adjust),
+        vec3(0.5 + 0.5 * adjust * adjust),
         vec3(1. + multicolor, 1.0, 1.0),
         palarg
       );
@@ -358,7 +357,7 @@ const shaders = Shaders.create({
       return l;
     }
     float scene(in vec2 p, float t) {
-      float adj = 0.8 + 0.2 * adjust;
+      float adj = 0.6 + 0.4 * adjust;
       float a0 = mix(0.0, amps[0], adj);
       float a1 = mix(0.0, amps[1], adj);
       float a2 = mix(0.0, amps[2], adj);
@@ -370,7 +369,7 @@ const shaders = Shaders.create({
       v *= 2. - length(p);
       v += 0.1 * fbm(q + p + r + vec2(cos(t), sin(t)));
       v += amps[4] * shape(p);
-      return smoothstep(lowcutoff, 1.0, fract(v));
+      return floor(v) + smoothstep(lowcutoff, 1.0, fract(v));
     }
     void main() {
       vec2 ratio = resolution / min(resolution.x, resolution.y);
