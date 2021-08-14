@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import Sketch from 'react-p5';
 import MersenneTwister from "mersenne-twister";
 
@@ -17,31 +17,14 @@ const CustomStyle = ({
 }) => {
   const background = "black";
   const color1 = "red";
-  const shuffleBag = useRef();
-  const hoistedValue = useRef();
 
   const { hash } = block;
-
-  // setup() initializes p5 and the canvas element, can be mostly ignored in our case (check draw())
   const setup = (p5, canvasParentRef) => {
-    // Keep reference of canvas element for snapshots
     let _p5 = p5.createCanvas(width, height).parent(canvasParentRef);
     canvasRef.current = p5;
-
     attributesRef.current = () => {
       return {
-        // This is called when the final image is generated, when creator opens the Mint NFT modal.
-        // should return an object structured following opensea/enjin metadata spec for attributes/properties
-        // https://docs.opensea.io/docs/metadata-standards
-        // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1155.md#erc-1155-metadata-uri-json-schema
-
         attributes: [
-          {
-            display_type: 'number',
-            trait_type: 'your trait here number',
-            value: hoistedValue.current, // using the hoisted value from within the draw() method, stored in the ref.
-          },
-
           {
             trait_type: 'your trait here text',
             value: 'replace me',
@@ -51,46 +34,57 @@ const CustomStyle = ({
     };
   };
 
-  // draw() is called right after setup and in a loop
-  // disabling the loop prevents controls from working correctly
-  // code must be deterministic so every loop instance results in the same output
-
-  // Basic example of a drawing something using:
-  // a) the block hash as initial seed (shuffleBag)
-  // b) individual transactions in a block (seed)
-  // c) custom parameters creators can customize (mod1, color1)
-  // d) final drawing reacting to screen resizing (M)
   const draw = (p5) => {
-    let WIDTH = width;
-    let HEIGHT = height;
-    let DIM = Math.min(WIDTH, HEIGHT);
-    let M = DIM / DEFAULT_SIZE;
+    let dim = Math.min(width, height);
 
     p5.background(background);
 
-    // reset shuffle bag
     let seed = parseInt(hash.slice(0, 16), 16);
-    shuffleBag.current = new MersenneTwister(seed);
-    let objs = block.transactions.map((t) => {
-      let seed = parseInt(t.hash.slice(0, 16), 16);
+    const rng = new MersenneTwister(seed);
+
+    let f = Math.floor(Math.sqrt(block.transactions.length));
+    let objs = block.transactions.map((t, i) => {
+      let input = t.input && t.input.slice(2) || ""
+      if (input.length===0) return;
+      const sz = Math.ceil(Math.sqrt(input.length / 8));
       return {
-        y: shuffleBag.current.random(),
-        x: shuffleBag.current.random(),
-        radius: seed / 1000000000000000,
+        x: (i % f) / f,
+        y: Math.floor(i / f) / f,
+        width: 4 * sz / dim,
+        height: 4 * sz / dim,
+        data: input,
+        sz
       };
-    });
+    }).filter(Boolean);
 
-    // example assignment of hoisted value to be used as NFT attribute later
-    hoistedValue.current = 42;
+    p5.fill("red");
+    p5.noStroke();
 
-    objs.map((dot, i) => {
-      p5.stroke(color1);
-      p5.strokeWeight(1 + mod2 * 10);
-      p5.ellipse(
-        200 * dot.y * 6 * M,
-        100 * dot.x * 6 * M,
-        dot.radius * M * mod1
+    objs.forEach((o) => {
+      // TODO centered on diff ratio
+      for (let xi = 0; xi < o.sz; xi++) {
+        for (let yi = 0; yi < o.sz; yi++) {
+          const x = dim * (o.x + o.width * xi / o.sz);
+          const y = dim * (o.y + o.height * yi / o.sz);
+          const i = 8 * (xi + yi * o.sz);
+          p5.fill(p5.color(
+            parseInt(o.data.slice(i, i+2)||0, 16),
+            parseInt(o.data.slice(i+2, i+4)||0, 16),
+            parseInt(o.data.slice(i+4, i+6)||0, 16)
+          ));
+          p5.rect(x, y, dim * o.width / o.sz, dim * o.height / o.sz)
+          // p5.set(x, y, );
+        }
+      }
+      // p5.updatePixels();
+      /*
+      p5.rect(
+        dim * o.x,
+        dim * o.y,
+        dim * o.width,
+        dim * o.height
       );
+      */
     });
   };
 
