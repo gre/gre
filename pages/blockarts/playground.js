@@ -10,15 +10,20 @@ import { Main } from "../../components/Main";
 import Sidebar from "../../components/ethblockart/Sidebar";
 import blocks from "../../blockarts/blocks";
 
-const BlockArt = typeof window === "undefined" ? "div" : dynamic(() => import("../../blockarts/current"));
+const BlockArt =
+  typeof window === "undefined"
+    ? "div"
+    : dynamic(() => import("../../blockarts/current"));
 
 const store = proxy({
   options: {
     mod1: 0.5,
-    mod2: 0.5,
-    mod3: 0.5,
-    mod4: 0.5,
-  }
+    mod2: 0.4,
+    mod3: 0,
+    mod4: 0.6,
+    mod5: 0.9,
+    mod6: 0.5,
+  },
 });
 
 let id = 1;
@@ -109,10 +114,7 @@ export function useRandomLoadingBlocks(
   }, []);
 }
 
-export function useRandomBlocks(
-  count = 10,
-  delay = 100
-) {
+export function useRandomBlocks(count = 10, delay = 100) {
   const [blocks, setBlocks] = useState([]);
   useEffect(() => {
     async function refresh() {
@@ -120,7 +122,7 @@ export function useRandomBlocks(
       if (!blockNumber) return;
       const n = parseInt(blockNumber);
       const pick = Math.floor(n * Math.random());
-      const blocks = []
+      const blocks = [];
       for (let i = pick; i >= 1 && i > pick - count; i--) {
         const block = await rpc("eth_getBlockByNumber", [
           "0x" + i.toString(16),

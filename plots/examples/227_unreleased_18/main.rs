@@ -10,18 +10,20 @@ use svg::node::element::*;
 struct Opts {
     #[clap(short, long, default_value = "100.0")]
     seed: f64,
+    #[clap(short, long, default_value = "1.0")]
+    kmul: f64,
 }
 
 fn art(opts: Opts) -> Vec<Group> {
     let mut rng = rng_from_seed(opts.seed);
-    let k = rng.gen_range(1.0, 6.0);
-    let k1 = rng.gen_range(1.0, 6.0);
-    let k2 = rng.gen_range(1.0, 6.0);
-    let k3 = rng.gen_range(1.0, 6.0);
-    let k4 = rng.gen_range(1.0, 6.0);
-    let k5 = rng.gen_range(1.0, 6.0);
-    let k6 = rng.gen_range(1.0, 6.0);
-    let m = rng.gen_range(1.0, 10.0);
+    let k = rng.gen_range(1.0, 6.0) * opts.kmul;
+    let k1 = rng.gen_range(1.0, 6.0)  * opts.kmul;
+    let k2 = rng.gen_range(1.0, 6.0)  * opts.kmul;
+    let k3 = rng.gen_range(1.0, 6.0)  * opts.kmul;
+    let k4 = rng.gen_range(1.0, 6.0)  * opts.kmul;
+    let k5 = rng.gen_range(1.0, 6.0)  * opts.kmul;
+    let k6 = rng.gen_range(1.0, 6.0)  * opts.kmul;
+    let m = rng.gen_range(1.0, 10.0)  * opts.kmul;
     let colors = vec!["black"];
     colors
         .iter()

@@ -1,27 +1,25 @@
 use noise::*;
 use clap::Clap;
 use gre::*;
-use rand::Rng;
 use svg::node::element::path::Data;
 use svg::node::element::*;
 
 #[derive(Clap)]
 #[clap()]
 struct Opts {
-    #[clap(short, long, default_value = "100.0")]
+    #[clap(short, long, default_value = "20.0")]
     seed: f64,
 }
 
 fn art(opts: Opts) -> Vec<Group> {
-    let mut rng = rng_from_seed(opts.seed);
-    let k = rng.gen_range(1.0, 6.0);
-    let k1 = rng.gen_range(1.0, 6.0);
-    let k2 = rng.gen_range(1.0, 6.0);
-    let k3 = rng.gen_range(1.0, 6.0);
-    let k4 = rng.gen_range(1.0, 6.0);
-    let k5 = rng.gen_range(1.0, 6.0);
-    let k6 = rng.gen_range(1.0, 6.0);
-    let m = rng.gen_range(1.0, 10.0);
+    let m = 4.0;
+    let k = 4.0;
+    let k1 = 1.0;
+    let k2 = 1.0;
+    let k3 = 1.0;
+    let k4 = 1.0;
+    let k5 = 2.0;
+    let k6 = 2.0;
     let colors = vec!["black"];
     colors
         .iter()
@@ -29,12 +27,13 @@ fn art(opts: Opts) -> Vec<Group> {
         .map(|(_ci, color)| {
             let height = 297.0;
             let width = 210.0;
-            let pad = (30.0, 30.0);
+            let pad = (20.0, 50.0);
             let boundaries = (pad.0, pad.1, width - pad.0, height - pad.1);
             let ratio = (boundaries.2 - boundaries.0) / (boundaries.3 - boundaries.1);
             
             let noise = OpenSimplex::new();
             let f = |point: (f64, f64)| {
+                let point = (0.5 + (point.0 - 0.5).abs(), point.1);
                 let p = ( point.0 * m * ratio, point.1 * m );
                 let a1 = noise.get([3. + 0.9 * opts.seed, p.0, p.1 ]);
                 let a2 = noise.get([p.0, p.1, 7.3 * opts.seed]);
@@ -42,11 +41,12 @@ fn art(opts: Opts) -> Vec<Group> {
                     p.0 + 4. * k * a1 + 7.8 + opts.seed,
                     p.1 + k * a2 ]);
                 let b2 = noise.get([
-                    p.0 + k * a1 + 2.8 - opts.seed,
+                    p.0 + k * a1 + 2.1 - opts.seed,
                     p.1 + 2. * k * a2 - 1.7 ]);
                 smoothstep(
-                    -0.4,
-                    0.4,
+                    -0.3,
+                    0.5,
+                    1.5 * (0.33 - (point.0-0.5).abs()) +
                     noise.get([
                     -opts.seed,
                     p.0 + 0.2 * k * a1 + 0.4 * k * b1,
@@ -55,11 +55,11 @@ fn art(opts: Opts) -> Vec<Group> {
             };
             let offset = |p: (f64, f64)| -> (f64, f64) {
                 let a = 1.0 * noise.get([k1 * p.0, k2 * p.1, 6.7 * opts.seed]);
-                let b = 1.0 * noise.get([k4 * p.0, k3 * p.1, 99. - 0.3 * opts.seed]);
+                let b = 1.5 * noise.get([k4 * p.0, k3 * p.1, 99. - 0.3 * opts.seed]);
                 let c = 2.0 * noise.get([k5 * p.0 + a, k6 * p.1 + b]);
                 (
-                    p.0 + 0.2 * noise.get([a, 10. + c]),
-                    p.1 + 0.05 * noise.get([b, -10. - c]),
+                    p.0 + 0.05 * noise.get([a, 10. + c]),
+                    p.1 + 0.02 * noise.get([b, -10. - c]),
                 )
             };
             let mut routes = Vec::new(); // all the lines
@@ -94,7 +94,7 @@ fn art(opts: Opts) -> Vec<Group> {
             }
             l = l.add(signature(
                 0.6,
-                offset((160.0, 274.0)),
+                offset((173.0, 248.0)),
                 color,
             ));
             l

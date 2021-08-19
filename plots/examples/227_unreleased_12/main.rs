@@ -10,16 +10,16 @@ struct Opts {
 }
 
 fn art(_opts: Opts) -> Vec<Group> {
-    let get_color = image_get_color("images/eye2.png").unwrap();
+    let get_color = image_get_color("a.jpg").unwrap();
     let colors = vec!["black"];
     colors
         .iter()
         .enumerate()
         .map(|(_ci, color)| {
-            let pad = 30.0;
-            let width = 297.0;
-            let height = 210.0;
-            let boundaries = (pad, pad, width - pad, height - pad);
+            let pad = 50.0;
+            let width = 100.0;
+            let height = 100.0;
+            let boundaries = (pad, pad, width + pad, height + pad);
             let f = |point: (f64, f64)| {
                 let p = preserve_ratio_outside(
                     point,
@@ -30,9 +30,9 @@ fn art(_opts: Opts) -> Vec<Group> {
                 smoothstep(0.8, 0.0, c).powf(2.)
             };
             let mut routes = Vec::new(); // all the lines
-            let xdivisions = 200; // how much to split the width space
-            let lines = 50; // how much to split the height space
-            let sublines = 8; // for each line, how much do we make "sublines" to make it grow
+            let xdivisions = 120; // how much to split the width space
+            let lines = 40; // how much to split the height space
+            let sublines = 6; // for each line, how much do we make "sublines" to make it grow
             for i in 0..lines {
                 let ypi = i as f64 / ((lines-1) as f64); // y=0..1
                 for j in 0..sublines {
@@ -57,11 +57,6 @@ fn art(_opts: Opts) -> Vec<Group> {
                 let data = render_route_curve(Data::new(), r);
                 l = l.add(base_path(color, 0.35, data));
             }
-            l = l.add(signature(
-                0.8,
-                (246.0, 182.0),
-                color,
-            ));
             l
         })
         .collect()
