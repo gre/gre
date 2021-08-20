@@ -1,3 +1,3 @@
-export * from "./Exploration03";
-import Default from "./Exploration03";
+export * from "./Exploration04";
+import Default from "./Exploration04";
 export default Default;
