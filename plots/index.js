@@ -12,7 +12,7 @@ export async function getPlots() {
     plots.push({
       n: m[1],
       key,
-      rustFile: folder + "/main.rs",
+      rustFile: (meta.data.sourceFolder || folder) + "/main.rs",
       content: marked(meta.content),
       data: meta.data,
     });
