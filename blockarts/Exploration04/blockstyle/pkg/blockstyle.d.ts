@@ -1,15 +1,18 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
+* @param {any} val
 * @returns {string}
 */
-export function blockstyle(): string;
+export function blockstyle(val: any): string;
 
 export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembly.Module;
 
 export interface InitOutput {
   readonly memory: WebAssembly.Memory;
-  readonly blockstyle: (a: number) => void;
+  readonly blockstyle: (a: number, b: number) => void;
+  readonly __wbindgen_malloc: (a: number) => number;
+  readonly __wbindgen_realloc: (a: number, b: number, c: number) => number;
   readonly __wbindgen_add_to_stack_pointer: (a: number) => number;
   readonly __wbindgen_free: (a: number, b: number) => void;
 }
