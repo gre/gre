@@ -1,10 +1,31 @@
 // @flow
-import React, { useCallback, useEffect, useMemo, useRef } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import MersenneTwister from "mersenne-twister";
 import SimplexNoise from "simplex-noise";
 import { mix, smoothstep, useStats, useTime } from "../utils";
 import { Surface } from "gl-react-dom";
 import { GLSL, Node, Shaders, Uniform } from "gl-react";
+
+import init, { blockstyle } from "./blockstyle/pkg/blockstyle";
+import wasm from "base64-inline-loader!./blockstyle/pkg/blockstyle_bg.wasm";
+function decode(dataURI) {
+  const binaryString = atob(dataURI.split(",")[1]);
+  var bytes = new Uint8Array(binaryString.length);
+  for (var i = 0; i < binaryString.length; i++) {
+    bytes[i] = binaryString.charCodeAt(i);
+  }
+  return bytes.buffer;
+}
+let wasmLoaded = false;
+const promiseOfLoad = init(decode(wasm)).then(() => {
+  wasmLoaded = true;
+});
 
 const DEBUG_SVG = false;
 
@@ -118,9 +139,9 @@ function renderSVG({ variables }) {
   ];
 
   const routes = [];
-  const xdivisions = 120;
-  const lines = 60;
-  const sublines = 6;
+  const xdivisions = 200;
+  const lines = 80;
+  const sublines = 8;
   for (let i = 0; i < lines; i++) {
     const ypi = i / (lines - 1);
     for (let j = 0; j < sublines; j++) {
@@ -161,10 +182,26 @@ const Main = ({
   mod3,
   mod4,
 }) => {
+  const [loaded, setLoaded] = useState(wasmLoaded);
   const variables = useVariables({ block, mod1, mod2, mod3, mod4 });
   useAttributes(attributesRef, variables);
 
-  const svgBody = useMemo(() => renderSVG({ variables }), [variables]);
+  useEffect(() => {
+    if (!loaded) promiseOfLoad.then(() => setLoaded(true));
+  }, [loaded]);
+
+  const svgBody = useMemo(() => {
+    if (!loaded) return "";
+    /*
+    let d = Date.now();
+    const svg = renderSVG({ variables });
+    console.log("js", Date.now() - d, "l" + svg.length);
+    d = Date.now();
+    */
+    const result = blockstyle();
+    console.log(result);
+    return result;
+  }, [variables, loaded]);
 
   const imgSrc = useMemo(
     () =>
