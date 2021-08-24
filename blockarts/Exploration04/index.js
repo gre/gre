@@ -32,18 +32,33 @@ const DEBUG_SVG = false;
 const COLORS = [
   {
     name: "Black",
-    main: [0, 0, 0],
+    main: [0.1, 0.1, 0.1],
+    highlight: [0, 0, 0],
+  },
+  {
+    name: "Indigo",
+    main: [0.3, 0.3, 0.4],
     highlight: [0, 0, 0],
   },
   {
     name: "Bloody Brexit",
-    main: [0.1, 0.1, 0.3],
+    main: [0.1, 0.1, 0.4],
     highlight: [0.5, 0.0, 0.0],
   },
   {
     name: "Turquoise",
     main: [0.0, 0.5, 1.0],
     highlight: [0.0, 0.2, 0.8],
+  },
+  {
+    name: "Aurora Borealis",
+    main: [0.0, 0.65, 0.7],
+    highlight: [0.0, 0.3, 0.4],
+  },
+  {
+    name: "Sherwood Green",
+    main: [0.1, 0.35, 0.1],
+    highlight: [0.0, 0.3, 0.0],
   },
   {
     name: "Violet",
@@ -54,6 +69,11 @@ const COLORS = [
     name: "Red Dragon",
     main: [0.8, 0.0, 0.0],
     highlight: [0.2, 0.0, 0.0],
+  },
+  {
+    name: "Pumpkin",
+    main: [1.0, 0.55, 0.25],
+    highlight: [0.8, 0.3, 0.0],
   },
   {
     name: "Pink",
@@ -76,6 +96,7 @@ const Main = ({
   mod3,
   mod4,
   mod5,
+  mod6,
   systemContext,
 }) => {
   const w = Math.min(2048, Math.floor(width));
@@ -112,6 +133,8 @@ const Main = ({
     [svgBody, w, h]
   );
 
+  const { primary, secondary } = variables;
+
   const dlSrc = useMemo(
     () =>
       "data:image/svg+xml;base64," +
@@ -119,10 +142,23 @@ const Main = ({
         `
         <svg xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns="http://www.w3.org/2000/svg" width="200mm" height="200mm" style="background:white" viewBox="0 0 200 200">
         <g inkscape:groupmode="layer" inkscape:label="Plot">` +
-          svgBody.replace(/opacity="0\.4"/g, "") +
+          svgBody
+            .replace(/opacity="{\\"}*"/g, "")
+            .replace(
+              /#F00/g,
+              "rgb(" +
+                primary.main.map((n) => Math.round(n * 255)).join(",") +
+                ")"
+            )
+            .replace(
+              /#0F0/g,
+              "rgb(" +
+                secondary.main.map((n) => Math.round(n * 255)).join(",") +
+                ")"
+            ) +
           "</g></svg>"
       ),
-    [svgBody]
+    [svgBody, primary, secondary]
   );
 
   if (DEBUG_SVG) {
@@ -157,7 +193,7 @@ const Main = ({
     >
       <Surface width={width} height={height} ref={innerCanvasRef}>
         <LinearCopy>
-          <Post size={{ width, height }} variables={variables}>
+          <Post mod6={mod6} size={{ width, height }} variables={variables}>
             {imgSrc}
           </Post>
         </LinearCopy>
@@ -171,17 +207,20 @@ const Main = ({
 
 function useVariables({ block, mod1, mod2, mod3, mod4, mod5 }) {
   const stats = useStats({ block });
+  const blockNumber = safeParseInt(block.number);
 
+  const mod2rounded = Math.round(mod2 * 100) / 100;
   const primary = pickColor(mod1);
-  const border = Math.floor(40 * mod2 * mod2) / 4;
+  const secondary = pickColor((blockNumber % 10) / 10);
+  const border = Math.floor(Math.max(0, 80 * (mod2 - 0.5))) / 4;
   const marginBase = Math.floor(40 * mod3 * mod3 - 10);
   const line_dir = Math.floor(mod4 * 100) / 100;
-  const sdivisions = Math.floor((20 + 180 * mod5) / 10) * 10;
+  const sdivisions = Math.floor((10 + 200 * mod5) / 10) * 10;
 
   // then, algos that also needs the mods
-  return useMemo(() => {
+  const opts = useMemo(() => {
     const rng = new MersenneTwister(parseInt(block.hash.slice(0, 16), 16));
-    let seed = rng.random();
+    let seed = 1000 * rng.random();
 
     let margin = [-marginBase, -marginBase];
 
@@ -202,10 +241,10 @@ function useVariables({ block, mod1, mod2, mod3, mod4, mod5 }) {
     let osc_freq = 40 + 200 * rng.random();
     let osc_amp = [0, 0];
     if (rng.random() < 0.2) {
-      osc_amp[0] += (rng.random() * rng.random() * rng.random()) / osc_freq;
+      osc_amp[0] += (4 * rng.random() * rng.random() * rng.random()) / osc_freq;
     }
     if (rng.random() < 0.2) {
-      osc_amp[1] += (rng.random() * rng.random() * rng.random()) / osc_freq;
+      osc_amp[1] += (4 * rng.random() * rng.random() * rng.random()) / osc_freq;
     }
 
     let lines =
@@ -218,7 +257,7 @@ function useVariables({ block, mod1, mod2, mod3, mod4, mod5 }) {
       0.3 * rng.random() * rng.random() * rng.random() +
       0.7 * smoothstep(0, 400, block.transactions.length);
 
-    let max_density = 600 * densityFactor;
+    let max_density = 640 * densityFactor;
 
     let sublines = Math.round(Math.max(2, Math.min(max_density / lines, 16)));
 
@@ -247,54 +286,83 @@ function useVariables({ block, mod1, mod2, mod3, mod4, mod5 }) {
     let upper = Math.max(
       lower + 0.1,
       Math.min(1, sublines / 4) -
-        0.7 * rng.random() * rng.random() * Math.max(0, rng.random() - 0.5)
+        rng.random() *
+          rng.random() *
+          rng.random() *
+          Math.max(0, rng.random() - 0.5)
     );
 
-    const off = [
-      0.1 * rng.random() * rng.random(),
-      0.1 * rng.random() * rng.random(),
-    ];
+    const off = [0, 0];
+    off[0] = Math.max(
+      0,
+      0.15 * rng.random() * rng.random() * rng.random() - 0.05
+    );
+    if (!off[0] || rng.random() < 0.2) {
+      off[1] = Math.max(0, 0.1 * rng.random() * rng.random() - 0.05);
+    }
+
+    let disp0 = 3 * rng.random() * rng.random();
+    let disp1 = rng.random();
+
+    let f1 = 3 * rng.random() * rng.random();
+    let f2 = 3 * rng.random() * rng.random();
+
+    let k1 = f1 * disp0;
+    let k2 = disp0;
+    let k3 = disp1;
+    let k4 = f2 * disp1;
+
+    let second_color_div =
+      rng.random() < 0.01 ? Math.floor(1 + 60 * Math.pow(rng.random(), 8)) : 0;
 
     return {
-      primary,
-      opts: {
-        opacity: 0.4,
-        border,
-        padding,
-        lines,
-        seed,
-        sdivisions,
-        sublines,
-        osc_amp,
-        osc_freq,
-        margin,
-        lines_axis,
-        mirror_axis,
-        line_dir,
-        mirror_axis_weight: 1 + 1 * Math.cos((5 * Math.PI * border) / 10),
-        off,
-        lower,
-        upper,
-        lowstep: -0.3,
-        highstep: 0.5,
-        rotation,
-        m: 3 + 5 * rng.random() - 2 * rng.random() * rng.random(),
-        k: 3 + 3 * rng.random() - 2 * rng.random() * rng.random(),
-        k1: 1.0 + rng.random(),
-        k2: 1.0 + rng.random(),
-        k3: 1.0 + 5 * rng.random(),
-        k4: 1.0 + 5 * rng.random(),
-        k5: 2.0 + 10 * rng.random(),
-        k6: 2.0 + 10 * rng.random(),
-      },
+      opacity: 0.5,
+      border,
+      padding,
+      lines,
+      seed,
+      sdivisions,
+      sublines,
+      osc_amp,
+      osc_freq,
+      margin,
+      lines_axis,
+      mirror_axis,
+      line_dir,
+      mirror_axis_weight: 1 + 1 * Math.cos(2 * 2 * Math.PI * mod2rounded),
+      off,
+      lower,
+      upper,
+      lowstep: -0.3,
+      highstep: 0.5,
+      rotation,
+      m: 3 + 5 * rng.random() - 2 * rng.random() * rng.random(),
+      k: 3 + 3 * rng.random() - 2 * rng.random() * rng.random(),
+      k1,
+      k2,
+      k3,
+      k4,
+      second_color_div,
     };
-  }, [stats, block, primary, border, marginBase, sdivisions, line_dir]);
+  }, [stats, block, border, mod2rounded, marginBase, sdivisions, line_dir]);
+
+  return useMemo(
+    () => ({
+      opts,
+      primary,
+      secondary,
+    }),
+    [opts, primary, secondary]
+  );
 }
 
 function useAttributes(attributesRef, variables) {
   useEffect(() => {
     attributesRef.current = () => {
       return {
+        // TODO lines
+        // TODO sublines
+        // TODO shape
         attributes: [
           {
             trait_type: "Ink",
@@ -373,13 +441,18 @@ const BlurV = ({
   return rec(passes);
 };
 
-const Post = ({ size, children, variables: { primary } }) => {
+const Post = ({ size, children, variables: { primary, secondary }, mod6 }) => {
   const time = useTime();
   return (
     <BlurV
       {...size}
-      map={<Node shader={shaders.blurGradient} uniforms={{ time }} />}
-      factor={3}
+      map={
+        <Node
+          shader={shaders.blurGradient}
+          uniforms={{ time, narrow: 0.3 * mod6 * mod6 }}
+        />
+      }
+      factor={3 * mod6}
       passes={4}
     >
       <Node
@@ -390,24 +463,23 @@ const Post = ({ size, children, variables: { primary } }) => {
           resolution: Uniform.Resolution,
           primary: primary.main,
           primaryHighlight: primary.highlight,
+          secondary: secondary.main,
+          secondaryHighlight: secondary.highlight,
         }}
       />
     </BlurV>
   );
 };
 
-// TODO paper effect
-
 const shaders = Shaders.create({
   blurGradient: {
-    // TODO add a slight blur for ALL? for aa?
     frag: `precision highp float;
     varying vec2 uv;
     uniform float time;
+    uniform float narrow;
     void main () {
-      float phase = 0.2 * cos(4. * time);
-      float phase2 = 0.2 * cos(2. * time);
-      float t = smoothstep(0.3 + phase2, 0.7, 2. * abs(uv.y-0.5) * length(uv-.5)) * (0.7 + 0.3 * phase);
+      float phase = 0.1 * cos(2. * time);
+      float t = smoothstep(0.4, 0.8, 2. * abs(uv.y-0.5) * length(uv-.5) + narrow + phase);
       gl_FragColor = vec4(vec3(t), 1.0);
     }`,
   },
@@ -439,18 +511,17 @@ void main () {
     uniform float time;
     uniform vec2 resolution;
     uniform vec3 primary, primaryHighlight;
+    uniform vec3 secondary, secondaryHighlight;
     uniform sampler2D t;
 
     vec3 palette(float t,vec3 a,vec3 b,vec3 c,vec3 d){
       return a+b*cos(6.28318*(c*t+d));
     }
-    vec3 pal(float t){
+    vec3 pal(float t, vec3 c1, vec3 c2){
+      float m = smoothstep(0.2, 0.15, t) * 0.95 + 0.05 * cos(4. * time);
       return mix(
         vec3(1.0, 1.0, 1.0),
-        mix(
-          primary,
-          primaryHighlight,
-          smoothstep(0.11, 0.1, t) * 0.9 + 0.1 * cos(4. * time)),
+        mix(c1, c2, m),
         smoothstep(0.99, 0.5, t)
       );
     }
@@ -458,8 +529,10 @@ void main () {
     void main() {
       vec2 ratio = resolution / min(resolution.x, resolution.y);
       vec2 p = 0.5 + (uv - 0.5) * ratio;
-      vec3 c = pal(texture2D(t, p).r);
-      // c = pal(uv.x);
+      vec4 v = texture2D(t, p);
+      vec3 c1 = pal(v.r, primary, primaryHighlight);
+      vec3 c2 = pal(v.g, secondary, secondaryHighlight);
+      vec3 c = c1 * c2;
       gl_FragColor = vec4(c, 1.0);
     }
   `,

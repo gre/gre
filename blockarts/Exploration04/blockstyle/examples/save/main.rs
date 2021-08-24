@@ -4,34 +4,33 @@ use svg::node::element::*;
 fn main() {
     let mut g = Group::new();
     let a = art(&Opts {
-        seed: 0.0,
+        seed: 100.0,
         opacity: 1.0,
         border: 2.0,
-        padding: (4.0, 4.0),
-        sdivisions: 200, // how much to split the width space
-        lines: 60, // how much to split the height space
-        sublines: 8, // for each line, how much do we make "sublines" to make it grow
+        padding: (10.0, 10.0),
+        margin: (20f64, 20f64),
+        sdivisions: 200,
+        lines: 40,
+        sublines: 8,
         osc_amp: (0.001, 0.001),
-        off: (0.02, 0.02),
+        off: (0.02, 0.0),
         osc_freq: 80.0,
-        margin: (0f64, 0f64),
-        lines_axis: vec![],
+        lines_axis: vec![true],
         mirror_axis: vec![false],
-        line_dir: 0.0, // 0 to 1
+        line_dir: 0.0,
         mirror_axis_weight: 1.0,
-        lower: -0.1,
-        upper: 0.8,
+        lower: -0.05,
+        upper: 1.0,
         lowstep: -0.3,
         highstep: 0.5,
-        rotation: 0.0,// PI / 4.,
+        rotation: 0.0,
         m: 4.0,
         k: 4.0,
         k1: 1.0,
-        k2: 1.0,
+        k2: 3.0,
         k3: 1.0,
         k4: 1.0,
-        k5: 2.0,
-        k6: 2.0,
+        second_color_div: 0
     });
     for e in a {
         g = g.add(e);

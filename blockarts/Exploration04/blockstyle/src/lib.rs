@@ -33,16 +33,35 @@ pub struct Opts {
     pub k2: f64,
     pub k3: f64,
     pub k4: f64,
-    pub k5: f64,
-    pub k6: f64,
+    pub second_color_div: usize,
 }
 
+
+fn close_last_curve (curves: &mut Vec<Vec<(f64,f64)>>) {
+    if let Some(curve) = curves.pop() {
+        let mut c = curve;
+        let l = c.len();
+        if l > 1 {
+            let a = c[l-1];
+            let b = c[l-2];
+            if a.0 != b.0 || a.1 != b.1 {
+                c = c.clone();
+                c.push(a);
+            }
+            curves.push(c);
+        }
+    }
+    curves.push(Vec::new());
+}
 
 pub fn art(opts: &Opts) -> Vec<Group> {
     // variables
     let sdivisions = opts.sdivisions; // how much to split the width space
+    let sdivisionsf = sdivisions as f64;
     let lines = opts.lines; // how much to split the height space
+    let linesf = lines as f64;
     let sublines = opts.sublines; // for each line, how much do we make "sublines" to make it grow
+    let sublinesf = sublines as f64;
     let osc_amp = opts.osc_amp;
     let osc_freq = opts.osc_freq;
     let margin = opts.margin;
@@ -62,11 +81,10 @@ pub fn art(opts: &Opts) -> Vec<Group> {
     let k2 = opts.k2;
     let k3 = opts.k3;
     let k4 = opts.k4;
-    let k5 = opts.k5;
-    let k6 = opts.k6;
+    let second_color_div = opts.second_color_div;
     
     // statics
-    let stroke_width = 0.35;
+    let stroke_width = 0.3;
     let height = 200.0;
     let width = 200.0;
     // calculated
@@ -109,33 +127,13 @@ pub fn art(opts: &Opts) -> Vec<Group> {
         smoothstep(lowstep, highstep, s) * (upper - lower) + lower
     };
 
-    let offset = |p: (f64, f64)| -> (f64, f64) {
-        let a = 1.0 * noise.get([k1 * p.0, k2 * p.1, 6.7 * opts.seed]);
-        let b = 1.5 * noise.get([k4 * p.0, k3 * p.1, 99. - 0.3 * opts.seed]);
-        let c = 2.0 * noise.get([k5 * p.0 + a, k6 * p.1 + b]);
+    let displacement = |p: (f64, f64)| -> (f64, f64) {
+        let a = 3.0 * noise.get([k1 * p.0, k2 * p.1, 6.7 * opts.seed]);
+        let b = 2.0 * noise.get([k4 * p.1 + a, k3 * p.0 - a]);
         (
-            p.0 + opts.off.0 * noise.get([a, 10. + c]) + osc_amp.0 * (osc_freq * p.1).cos(),
-            p.1 + opts.off.1 * noise.get([b, -10. - c]) + osc_amp.1 * (osc_freq * p.0).sin(),
+            p.0 + opts.off.0 * noise.get([p.0 + a - opts.seed, p.1 + 10. + b]) + osc_amp.0 * (osc_freq * p.1).cos(),
+            p.1 + opts.off.1 * noise.get([p.1 + b + opts.seed, p.0 -10. - b]) + osc_amp.1 * (osc_freq * p.0).sin(),
         )
-    };
-
-    let close_last_curve = |
-        curves: &mut Vec<Vec<(f64,f64)>>
-    | {
-        if let Some(curve) = curves.pop() {
-            let mut c = curve;
-            let l = c.len();
-            if l > 1 {
-                let a = c[l-1];
-                let b = c[l-2];
-                if a.0 != b.0 || a.1 != b.1 {
-                    c = c.clone();
-                    c.push(a);
-                }
-                curves.push(c);
-            }
-        }
-        curves.push(Vec::new());
     };
 
     let growing_lines = |
@@ -164,12 +162,12 @@ pub fn art(opts: &Opts) -> Vec<Group> {
             Vec::new()
         };
 
-        let p = h * (j as f64 - line_dir * (sublines as f64)) / (sublines as f64);
+        let p = h * (j as f64 - line_dir * (sublinesf)) / (sublinesf);
         let lp = lpi + p;
         for k in 0..sdivisions {
-            let sp = mix(spfrom, spto, (k as f64) / ((sdivisions - 1) as f64));
-            let origin = offset(if is_axis_y { (sp, lpi) } else { (lpi, sp) });
-            let target = offset(if is_axis_y { (sp, lp) } else { (lp, sp) });
+            let sp = mix(spfrom, spto, (k as f64) / (sdivisionsf - 1.));
+            let origin = displacement(if is_axis_y { (sp, lpi) } else { (lpi, sp) });
+            let target = displacement(if is_axis_y { (sp, lp) } else { (lp, sp) });
             let v = f(target); // lookup from a normalized function
 
             if v < 0.0 {
@@ -199,114 +197,118 @@ pub fn art(opts: &Opts) -> Vec<Group> {
         }
     };
 
-    let colors = vec!["black"];
-    colors
-        .iter()
-        .enumerate()
-        .map(|(_ci, &color)| {
-            let mut curves = Vec::new(); // all the lines
+    let mut layers = Vec::new();
+    let colors = if second_color_div > 0 {
+        vec!["#0FF", "#F0F"]
+    } else {
+        vec!["#0FF"]
+    };
+    let clen = colors.len();
+    for (ci, &color) in colors.iter().enumerate() {
+        let mut curves = Vec::new(); // all the lines
 
-            // rectangle spiral filling
-            if lines_axis.len() == 0 {
-                let max = (crop.2 - crop.0).max(crop.3 - crop.1);
-                let step = max / (lines as f64);
-                let h = 1. / (lines as f64);
-                for j in 0..sublines {
-                    let mut bounds = crop;
-                    loop {
-                        let mut a = normalize_in_boundaries((bounds.0, bounds.1), crop);
-                        let mut b = normalize_in_boundaries((bounds.2, bounds.1), crop);
-                        
-                        if bounds.0 < bounds.2 {
-                            let sdiv = (sdivisions as f64 * ((bounds.2 - bounds.0) / (crop.2 - crop.0))) as usize;
-                            // left to right
-                            growing_lines(
-                                j,
-                                &mut curves,
-                                sdiv,
-                                a.1,
-                                a.0,
-                                b.0,
-                                h,
-                                true,
-                                line_dir,
-                                true
-                            );
-                            bounds.0 += step;
-                        }
-
-                        a = b;
-                        b = normalize_in_boundaries((bounds.2, bounds.3), crop);
-                        if bounds.1 < bounds.3 {
-                            let sdiv = (sdivisions as f64 * ((bounds.3 - bounds.1) / (crop.3 - crop.1))) as usize;
-                            // top to down
-                            growing_lines(
-                                j,
-                                &mut curves,
-                                sdiv,
-                                a.0,
-                                a.1,
-                                b.1,
-                                h,
-                                false,
-                                1. - line_dir,
-                                true
-                            );
-                            bounds.1 += step;
-                        }
-
-                        a = b;
-                        b = normalize_in_boundaries((bounds.0, bounds.3), crop);
-                        if bounds.0 < bounds.2 {
-                            let sdiv = (sdivisions as f64 * ((bounds.2 - bounds.0) / (crop.2 - crop.0))) as usize;
-                            // right to left
-                            growing_lines(
-                                j,
-                                &mut curves,
-                                sdiv,
-                                a.1,
-                                a.0,
-                                b.0,
-                                h,
-                                true,
-                                1. - line_dir,
-                                true
-                            );
-                            bounds.2 -= step;
-                        }
-
-                        a = b;
-                        b = normalize_in_boundaries((bounds.0, bounds.1), crop);
-                        if bounds.1 < bounds.3 {
-                            let sdiv = (sdivisions as f64 * ((bounds.3 - bounds.1) / (crop.3 - crop.1))) as usize;
-                            // bottom to up
-                            growing_lines(
-                                j,
-                                &mut curves,
-                                sdiv,
-                                a.0,
-                                a.1,
-                                b.1,
-                                h,
-                                false,
-                                line_dir,
-                                true
-                            );
-                            bounds.3 -= step;
-                        }
-
-                        if bounds.0 >= bounds.2 || bounds.1 >= bounds.3 {
-                            break;
-                        }
+        // rectangle spiral filling
+        if lines_axis.len() == 0 && ci == clen-1 {
+            let max = (crop.2 - crop.0).max(crop.3 - crop.1);
+            let step = max / (linesf);
+            let h = 1. / (linesf);
+            for j in 0..sublines {
+                let mut bounds = crop;
+                loop {
+                    let mut a = normalize_in_boundaries((bounds.0, bounds.1), crop);
+                    let mut b = normalize_in_boundaries((bounds.2, bounds.1), crop);
+                    
+                    if bounds.0 < bounds.2 {
+                        let sdiv = (sdivisionsf * ((bounds.2 - bounds.0) / (crop.2 - crop.0))) as usize;
+                        // left to right
+                        growing_lines(
+                            j,
+                            &mut curves,
+                            sdiv,
+                            a.1,
+                            a.0,
+                            b.0,
+                            h,
+                            true,
+                            line_dir,
+                            true
+                        );
+                        bounds.0 += step;
                     }
-                    close_last_curve(&mut curves);
+
+                    a = b;
+                    b = normalize_in_boundaries((bounds.2, bounds.3), crop);
+                    if bounds.1 < bounds.3 {
+                        let sdiv = (sdivisionsf * ((bounds.3 - bounds.1) / (crop.3 - crop.1))) as usize;
+                        // top to down
+                        growing_lines(
+                            j,
+                            &mut curves,
+                            sdiv,
+                            a.0,
+                            a.1,
+                            b.1,
+                            h,
+                            false,
+                            1. - line_dir,
+                            true
+                        );
+                        bounds.1 += step;
+                    }
+
+                    a = b;
+                    b = normalize_in_boundaries((bounds.0, bounds.3), crop);
+                    if bounds.0 < bounds.2 {
+                        let sdiv = (sdivisionsf * ((bounds.2 - bounds.0) / (crop.2 - crop.0))) as usize;
+                        // right to left
+                        growing_lines(
+                            j,
+                            &mut curves,
+                            sdiv,
+                            a.1,
+                            a.0,
+                            b.0,
+                            h,
+                            true,
+                            1. - line_dir,
+                            true
+                        );
+                        bounds.2 -= step;
+                    }
+
+                    a = b;
+                    b = normalize_in_boundaries((bounds.0, bounds.1), crop);
+                    if bounds.1 < bounds.3 {
+                        let sdiv = (sdivisionsf * ((bounds.3 - bounds.1) / (crop.3 - crop.1))) as usize;
+                        // bottom to up
+                        growing_lines(
+                            j,
+                            &mut curves,
+                            sdiv,
+                            a.0,
+                            a.1,
+                            b.1,
+                            h,
+                            false,
+                            line_dir,
+                            true
+                        );
+                        bounds.3 -= step;
+                    }
+
+                    if bounds.0 >= bounds.2 || bounds.1 >= bounds.3 {
+                        break;
+                    }
                 }
+                close_last_curve(&mut curves);
             }
-            // otherwise it's a line filling
-            for is_axis_y in lines_axis.clone() {
-                for j in 0..sublines {
-                    for i in 0..lines {
-                        let lpi = (i as f64 + line_dir) / ((lines-1) as f64);
+        }
+        // otherwise it's a line filling
+        for is_axis_y in lines_axis.clone() {
+            for j in 0..sublines {
+                for i in 0..lines {
+                    if second_color_div == 0 || (i / second_color_div) % clen == ci {
+                        let lpi = (i as f64 + line_dir) / (linesf - 1.);
                         let (from, to) = if i % 2 == 0 {
                             (0.0, 1.0)
                         } else {
@@ -319,47 +321,52 @@ pub fn art(opts: &Opts) -> Vec<Group> {
                             lpi,
                             from,
                             to,
-                            1.0 / (lines as f64),
+                            1.0 / (linesf),
                             is_axis_y,
                             line_dir,
                             false
                         );
                     }
-                    close_last_curve(&mut curves);
                 }
+                close_last_curve(&mut curves);
             }
+        }
 
-            let mut l = Group::new()
-                .set("fill", "none")
-                .set("stroke", color)
-                .set("stroke-linecap", "round")
-                .set("stroke-width", stroke_width);
-                for r in curves {
-                    if r.len() < 2 {
-                        continue;
-                    }
-                    let data = render_route_curve(Data::new(), r, crop);
-                    l = l.add(
-                        Path::new()
-                        .set("opacity", opts.opacity)
-                        .set("d", data)
-                    );
+        let mut l = Group::new()
+            .set("fill", "none")
+            .set("stroke", color)
+            .set("stroke-linecap", "round")
+            .set("stroke-linejoin", "round")
+            .set("stroke-width", stroke_width);
+            for r in curves {
+                if r.len() < 2 {
+                    continue;
                 }
-                let border_dist = 0.25;
-                let borders = (border / border_dist).ceil() as usize;
+                let data = render_route_curve(Data::new(), r, crop);
+                l = l.add(
+                    Path::new()
+                    .set("opacity", opts.opacity)
+                    .set("d", data)
+                );
+            }
+            let border_dist = 0.25;
+            let borders = (border / border_dist).ceil() as usize;
+            if ci == 0 {
                 for b in 0..borders {
+                    let bd = b as f64 * border_dist;
                     l = l.add(
                         Rectangle::new()
                         .set("opacity", opts.opacity)
-                        .set("x", crop.0 - b as f64 * border_dist)
-                        .set("y", crop.1 - b as f64 * border_dist)
-                        .set("width", (crop.2-crop.0) + b as f64 * border_dist * 2.)
-                        .set("height", (crop.3-crop.1) + b as f64 * border_dist * 2.)
+                        .set("x", crop.0 - bd)
+                        .set("y", crop.1 - bd)
+                        .set("width", (crop.2 - crop.0) + bd * 2.)
+                        .set("height", (crop.3 - crop.1) + bd * 2.)
                     );
                 }
-            l
-        })
-        .collect()
+            }
+        layers.push(l);
+    }
+    layers
 }
 
 #[wasm_bindgen]
@@ -420,7 +427,8 @@ fn render_route_curve(
                 significant_str(p.1)
             ));
         } else {
-            if !out_of_bound(p, boundaries) {
+            let next = ((p.0 + last.0) / 2., (p.1 + last.1) / 2.);
+            if !out_of_bound(next, boundaries) {
                 if up {
                     up = false;
                     d = d.move_to((
@@ -431,8 +439,8 @@ fn render_route_curve(
                 d = d.quadratic_curve_to((
                     significant_str(last.0),
                     significant_str(last.1),
-                    significant_str((p.0 + last.0) / 2.),
-                    significant_str((p.1 + last.1) / 2.),
+                    significant_str(next.0),
+                    significant_str(next.1),
                 ));
             } else {
                 up = true;

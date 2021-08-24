@@ -9,8 +9,17 @@ A better description will come.
 **options**
 
 ```
-{"mod1":0.0001,"mod2":0.0001,"mod3":0.0001,"mod4":0.0001,"mod5":0.5}
+{"mod1":0.0001,"mod2":0.0001,"mod3":0.0001,"mod4":0.5,"mod5":0.5,"mod6":0.3}
 ```
+
+### TODO
+
+- [ ] HIGH add a second color as rare feature
+  - ? on the border
+  - ? on the "inner part"
+  - ? on a % modulus (e.g. %2)
+- [ ] HIGH more colors & adjust them to realistic
+- [ ] LOW paper effect
 
 ---
 
