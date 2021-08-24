@@ -1,5 +1,6 @@
 mod utils;
 use noise::*;
+use std::f64::consts::PI;
 use svg::node::element::path::Data;
 use svg::node::element::*;
 use wasm_bindgen::prelude::*;
@@ -34,6 +35,7 @@ pub struct Opts {
     pub k3: f64,
     pub k4: f64,
     pub second_color_div: usize,
+    pub border_cross: String,
 }
 
 
@@ -82,9 +84,10 @@ pub fn art(opts: &Opts) -> Vec<Group> {
     let k3 = opts.k3;
     let k4 = opts.k4;
     let second_color_div = opts.second_color_div;
+    let border_cross = opts.border_cross.clone();
     
     // statics
-    let stroke_width = 0.3;
+    let stroke_width = 0.29;
     let height = 200.0;
     let width = 200.0;
     // calculated
@@ -333,6 +336,8 @@ pub fn art(opts: &Opts) -> Vec<Group> {
         }
 
         let mut l = Group::new()
+            .set("inkscape:groupmode", "layer")
+            .set("inkscape:label", color)
             .set("fill", "none")
             .set("stroke", color)
             .set("stroke-linecap", "round")
@@ -349,8 +354,9 @@ pub fn art(opts: &Opts) -> Vec<Group> {
                     .set("d", data)
                 );
             }
-            let border_dist = 0.25;
-            let borders = (border / border_dist).ceil() as usize;
+            let border_dist: f64 = 0.25;
+            let bordersf = (border / border_dist).ceil();
+            let borders = bordersf as usize;
             if ci == 0 {
                 for b in 0..borders {
                     let bd = b as f64 * border_dist;
@@ -361,6 +367,74 @@ pub fn art(opts: &Opts) -> Vec<Group> {
                         .set("y", crop.1 - bd)
                         .set("width", (crop.2 - crop.0) + bd * 2.)
                         .set("height", (crop.3 - crop.1) + bd * 2.)
+                    );
+                }
+                for b in border_cross.chars() {
+                    let mut length = 0f64;
+                    let mut origin = (0f64, 0f64);
+                    let mut angle = 0f64;
+                    let mut reducer_factor = 0f64;
+                    match b {
+                        '|' => {
+                            origin = (crop.0 + (crop.2 - crop.0) / 2., crop.1);
+                            length = crop.3 - crop.1;
+                            angle = PI / 2.0;
+                        },
+                        '-' => {
+                            origin = (crop.0, crop.1 + (crop.3 - crop.1) / 2.);
+                            length = crop.2 - crop.0;
+                            angle = 0.0;
+                        },
+                        '\\' => {
+                            origin = (crop.0, crop.1);
+                            length = euclidian_dist(origin, (crop.2, crop.3));
+                            angle = (crop.3 - crop.1).atan2(crop.2 - crop.0);
+                            reducer_factor = 0.5;
+                        },
+                        '/' => {
+                            origin = (crop.2, crop.1);
+                            length = euclidian_dist(origin, (crop.0, crop.3));
+                            angle = (crop.3 - crop.1).atan2(crop.0 - crop.2);
+                            reducer_factor = 0.5;
+                        },
+                        _ => {}
+                    }
+                    if length <= 0.0 {
+                        break;
+                    }
+
+                    // how much increment between each line
+                    let angle_cos = angle.cos();
+                    let angle_sin = angle.sin();
+                    let da = angle + PI / 2.;
+                    let dx = border_dist * da.cos();
+                    let dy = border_dist * da.sin();
+                    let mut a = origin;
+                    let mut b = (
+                        a.0 + length * angle_cos,
+                        a.1 + length * angle_sin
+                    );
+                    let mut data = Data::new();
+                    for bord in 0..borders {
+                        let delta = bord as f64 - bordersf / 2.0;
+                        let red = reducer_factor * delta.abs() * (0.5 - (bord % 2) as f64);
+                        let from = (significant_str(a.0 + red * angle_cos + delta * dx), significant_str(a.1 + red * angle_sin + delta * dy));
+                        let to = (significant_str(b.0 - red * angle_cos + delta * dx), significant_str(b.1 - red * angle_sin + delta * dy));
+                        if bord == 0 {
+                            data = data.move_to(from);
+                        } else {
+                            data = data.line_to(from);
+                        }
+                        data = data.line_to(to);
+                        // swap
+                        let tmp = b;
+                        b = a;
+                        a = tmp;
+                    }
+                    l = l.add(
+                        Path::new()
+                        .set("opacity", opts.opacity)
+                        .set("d", data)
                     );
                 }
             }
@@ -382,6 +456,7 @@ pub fn blockstyle(val: &JsValue) -> String {
     return str;
 }
 
+#[inline]
 fn p_r(p: (f64, f64), a: f64) -> (f64, f64) {
     (
         a.cos() * p.0 + a.sin() * p.1,
@@ -389,6 +464,7 @@ fn p_r(p: (f64, f64), a: f64) -> (f64, f64) {
     )
 }
 
+#[inline]
 fn project_in_boundaries(
     p: (f64, f64),
     boundaries: (f64, f64, f64, f64),
@@ -399,10 +475,12 @@ fn project_in_boundaries(
     )
 }
 
+#[inline]
 fn out_of_bound(p: (f64, f64), boundaries: (f64, f64, f64, f64)) -> bool {
     p.0 < boundaries.0 || p.0 > boundaries.2 || p.1 < boundaries.1 || p.1 > boundaries.3
 }
 
+#[inline]
 fn significant_str (f: f64) -> f64 {
   (f * 100.0).floor() / 100.0
 }
@@ -451,16 +529,19 @@ fn render_route_curve(
     return d;
 }
 
+#[inline]
 fn smoothstep(a: f64, b: f64, x: f64) -> f64 {
     let k = ((x - a) / (b - a)).max(0.0).min(1.0);
     return k * k * (3.0 - 2.0 * k);
 }
 
+#[inline]
 fn mix(a: f64, b: f64, x: f64) -> f64 {
     (1. - x) * a + x * b
 }
 
-pub fn normalize_in_boundaries(
+#[inline]
+fn normalize_in_boundaries(
     p: (f64, f64),
     boundaries: (f64, f64, f64, f64),
 ) -> (f64, f64) {
@@ -470,4 +551,14 @@ pub fn normalize_in_boundaries(
         (p.1 - boundaries.1)
             / (boundaries.3 - boundaries.1),
     )
+}
+
+#[inline]
+fn euclidian_dist(
+    (x1, y1): (f64, f64),
+    (x2, y2): (f64, f64),
+) -> f64 {
+    let dx = x1 - x2;
+    let dy = y1 - y2;
+    return (dx * dx + dy * dy).sqrt();
 }

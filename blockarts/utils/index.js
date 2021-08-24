@@ -22,7 +22,7 @@ function isBurn(to) {
   return to && to.slice(2, 2 + burnBegin.length) === burnBegin;
 }
 function getTokenByContract(contract) {
-  return dataByContractLowerCase[contract.toLowerCase()];
+  return dataByContractLowerCase[(contract || "").toLowerCase()];
 }
 function erc20value(value, token) {
   return value * (token?.priceMultiplier || 0);
@@ -39,7 +39,7 @@ export function formatCurrency(symbol, value, magnitude) {
   );
 }
 
-export function useStats({ block }) {
+export function useStats({ block, withLegend = false }) {
   return useMemo(() => {
     // txs with their value
     const transactions = block.transactions.map((tx) => {
@@ -48,9 +48,13 @@ export function useStats({ block }) {
       let erc20transfer = false;
       const legends = [];
       let usd = 0;
+      let eth = 0;
       if (value > 0) {
-        legends.push(formatCurrency("ETH", value, 18));
+        if (withLegend) {
+          legends.push(formatCurrency("ETH", value, 18));
+        }
         usd = value * ethPrice;
+        eth += value;
       }
       let input = (tx.input || "").slice(2);
       let dataLength = 0;
@@ -61,39 +65,47 @@ export function useStats({ block }) {
           const token = getTokenByContract(tx.to);
           if (token) {
             const value = parseInt(input.slice(72, 136), 16);
-            legends.push(formatCurrency(token.symbol, value, token.decimals));
-            usd += erc20value(value, tx.to);
+            if (withLegend) {
+              legends.push(formatCurrency(token.symbol, value, token.decimals));
+            }
+            usd += erc20value(value, token);
           }
           erc20transfer = true;
           burn = isBurn(to);
-        } else if (input.startsWith("42966c68")) {
+        } else if (input.startsWith("42966c68") && tx.to) {
           // e.g. https://etherscan.io/tx/0xbf97244cf0c5709e0dd36e37bacb994f95c245aaf20a279595b5371ff592f4b0
           burn = true;
           const token = getTokenByContract(tx.to);
           if (token) {
             const value = parseInt(input.slice(8, 40), 16);
-            legends.push(
-              "BURN " + formatCurrency(token.symbol, value, token.decimals)
-            );
-            usd += erc20value(value, tx.to);
+            if (withLegend) {
+              legends.push(
+                "BURN " + formatCurrency(token.symbol, value, token.decimals)
+              );
+            }
+            usd += erc20value(value, token);
           }
         } else {
           let l = input.length / 2;
           if (l > 8) {
             dataLength = l;
-            legends.push(dataLength + " bytes");
+            if (withLegend) {
+              legends.push(dataLength + " bytes");
+            }
           }
           // TODO data points
         }
       }
-      const gasPaidUsd =
-        safeParseInt(tx.gas) * safeParseInt(tx.gasPrice) * ethPrice;
+      const gasPaid = safeParseInt(tx.gas) * safeParseInt(tx.gasPrice);
+      const gasPaidUsd = gasPaid * ethPrice;
 
       const legend = legends.join(", ");
 
       return {
         tx,
+        eth,
         usd,
+        gasPaid,
         gasPaidUsd,
         erc20transfer,
         burn,
@@ -105,6 +117,11 @@ export function useStats({ block }) {
       (acc, tx) => acc + tx.usd + tx.gasPaidUsd,
       0
     );
+    const totalEth = transactions.reduce(
+      (acc, tx) => acc + tx.eth + tx.gasPaid,
+      0
+    );
+    const totalEthUsd = totalEth * ethPrice;
 
     // data txs
     const dataTxs = transactions.filter((o) => o.dataLength);
@@ -120,11 +137,12 @@ export function useStats({ block }) {
 
     const totalBurn =
       burnedFees + burnedTxs.reduce((acc, tx) => acc + tx.usd, 0);
-
     return {
       transactions,
       dataTxs,
       totalUsd,
+      totalEth,
+      totalEthUsd,
       totalDataBytes,
       burnedTxs,
       burnedEth,

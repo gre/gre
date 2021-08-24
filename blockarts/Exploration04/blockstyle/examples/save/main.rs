@@ -6,7 +6,7 @@ fn main() {
     let a = art(&Opts {
         seed: 100.0,
         opacity: 1.0,
-        border: 2.0,
+        border: 6.0,
         padding: (10.0, 10.0),
         margin: (20f64, 20f64),
         sdivisions: 200,
@@ -30,7 +30,8 @@ fn main() {
         k2: 3.0,
         k3: 1.0,
         k4: 1.0,
-        second_color_div: 0
+        second_color_div: 0,
+        border_cross: String::from("-|/\\")
     });
     for e in a {
         g = g.add(e);

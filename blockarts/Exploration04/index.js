@@ -8,6 +8,17 @@ import { GLSL, LinearCopy, Node, Shaders, Uniform } from "gl-react";
 import init, { blockstyle } from "./blockstyle/pkg/blockstyle";
 import wasm from "base64-inline-loader!./blockstyle/pkg/blockstyle_bg.wasm";
 
+/*
+interesting testing blocks
+13087398
+13088825
+*/
+
+// IDEAS
+// paper effect
+// BUG
+// unecessary "MOVE" in the svg to clean
+
 function decode(dataURI) {
   const binaryString = atob(dataURI.split(",")[1]);
   var bytes = new Uint8Array(binaryString.length);
@@ -23,12 +34,6 @@ const promiseOfLoad = init(decode(wasm)).then(() => {
 
 const DEBUG_SVG = false;
 
-// IDEAS
-// one line of diff color
-// diff symmetry of noise
-// diff orientation
-// make orientation repeat in patterns
-
 const COLORS = [
   {
     name: "Black",
@@ -42,17 +47,17 @@ const COLORS = [
   },
   {
     name: "Bloody Brexit",
-    main: [0.1, 0.1, 0.4],
+    main: [0.0, 0.1, 0.4],
     highlight: [0.5, 0.0, 0.0],
   },
   {
     name: "Turquoise",
-    main: [0.0, 0.5, 1.0],
-    highlight: [0.0, 0.2, 0.8],
+    main: [0.05, 0.65, 0.95],
+    highlight: [0.0, 0.2, 0.6],
   },
   {
     name: "Aurora Borealis",
-    main: [0.0, 0.65, 0.7],
+    main: [0.0, 0.6, 0.6],
     highlight: [0.0, 0.3, 0.4],
   },
   {
@@ -61,29 +66,36 @@ const COLORS = [
     highlight: [0.0, 0.3, 0.0],
   },
   {
-    name: "Violet",
-    main: [0.5, 0.0, 1.0],
-    highlight: [0.3, 0.0, 0.5],
-  },
-  {
     name: "Red Dragon",
-    main: [0.8, 0.0, 0.0],
+    main: [0.7, 0.0, 0.0],
     highlight: [0.2, 0.0, 0.0],
   },
   {
     name: "Pumpkin",
-    main: [1.0, 0.55, 0.25],
-    highlight: [0.8, 0.3, 0.0],
+    main: [1, 0.5, 0.2],
+    highlight: [0.9, 0.3, 0.0],
+  },
+  {
+    name: "Amber",
+    main: [1.0, 0.78, 0.28],
+    highlight: [1.0, 0.5, 0.0],
   },
   {
     name: "Pink",
-    main: [1.0, 0.5, 0.7],
+    main: [1.0, 0.4, 0.6],
     highlight: [1.0, 0.5, 0.0],
+  },
+  {
+    name: "Imperial Purple",
+    main: [0.5, 0.1, 0.9],
+    highlight: [0.2, 0.0, 0.4],
   },
 ];
 
 const pickColor = (f) =>
   COLORS[Math.floor(0.99999 * f * COLORS.length) % COLORS.length];
+
+const MAX = 2048;
 
 const Main = ({
   innerCanvasRef,
@@ -99,8 +111,9 @@ const Main = ({
   mod6,
   systemContext,
 }) => {
-  const w = Math.min(2048, Math.floor(width));
-  const h = Math.min(2048, Math.floor(height));
+  const dpr = window.devicePixelRatio || 1;
+  const w = Math.min(MAX, Math.floor(dpr * width));
+  const h = Math.min(MAX, Math.floor(dpr * height));
   const [hover, setHover] = useState(false);
   const [loaded, setLoaded] = useState(wasmLoaded);
   const variables = useVariables({ block, mod1, mod2, mod3, mod4, mod5 });
@@ -126,7 +139,7 @@ const Main = ({
       "data:image/svg+xml;base64," +
       btoa(
         `
-        <svg xmlns="http://www.w3.org/2000/svg" width="${w}px" height="${h}px" style="background:white" viewBox="0 0 200 200">` +
+        <svg xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns="http://www.w3.org/2000/svg" width="${MAX}px" height="${MAX}px" style="background:white" viewBox="0 0 200 200">` +
           svgBody +
           "</svg>"
       ),
@@ -140,18 +153,18 @@ const Main = ({
       "data:image/svg+xml;base64," +
       btoa(
         `
-        <svg xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns="http://www.w3.org/2000/svg" width="200mm" height="200mm" style="background:white" viewBox="0 0 200 200">
-        <g inkscape:groupmode="layer" inkscape:label="Plot">` +
+        <svg xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns="http://www.w3.org/2000/svg" width="210mm" height="210mm" style="background:white" viewBox="0 0 210 210">
+        <g transform="translate(5,5)">` +
           svgBody
-            .replace(/opacity="{\\"}*"/g, "")
+            .replace(/opacity="[^"]*"/g, "")
             .replace(
-              /#F00/g,
+              /#0FF/g,
               "rgb(" +
                 primary.main.map((n) => Math.round(n * 255)).join(",") +
                 ")"
             )
             .replace(
-              /#0F0/g,
+              /#F0F/g,
               "rgb(" +
                 secondary.main.map((n) => Math.round(n * 255)).join(",") +
                 ")"
@@ -180,9 +193,10 @@ const Main = ({
     textDecoration: "none",
     fontSize: "16px",
     fontWeight: "bold",
-    fontFamily: "Monaco",
+    fontFamily: "Monaco, sans-serif",
     opacity: hover ? 1 : 0,
     transition: "200ms opacity",
+    userSelect: "none",
   };
 
   return (
@@ -193,7 +207,11 @@ const Main = ({
     >
       <Surface width={width} height={height} ref={innerCanvasRef}>
         <LinearCopy>
-          <Post mod6={mod6} size={{ width, height }} variables={variables}>
+          <Post
+            size={{ width: w, height: h }}
+            mod6={mod6}
+            variables={variables}
+          >
             {imgSrc}
           </Post>
         </LinearCopy>
@@ -212,17 +230,52 @@ function useVariables({ block, mod1, mod2, mod3, mod4, mod5 }) {
   const mod2rounded = Math.round(mod2 * 100) / 100;
   const primary = pickColor(mod1);
   const secondary = pickColor((blockNumber % 10) / 10);
-  const border = Math.floor(Math.max(0, 80 * (mod2 - 0.5))) / 4;
-  const marginBase = Math.floor(40 * mod3 * mod3 - 10);
+  const borderBase = Math.floor(Math.max(0, 80 * (mod2 - 0.5))) / 4;
+  const marginBase = Math.floor(
+    30 * mod3 * mod3 - 30 * (1 - mod3) * (1 - mod3)
+  );
   const line_dir = Math.floor(mod4 * 100) / 100;
-  const sdivisions = Math.floor((10 + 200 * mod5) / 10) * 10;
+  const sdivisions = Math.floor((10 + 210 * mod5) / 10) * 10;
+
+  const shouldEnableBorderCross = useMemo(() => {
+    const rng = new MersenneTwister(safeParseInt(block.hash.slice(0, 16)));
+    return (
+      (blockNumber % 1000000 === 0 ||
+        (blockNumber % 100000 === 0 && rng.random() < 0.2) ||
+        rng.random() < 0.01) &&
+      Math.floor(rng.random() * COLORS.length) === COLORS.indexOf(primary)
+    );
+  }, [primary, blockNumber]);
 
   // then, algos that also needs the mods
   const opts = useMemo(() => {
-    const rng = new MersenneTwister(parseInt(block.hash.slice(0, 16), 16));
+    const rng = new MersenneTwister(safeParseInt(block.hash.slice(0, 16)));
     let seed = 1000 * rng.random();
 
     let margin = [-marginBase, -marginBase];
+
+    const ratioEthTransfer = !stats.totalUsd
+      ? 1
+      : stats.totalEthUsd / stats.totalUsd;
+
+    let border = borderBase;
+    let border_cross = "";
+    let r = [rng.random(), rng.random(), rng.random(), rng.random()];
+    if (shouldEnableBorderCross) {
+      if (r[0] < 0.3) {
+        border_cross += "\\";
+      }
+      if (r[3] < 0.3) {
+        border_cross += "/";
+      }
+      if (r[1] < 0.3) {
+        border_cross += "|";
+      }
+      if (r[2] < 0.3 || border_cross.length === 0) {
+        border_cross += "-";
+      }
+      border *= 2;
+    }
 
     let mainPad = Math.max(
       0,
@@ -257,14 +310,14 @@ function useVariables({ block, mod1, mod2, mod3, mod4, mod5 }) {
       0.3 * rng.random() * rng.random() * rng.random() +
       0.7 * smoothstep(0, 400, block.transactions.length);
 
-    let max_density = 640 * densityFactor;
+    let max_density = 700 * densityFactor;
 
     let sublines = Math.round(Math.max(2, Math.min(max_density / lines, 16)));
 
     let lines_axis = [];
-    if (lines < 20 || rng.random() < 0.8) {
-      lines_axis.push(rng.random() < 0.5);
-      if (rng.random() < 0.05) {
+    if (lines < 8 || ratioEthTransfer < 0.99) {
+      lines_axis.push(ratioEthTransfer < 0.5);
+      if (ratioEthTransfer < 0.02) {
         lines_axis.push(!lines_axis[0]);
       }
     }
@@ -282,14 +335,15 @@ function useVariables({ block, mod1, mod2, mod3, mod4, mod5 }) {
       rotation = Math.PI / 4;
     }
 
-    let lower = 0.1 - 0.3 * rng.random() * rng.random() * rng.random();
+    let lower = 0.1 - 0.3 * Math.pow(rng.random(), 8);
     let upper = Math.max(
       lower + 0.1,
       Math.min(1, sublines / 4) -
         rng.random() *
           rng.random() *
           rng.random() *
-          Math.max(0, rng.random() - 0.5)
+          Math.max(0, rng.random() - 0.5) +
+        Math.pow(rng.random(), 14)
     );
 
     const off = [0, 0];
@@ -333,7 +387,8 @@ function useVariables({ block, mod1, mod2, mod3, mod4, mod5 }) {
       off,
       lower,
       upper,
-      lowstep: -0.3,
+      lowstep:
+        -0.3 - (rng.random() < 0.05 ? 4 * rng.random() * rng.random() : 0),
       highstep: 0.5,
       rotation,
       m: 3 + 5 * rng.random() - 2 * rng.random() * rng.random(),
@@ -343,8 +398,18 @@ function useVariables({ block, mod1, mod2, mod3, mod4, mod5 }) {
       k3,
       k4,
       second_color_div,
+      border_cross,
     };
-  }, [stats, block, border, mod2rounded, marginBase, sdivisions, line_dir]);
+  }, [
+    stats,
+    block,
+    borderBase,
+    mod2rounded,
+    marginBase,
+    sdivisions,
+    line_dir,
+    shouldEnableBorderCross,
+  ]);
 
   return useMemo(
     () => ({
@@ -363,6 +428,7 @@ function useAttributes(attributesRef, variables) {
         // TODO lines
         // TODO sublines
         // TODO shape
+        // TODO second ink
         attributes: [
           {
             trait_type: "Ink",
@@ -441,33 +507,44 @@ const BlurV = ({
   return rec(passes);
 };
 
+const Blurred = ({ size, children, mod6 }) => (
+  <BlurV
+    {...size}
+    map={
+      <Node
+        shader={shaders.blurGradient}
+        uniforms={{ narrow: 0.3 * mod6 * mod6 }}
+      />
+    }
+    factor={3 * mod6}
+    passes={4}
+  >
+    {children}
+  </BlurV>
+);
+
+const BlurredMemo = React.memo(Blurred);
+
 const Post = ({ size, children, variables: { primary, secondary }, mod6 }) => {
   const time = useTime();
   return (
-    <BlurV
+    <Node
       {...size}
-      map={
-        <Node
-          shader={shaders.blurGradient}
-          uniforms={{ time, narrow: 0.3 * mod6 * mod6 }}
-        />
-      }
-      factor={3 * mod6}
-      passes={4}
-    >
-      <Node
-        shader={shaders.main}
-        uniforms={{
-          t: children,
-          time,
-          resolution: Uniform.Resolution,
-          primary: primary.main,
-          primaryHighlight: primary.highlight,
-          secondary: secondary.main,
-          secondaryHighlight: secondary.highlight,
-        }}
-      />
-    </BlurV>
+      shader={shaders.main}
+      uniforms={{
+        t: (
+          <BlurredMemo size={size} mod6={mod6}>
+            {children}
+          </BlurredMemo>
+        ),
+        time,
+        resolution: Uniform.Resolution,
+        primary: primary.main,
+        primaryHighlight: primary.highlight,
+        secondary: secondary.main,
+        secondaryHighlight: secondary.highlight,
+      }}
+    />
   );
 };
 
@@ -475,11 +552,18 @@ const shaders = Shaders.create({
   blurGradient: {
     frag: `precision highp float;
     varying vec2 uv;
-    uniform float time;
     uniform float narrow;
     void main () {
-      float phase = 0.1 * cos(2. * time);
-      float t = smoothstep(0.4, 0.8, 2. * abs(uv.y-0.5) * length(uv-.5) + narrow + phase);
+      float t = smoothstep(0.4, 0.8, 2. * abs(uv.y-0.5) * length(uv-.5) + narrow);
+      gl_FragColor = vec4(vec3(t), 1.0);
+    }`,
+  },
+  paper: {
+    frag: `precision highp float;
+    varying vec2 uv;
+    uniform float narrow;
+    void main () {
+      float t = smoothstep(0.4, 0.8, 2. * abs(uv.y-0.5) * length(uv-.5) + narrow);
       gl_FragColor = vec4(vec3(t), 1.0);
     }`,
   },
@@ -518,11 +602,11 @@ void main () {
       return a+b*cos(6.28318*(c*t+d));
     }
     vec3 pal(float t, vec3 c1, vec3 c2){
-      float m = smoothstep(0.2, 0.15, t) * 0.95 + 0.05 * cos(4. * time);
+      float m = smoothstep(0.3, 0.15, t) * 0.95 + 0.05 * cos(6. * (time + uv.x));
       return mix(
         vec3(1.0, 1.0, 1.0),
         mix(c1, c2, m),
-        smoothstep(0.99, 0.5, t)
+        smoothstep(1.0, 0.5, t)
       );
     }
     
