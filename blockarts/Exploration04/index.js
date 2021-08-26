@@ -1,9 +1,15 @@
 // @flow
-import React, { useEffect, useMemo, useState, useCallback } from "react";
+import React, {
+  useEffect,
+  useMemo,
+  useState,
+  useCallback,
+  useRef,
+} from "react";
 import MersenneTwister from "mersenne-twister";
 import { mix, safeParseInt, smoothstep, useStats, useTime } from "../utils";
 import { Surface } from "gl-react-dom";
-import { GLSL, LinearCopy, Node, Shaders, Uniform } from "gl-react";
+import { Bus, GLSL, LinearCopy, Node, Shaders, Uniform } from "gl-react";
 
 import init, { blockstyle } from "./blockstyle/pkg/blockstyle";
 import wasm from "base64-inline-loader!./blockstyle/pkg/blockstyle_bg.wasm";
@@ -226,6 +232,7 @@ const Main = ({
 function useVariables({ block, mod1, mod2, mod3, mod4, mod5 }) {
   const stats = useStats({ block });
   const blockNumber = safeParseInt(block.number);
+  const paperSeed = (blockNumber / 100) % 1;
 
   const mod2rounded = Math.round(mod2 * 100) / 100;
   const mod3rounded = Math.round(mod3 * 100) / 100;
@@ -387,6 +394,7 @@ function useVariables({ block, mod1, mod2, mod3, mod4, mod5 }) {
 
     let radius_amp =
       4 *
+      mod5rounded *
       (rng.random() - 0.5) *
       rng.random() *
       rng.random() *
@@ -446,6 +454,7 @@ function useVariables({ block, mod1, mod2, mod3, mod4, mod5 }) {
       opts,
       primary,
       secondary,
+      paperSeed,
     }),
     [opts, primary, secondary]
   );
@@ -580,36 +589,57 @@ const BlurV = ({
   return rec(passes);
 };
 
-const Blurred = ({ size, children, mod6 }) => (
-  <BlurV
-    {...size}
-    map={
-      <Node
-        shader={shaders.blurGradient}
-        uniforms={{ narrow: 0.3 * mod6 * mod6 }}
-      />
-    }
-    factor={4 * mod6}
-    passes={4}
-  >
+const Blurred = ({ size, children, mod6, blurMap }) => (
+  <BlurV {...size} map={blurMap} factor={4 * mod6} passes={4}>
     {children}
   </BlurV>
 );
 
 const BlurredMemo = React.memo(Blurred);
 
-const Post = ({ size, children, variables: { primary, secondary }, mod6 }) => {
+const Paper = ({ seed, grain }) => (
+  <Node
+    shader={shaders.paper}
+    uniforms={{ seed, grain, resolution: Uniform.Resolution }}
+  />
+);
+const PaperMemo = React.memo(Paper);
+
+const BlurGradient = ({ mod6 }) => (
+  <Node
+    shader={shaders.blurGradient}
+    uniforms={{
+      narrow: 0.3 * mod6 * mod6,
+      resolution: Uniform.Resolution,
+    }}
+  />
+);
+const BlurGradientMemo = React.memo(BlurGradient);
+
+const Post = ({
+  size,
+  children,
+  variables: { primary, secondary, paperSeed },
+  mod6,
+}) => {
   const time = useTime();
+  const blurMapBusRef = useRef();
   return (
     <Node
       {...size}
       shader={shaders.main}
       uniforms={{
         t: (
-          <BlurredMemo size={size} mod6={mod6}>
+          <BlurredMemo
+            blurMap={() => blurMapBusRef.current}
+            size={size}
+            mod6={mod6}
+          >
             {children}
           </BlurredMemo>
         ),
+        blurMap: () => blurMapBusRef.current,
+        paper: <PaperMemo seed={paperSeed} grain={256} />,
         time,
         resolution: Uniform.Resolution,
         primary: primary.main,
@@ -617,7 +647,11 @@ const Post = ({ size, children, variables: { primary, secondary }, mod6 }) => {
         secondary: secondary.main,
         secondaryHighlight: secondary.highlight,
       }}
-    />
+    >
+      <Bus ref={blurMapBusRef}>
+        <BlurGradientMemo mod6={mod6} />
+      </Bus>
+    </Node>
   );
 };
 
@@ -626,17 +660,70 @@ const shaders = Shaders.create({
     frag: `precision highp float;
     varying vec2 uv;
     uniform float narrow;
+    uniform vec2 resolution;
     void main () {
-      float t = smoothstep(0.4, 0.8, 2. * abs(uv.y-0.5) * length(uv-.5) + narrow);
+      vec2 ratio = resolution / min(resolution.x, resolution.y);
+      vec2 p = 0.5 + (uv - 0.5) * ratio;
+      float t = smoothstep(0.4, 0.8, 2. * abs(p.y-0.5) * length(p-.5) + narrow);
       gl_FragColor = vec4(vec3(t), 1.0);
     }`,
   },
   paper: {
     frag: `precision highp float;
     varying vec2 uv;
-    uniform float narrow;
+    uniform vec2 resolution;
+    uniform float grain;
+    uniform float seed;
+    void pR(inout vec2 p, float a) {
+      p = cos(a)*p + sin(a)*vec2(p.y, -p.x);
+    }
+    float hash(float p) {
+      p = fract(p * .1031);
+      p *= p + 33.33;
+      p *= p + p;
+      return fract(p);
+    }
+    float hash(vec2 p) {
+      vec3 p3  = fract(vec3(p.xyx) * .1031);
+      p3 += dot(p3, p3.yzx + 33.33);
+      return fract((p3.x + p3.y) * p3.z);
+    }
+    float noise(float x) {
+      float i = floor(x);
+      float f = fract(x);
+      float u = f * f * (3.0 - 2.0 * f);
+      return mix(hash(i), hash(i + 1.0), u);
+    }
+    float noise(vec2 x) {
+      vec2 i = floor(x);
+      vec2 f = fract(x);
+      float a = hash(i);
+      float b = hash(i + vec2(1.0, 0.0));
+      float c = hash(i + vec2(0.0, 1.0));
+      float d = hash(i + vec2(1.0, 1.0));
+      vec2 u = f * f * (3.0 - 2.0 * f);
+      return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
+    }
+    const mat2 m2 = mat2( 0.4,  0.7, -0.7,  0.4 );
+    float fbm( in vec2 x ) {
+      float f = 2.0;
+      float s = 0.55;
+      float a = 0.0;
+      float b = 0.5;
+      for( int i=0; i<4; i++ ) {
+        float n = noise(x);
+        a += b * n;
+        b *= s;
+        x = f * x;
+      }
+      return a;
+    }
     void main () {
-      float t = smoothstep(0.4, 0.8, 2. * abs(uv.y-0.5) * length(uv-.5) + narrow);
+      vec2 ratio = resolution / min(resolution.x, resolution.y);
+      vec2 p = 0.5 + (uv - 0.5) * ratio;
+      pR(p, 2.);
+      float t = 0.5 * fbm(seed + p * grain) + 0.5 * fbm((p + vec2(7.7 * seed, 3.3 - seed)) * grain * 2.0);
+      t = smoothstep(0.05, 0.15, abs(t-0.5));
       gl_FragColor = vec4(vec3(t), 1.0);
     }`,
   },
@@ -671,13 +758,10 @@ void main () {
     uniform vec2 resolution;
     uniform vec3 primary, primaryHighlight;
     uniform vec3 secondary, secondaryHighlight;
-    uniform sampler2D t;
+    uniform sampler2D t, paper, blurMap;
 
-    vec3 palette(float t,vec3 a,vec3 b,vec3 c,vec3 d){
-      return a+b*cos(6.28318*(c*t+d));
-    }
-    vec3 pal(float t, vec3 c1, vec3 c2){
-      float m = smoothstep(0.3, 0.15, t) * 0.85 + 0.15 * cos(4. * (time + uv.x + uv.y));
+    vec3 pal(float t, vec3 c1, vec3 c2, float phase){
+      float m = smoothstep(0.3, 0.15, t) * 0.9 + 0.1 * phase;
       return mix(
         vec3(1.0, 1.0, 1.0),
         mix(c1, c2, m),
@@ -688,10 +772,17 @@ void main () {
     void main() {
       vec2 ratio = resolution / min(resolution.x, resolution.y);
       vec2 p = 0.5 + (uv - 0.5) * ratio;
+      float phase = abs(cos(3. * (time - uv.y)));
       vec4 v = texture2D(t, p);
-      vec3 c1 = pal(v.r, primary, primaryHighlight);
-      vec3 c2 = pal(v.g, secondary, secondaryHighlight);
-      vec3 c = c1 * c2;
+      float grain = texture2D(paper, p).r;
+      float blur = texture2D(blurMap, p).r;
+      vec3 c1 = pal(v.r, primary, primaryHighlight, phase);
+      vec3 c2 = pal(v.g, secondary, secondaryHighlight, phase);
+      vec3 c = c1 * c2 +
+        0.08 *
+        (1. - blur) *
+        (0.6 + 0.4 * mix(1.0, -phase, step(0.5, grain))) *
+        (grain - 0.5);
       gl_FragColor = vec4(c, 1.0);
     }
   `,
