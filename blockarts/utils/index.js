@@ -56,7 +56,7 @@ export function useStats({ block, withLegend = false }) {
         usd = value * ethPrice;
         eth += value;
       }
-      let input = (tx.input || "").slice(2);
+      let input = (tx.input || tx.data || "").slice(2);
       let dataLength = 0;
       if (input) {
         // erc20 transfer
@@ -137,6 +137,7 @@ export function useStats({ block, withLegend = false }) {
 
     const totalBurn =
       burnedFees + burnedTxs.reduce((acc, tx) => acc + tx.usd, 0);
+
     return {
       transactions,
       dataTxs,
@@ -169,6 +170,9 @@ export function useTime() {
 }
 
 export const safeParseInt = (a) => {
+  if (a && typeof a === "object" && a.hex) {
+    a = a.hex;
+  }
   const v = parseInt(a);
   if (isNaN(v) || !isFinite(a)) return 0;
   return v;

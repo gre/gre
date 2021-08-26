@@ -1,13 +1,16 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react";
 import Head from "next/head";
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
 import { useRef } from "react";
 import { Container } from "../../components/Container";
 import { Global } from "../../components/Global";
 import { Main } from "../../components/Main";
 import { useBlock, useCurrentBlockNumber } from "./playground";
 
-const BlockStyle = typeof window === "undefined" ? "div" : dynamic(() => import("../../dist/main.js"));
+const BlockStyle =
+  typeof window === "undefined"
+    ? "div"
+    : dynamic(() => import("../../dist/main.js"));
 
 export default function Home() {
   const currentBlockNumber = useCurrentBlockNumber();
@@ -15,9 +18,9 @@ export default function Home() {
   const attributesRef = useRef({});
   const [attr, setAttr] = useState({});
   useEffect(() => {
-      setTimeout(() => {
-        setAttr(attributesRef.current());
-      }, 1000);
+    setTimeout(() => {
+      setAttr(attributesRef.current());
+    }, 1000);
   }, [attributesRef]);
 
   if (!block) return null;
@@ -29,19 +32,25 @@ export default function Home() {
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <Main>
-            <BlockStyle
-                block={block}
-                width={400}
-                height={400}
-                mod1={0.5}
-                mod2={0.5}
-                mod3={0.5}
-                mod4={0.5}
-                attributesRef={attributesRef}
-              />
-              <pre>
-              {attr?.attributes?.map(o => o.trait_type+": "+o.value).join("\n")}
-              </pre>
+          <BlockStyle
+            block={block}
+            width={400}
+            height={400}
+            {...{
+              mod1: 0.0001,
+              mod2: 0.0001,
+              mod3: 0.3,
+              mod4: 0.5,
+              mod5: 0.5,
+              mod6: 0.3,
+            }}
+            attributesRef={attributesRef}
+          />
+          <pre>
+            {attr?.attributes
+              ?.map((o) => o.trait_type + ": " + o.value)
+              .join("\n")}
+          </pre>
         </Main>
       </Container>
     </Global>

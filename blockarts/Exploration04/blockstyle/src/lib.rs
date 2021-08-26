@@ -10,6 +10,7 @@ use serde::{Deserialize};
 pub struct Opts {
     pub seed: f64,
     pub opacity: f64,
+    pub opacity_fade: f64,
     pub sdivisions: usize,
     pub lines: usize,
     pub sublines: usize,
@@ -36,6 +37,9 @@ pub struct Opts {
     pub k4: f64,
     pub second_color_div: usize,
     pub border_cross: String,
+    pub radius_amp: f64,
+    pub radius_freq: f64,
+    pub radius_offset: f64,
 }
 
 
@@ -51,9 +55,9 @@ fn close_last_curve (curves: &mut Vec<Vec<(f64,f64)>>) {
                 c.push(a);
             }
             curves.push(c);
+            curves.push(Vec::new());
         }
     }
-    curves.push(Vec::new());
 }
 
 pub fn art(opts: &Opts) -> Vec<Group> {
@@ -85,9 +89,12 @@ pub fn art(opts: &Opts) -> Vec<Group> {
     let k4 = opts.k4;
     let second_color_div = opts.second_color_div;
     let border_cross = opts.border_cross.clone();
+    let radius_amp = opts.radius_amp;
+    let radius_freq = opts.radius_freq;
+    let radius_offset = opts.radius_offset;
     
     // statics
-    let stroke_width = 0.29;
+    let stroke_width = 0.3;
     let height = 200.0;
     let width = 200.0;
     // calculated
@@ -127,6 +134,7 @@ pub fn art(opts: &Opts) -> Vec<Group> {
             p.0 + 0.2 * k * a1 + 0.4 * k * b1,
             p.1 + 0.2 * k * a2 + 0.4 * k * b2
         ]);
+        s += radius_amp * ((radius_freq * (radius_offset + 2. * euclidian_dist((0.5, 0.5), point))) % 1.0 - 0.5);
         smoothstep(lowstep, highstep, s) * (upper - lower) + lower
     };
 
@@ -150,7 +158,8 @@ pub fn art(opts: &Opts) -> Vec<Group> {
         is_axis_y: bool,
         line_dir: f64,
         continuing: bool
-    | {
+    | -> bool {
+        let sdivisionsf = sdivisions as f64;
         let mut curve = if continuing {
             if let Some(curve) = curves.pop() {
                 curve
@@ -167,37 +176,38 @@ pub fn art(opts: &Opts) -> Vec<Group> {
 
         let p = h * (j as f64 - line_dir * (sublinesf)) / (sublinesf);
         let lp = lpi + p;
+        let mut pen_down = false;
         for k in 0..sdivisions {
             let sp = mix(spfrom, spto, (k as f64) / (sdivisionsf - 1.));
             let origin = displacement(if is_axis_y { (sp, lpi) } else { (lpi, sp) });
             let target = displacement(if is_axis_y { (sp, lp) } else { (lp, sp) });
             let v = f(target); // lookup from a normalized function
-
             if v < 0.0 {
                 let l = curve.len();
                 if l > 0 {
                     if l > 1 {
-                        curve.push(curve[l-1]); // as it's a curve, we need to add last point again
+                        curve.push(curve[l-1]);
                         curves.push(curve);
                     }
                     curve = Vec::new();
                 }
+                pen_down = false;
             }
             else {
-                    // our final point (normalized in 0..1)
                 let p = if is_axis_y {
                     ( origin.0, mix(origin.1, target.1, v) )
                 } else {
                     ( mix(origin.0, target.0, v), origin.1 )
                 };
                 curve.push(project_in_boundaries(p, boundaries));
+                pen_down = true;
             }
         }
         let l = curve.len();
         if l > 1 {
-            curve.push(curve[curve.len()-1]); // as it's a curve, we need to add last point again
             curves.push(curve);
         }
+        pen_down
     };
 
     let mut layers = Vec::new();
@@ -209,6 +219,7 @@ pub fn art(opts: &Opts) -> Vec<Group> {
     let clen = colors.len();
     for (ci, &color) in colors.iter().enumerate() {
         let mut curves = Vec::new(); // all the lines
+        let mut pen_down = false;
 
         // rectangle spiral filling
         if lines_axis.len() == 0 && ci == clen-1 {
@@ -224,7 +235,7 @@ pub fn art(opts: &Opts) -> Vec<Group> {
                     if bounds.0 < bounds.2 {
                         let sdiv = (sdivisionsf * ((bounds.2 - bounds.0) / (crop.2 - crop.0))) as usize;
                         // left to right
-                        growing_lines(
+                        pen_down = growing_lines(
                             j,
                             &mut curves,
                             sdiv,
@@ -234,7 +245,7 @@ pub fn art(opts: &Opts) -> Vec<Group> {
                             h,
                             true,
                             line_dir,
-                            true
+                            pen_down
                         );
                         bounds.0 += step;
                     }
@@ -244,7 +255,7 @@ pub fn art(opts: &Opts) -> Vec<Group> {
                     if bounds.1 < bounds.3 {
                         let sdiv = (sdivisionsf * ((bounds.3 - bounds.1) / (crop.3 - crop.1))) as usize;
                         // top to down
-                        growing_lines(
+                        pen_down = growing_lines(
                             j,
                             &mut curves,
                             sdiv,
@@ -254,7 +265,7 @@ pub fn art(opts: &Opts) -> Vec<Group> {
                             h,
                             false,
                             1. - line_dir,
-                            true
+                            pen_down
                         );
                         bounds.1 += step;
                     }
@@ -264,7 +275,7 @@ pub fn art(opts: &Opts) -> Vec<Group> {
                     if bounds.0 < bounds.2 {
                         let sdiv = (sdivisionsf * ((bounds.2 - bounds.0) / (crop.2 - crop.0))) as usize;
                         // right to left
-                        growing_lines(
+                        pen_down = growing_lines(
                             j,
                             &mut curves,
                             sdiv,
@@ -274,7 +285,7 @@ pub fn art(opts: &Opts) -> Vec<Group> {
                             h,
                             true,
                             1. - line_dir,
-                            true
+                            pen_down
                         );
                         bounds.2 -= step;
                     }
@@ -284,7 +295,7 @@ pub fn art(opts: &Opts) -> Vec<Group> {
                     if bounds.1 < bounds.3 {
                         let sdiv = (sdivisionsf * ((bounds.3 - bounds.1) / (crop.3 - crop.1))) as usize;
                         // bottom to up
-                        growing_lines(
+                        pen_down = growing_lines(
                             j,
                             &mut curves,
                             sdiv,
@@ -294,7 +305,7 @@ pub fn art(opts: &Opts) -> Vec<Group> {
                             h,
                             false,
                             line_dir,
-                            true
+                            pen_down
                         );
                         bounds.3 -= step;
                     }
@@ -310,8 +321,9 @@ pub fn art(opts: &Opts) -> Vec<Group> {
         for is_axis_y in lines_axis.clone() {
             for j in 0..sublines {
                 for i in 0..lines {
-                    if second_color_div == 0 || (i / second_color_div) % clen == ci {
-                        let lpi = (i as f64 + line_dir) / (linesf - 1.);
+                    if second_color_div == 0 ||
+                    (i as f64 / (second_color_div as f64) + clen as f64 - line_dir) as usize % clen == ci {
+                        let lpi = (i as f64 + line_dir) / linesf;
                         let (from, to) = if i % 2 == 0 {
                             (0.0, 1.0)
                         } else {
@@ -343,101 +355,105 @@ pub fn art(opts: &Opts) -> Vec<Group> {
             .set("stroke-linecap", "round")
             .set("stroke-linejoin", "round")
             .set("stroke-width", stroke_width);
-            for r in curves {
-                if r.len() < 2 {
-                    continue;
+
+        let opdiff = opts.opacity_fade / (curves.len() as f64);
+        let mut i = 0.0;
+        for r in curves {
+            i += 1.0;
+            if r.len() < 2 {
+                continue;
+            }
+            let data = render_route_curve(Data::new(), r, crop);
+            l = l.add(
+                Path::new()
+                .set("opacity", (1000. * (opts.opacity - i * opdiff)).floor()/1000.0)
+                .set("d", data)
+            );
+        }
+        let border_dist: f64 = 0.25;
+        let bordersf = (border / border_dist).ceil();
+        let borders = bordersf as usize;
+        if ci == 0 {
+            for b in 0..borders {
+                let bd = b as f64 * border_dist;
+                l = l.add(
+                    Rectangle::new()
+                    .set("opacity", opts.opacity)
+                    .set("x", crop.0 - bd)
+                    .set("y", crop.1 - bd)
+                    .set("width", (crop.2 - crop.0) + bd * 2.)
+                    .set("height", (crop.3 - crop.1) + bd * 2.)
+                );
+            }
+            for b in border_cross.chars() {
+                let mut length = 0f64;
+                let mut origin = (0f64, 0f64);
+                let mut angle = 0f64;
+                let mut reducer_factor = 0f64;
+                match b {
+                    '|' => {
+                        origin = (crop.0 + (crop.2 - crop.0) / 2., crop.1);
+                        length = crop.3 - crop.1;
+                        angle = PI / 2.0;
+                    },
+                    '-' => {
+                        origin = (crop.0, crop.1 + (crop.3 - crop.1) / 2.);
+                        length = crop.2 - crop.0;
+                        angle = 0.0;
+                    },
+                    '\\' => {
+                        origin = (crop.0, crop.1);
+                        length = euclidian_dist(origin, (crop.2, crop.3));
+                        angle = (crop.3 - crop.1).atan2(crop.2 - crop.0);
+                        reducer_factor = 0.5;
+                    },
+                    '/' => {
+                        origin = (crop.2, crop.1);
+                        length = euclidian_dist(origin, (crop.0, crop.3));
+                        angle = (crop.3 - crop.1).atan2(crop.0 - crop.2);
+                        reducer_factor = 0.5;
+                    },
+                    _ => {}
                 }
-                let data = render_route_curve(Data::new(), r, crop);
+                if length <= 0.0 {
+                    break;
+                }
+
+                // how much increment between each line
+                let angle_cos = angle.cos();
+                let angle_sin = angle.sin();
+                let da = angle + PI / 2.;
+                let dx = border_dist * da.cos();
+                let dy = border_dist * da.sin();
+                let mut a = origin;
+                let mut b = (
+                    a.0 + length * angle_cos,
+                    a.1 + length * angle_sin
+                );
+                let mut data = Data::new();
+                for bord in 0..borders {
+                    let delta = bord as f64 - bordersf / 2.0;
+                    let red = reducer_factor * delta.abs() * (0.5 - (bord % 2) as f64);
+                    let from = (significant_str(a.0 + red * angle_cos + delta * dx), significant_str(a.1 + red * angle_sin + delta * dy));
+                    let to = (significant_str(b.0 - red * angle_cos + delta * dx), significant_str(b.1 - red * angle_sin + delta * dy));
+                    if bord == 0 {
+                        data = data.move_to(from);
+                    } else {
+                        data = data.line_to(from);
+                    }
+                    data = data.line_to(to);
+                    // swap
+                    let tmp = b;
+                    b = a;
+                    a = tmp;
+                }
                 l = l.add(
                     Path::new()
                     .set("opacity", opts.opacity)
                     .set("d", data)
                 );
             }
-            let border_dist: f64 = 0.25;
-            let bordersf = (border / border_dist).ceil();
-            let borders = bordersf as usize;
-            if ci == 0 {
-                for b in 0..borders {
-                    let bd = b as f64 * border_dist;
-                    l = l.add(
-                        Rectangle::new()
-                        .set("opacity", opts.opacity)
-                        .set("x", crop.0 - bd)
-                        .set("y", crop.1 - bd)
-                        .set("width", (crop.2 - crop.0) + bd * 2.)
-                        .set("height", (crop.3 - crop.1) + bd * 2.)
-                    );
-                }
-                for b in border_cross.chars() {
-                    let mut length = 0f64;
-                    let mut origin = (0f64, 0f64);
-                    let mut angle = 0f64;
-                    let mut reducer_factor = 0f64;
-                    match b {
-                        '|' => {
-                            origin = (crop.0 + (crop.2 - crop.0) / 2., crop.1);
-                            length = crop.3 - crop.1;
-                            angle = PI / 2.0;
-                        },
-                        '-' => {
-                            origin = (crop.0, crop.1 + (crop.3 - crop.1) / 2.);
-                            length = crop.2 - crop.0;
-                            angle = 0.0;
-                        },
-                        '\\' => {
-                            origin = (crop.0, crop.1);
-                            length = euclidian_dist(origin, (crop.2, crop.3));
-                            angle = (crop.3 - crop.1).atan2(crop.2 - crop.0);
-                            reducer_factor = 0.5;
-                        },
-                        '/' => {
-                            origin = (crop.2, crop.1);
-                            length = euclidian_dist(origin, (crop.0, crop.3));
-                            angle = (crop.3 - crop.1).atan2(crop.0 - crop.2);
-                            reducer_factor = 0.5;
-                        },
-                        _ => {}
-                    }
-                    if length <= 0.0 {
-                        break;
-                    }
-
-                    // how much increment between each line
-                    let angle_cos = angle.cos();
-                    let angle_sin = angle.sin();
-                    let da = angle + PI / 2.;
-                    let dx = border_dist * da.cos();
-                    let dy = border_dist * da.sin();
-                    let mut a = origin;
-                    let mut b = (
-                        a.0 + length * angle_cos,
-                        a.1 + length * angle_sin
-                    );
-                    let mut data = Data::new();
-                    for bord in 0..borders {
-                        let delta = bord as f64 - bordersf / 2.0;
-                        let red = reducer_factor * delta.abs() * (0.5 - (bord % 2) as f64);
-                        let from = (significant_str(a.0 + red * angle_cos + delta * dx), significant_str(a.1 + red * angle_sin + delta * dy));
-                        let to = (significant_str(b.0 - red * angle_cos + delta * dx), significant_str(b.1 - red * angle_sin + delta * dy));
-                        if bord == 0 {
-                            data = data.move_to(from);
-                        } else {
-                            data = data.line_to(from);
-                        }
-                        data = data.line_to(to);
-                        // swap
-                        let tmp = b;
-                        b = a;
-                        a = tmp;
-                    }
-                    l = l.add(
-                        Path::new()
-                        .set("opacity", opts.opacity)
-                        .set("d", data)
-                    );
-                }
-            }
+        }
         layers.push(l);
     }
     layers
@@ -493,36 +509,36 @@ fn render_route_curve(
     if route.len() == 0 {
         return data;
     }
-    let mut first = true;
     let mut up = false;
+    let first_p = route[0];
+    let mut move_to = Some((
+        significant_str(first_p.0),
+        significant_str(first_p.1)
+    ));
     let mut last = route[0];
     let mut d = data;
     for p in route {
-        if first {
-            first = false;
-            d = d.move_to((
-                significant_str(p.0),
-                significant_str(p.1)
+        let next = ((p.0 + last.0) / 2., (p.1 + last.1) / 2.);
+        if !out_of_bound(next, boundaries) {
+            if up {
+                up = false;
+                move_to = Some((
+                    significant_str(last.0),
+                    significant_str(last.1)
+                ));
+            }
+            if let Some(p) = move_to {
+                d = d.move_to(p);
+                move_to = None;
+            }
+            d = d.quadratic_curve_to((
+                significant_str(last.0),
+                significant_str(last.1),
+                significant_str(next.0),
+                significant_str(next.1),
             ));
         } else {
-            let next = ((p.0 + last.0) / 2., (p.1 + last.1) / 2.);
-            if !out_of_bound(next, boundaries) {
-                if up {
-                    up = false;
-                    d = d.move_to((
-                        significant_str(last.0),
-                        significant_str(last.1)
-                    ));
-                }
-                d = d.quadratic_curve_to((
-                    significant_str(last.0),
-                    significant_str(last.1),
-                    significant_str(next.0),
-                    significant_str(next.1),
-                ));
-            } else {
-                up = true;
-            }
+            up = true;
         }
         last = p;
     }

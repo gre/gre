@@ -47,13 +47,13 @@ const COLORS = [
   },
   {
     name: "Bloody Brexit",
-    main: [0.0, 0.1, 0.4],
-    highlight: [0.5, 0.0, 0.0],
+    main: [0.02, 0.12, 0.42],
+    highlight: [0.18, 0.0, 0.2],
   },
   {
     name: "Turquoise",
-    main: [0.05, 0.65, 0.95],
-    highlight: [0.0, 0.2, 0.6],
+    main: [0 / 255, 180 / 255, 230 / 255],
+    highlight: [0 / 255, 90 / 255, 140 / 255],
   },
   {
     name: "Aurora Borealis",
@@ -67,8 +67,8 @@ const COLORS = [
   },
   {
     name: "Red Dragon",
-    main: [0.7, 0.0, 0.0],
-    highlight: [0.2, 0.0, 0.0],
+    main: [0.6, 0.0, 0.0],
+    highlight: [0.3, 0.0, 0.0],
   },
   {
     name: "Pumpkin",
@@ -83,7 +83,7 @@ const COLORS = [
   {
     name: "Pink",
     main: [1.0, 0.4, 0.6],
-    highlight: [1.0, 0.5, 0.0],
+    highlight: [1.0, 0.4, 0.2],
   },
   {
     name: "Imperial Purple",
@@ -228,14 +228,15 @@ function useVariables({ block, mod1, mod2, mod3, mod4, mod5 }) {
   const blockNumber = safeParseInt(block.number);
 
   const mod2rounded = Math.round(mod2 * 100) / 100;
+  const mod3rounded = Math.round(mod3 * 100) / 100;
+  const mod4rounded = Math.floor(mod4 * 100) / 100;
+  const mod5rounded = Math.floor(mod5 * 100) / 100;
   const primary = pickColor(mod1);
   const secondary = pickColor((blockNumber % 10) / 10);
   const borderBase = Math.floor(Math.max(0, 80 * (mod2 - 0.5))) / 4;
   const marginBase = Math.floor(
     30 * mod3 * mod3 - 30 * (1 - mod3) * (1 - mod3)
   );
-  const line_dir = Math.floor(mod4 * 100) / 100;
-  const sdivisions = Math.floor((10 + 210 * mod5) / 10) * 10;
 
   const shouldEnableBorderCross = useMemo(() => {
     const rng = new MersenneTwister(safeParseInt(block.hash.slice(0, 16)));
@@ -251,6 +252,9 @@ function useVariables({ block, mod1, mod2, mod3, mod4, mod5 }) {
   const opts = useMemo(() => {
     const rng = new MersenneTwister(safeParseInt(block.hash.slice(0, 16)));
     let seed = 1000 * rng.random();
+
+    const sdivisions = Math.floor(10 + 210 * mod5rounded);
+    const line_dir = mod4rounded;
 
     let margin = [-marginBase, -marginBase];
 
@@ -300,22 +304,20 @@ function useVariables({ block, mod1, mod2, mod3, mod4, mod5 }) {
       osc_amp[1] += (4 * rng.random() * rng.random() * rng.random()) / osc_freq;
     }
 
+    let sublines =
+      8 - 7 * Math.pow(rng.random(), 8) + 8 * Math.pow(rng.random(), 3);
     let lines =
-      rng.random() < 0.5
-        ? 80
-        : Math.floor(Math.max(2, Math.min(100 * rng.random(), 100)));
+      1.5 +
+      89 *
+        mix(smoothstep(0, 400, block.transactions.length), rng.random(), 0.2);
 
-    let densityFactor =
-      0.3 -
-      0.3 * rng.random() * rng.random() * rng.random() +
-      0.7 * smoothstep(0, 400, block.transactions.length);
+    sublines *= 1 + 3 * rng.random() * smoothstep(20, 2, lines);
 
-    let max_density = 700 * densityFactor;
-
-    let sublines = Math.round(Math.max(2, Math.min(max_density / lines, 16)));
+    sublines = Math.floor(sublines);
+    lines = Math.floor(lines);
 
     let lines_axis = [];
-    if (lines < 8 || ratioEthTransfer < 0.99) {
+    if (lines < 10 || ratioEthTransfer < 0.99) {
       lines_axis.push(ratioEthTransfer < 0.5);
       if (ratioEthTransfer < 0.02) {
         lines_axis.push(!lines_axis[0]);
@@ -335,7 +337,7 @@ function useVariables({ block, mod1, mod2, mod3, mod4, mod5 }) {
       rotation = Math.PI / 4;
     }
 
-    let lower = 0.1 - 0.3 * Math.pow(rng.random(), 8);
+    let lower = 0.1 - 0.3 * Math.pow(rng.random(), 10);
     let upper = Math.max(
       lower + 0.1,
       Math.min(1, sublines / 4) -
@@ -349,17 +351,19 @@ function useVariables({ block, mod1, mod2, mod3, mod4, mod5 }) {
     const off = [0, 0];
     off[0] = Math.max(
       0,
-      0.15 * rng.random() * rng.random() * rng.random() - 0.05
+      0.3 * rng.random() * rng.random() * rng.random() - 0.05
     );
     if (!off[0] || rng.random() < 0.2) {
-      off[1] = Math.max(0, 0.1 * rng.random() * rng.random() - 0.05);
+      off[1] = Math.max(0, 0.2 * rng.random() * rng.random() - 0.05);
     }
+    off[0] *= mod4rounded;
+    off[1] *= mod4rounded;
 
-    let disp0 = 3 * rng.random() * rng.random();
-    let disp1 = rng.random();
+    let disp0 = 3 * rng.random() * rng.random() + mod3rounded;
+    let disp1 = rng.random() + mod2rounded * (1 - mod3rounded);
 
-    let f1 = 3 * rng.random() * rng.random();
-    let f2 = 3 * rng.random() * rng.random();
+    let f1 = 3 * rng.random() * rng.random() + mod2rounded;
+    let f2 = 3 * rng.random() * rng.random() + mod3rounded;
 
     let k1 = f1 * disp0;
     let k2 = disp0;
@@ -367,10 +371,33 @@ function useVariables({ block, mod1, mod2, mod3, mod4, mod5 }) {
     let k4 = f2 * disp1;
 
     let second_color_div =
-      rng.random() < 0.01 ? Math.floor(1 + 60 * Math.pow(rng.random(), 8)) : 0;
+      rng.random() < 0.1 ? Math.floor(1 + 60 * Math.pow(rng.random(), 8)) : 0;
+
+    const mirror_axis_weight = 1 + 1 * Math.cos(2 * 2 * Math.PI * mod2rounded);
+
+    const lowstep =
+      -0.3 - (rng.random() < 0.05 ? 4 * rng.random() * rng.random() : 0);
+
+    const m = 3 + 5 * rng.random() - 2 * rng.random() * rng.random();
+
+    const k = 3 + 3 * rng.random() - 2 * rng.random() * rng.random();
+
+    const mod3sawtooth = (mod3rounded * 2) % 1;
+    const highstep = 0.45 + mod3sawtooth * rng.random();
+
+    let radius_amp =
+      4 *
+      (rng.random() - 0.5) *
+      rng.random() *
+      rng.random() *
+      Math.max(0.0, rng.random() - 0.2);
+    let radius_freq =
+      1 + 20 * rng.random() * rng.random() * rng.random() * rng.random();
+    let radius_offset = rng.random();
 
     return {
-      opacity: 0.5,
+      opacity: 0.55,
+      opacity_fade: 0.15,
       border,
       padding,
       lines,
@@ -383,31 +410,34 @@ function useVariables({ block, mod1, mod2, mod3, mod4, mod5 }) {
       lines_axis,
       mirror_axis,
       line_dir,
-      mirror_axis_weight: 1 + 1 * Math.cos(2 * 2 * Math.PI * mod2rounded),
+      mirror_axis_weight,
       off,
       lower,
       upper,
-      lowstep:
-        -0.3 - (rng.random() < 0.05 ? 4 * rng.random() * rng.random() : 0),
-      highstep: 0.5,
+      lowstep,
+      highstep,
       rotation,
-      m: 3 + 5 * rng.random() - 2 * rng.random() * rng.random(),
-      k: 3 + 3 * rng.random() - 2 * rng.random() * rng.random(),
+      m,
+      k,
       k1,
       k2,
       k3,
       k4,
       second_color_div,
       border_cross,
+      radius_amp,
+      radius_freq,
+      radius_offset,
     };
   }, [
     stats,
     block,
     borderBase,
     mod2rounded,
+    mod3rounded,
+    mod4rounded,
+    mod5rounded,
     marginBase,
-    sdivisions,
-    line_dir,
     shouldEnableBorderCross,
   ]);
 
@@ -424,17 +454,54 @@ function useVariables({ block, mod1, mod2, mod3, mod4, mod5 }) {
 function useAttributes(attributesRef, variables) {
   useEffect(() => {
     attributesRef.current = () => {
+      const { opts, primary, secondary } = variables;
+      const attributes = [
+        {
+          trait_type: "Lines",
+          value: opts.sublines * opts.lines,
+        },
+        {
+          trait_type: "Shape",
+          value:
+            opts.lines_axis.length === 0
+              ? "spiral"
+              : opts.lines_axis.length === 1
+              ? !opts.lines_axis[0]
+                ? "vertical"
+                : "horizontal"
+              : "cloth",
+        },
+        {
+          trait_type: "Ink",
+          value:
+            primary.name +
+            (opts.second_color_div > 0 ? ", " + secondary.name : ""),
+        },
+      ];
+      if (opts.border_cross && opts.border > 0) {
+        attributes.push({
+          trait_type: "Rare Shape",
+          value: opts.border_cross,
+        });
+      }
+
+      if (opts.mirror_axis.length) {
+        attributes.push({
+          trait_type: "Symmetry",
+          value: opts.rotation
+            ? opts.mirror_axis.length === 2
+              ? "two diagonals"
+              : "diagonal"
+            : opts.mirror_axis.length === 2
+            ? "cross"
+            : !opts.mirror_axis[0]
+            ? "horizontal"
+            : "vertical",
+        });
+      }
+
       return {
-        // TODO lines
-        // TODO sublines
-        // TODO shape
-        // TODO second ink
-        attributes: [
-          {
-            trait_type: "Ink",
-            value: variables.primary.name,
-          },
-        ],
+        attributes,
       };
     };
   }, [variables]);
@@ -444,6 +511,8 @@ const BlurV1D = ({
   width,
   height,
   map,
+  factor,
+  aa,
   pixelRatio,
   direction,
   children: t,
@@ -458,14 +527,16 @@ const BlurV1D = ({
       resolution: Uniform.Resolution,
       t,
       map,
+      factor,
+      aa,
     }}
   />
 );
 
 const NORM = Math.sqrt(2) / 2;
 
-const directionForPass = (p, factor, total) => {
-  const f = (factor * 2 * Math.ceil(p / 2)) / total;
+const directionForPass = (p, total) => {
+  const f = (2 * Math.ceil(p / 2)) / total;
   switch (
     (p - 1) %
     4 // alternate horizontal, vertical and 2 diagonals
@@ -499,7 +570,9 @@ const BlurV = ({
         height={height}
         map={map}
         pixelRatio={pixelRatio}
-        direction={directionForPass(pass, factor, passes)}
+        factor={factor}
+        aa={0.1 * Math.floor(1 + (0.5 * passes) / pass)}
+        direction={directionForPass(pass, passes)}
       >
         {rec(pass - 1)}
       </BlurV1D>
@@ -516,7 +589,7 @@ const Blurred = ({ size, children, mod6 }) => (
         uniforms={{ narrow: 0.3 * mod6 * mod6 }}
       />
     }
-    factor={3 * mod6}
+    factor={4 * mod6}
     passes={4}
   >
     {children}
@@ -573,10 +646,12 @@ const shaders = Shaders.create({
 varying vec2 uv;
 uniform sampler2D t, map;
 uniform vec2 direction, resolution;
-vec4 blur9(sampler2D image, vec2 uv, vec2 resolution, vec2 direction) {
+uniform float factor;
+uniform float aa;
+vec4 blur9(sampler2D image, vec2 uv, vec2 resolution, vec2 direction, float f) {
   vec4 color = vec4(0.0);
-  vec2 off1 = vec2(1.3846153846) * direction;
-  vec2 off2 = vec2(3.2307692308) * direction;
+  vec2 off1 = vec2(1.3846153846) * direction * f;
+  vec2 off2 = vec2(3.2307692308) * direction * f;
   color += texture2D(image, uv) * 0.2270270270;
   color += texture2D(image, uv + (off1 / resolution)) * 0.3162162162;
   color += texture2D(image, uv - (off1 / resolution)) * 0.3162162162;
@@ -585,7 +660,7 @@ vec4 blur9(sampler2D image, vec2 uv, vec2 resolution, vec2 direction) {
   return color;
 }
 void main () {
-  gl_FragColor = blur9(t, uv, resolution, direction * texture2D(map, uv).rg);
+  gl_FragColor = blur9(t, uv, resolution, direction, aa + factor * texture2D(map, uv).r);
 }`,
   },
   main: {
@@ -602,7 +677,7 @@ void main () {
       return a+b*cos(6.28318*(c*t+d));
     }
     vec3 pal(float t, vec3 c1, vec3 c2){
-      float m = smoothstep(0.3, 0.15, t) * 0.95 + 0.05 * cos(6. * (time + uv.x));
+      float m = smoothstep(0.3, 0.15, t) * 0.85 + 0.15 * cos(4. * (time + uv.x + uv.y));
       return mix(
         vec3(1.0, 1.0, 1.0),
         mix(c1, c2, m),
