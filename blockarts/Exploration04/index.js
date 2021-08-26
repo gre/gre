@@ -13,6 +13,7 @@ import { Bus, GLSL, LinearCopy, Node, Shaders, Uniform } from "gl-react";
 
 import init, { blockstyle } from "./blockstyle/pkg/blockstyle";
 import wasm from "base64-inline-loader!./blockstyle/pkg/blockstyle_bg.wasm";
+import blocks from "../blocks";
 
 function decode(dataURI) {
   const binaryString = atob(dataURI.split(",")[1]);
@@ -307,7 +308,11 @@ function useVariables({ block, mod1, mod2, mod3, mod4, mod5 }) {
     lines = Math.floor(lines);
 
     let lines_axis = [];
-    if (lines < 10 || ratioEthTransfer < 0.99) {
+    if (
+      lines < 10 ||
+      ratioEthTransfer < 0.99 ||
+      stats.transactions.length === 0
+    ) {
       lines_axis.push(ratioEthTransfer < 0.5);
       if (ratioEthTransfer < 0.02) {
         lines_axis.push(!lines_axis[0]);
@@ -361,7 +366,9 @@ function useVariables({ block, mod1, mod2, mod3, mod4, mod5 }) {
     let k4 = f2 * disp1;
 
     let second_color_div =
-      rng.random() < 0.1 ? Math.floor(1 + 60 * Math.pow(rng.random(), 8)) : 0;
+      lines_axis.length > 0 && lines > 1 && rng.random() < 0.1
+        ? Math.floor(1 + 60 * Math.pow(rng.random(), 8))
+        : 0;
 
     let second_color_blind = second_color_div > 0 ? rng.random() > 0.5 : false;
 
@@ -434,6 +441,8 @@ function useVariables({ block, mod1, mod2, mod3, mod4, mod5 }) {
     marginBase,
     shouldEnableBorderCross,
   ]);
+
+  console.log({ block, stats, opts });
 
   return useMemo(
     () => ({
