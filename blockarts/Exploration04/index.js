@@ -14,17 +14,6 @@ import { Bus, GLSL, LinearCopy, Node, Shaders, Uniform } from "gl-react";
 import init, { blockstyle } from "./blockstyle/pkg/blockstyle";
 import wasm from "base64-inline-loader!./blockstyle/pkg/blockstyle_bg.wasm";
 
-/*
-interesting testing blocks
-13087398
-13088825
-*/
-
-// IDEAS
-// paper effect
-// BUG
-// unecessary "MOVE" in the svg to clean
-
 function decode(dataURI) {
   const binaryString = atob(dataURI.split(",")[1]);
   var bytes = new Uint8Array(binaryString.length);
@@ -37,8 +26,6 @@ let wasmLoaded = false;
 const promiseOfLoad = init(decode(wasm)).then(() => {
   wasmLoaded = true;
 });
-
-const DEBUG_SVG = false;
 
 const COLORS = [
   {
@@ -179,10 +166,6 @@ const Main = ({
       ),
     [svgBody, primary, secondary]
   );
-
-  if (DEBUG_SVG) {
-    return <img src={imgSrc} />;
-  }
 
   let download = `Pattern03_${String(
     systemContext?.styleEdition || safeParseInt(block.number)
@@ -380,6 +363,8 @@ function useVariables({ block, mod1, mod2, mod3, mod4, mod5 }) {
     let second_color_div =
       rng.random() < 0.1 ? Math.floor(1 + 60 * Math.pow(rng.random(), 8)) : 0;
 
+    let second_color_blind = second_color_div > 0 ? rng.random() > 0.5 : false;
+
     const mirror_axis_weight = 1 + 1 * Math.cos(2 * 2 * Math.PI * mod2rounded);
 
     const lowstep =
@@ -432,6 +417,7 @@ function useVariables({ block, mod1, mod2, mod3, mod4, mod5 }) {
       k3,
       k4,
       second_color_div,
+      second_color_blind,
       border_cross,
       radius_amp,
       radius_freq,
@@ -466,8 +452,12 @@ function useAttributes(attributesRef, variables) {
       const { opts, primary, secondary } = variables;
       const attributes = [
         {
-          trait_type: "Lines",
+          trait_type: "Density",
           value: opts.sublines * opts.lines,
+        },
+        {
+          trait_type: "Lines",
+          value: opts.lines,
         },
         {
           trait_type: "Shape",
@@ -484,7 +474,9 @@ function useAttributes(attributesRef, variables) {
           trait_type: "Ink",
           value:
             primary.name +
-            (opts.second_color_div > 0 ? ", " + secondary.name : ""),
+            (opts.second_color_div > 0 && !opts.second_color_blind
+              ? ", " + secondary.name
+              : ""),
         },
       ];
       if (opts.border_cross && opts.border > 0) {
@@ -640,6 +632,8 @@ const Post = ({
         ),
         blurMap: () => blurMapBusRef.current,
         paper: <PaperMemo seed={paperSeed} grain={256} />,
+        phasing: 0.15 + 0.1 * mod6,
+        grainAmp: 0.08,
         time,
         resolution: Uniform.Resolution,
         primary: primary.main,
@@ -733,8 +727,7 @@ const shaders = Shaders.create({
 varying vec2 uv;
 uniform sampler2D t, map;
 uniform vec2 direction, resolution;
-uniform float factor;
-uniform float aa;
+uniform float factor, aa;
 vec4 blur9(sampler2D image, vec2 uv, vec2 resolution, vec2 direction, float f) {
   vec4 color = vec4(0.0);
   vec2 off1 = vec2(1.3846153846) * direction * f;
@@ -754,14 +747,17 @@ void main () {
     frag: GLSL`
     precision highp float;
     varying vec2 uv;
-    uniform float time;
+    uniform float time, grainAmp, phasing;
     uniform vec2 resolution;
-    uniform vec3 primary, primaryHighlight;
-    uniform vec3 secondary, secondaryHighlight;
+    uniform vec3 primary, primaryHighlight, secondary, secondaryHighlight;
     uniform sampler2D t, paper, blurMap;
 
     vec3 pal(float t, vec3 c1, vec3 c2, float phase){
-      float m = smoothstep(0.3, 0.15, t) * 0.9 + 0.1 * phase;
+      float m = mix(
+        smoothstep(0.3, 0.15, t),
+        phase,
+        phasing
+      );
       return mix(
         vec3(1.0, 1.0, 1.0),
         mix(c1, c2, m),
@@ -772,14 +768,14 @@ void main () {
     void main() {
       vec2 ratio = resolution / min(resolution.x, resolution.y);
       vec2 p = 0.5 + (uv - 0.5) * ratio;
-      float phase = abs(cos(3. * (time - uv.y)));
+      float phase = abs(cos(2. * (time + uv.y)));
       vec4 v = texture2D(t, p);
       float grain = texture2D(paper, p).r;
       float blur = texture2D(blurMap, p).r;
       vec3 c1 = pal(v.r, primary, primaryHighlight, phase);
       vec3 c2 = pal(v.g, secondary, secondaryHighlight, phase);
       vec3 c = c1 * c2 +
-        0.08 *
+        grainAmp *
         (1. - blur) *
         (0.6 + 0.4 * mix(1.0, -phase, step(0.5, grain))) *
         (grain - 0.5);

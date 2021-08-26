@@ -32,6 +32,7 @@ fn main() {
         k3: 1.0,
         k4: 1.0,
         second_color_div: 0,
+        second_color_blind: false,
         border_cross: String::from("-|/\\"),
         radius_amp: 0.0,
         radius_freq: 0.0,

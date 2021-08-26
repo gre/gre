@@ -36,6 +36,7 @@ pub struct Opts {
     pub k3: f64,
     pub k4: f64,
     pub second_color_div: usize,
+    pub second_color_blind: bool,
     pub border_cross: String,
     pub radius_amp: f64,
     pub radius_freq: f64,
@@ -218,6 +219,9 @@ pub fn art(opts: &Opts) -> Vec<Group> {
     };
     let clen = colors.len();
     for (ci, &color) in colors.iter().enumerate() {
+        if ci == 1 && opts.second_color_blind {
+            continue;
+        }
         let mut curves = Vec::new(); // all the lines
         let mut pen_down = false;
 
