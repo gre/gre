@@ -21,26 +21,15 @@ As all BlockStyles, this script visualize Ethereum's block data: number of lines
 
 There are many rare features to discover and intentionally not all documented: ultimately, don't hunt for the rarity that are "designed by the author", search for the organic rarity & enjoy patterns and unexpected shapes.
 
-
----
-
-
-Notes:
-- mod5 controls the resolution. Using a high value slow down other mods.
-- This BlockStyle is a melting pot of technologies: Rust, WASM, SVG and WebGL!
-
-WIP:
-- the NFT traits are not finished.
-- the SVG need a small optimisation to "dedup the moves".
-- tweaks will continue to adjust the rarity features.
-- Current BlockStyle image is not definitive.
-- I plan to add a slight "paper" effect in post processing.
-
 **options**
 
 ```
 {"mod1":0.0001,"mod2":0.0001,"mod3":0.3,"mod4":0.5,"mod5":0.5,"mod6":0.3}
 ```
+
+---
+
+- This BlockStyle is a melting pot of technologies: Rust, WASM, SVG and WebGL!
 
 ---
 
