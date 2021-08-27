@@ -775,19 +775,19 @@ void main () {
       vec2 p = 0.5 + (uv - 0.5) * ratio;
       float phase = abs(cos(2. * (time + uv.y)));
       vec4 v = texture2D(t, p);
-      float grain = mix(
-        1.0,
-        texture2D(paper, p).r,
-        step(0.0, p.x) * step(p.x, 1.0) * step(0.0, p.y) * step(p.y, 1.0)
-      );
+      float grain = texture2D(paper, p).r;
       float blur = texture2D(blurMap, p).r;
       vec3 c1 = pal(v.r, primary, primaryHighlight, phase);
       vec3 c2 = pal(v.g, secondary, secondaryHighlight, phase);
-      vec3 c = c1 * c2 +
+      vec3 c = mix(
+        vec3(1.0),
+        c1 * c2 +
         grainAmp *
         (1. - blur) *
         (0.6 + 0.4 * mix(1.0, -phase, step(0.5, grain))) *
-        (grain - 0.5);
+        (grain - 0.5),
+        step(0.0, p.x) * step(p.x, 1.0) * step(0.0, p.y) * step(p.y, 1.0)
+      );
       gl_FragColor = vec4(c, 1.0);
     }
   `,
