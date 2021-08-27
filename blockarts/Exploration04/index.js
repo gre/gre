@@ -7,13 +7,11 @@ import React, {
   useRef,
 } from "react";
 import MersenneTwister from "mersenne-twister";
-import { mix, safeParseInt, smoothstep, useStats, useTime } from "../utils";
 import { Surface } from "gl-react-dom";
 import { Bus, GLSL, LinearCopy, Node, Shaders, Uniform } from "gl-react";
-
+import { mix, safeParseInt, smoothstep, useStats, useTime } from "../utils";
 import init, { blockstyle } from "./blockstyle/pkg/blockstyle";
 import wasm from "base64-inline-loader!./blockstyle/pkg/blockstyle_bg.wasm";
-import blocks from "../blocks";
 
 function decode(dataURI) {
   const binaryString = atob(dataURI.split(",")[1]);
@@ -35,14 +33,14 @@ const COLORS = [
     highlight: [0, 0, 0],
   },
   {
-    name: "Indigo",
-    main: [0.3, 0.3, 0.4],
-    highlight: [0, 0, 0],
-  },
-  {
     name: "Bloody Brexit",
     main: [0.02, 0.12, 0.42],
     highlight: [0.18, 0.0, 0.2],
+  },
+  {
+    name: "Indigo",
+    main: [0.45, 0.55, 0.7],
+    highlight: [0.2, 0.3, 0.4],
   },
   {
     name: "Turquoise",
@@ -76,7 +74,7 @@ const COLORS = [
   },
   {
     name: "Pink",
-    main: [1.0, 0.4, 0.6],
+    main: [1.0, 0.5, 0.7],
     highlight: [1.0, 0.4, 0.2],
   },
   {
@@ -779,7 +777,11 @@ void main () {
       vec2 p = 0.5 + (uv - 0.5) * ratio;
       float phase = abs(cos(2. * (time + uv.y)));
       vec4 v = texture2D(t, p);
-      float grain = texture2D(paper, p).r;
+      float grain = mix(
+        1.0,
+        texture2D(paper, p).r,
+        step(0.0, p.x) * step(p.x, 1.0) * step(0.0, p.y) * step(p.y, 1.0)
+      );
       float blur = texture2D(blurMap, p).r;
       vec3 c1 = pal(v.r, primary, primaryHighlight, phase);
       vec3 c2 = pal(v.g, secondary, secondaryHighlight, phase);

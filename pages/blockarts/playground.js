@@ -140,7 +140,7 @@ export function useRandomBlocks(count = 10, delay = 100) {
   return blocks;
 }
 
-const seed = 0;
+const seed = -4;
 const shouldAutoSeed = seed < 0 && -seed % 2 == 0;
 const shouldBeMinimal = seed < 0 && (-seed >> 1) % 2 == 0;
 
