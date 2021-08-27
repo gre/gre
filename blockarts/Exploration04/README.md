@@ -2,24 +2,16 @@
 
 <img src="../../public/images/blockstyles/pattern-03/01.png" width="400"/>
 
-Pattern 03 is a tribute to fountain pen plotting, generating strokes lines to yield unique patterns. It recreates the condition of ink on paper in a digital art form. The second market will be interesting as these are also physically plottable. The NFT allows to download a SVG file: recipe for a physical artist to perform the art physically, with their own tools.
+Pattern 03 is a tribute to fountain pen plotting, generating strokes lines to yield unique patterns. It recreates the condition of ink on paper in a digital art form. The second market will be exciting as these are also physically plottable. A SVG file can be downloaded from each NFT that is the recipe for a physical artist to perform the art physically, with their own tools.
 
-MOD1: allows you to pick your color. which recreates the conditions of some inks. Black is very powerful but also other inks are very vivid. It's given to you as a mod control to pick one.
+===
 
-MOD2: is controlling two factors, the border width (0.5 to 1.0) and the intensity of the noise (cycles twice).
+This script visualize Ethereum's blocks like a regular BlockStyle. There are many rare features to discover and not all are documented: but ultimately, don't hunt for the rarity that are "designed by the author", search for the organic rarity & enjoy patterns and unexpected shapes.
 
-MOD3: is a general padding control and also tweaks border placement and sometimes lines distance.
+===
 
-MOD4: control the alignment of waves and the amplitude of the "displacement" effect.
+I would appreciate if you could acknowledge the artistic process behind this style: https://greweb.me/2021/08/pattern-03
 
-MOD5: controls the resolution of each line. (beware high values slows down other mods)
-
-MOD6: adds a variable blur effect.
-
-
-As all BlockStyles, this script visualize Ethereum's block data: number of lines is driven by transactions count in the block, The shape is driven by $value of ERC20 transfers vs ETH. When high value is in ETH, a spiral is used, vertical lines means more $ in ETH, horizontal otherwise, cross-hatch when there are exceptional ERC20 transfers. (evaluated with Aug 2021 static prices)
-
-There are many rare features to discover and intentionally not all documented: ultimately, don't hunt for the rarity that are "designed by the author", search for the organic rarity & enjoy patterns and unexpected shapes.
 
 **options**
 
