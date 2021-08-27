@@ -54,8 +54,8 @@ const COLORS = [
   },
   {
     name: "Sherwood Green",
-    main: [0.1, 0.35, 0.1],
-    highlight: [0.0, 0.3, 0.0],
+    main: [0.25, 0.5, 0.3],
+    highlight: [0.1, 0.3, 0.1],
   },
   {
     name: "Red Dragon",
