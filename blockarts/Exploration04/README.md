@@ -2,15 +2,11 @@
 
 <img src="../../public/images/blockstyles/pattern-03/01.png" width="400"/>
 
-Pattern 03 is a tribute to fountain pen plotting, generating strokes lines to yield unique patterns. It recreates the condition of ink on paper in a digital art form. The second market will be exciting as these are also physically plottable. A SVG file can be downloaded from each NFT that is the recipe for a physical artist to perform the art physically, with their own tools.
+Pattern 03 is a tribute to fountain pen plotting, generating strokes lines to yield unique patterns. It recreates the condition of ink on paper in a digital art form. The second market will be exciting as these are also physically plottable. A SVG file can be downloaded from each NFT that is the recipe for a physical artist to perform the art physically, with their own tools. |||
 
-===
+This script visualizes Ethereum's blocks like a regular BlockStyle. There are many rare features to discover and not all are documented: but ultimately, don't hunt for the rarity that is "designed by the author", search for the organic rarity & enjoy patterns and unexpected shapes. |||
 
-This script visualize Ethereum's blocks like a regular BlockStyle. There are many rare features to discover and not all are documented: but ultimately, don't hunt for the rarity that are "designed by the author", search for the organic rarity & enjoy patterns and unexpected shapes.
-
-===
-
-I would appreciate if you could acknowledge the artistic process behind this style: https://greweb.me/2021/08/pattern-03
+Please acknowledge the artistic process behind this style: https://greweb.me/2021/08/pattern-03
 
 
 **options**
