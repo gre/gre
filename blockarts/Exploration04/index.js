@@ -440,8 +440,6 @@ function useVariables({ block, mod1, mod2, mod3, mod4, mod5 }) {
     shouldEnableBorderCross,
   ]);
 
-  console.log({ block, stats, opts });
-
   return useMemo(
     () => ({
       opts,
