@@ -6,7 +6,7 @@ Pattern 03 is a tribute to fountain pen plotting, generating strokes lines to yi
 
 This script visualizes Ethereum's blocks like a regular BlockStyle. There are many rare features to discover and not all are documented: but ultimately, don't hunt for the rarity that is "designed by the author", search for the organic rarity & enjoy patterns and unexpected shapes. |||
 
-Please acknowledge the artistic process behind this style: https://greweb.me/2021/08/pattern-03
+Please also check the artistic process behind this style: https://greweb.me/2021/08/pattern-03
 
 
 **options**
