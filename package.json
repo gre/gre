@@ -9,8 +9,8 @@
     "build-doodle": "rm -rf dist/ ; parcel build --public-url '.'",
     "zip-dist": "rm -f dist.zip; cd dist && zip -r ../dist.zip *",
     "start-doodle": "parcel",
-    "build-blockstyle-rust-pkg-release": "wasm-pack build --target web blockarts/Exploration04/blockstyle --release",
-    "build-blockstyle-rust-pkg-debug": "wasm-pack build --target web blockarts/Exploration04/blockstyle --dev",
+    "build-blockstyle-rust-pkg-release": "wasm-pack build --target web blockarts/Pattern03/blockstyle --release",
+    "build-blockstyle-rust-pkg-debug": "wasm-pack build --target web blockarts/Pattern03/blockstyle --dev",
     "build-blockstyle": "NODE_ENV=production webpack --mode production --config blockstyle.webpack.config.js",
     "build-blockstyle-dev": "webpack --mode development --config blockstyle.webpack.config.js"
   },
