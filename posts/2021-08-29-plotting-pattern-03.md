@@ -1,7 +1,7 @@
 ---
 title: "The day after Pattern 03 (2/2)"
 thumbnail: /images/2021/08/timelapse.gif
-description: "The ethblock.art BlockStyle 'Pattern 03' sold out yesterday in only 2 hours with 888 pieces. The day after Pattern 03, covering the future plots."
+description: "The ethblock.art BlockStyle 'Pattern 03' sold out yesterday in only 2 hours with 888 pieces. Let's cover what's next with future plots."
 tags:
   - NFT
 ---

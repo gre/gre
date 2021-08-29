@@ -1,7 +1,7 @@
 ---
 title: "The day after Pattern 03 (1/2)"
 thumbnail: /images/blockstyles/pattern-03/05.png
-description: "The ethblock.art BlockStyle 'Pattern 03' sold out yesterday in only 2 hours with 888 pieces. The day after Pattern 03, covering the rarity aspects"
+description: "The ethblock.art BlockStyle 'Pattern 03' sold out yesterday in only 2 hours with 888 pieces. The day after Pattern 03, covering the rarity aspects."
 tags:
   - NFT
 ---
@@ -204,5 +204,5 @@ I'm not astonished that some mints pushed the generator to its extreme boundarie
 
 **A LOT OF OTHER COOL THINGS! impossible to cover everything.**
 
-[Next article on the future plots](/images/2021/08/plotting-pattern-03)
+[Next article on the future plots](/2021/08/plotting-pattern-03)
 
