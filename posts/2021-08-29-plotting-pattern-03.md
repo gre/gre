@@ -1,6 +1,6 @@
 ---
 title: "The day after Pattern 03 (2/2)"
-thumbnail: /images/blockstyles/pattern-03/05.png
+thumbnail: /images/2021/08/timelapse.gif
 description: "The ethblock.art BlockStyle 'Pattern 03' sold out yesterday in only 2 hours with 888 pieces. The day after Pattern 03, covering the future plots."
 tags:
   - NFT
@@ -29,13 +29,19 @@ It will curate plots that I will start drawing in the coming days.
 
 It's going to be a time-consuming process as a plot takes about 1 hour to perform (depending on settings and complexity of the lines). The physical art is designed to be plotted with fountain pens on A4 water-colour 300g paper and then cut into a 21 by 21 centimeters piece with a 5mm padding (so your art is a 20x20cm square). The planned inks to use are those described by the "Ink" trait (Diamine inks). The digital NFT has simulated a rendering that will be relatively well respected. There is going to be unpredictability when plotting it for real.
 
-**I can happily take requests on Discord or Twitter if you really want your art plotted!** But I'll curate the plots that I find the most interesting to plot physically and you may be a lucky one. But I probably can't do them all (it would require months, as a plot takes ~1 hour).
+## First phase: 🎉 claim a physical plot
 
-## First phase: 🎉 claim a physical gift!
+This first phase will be limited in time (e.g. 60 days after each physical NFT of the physical NFT collection). It will be defined in each NFT description. NB: you must be owning the digital NFT to claim the physical one when it's created.
 
-This first phase will be limited in time (e.g. 60 days after each physical NFT of the physical nft collection). It will be defined in the NFT description.
+> Disclaimer: Beware I will likely not be able to plot them all. There are 888 items and it takes an average 1 hour to plot. However, I'll start plotting following a bit this curation decision process:
+> - personal favorite picks
+> - I will look at Opensea most starred NFTs
+> - I will look at Opensea most sold NFTs
+> - also if you really want the physical piece. e.g. if you ask me on Discord / Twitter. I can sure take request and add it in the wished list But I can't guarantee it as it would probably takes me 800 hours =)
 
-I decided to go more rewarded than announced initially: If you own a digital NFT, and once a physical NFT exists, you will be able to claim for free a physical piece I will have plotted in that collection. To claim it, I simply will ask you do a very small Offer on the NFT physical (e.g. 0.01 WETH) so I can verify you are the NFT owner & send you the 'physical NFT'.
+**How will it work?**
+
+If you own the digital NFT, once a physical NFT exists, you will be able to claim the physical NFT that goes with the physical piece. To claim it, I will only ask for a very small Offer on the NFT physical (e.g. 0.01 WETH) so I can verify you are the NFT digital owner & proceed to accepting the NFT transfer of that 'physical NFT'.
 
 **How shipping works?**
 - The 'physical NFT', once acquires, will have unlockable content with instruction on how to contact me for proceeding to shipping.
