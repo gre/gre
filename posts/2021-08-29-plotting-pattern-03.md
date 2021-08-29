@@ -5,8 +5,10 @@ description: "The ethblock.art BlockStyle 'Pattern 03' sold out yesterday in onl
 tags:
   - NFT
 ---
-- [Part 1: covering the rarity aspects](/2021/08/the-day-after-pattern-03)
-- [Part 2: covering the future plots](/2021/08/plotting-pattern-03)
+
+- [Pre-release article](/2021/08/pattern-03)
+- [Post article: Part 1: covering the rarity aspects](/2021/08/the-day-after-pattern-03)
+- [Post article: Part 2: covering the future plots](/2021/08/plotting-pattern-03)
 
 > 🤗 **The ethblock.art BlockStyle ['Pattern 03'](https://ethblock.art/style/32) sold out yesterday in only 2 hours with 888 pieces.** I still can't believe it. There are no words to describe how thankful I am for all your support. THANK YOU!
 
