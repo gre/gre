@@ -24,7 +24,7 @@ Quick recap of the philosophy announced before the BlockStyle was released:
 
 ## *"@greweb 'Pattern 03' plots"* collection
 
-<video loop autoPlay src="/images/2021/08/timelapse.mp4"></video>
+<video loop muted autoPlay src="/images/2021/08/timelapse.mp4"></video>
 
 A collection [*"@greweb 'Pattern 03' plots"*](https://opensea.io/collection/greweb-pattern-03-plots) has been created on OpenSea.
 It will curate plots that I will start drawing in the coming days.
