@@ -43,7 +43,7 @@ This first phase will be limited in time (e.g. 60 days after each physical NFT o
 
 **How will it work?**
 
-If you own the digital NFT, once a physical NFT exists, you will be able to claim the physical NFT that goes with the physical piece. To claim it, I will only ask for a very small Offer on the NFT physical (e.g. 0.01 WETH) so I can verify you are the NFT digital owner & proceed to accepting the NFT transfer of that 'physical NFT'.
+If you own the digital NFT, once a physical NFT exists, you will be able to claim the physical NFT that goes with the physical piece. To claim it, I will only ask for a very small Offer (pay what you want) on the NFT physical (e.g. 0.01 WETH) so I can verify you are the NFT digital owner & proceed to accepting the NFT transfer of that 'physical NFT'.
 
 **How shipping works?**
 - The 'physical NFT', once acquires, will have unlockable content with instruction on how to contact me for proceeding to shipping.
