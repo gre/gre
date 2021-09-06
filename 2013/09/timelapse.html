@@ -1,0 +1,628 @@
+<!DOCTYPE html><html><head><meta charSet="utf-8"/><link rel="icon" href="/favicon.ico"/><meta name="author" content="Gaëtan Renaudeau"/><meta name="description" content="While continuing to experiment with Web Audio API and GLSL, I&#x27;ve made a game called Timelapse for js13kgames (an HTML5 game competition where entries must be less than 13 kb zipped)."/><meta name="keywords" content="js13k, GLSL, audio, gamedev"/><meta name="HandheldFriendly" content="True"/><meta name="MobileOptimized" content="320"/><meta name="viewport" content="width=device-width, initial-scale=1"/><meta name="twitter:card" content="summary"/><meta name="twitter:site" content="@greweb"/><meta name="twitter:title" content="Making a rhythm game with bleeding-edge web"/><meta name="og:title" content="Making a rhythm game with bleeding-edge web"/><meta name="twitter:description" content="While continuing to experiment with Web Audio API and GLSL, I&#x27;ve made a game called Timelapse for js13kgames (an HTML5 game competition where entries must be less than 13 kb zipped)."/><meta name="twitter:creator" content="@greweb"/><meta name="og:image" content="http://greweb.me//images/2013/09/timelapse.png"/><meta name="twitter:image" content="http://greweb.me//images/2013/09/timelapse.png"/><link rel="image_src" href="http://greweb.me//images/2013/09/timelapse.png"/><title>@greweb - Making a rhythm game with bleeding-edge web</title><link href="http://fonts.googleapis.com/css?family=Fredericka+the+Great|Arapey|Roboto:400,700,400italic" rel="stylesheet" type="text/css"/><link rel="stylesheet" href="https://unpkg.com/@highlightjs/cdn-assets@10.7.2/styles/default.min.css"/><script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.2/highlight.min.js"></script><script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.2/languages/javascript.min.js"></script><script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.2/languages/cpp.min.js"></script><script src="https://unpkg.com/@highlightjs/cdn-assets@10.7.2/languages/glsl.min.js"></script><link rel="stylesheet" href="/style/main.css"/><meta name="next-head-count" content="25"/><noscript data-n-css=""></noscript><script defer="" nomodule="" src="/_next/static/chunks/polyfills-a54b4f32bdc1ef890ddd.js"></script><script src="/_next/static/chunks/webpack-3efa3b6043722353fd27.js" defer=""></script><script src="/_next/static/chunks/framework-c93ed74a065331c4bd75.js" defer=""></script><script src="/_next/static/chunks/main-005750ed97c879f2d59b.js" defer=""></script><script src="/_next/static/chunks/pages/_app-092526a60f8cb7d1b3d6.js" defer=""></script><script src="/_next/static/chunks/988-83f401159b53b3fa4628.js" defer=""></script><script src="/_next/static/chunks/pages/%5Byear%5D/%5Bmonth%5D/%5Bslug%5D-0f67605ef98ac8184736.js" defer=""></script><script src="/_next/static/SRE41IJCBZThpM4sgIIYT/_buildManifest.js" defer=""></script><script src="/_next/static/SRE41IJCBZThpM4sgIIYT/_ssgManifest.js" defer=""></script><style id="__jsx-2519965637">.block.jsx-2519965637{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-flex-direction:row;-ms-flex-direction:row;flex-direction:row;-webkit-align-items:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center;}.block.jsx-2519965637 .right.jsx-2519965637{padding:10px;}.block.jsx-2519965637 .social.jsx-2519965637{margin-top:10px;}.block.jsx-2519965637 .social.jsx-2519965637 a.jsx-2519965637{padding:10px;}.block.jsx-2519965637 .social.jsx-2519965637 img.jsx-2519965637{height:20px;}</style><style id="__jsx-3621368397">.container.jsx-3621368397{min-height:100vh;padding:0 0.5rem;display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-flex-direction:column;-ms-flex-direction:column;flex-direction:column;-webkit-box-pack:center;-webkit-justify-content:center;-ms-flex-pack:center;justify-content:center;-webkit-align-items:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center;}</style><style id="__jsx-3469673304">html,body{padding:0;margin:0;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto, Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue, sans-serif;}*{box-sizing:border-box;}a{color:inherit;-webkit-text-decoration:none;text-decoration:none;}a:hover,a:active{-webkit-text-decoration:underline;text-decoration:underline;}</style></head><body><div id="__next"><div class="jsx-3621368397 container"><div id="container"><div id="main"><div id="content"><article><header><h1><a href="/">Making a rhythm game with bleeding-edge web</a></h1><time class="date" dateTime="2013-09-17">2013-09-17</time><span class="tags"><a class="tag">js13k</a><a class="tag">GLSL</a><a class="tag">audio</a><a class="tag">gamedev</a></span></header><div class="entry-content"><img src="/images/2013/09/timelapse.png" alt="" class="thumbnail-left" />
+
+<p>While continuing to experiment with <a href="https://dvcs.w3.org/hg/audio/raw-file/tip/webaudio/specification.html">Web Audio API</a> and <a href="/2013/02/glsl-js-a-javascript-glsl-library-dry-efficient/">GLSL</a>,
+I&#39;ve made <strong><a href="http://js13kgames.com/entries/timelapse">a game called Timelapse</a></strong> for <a href="http://js13kgames.com/">js13kgames</a>
+(an HTML5 game competition where entries must be less than 13 kb zipped).</p>
+<p>This article is a <strong>postmortem overview of my game development</strong> which will try to explain
+what was my game mecanism ideas and show you some interesting parts with <strong>screenshots, audios and source code snippets</strong>.</p>
+<h2 id="the-game">The Game</h2>
+<p><a href="http://js13kgames.com/entries/timelapse">Open the game on js13kgames</a> / <a href="https://github.com/gre/js13k">github</a>.</p>
+<p><strong>The game intends to work on Desktop and Mobile</strong>.
+However, <em>Chrome</em> is recommended 
+(<em>Firefox Aurora</em> also supports it but audio is a bit wrong, but Mozilla devs should improve this <a href="https://twitter.com/padenot/status/375924494537195520">soon</a>).
+Today, it works on <em>Android Chrome Beta</em> on a Nexus 4, unfortunately with some clicks in the audio (Web Audio API is bleeding-edge).</p>
+<!--more-->
+
+<h2 id="experimenting-with-stuff">Experimenting with stuff</h2>
+<p>Last months, I&#39;ve been playing with Web Audio API and released a few experiments like 
+<a href="/2013/09/beez">Beez</a>, <a href="/2013/08/FM-audio-api">FM Synthesis</a> and <a href="/2013/08/zound-wip-v1/">Zound</a>.</p>
+<p>My game development started last weekend as an experiment, I tried to make some <strong>dubstep-like sound</strong>, 
+starting with a <strong><a href="http://jsfiddle.net/greweb/CrXYw/4/">&quot;Wob Wob Wob&quot; sound</a></strong>.</p>
+<p>I also started to dig into <a href="http://glsl.heroku.com/">glsl.heroku.com</a>, 
+I definitely wanted to make some <strong>cool and unusual graphics with glitchy style</strong> to fit with dubstep audio part, 
+I unfortunately hadn&#39;t enough deepen this glitchy part as I would have liked.</p>
+<p>GLSL quite fits this need: it mays look strange and hard code language as a start 
+but <strong>it&#39;s very easy and free to do anything with it</strong>. 
+I used my <a href="/2013/02/glsl-js-a-javascript-glsl-library-dry-efficient/">glsl.js</a> wrapper to easily have a shader rendering the whole Canvas.</p>
+<blockquote>
+<p>GLSL is a totally different way of thinking the rendering: 
+the main principle is to define <strong>a function which returns a Color for a given Position</strong>. 
+I use to call it &quot;Functional Rendering&quot; in opposite to &quot;Procedural Rendering&quot;. I&#39;ll talk again about those concepts soon.</p>
+</blockquote>
+<p>I started my graphics by forking <a href="http://glsl.heroku.com/e#10795.2">this very interesting glow effect</a>.</p>
+<h2 id="prototyping-the-game-ideas">Prototyping the game ideas</h2>
+<p>Then I started to really think about the game I could do, 
+I sketched some game mecanisms and thought about the gameplay.</p>
+<p>My game was designed to be a <strong>one-button</strong> <a href="https://en.wikipedia.org/wiki/Dance_Dance_Revolution">DDR</a>-like <strong>rhythm game</strong>
+with the main idea that <strong>the user controls the speed</strong> <em>(the BPM, beats per minute)</em> of the song.
+I wanted an <strong>inertia system</strong>: tap a bit early and your song will speed up, tap a bit late and the song will slow down.
+This speed freedom isn&#39;t without constraints: You can reach a gameover if your speed isn&#39;t enough fast, or contrariwise if it is too fast (like a overheat).</p>
+<blockquote>
+<p>The game listen to your inputs to adapt the song BPM.</p>
+</blockquote>
+<p>The game is basically about SPACE-typing on each beat, but also introduce some <strong>freestyle &quot;dubstep&quot; phase</strong>
+<em>(It&#39;s not really dubstep though!)</em>: the gameplay is either typing on the key like hell or holding and releasing some &quot;riff&quot;. </p>
+<p>The score mecanisms give good scores for very precise beats and will be negative for very bad/loss rhythms.
+During the freestyle section, each action gives a score, also each riff (holding the button for more than 1 tick) gives a score. Making small riffs has been designed to give more points that a very long riff so you have to find the good balance.
+(The score also increases at the end of each freestyle phase).</p>
+<img src="/images/2013/09/highscores.png" style="max-width: 300px; width: 50%" />
+
+<p>I also had to find a game end, I first thought about trying to make the game harder and harder but it wasn&#39;t trivial to make
+because I wanted to keep my <em>&quot;player is free to take any speed he wants&quot;</em> idea.</p>
+<p>Instead, I chose to <strong>limit the game time by one minute</strong>, 
+which makes my game a psychedelic rush game if you want a good score: 
+A good strategy to make a good score is to first speed up the song inertia as fast as possible, and then keep the rhythm on an high BPM.</p>
+<blockquote>
+<p>That mecanism is interesting because it is also harder to make precise scores on higher speed, it can even be risky (reaching the BPM limit, failing some beats), the player has to find the speed it fits the most!</p>
+</blockquote>
+<h2 id="the-game-experience">The game experience</h2>
+<p>I wanted my game experience to be both on the <strong>graphics</strong> and on the <strong>audio</strong> aspects:
+you have both a feedback on your actions with the graphics using a color (
+<span style="color:#0F0">green=good</span>,
+<span style="color:#CC0">yellow=meh</span>,
+<span style="color:#F00">red=bad</span>
+) and with the audio (different sound depending on the rate of the action).</p>
+<img src="/images/2013/09/good.png" style="width: 30%" />
+<img src="/images/2013/09/timelapse.png" style="width: 30%" />
+<img src="/images/2013/09/toofast.png" style="width: 30%" />
+
+<p>The audio BPM is also graphically visualized using a circle with a rotating pulse
+which also helps you on the rhythm.</p>
+<p>During the freestyle phase, the circle turns fully highlighted and the audio &quot;wob wob wob&quot; part is playing.
+Each user freestyle &quot;riff&quot; (hold a note) will randomly change the delay of a &quot;repeater&quot;, an important part on the audio of that section I will discuss in the <em>Audio Section</em>.</p>
+<img src="/images/2013/09/killer-riff.png" style="max-width: 300px; width: 100%" />
+
+<p>If the player runs the song too fast, an overheat happens and the circle turns very light:</p>
+<img src="/images/2013/09/lighted.png" style="max-width: 300px; width: 100%" />
+
+<p>On the contrary, it turns very dark and glitchy when the BPM is very slow:</p>
+<img src="/images/2013/09/slow.png" style="max-width: 300px; width: 100%" />
+
+<h2 id="more-about-the-audio">More about the audio</h2>
+<p>As described in the <a href="https://dvcs.w3.org/hg/audio/raw-file/tip/webaudio/specification.html">specification</a>, the <em>Web Audio API</em> is an audio routing graph composed of low level audio nodes.
+Using it raw can be quite verbose, I&#39;ve made my own reusable component using those nodes.
+My convention is to use Javascript constructor for those components and to have a &quot;inp&quot; and an &quot;out&quot; <em>AudioNode</em> field.</p>
+<p>First I create a <code>ctx</code> <em>AudioContext</em> (works for Chrome &amp; Firefox Aurora):</p>
+<pre><code class="language-javascript">var ctx = new (window.AudioContext || window.webkitAudioContext)();
+</code></pre>
+<p>This <code>ctx</code> variable now offers all methods to work with sound.</p>
+<h3 id="global-effects-reverbation-compressor">Global effects: Reverbation, Compressor</h3>
+<p>Web Audio API have a <strong>Convolver</strong> node which allows to make diverse audio effects like <strong>reverbation</strong>, which is basically emulating your song played in a room. You can find more information <a href="http://creativejs.com/resources/web-audio-api-a-bit-more-advanced/">here</a>.</p>
+<p>I&#39;ve used a simple Reverb effect to pass the whole sound. This simple reverb implementation can be found on <a href="https://github.com/web-audio-components/simple-reverb">https://github.com/web-audio-components/simple-reverb</a>.</p>
+<p>Another <strong>very</strong> important brick of the Audio graph is the <strong>Compressor</strong>.
+The <a href="https://dvcs.w3.org/hg/audio/raw-file/tip/webaudio/specification.html">Web Audio API</a> have a built-in Compressor with some parameters.</p>
+<p>A compressor dynamically adapts the input sound to a normalized output. It ensures the output is not distorted (saturated because amplitude is too high) or inaudible because too low.
+In other words, it consists of dynamically raise the volume if the input is lower, and decrease the volume if the input is higher, that a given rate.</p>
+<p>Here is the global audio setup I&#39;ve used as an output for all different sounds of the song:</p>
+<pre><code class="language-javascript">  var out = ctx.createGain(); // My global output
+  var outCompressor = ctx.createDynamicsCompressor();
+  var reverb = new Reverb(0.5);
+  out.gain.value = 0; // We will increase the main volume when the song starts
+  out.connect(reverb.inp);
+  reverb.out.connect(outCompressor);
+  outCompressor.connect(ctx.destination);
+</code></pre>
+<h3 id="ambiant-sounds">Ambiant sounds</h3>
+<p>I&#39;ve used a soft <strong>sine Oscillator</strong> and some <strong>Noise generator</strong> (protected by a bandpass Filter) for the <strong>ambiant sound</strong>.
+That gives more depth to the song.</p>
+<p>It was also used to give more audio feedback on the gameplay:</p>
+<ul>
+<li>The <strong>Oscillator frequency follows the BPM</strong> (goes higher in frequency with the song speed).</li>
+<li>The BPM also affects the <strong>frequency of a LFO</strong> which oscillate the <strong>volume of the Noise</strong> to make an <strong>helicopter-like sound</strong>.</li>
+<li>The Oscillator is fastly <strong>detuned on each user action</strong>, and especially if the user tap too early it will produce a &quot;bip&quot; like you can hear in the following Soundcloud.</li>
+<li>Finally, a second noise passed into a highpass filter will be louder if the player is in danger (BPM is too slow or too fast). <em>(we won&#39;t show the code for this one)</em></li>
+</ul>
+<p>I have muted all other sounds to make you hear only the ambiant sound when speeding up the song up to a gameover:</p>
+<iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F110774935"></iframe>
+
+<p>The Noise component:</p>
+<pre><code class="language-javascript">  function Noise () {
+    // Here we loop on a 2s noise buffer, it is more efficient that generating on the fly
+    var bufferSize = 2 * ctx.sampleRate,
+    noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate),
+    output = noiseBuffer.getChannelData(0);
+    for (var i = 0; i &lt; bufferSize; i++) {
+      output[i] = Math.random() * 2 - 1;
+    }
+    var whiteNoise = ctx.createBufferSource();
+    whiteNoise.buffer = noiseBuffer;
+    whiteNoise.loop = true;
+
+    var gain = createGain();
+    whiteNoise.connect(gain);
+
+    var filter = ctx.createBiquadFilter();
+    gain.connect(filter);
+    filter.type = &quot;lowpass&quot;; // Generally lowpass, but can be overrided
+
+    this.white = whiteNoise;
+    this.gain = gain;
+    this.out = this.filter = filter;
+  }
+
+  Noise.prototype = {
+    start: function (time, duration) {
+      this.white.start(time, 0, duration);
+    }
+  };
+</code></pre>
+<p>Here is some code I used for making the ambiant sound:</p>
+<pre><code class="language-javascript">  var bpmOsc2mult = 3;
+  var bpmNoiseMult = 10;
+  var noiseBpmGain = ctx.createGain();
+  noiseBpmGain.connect(out);
+  var noiseBpm = new Noise();
+  noiseBpm.out.connect(noiseBpmGain);
+  noiseBpm.start(0);
+  noiseBpm.gain.gain.value = 0.2;
+  noiseBpm.filter.type = &quot;bandpass&quot;;
+  noiseBpm.filter.Q.value = 20;
+  noiseBpm.filter.frequency.value = 0;
+
+  var bpmNoiseLfoMult = 0.05;
+  var bpmNoiseLfoPow = 1.3;
+  var lfoBpm = ctx.createOscillator();
+  lfoBpm.start(0);
+  var lfoBpmGain = ctx.createGain();
+  lfoBpmGain.gain.value = 0.8;
+  lfoBpm.connect(lfoBpmGain);
+  lfoBpmGain.connect(noiseBpmGain.gain);
+
+  var osc2 = new OscGain();
+  osc2.type = &quot;sawtooth&quot;;
+  osc2.osc.frequency.value = vars.bpm * bpmOsc2mult;
+  osc2.osc.detune.value = 5;
+  osc2.gain.gain.value = 0.1;
+  osc2.out.connect(out);
+  osc2.start(0);
+</code></pre>
+<h3 id="notes">NOTES</h3>
+<p>To easily define melodies, I first define &quot;NOTES&quot;, a map of <code>note -&gt; frequency</code>. 
+For instance <code>NOTES.A4</code> is <code>440</code> Hz:</p>
+<pre><code class="language-javascript">var NOTES = (function () {
+  var notes = {};
+  var toneSymbols = &quot;CcDdEFfGgAaB&quot;;
+  function noteToFrequency (note) {
+    return Math.pow(2, (note-69)/12)*440; // Beauty of audio math!
+  };
+  for (var octave = 0; octave &lt; 8; ++octave) {
+    for (var t = 0; t &lt; 12; ++t) {
+      notes[toneSymbols[t]+octave] = noteToFrequency(octave * 12 + t);
+    }
+  }
+  return notes;
+}());
+</code></pre>
+<p>My convention here is to use a cap for major notes like <code>D</code> and no cap for minor notes like <code>d</code> (the black keys on a Piano).
+The following number is the octave. Notes are defined with two characters: Like A1, C2, B3, a4, ...
+You will see that&#39;s quite convenient to use the <code>with(NOTES){ ... }</code> syntax.</p>
+<p>See Also <a href="https://en.wikipedia.org/wiki/Frequencies_of_notes">Frequencies of notes</a>.</p>
+<h3 id="fm-synth-bass-melody">FM Synth &quot;bass&quot; melody</h3>
+<p>I used some <a href="/2013/08/FM-audio-api">FM synth</a> for making the main &quot;bass&quot; melody:</p>
+<iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F110622269"></iframe>
+
+
+<p>First, I made a &quot;OscGain&quot; and a &quot;FM&quot; components.</p>
+<pre><code class="language-javascript">  function OscGain (t) {
+    this.osc = ctx.createOscillator();
+    if (t) this.osc.type = t;
+    this.out = this.gain = ctx.createGain();
+    this.osc.connect(this.gain);
+  }
+  OscGain.prototype = {
+    start: function (time, duration) {
+      this.osc.start(time, 0, duration);
+    }
+  };
+
+  function FM () {
+    OscGain.call(this);
+    this.mod = new OscGain();
+    this.mod.out.connect(this.osc.frequency);
+  }
+  FM.prototype = {
+    start: function (time, duration) {
+      this.osc.start(time, 0, duration);
+      this.mod.start(time, duration);
+    }
+  };
+</code></pre>
+<p>And used this melody:</p>
+<pre><code class="language-javascript">with (NOTES) {
+  bassMelo = [G4,D4,F4,C4];
+}
+</code></pre>
+<pre><code class="language-javascript">  // Usage for the bass:
+  var bass = new FM();
+  bass.out.connect(out);
+  function tick (i, time) {
+    // ...
+    // Change the note each 4 tick
+    var oscFreq = bassMelo[Math.floor(i/4) % bassMelo.length];
+    bass.osc.frequency.value = oscFreq * 2.0;
+    bass.mod.osc.frequency.value = oscFreq * 0.5;
+    bass.mod.gain.gain.value = oscFreq * 0.5;
+    // ...
+  }
+</code></pre>
+<blockquote>
+<p><strong>N.B.</strong>:
+The modulator frequency is 1/4 of the oscillator frequency which gives a cool bass sound. <br/>
+Also, That tick function is called at a (variable) frequency of <code>60 / BPM</code> Hz (BPM means Beat Per Minute, here it&#39;s more a Tick Per Minute) with the tick number <code>&quot;i&quot;</code> and the tick time <code>&quot;time&quot;</code>.</p>
+</blockquote>
+<h3 id="fm-synth-main-melody">FM Synth &quot;main&quot; melody</h3>
+<iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F110620277"></iframe>
+
+<p>This &quot;main&quot; synth is also a Frequency Modulation, but using a 3/4 ratio on the modulator frequency,
+and with an envelope on each notes.</p>
+<pre><code class="language-javascript">with (NOTES) {
+  melo1 = [E3,G3,D3,G3,E3,A3,C3,G3];
+  melo2 = [E3,B3,D3,G3,E3,C4,C3,D3];
+}
+</code></pre>
+<p>Making an envelope consists of scheduling the amplitude through time with a <em>Gain</em>. See my <a href="/2013/08/FM-audio-api">FM Article</a>.</p>
+<pre><code class="language-javascript">  function envelope (gainNode, time, volume, duration, a, d, s, r) {
+    var gain = gainNode.gain;
+    gain.cancelScheduledValues(0);
+    gain.setValueAtTime(gain, 0, time);
+    gain.linearRampToValueAtTime(volume, time + a);
+    gain.linearRampToValueAtTime(volume * s, time + a + d);
+    gain.setValueAtTime(volume * s, time + a + d + duration);
+    gain.linearRampToValueAtTime(0, time + a + d + duration + r);
+  }
+</code></pre>
+<p>Also, the melody periodically switch into &quot;arpeggio note&quot; with this function:</p>
+<pre><code class="language-javascript">  var DELTAS = [
+    Math.pow(2, 0),
+    Math.pow(2, 1),
+    Math.pow(2, 2)
+  ];
+
+  function applyArpeggio (freqParam, baseFreq, time, duration, arpDuration, deltas) {
+    if (!deltas) deltas = DELTAS;
+    var length = deltas.length;
+    var ranges = [];
+    cancelScheduledValues(freqParam, 0);
+    for (var t = 0, i = 0; t &lt;= duration; t += arpDuration, i = (i+1) % length) {
+      setValueAtTime(freqParam, baseFreq * deltas[i], time + t);
+    }
+  }
+</code></pre>
+<p>The Arpeggio effect is about fastly changing some octaves higher (like C3,C4,C5,C3,C4,C5,... very fastly).
+I&#39;ve keeped that &quot;deltas&quot; a parameter to try other arpeggios, I&#39;ve only used <code>[1,2,4]</code> multiplicators in the game.</p>
+<p>Indeed, thanks to the magic of audio math, 
+incrementing the octave means multipling the frequency by 2,
+more generally increment by N octaves means multiplying by <code>2 ^ N</code>.</p>
+<p>Finally, here is &quot;meloNote&quot;, the function which triggers one melody note.</p>
+<pre><code class="language-javascript">  function meloNote (noteFreq, time, arpeggio, metallic) {
+    var fm = new FM();
+    var duration = 0.3;
+    var release = 0.1;
+    fm.osc.type = &quot;triangle&quot;;
+    fm.osc.frequency.value = 4 * noteFreq;
+    fm.mod.osc.frequency.value = 3 * noteFreq;
+    fm.mod.osc.type = &quot;sine&quot;;
+    fm.out.connect(meloOut.inp);
+    setTimeout(function () {
+      fm.out.disconnect(meloOut.inp);
+    }, 1000);
+    startNode(fm, time, 0, 1);
+    arpeggio &amp;&amp; applyArpeggio(fm.osc.frequency, 4 * noteFreq, time, duration+release, 0.025);
+    envelope(fm.gain, time, 0.5, duration, 
+        0.01, 0.02, 0.6, 0.2);
+    envelope(fm.mod.gain, time, 4 * noteFreq * metallic, duration, 
+        0.05, 0.1, 0.6, 0.2);
+  }
+</code></pre>
+<blockquote>
+<p><strong>N.B.</strong> The metallic parameter is a parameter from 0 to 1 to give a more metallic sound. 
+It changes the modulator intensity. In fact, that 3/4 ratio on the FM is the reason metallic sound.</p>
+</blockquote>
+<p>This function is called each tick with a new note:</p>
+<pre><code class="language-javascript">function tick (i, time) {
+  // ...
+  var r = risk(); // How the player is in danger
+  var metallic = 0.4 * r + 0.3 * smoothstep(-1, 1, Math.cos(Math.PI * i / 16));
+  var melo = i % 16 &lt; 8 ? melo1 : melo2;
+  var octave = i % 32 &lt; 16 ? 0 : 1;
+  var m = melo[i % 8] * (1 &lt;&lt; octave);
+  meloNote(m, time, meloIsArpeggio, metallic);
+  // ...
+}
+</code></pre>
+<h3 id="repeater-of-freestyle-part">Repeater of freestyle part</h3>
+<p>A <strong>&quot;repeater&quot; with random delay add crazyness in the freestyle section</strong>. The delay time is randomly changed each time you hold the key so it gives cool feedback.</p>
+<iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F110612559"></iframe>
+
+<p>The <em>Repeater</em> is made of a <em>Delay</em> piped in a <em>Gain</em> and piped back in the delay input to produce feedback (echo).
+A particularity of this component is the input <em>Gain</em> is also the output <em>Gain</em>.</p>
+<p><img src="/images/2013/09/repeater_schema.png" alt=""></p>
+<p>Implementation of a Repeater:</p>
+<pre><code class="language-javascript">  function Repeater (delayValue, repeatGainValue) {
+    var out = ctx.createGain();
+    var delay = ctx.createDelay(1); // The Max Delay
+    delay.delayTime.value = delayValue;
+    out.connect(delay);
+    var repeatGain = ctx.createGain();
+    repeatGain.gain.value = repeatGainValue;
+    delay.connect(repeatGain);
+    repeatGain.connect(out);
+    this.delay = delay;
+    this.repeater = repeatGain;
+    this.gain = this.inp = this.out = out;
+  }
+</code></pre>
+<h3 id="playing-with-stereo">Playing with Stereo</h3>
+<p>Doing stereo with Web Audio API can be a bit verbose without wrapping it,
+here is the Stereo component:</p>
+<pre><code class="language-javascript">  function Stereo (left, right) {
+    var merger = ctx.createChannelMerger();
+    var inp = ctx.createGain();
+    inp.connect(left.inp);
+    inp.connect(right.inp);
+    this.inp = inp;
+    left.out.connect(merger, 0, 0);
+    right.out.connect(merger, 0, 1);
+    this.left = left;
+    this.right = right;
+    this.out = merger;
+  }
+</code></pre>
+<h3 id="drumbox">Drumbox</h3>
+<p><strong>The Drumbox is simply made of a Kick, a Snare and a Hihat.</strong></p>
+<iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F110781486"></iframe>
+
+<p>A <strong>Snare</strong> is implemented with a Noise and a Filter:</p>
+<pre><code class="language-javascript">  function Snare (volume, freqFrom, freqTo) {
+    var noise = new Noise();
+    noise.filter.type = &quot;lowpass&quot;;
+    noise.filter.Q.value = 5;
+    noise.gain.gain.value = 0;
+    this.noise = noise;
+    this.out = noise.out;
+    this.volume = volume || 1;
+    this.freqFrom = freqFrom || 800;
+    this.freqTo = freqTo || 1000;
+    this.release = 0.3;
+  }
+
+  Snare.prototype = {
+    trigger: function (time) {
+      this.noise.start(time, 1);
+      envelope(this.noise.gain, time, this.volume, 0.05, 
+          0.01, 0.03, 0.25, this.release);
+      var f = this.noise.filter.frequency;
+      f.setValueAtTime(this.freqFrom, time);
+      f.linearRampToValueAtTime(this.freqTo, time+0.1);
+    }
+  };
+</code></pre>
+<p>The <strong>HiHat</strong> is also made with a Noise and a Filter, 
+except the Filter is a highpass filter (only high frequency are audible).</p>
+<p>Finally, The <strong>Kick</strong> is made with a <code>Kicker</code> and a <code>Snare</code>.</p>
+<p>Here is the Kicker implementation:</p>
+<pre><code class="language-javascript">  function Kicker (freq, attack, duration, fall) {
+    OscGain.call(this);
+    this.gain.gain.value = 0;
+    this.osc.frequency.value = freq;
+    this.freq = freq || 50;
+    this.fall = fall || 0;
+    this.attack = attack || 0;
+    this.duration = duration || 0;
+    this.volume = 1;
+  }
+
+  Kicker.prototype = {
+    start: function (time, duration) {
+      startNode(this.osc, time, 0, duration);
+    },
+    trigger: function (time) {
+      var a = this.attack, d = this.attack + 0.06, s = 0.8, r = 0.1;
+      this.start(time, this.duration + 1);
+      envelope(this.gain, time, this.volume, this.duration, a, d, s, r);
+      setValueAtTime(this.osc.frequency, this.freq, time);
+      linearRampToValueAtTime(this.osc.frequency, 0, time + this.fall);
+    }
+  };
+</code></pre>
+<p>And finally, here is my &quot;kick&quot; method called each time a user press the key:</p>
+<pre><code class="language-javascript">  kick: function (t, errorRate) {
+    errorRate = errorRate * errorRate * errorRate;
+    var freq = mix(100, 120, errorRate);
+    var speed = mix(0.2, 0.3, errorRate) * 100 / vars.bpm;
+    var kick = new Kicker(freq, 0.01, speed, speed);
+    kick.volume = 1.5;
+    kick.osc.type = &quot;sine&quot;;
+    var filter = ctx.createBiquadFilter();
+    filter.frequency.value = mix(200, 300, errorRate);
+    filter.Q.value = 10 + 10 * errorRate;
+    kick.out.connect(filter);
+    filter.connect(drumOut.inp);
+    setTimeout(function () {
+      filter.disconnect(drumOut.inp);
+    }, 1000);
+    kick.trigger(t);
+
+    var snare = new Snare(0.5, 1000, 10);
+    snare.out.connect(drumOut.inp);
+    setTimeout(function () {
+      snare.out.disconnect(drumOut.inp);
+    }, 1000);
+    snare.trigger(t);
+
+    E.pub(&quot;kick&quot;, t);
+  }
+</code></pre>
+<h3 id="stereo-drumbox">Stereo Drumbox</h3>
+<p>I&#39;ve used two Repeaters (one for the left, on for the right) on the Drumbox to produce some stereo echo effects.</p>
+<p>The effect can be very weak to hear, so I made in the following audio example 2 different delays so you can understand what I mean:</p>
+<iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F110622238"></iframe>
+
+<p>All sounds from the drumbox (snare, hihat, kick) is piped into &quot;drumOut&quot;, which have that Stereo system.</p>
+<p>Here is the code of the &quot;drumOut&quot; (the output where goes all Drum Box sounds):</p>
+<pre><code class="language-javascript">  var drumOut = (function () {
+    // using the second example delay effect (listen to the soundcloud sound)
+    var left = new Repeater(0.1, 0.5);
+    var right = new Repeater(0.2, 0.7); // Playing with different values for stereo effects
+    right.gain.gain.value = 0.8; // move the drum a bit to the left
+    return new Stereo(left, right);
+  }());
+  drumOut.out.connect(out);
+</code></pre>
+<h2 id="the-glsl-shader">The GLSL shader</h2>
+<p>Here is the GLSL code I used for the game, the final version is a bit crazy because I incrementally add features to it!
+All the graphics are defined here!</p>
+<pre><code class="language-glsl">#ifdef GL_ES
+precision mediump float;
+#endif
+
+#define BPM_MIN 30.0
+#define BPM_MAX 150.0
+
+uniform vec2 resolution;
+uniform float time;
+uniform float kick;
+uniform float kickSpeed;
+uniform float bpm;
+uniform float lvl;
+
+uniform bool dubstepAction;
+uniform float useraction;
+uniform float successState;
+
+uniform float dubloading;
+uniform bool dubphase;
+uniform float pulseOpenFrom;
+uniform float pulseOpenTo;
+
+const vec2 center = vec2(0.5, 0.5);
+
+const float PI = 3.14159265359;
+const float PI_x_2 = 6.28318530718;
+
+const vec3 COLOR_NEUTRAL = vec3(0.1, 0.2, 0.7);
+const vec3 COLOR_SUCCESS = vec3(0.0, 0.7, 0.1);
+const vec3 COLOR_ERROR = vec3(0.7, 0.0, 0.05);
+
+float expInOut (float a) {
+  return 0.0==a ? 0.0 : 1.0==a ? 1.0 : 1.0 &gt; (a *= 2.0) ? 0.5 * pow(1024.0,a-1.0):0.5*(-pow(2.0,-10.0*(a-1.0))+2.0);
+}
+
+float random (vec2 pos) {
+  return fract(sin(dot(pos.xy ,vec2(12.9898,78.233))) * 43758.5453);
+}
+vec3 random3 (vec2 pos) {
+  return vec3(
+    random(pos),
+    random(pos*3.),
+    random(pos*13.)
+  );
+}
+
+float distanceRadius (float a, float b) {
+  float d = mod(distance(a, b), PI_x_2);
+  return d &lt; PI ? d : PI_x_2 - d;
+}
+
+float spiralDistance (vec2 v, float r) {
+  float d = length(v);
+  float a = (PI + atan(v.x, v.y))/PI_x_2;
+  float n = log(d/r)+a;
+  return distance(1.0, 2.0 * smoothstep(0.0, 1.0, fract(n)));
+}
+
+float bpmToSec (float bpm) {
+  return 60. / bpm;
+}
+
+float circlePulse (
+  vec2 v, float kickForce,
+  float kickGlitchFreq, float kickGlitchAmp,
+  float thin, float pulseAngle, bool dubphase,
+  float waveFreq, float waveAmp, float waveDuration,
+  float bullForce
+) {
+  float angle = atan(-v.x, -v.y);
+  float clock = distanceRadius(0.0, angle) / PI;
+  float distAngle = distanceRadius(angle, PI_x_2 * pulseAngle) / PI;
+  float f = mix(1.0, smoothstep(-1.0, 1.0, cos(kickGlitchFreq * (clock+0.1*angle+kickForce))), kickGlitchAmp);
+  float r = mix(0.35, 0.2, kickForce*f);
+  float sc = smoothstep(1.0-waveDuration, 1.0, distAngle);
+  float intensity = 0.1+0.05*sc;
+  r /= mix(0.95, 1.0, waveAmp*sc*cos(angle*waveFreq));
+  float a = mod(PI_x_2+atan(v.x, v.y), PI_x_2)/PI_x_2;
+  float ring = abs(length(v)-r) - 0.03*bullForce*(!dubphase ? 
+    smoothstep(1.0-1.5*waveDuration, 1.0, clock) : 
+    (
+    a &lt; pulseOpenFrom ? smoothstep(0.05, 0.0, distance(a, pulseOpenFrom)) : 
+    a &gt; pulseOpenTo ? smoothstep(0.05, 0.0, distance(a, pulseOpenTo)) : 
+    1.0
+    )
+  );
+  float value = smoothstep(0.0, intensity, ring);
+  float returnValue = 1.0/sqrt(abs(value))/1.0 * pow(thin, 2.);
+  if ( length(v) &lt; r) {
+    float sr = PI;
+    float s = spiralDistance(v, sr);
+    float a = (PI + atan(v.x, v.y))/PI_x_2;;
+    float v = 
+      smoothstep(0.02, 0., distanceRadius(PI+pulseAngle*PI_x_2, a*PI_x_2)/PI) *
+      smoothstep(0.2, 0., s);
+    returnValue += v * 2.0;
+    s = 1.0 - pow(smoothstep(0.0, 0.3, s), 0.3);
+    returnValue += s;
+  }
+  float centerIntensity = dubphase ? 0.1 : 0.1*dubloading;
+  if (centerIntensity &gt; 0.0) {
+    float s = bpmToSec(bpm);
+    float c = mix(1.0, 10.0, mod(time, s)/s) * smoothstep(centerIntensity, 0.0, length(v));
+    returnValue += c;
+  }
+  return returnValue;
+}
+
+void main (void) {
+  vec3 c = vec3(0.0);
+  vec2 p = gl_FragCoord.xy / resolution;
+  float sec = bpmToSec(bpm);
+  float statePower = smoothstep(0.8, 0.0, time-useraction);
+  float colorPower = dubstepAction ? 1.0 : statePower;
+  float cPulse = circlePulse(
+    p - center,
+    smoothstep(kickSpeed, 0.0, time-kick),
+    20.0,
+    0.5,
+    0.5 + 0.5 * smoothstep(smoothstep(0.6, 1.0, statePower), 0.0, distance(smoothstep(0.8, 1.0, statePower), distance(p, center))),
+    mod((time-kick)/sec, 1.0),
+    dubphase,
+    1.2*sqrt(bpm) + 4.0*statePower,
+    2.0,
+    min(0.5, bpm / 800.0),
+    1.0 - statePower
+  );
+  vec3 mainColor = mix(
+    COLOR_NEUTRAL,
+    mix(COLOR_ERROR, COLOR_SUCCESS, successState),
+    colorPower);
+  
+  c += cPulse * mainColor;
+
+  c = clamp(
+    c,
+    vec3(0.05, 0.05, 0.05),
+    vec3(1.0, 1.0, 1.0)
+  );
+
+  float bpmLight = smoothstep(BPM_MIN, BPM_MAX, bpm);
+  c = mix(c * (0.5 * random(p + time) + 0.5 * random(floor(p * 100.) + 0.01*time) - 0.5 * random(floor(p * 10.) + time)), c, min(1.0, 15.0*bpmLight));
+
+  c *= 0.1 + max(0.95, 100.0*(bpmLight-0.85));
+
+  gl_FragColor = vec4(c, 1.0);
+}
+</code></pre>
+<h2 id="bonus">Bonus</h2>
+<p><strong>Did you recognize the melody I used in the freestyle part?</strong>
+The melody doesn&#39;t keep the rhythm though, but you should be able to recognize it!</p>
+<iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F110614352"></iframe>
+</div><footer><div class="jsx-2519965637 block"><img src="http://greweb.me/profile.jpg" width="100" class="jsx-2519965637"/><div class="jsx-2519965637 right"><div class="jsx-2519965637 description">creative coder experimenting with GLSL shaders, Rust, and fountain pens robot plots. infinite noise explorer.</div><div class="jsx-2519965637 social"><a href="https://twitter.com/greweb" class="jsx-2519965637"><img alt="" src="/icons/twitter.svg" class="jsx-2519965637"/></a><a href="https://instagram.com/greweb" class="jsx-2519965637"><img alt="" src="/icons/instagram.svg" class="jsx-2519965637"/></a><a href="https://github.com/gre" class="jsx-2519965637"><img alt="" src="/icons/github.svg" class="jsx-2519965637"/></a><a href="https://twitch.tv/greweb" class="jsx-2519965637"><img alt="" src="/icons/twitch.svg" class="jsx-2519965637"/></a><a href="https://greweb.itch.io" class="jsx-2519965637"><img alt="" src="/icons/iconmonstr-gamepad-3.svg" class="jsx-2519965637"/></a><a href="https://hic.link/greweb" class="jsx-2519965637"><img alt="" src="/icons/hic.svg" class="jsx-2519965637"/></a></div></div></div></footer></article></div></div></div><script>hljs.highlightAll();</script></div></div><script id="__NEXT_DATA__" type="application/json">{"props":{"pageProps":{"id":"2013-09-17-timelapse","year":"2013","month":"09","day":"17","slug":"timelapse","content":"\u003cimg src=\"/images/2013/09/timelapse.png\" alt=\"\" class=\"thumbnail-left\" /\u003e\n\n\u003cp\u003eWhile continuing to experiment with \u003ca href=\"https://dvcs.w3.org/hg/audio/raw-file/tip/webaudio/specification.html\"\u003eWeb Audio API\u003c/a\u003e and \u003ca href=\"/2013/02/glsl-js-a-javascript-glsl-library-dry-efficient/\"\u003eGLSL\u003c/a\u003e,\nI\u0026#39;ve made \u003cstrong\u003e\u003ca href=\"http://js13kgames.com/entries/timelapse\"\u003ea game called Timelapse\u003c/a\u003e\u003c/strong\u003e for \u003ca href=\"http://js13kgames.com/\"\u003ejs13kgames\u003c/a\u003e\n(an HTML5 game competition where entries must be less than 13 kb zipped).\u003c/p\u003e\n\u003cp\u003eThis article is a \u003cstrong\u003epostmortem overview of my game development\u003c/strong\u003e which will try to explain\nwhat was my game mecanism ideas and show you some interesting parts with \u003cstrong\u003escreenshots, audios and source code snippets\u003c/strong\u003e.\u003c/p\u003e\n\u003ch2 id=\"the-game\"\u003eThe Game\u003c/h2\u003e\n\u003cp\u003e\u003ca href=\"http://js13kgames.com/entries/timelapse\"\u003eOpen the game on js13kgames\u003c/a\u003e / \u003ca href=\"https://github.com/gre/js13k\"\u003egithub\u003c/a\u003e.\u003c/p\u003e\n\u003cp\u003e\u003cstrong\u003eThe game intends to work on Desktop and Mobile\u003c/strong\u003e.\nHowever, \u003cem\u003eChrome\u003c/em\u003e is recommended \n(\u003cem\u003eFirefox Aurora\u003c/em\u003e also supports it but audio is a bit wrong, but Mozilla devs should improve this \u003ca href=\"https://twitter.com/padenot/status/375924494537195520\"\u003esoon\u003c/a\u003e).\nToday, it works on \u003cem\u003eAndroid Chrome Beta\u003c/em\u003e on a Nexus 4, unfortunately with some clicks in the audio (Web Audio API is bleeding-edge).\u003c/p\u003e\n\u003c!--more--\u003e\n\n\u003ch2 id=\"experimenting-with-stuff\"\u003eExperimenting with stuff\u003c/h2\u003e\n\u003cp\u003eLast months, I\u0026#39;ve been playing with Web Audio API and released a few experiments like \n\u003ca href=\"/2013/09/beez\"\u003eBeez\u003c/a\u003e, \u003ca href=\"/2013/08/FM-audio-api\"\u003eFM Synthesis\u003c/a\u003e and \u003ca href=\"/2013/08/zound-wip-v1/\"\u003eZound\u003c/a\u003e.\u003c/p\u003e\n\u003cp\u003eMy game development started last weekend as an experiment, I tried to make some \u003cstrong\u003edubstep-like sound\u003c/strong\u003e, \nstarting with a \u003cstrong\u003e\u003ca href=\"http://jsfiddle.net/greweb/CrXYw/4/\"\u003e\u0026quot;Wob Wob Wob\u0026quot; sound\u003c/a\u003e\u003c/strong\u003e.\u003c/p\u003e\n\u003cp\u003eI also started to dig into \u003ca href=\"http://glsl.heroku.com/\"\u003eglsl.heroku.com\u003c/a\u003e, \nI definitely wanted to make some \u003cstrong\u003ecool and unusual graphics with glitchy style\u003c/strong\u003e to fit with dubstep audio part, \nI unfortunately hadn\u0026#39;t enough deepen this glitchy part as I would have liked.\u003c/p\u003e\n\u003cp\u003eGLSL quite fits this need: it mays look strange and hard code language as a start \nbut \u003cstrong\u003eit\u0026#39;s very easy and free to do anything with it\u003c/strong\u003e. \nI used my \u003ca href=\"/2013/02/glsl-js-a-javascript-glsl-library-dry-efficient/\"\u003eglsl.js\u003c/a\u003e wrapper to easily have a shader rendering the whole Canvas.\u003c/p\u003e\n\u003cblockquote\u003e\n\u003cp\u003eGLSL is a totally different way of thinking the rendering: \nthe main principle is to define \u003cstrong\u003ea function which returns a Color for a given Position\u003c/strong\u003e. \nI use to call it \u0026quot;Functional Rendering\u0026quot; in opposite to \u0026quot;Procedural Rendering\u0026quot;. I\u0026#39;ll talk again about those concepts soon.\u003c/p\u003e\n\u003c/blockquote\u003e\n\u003cp\u003eI started my graphics by forking \u003ca href=\"http://glsl.heroku.com/e#10795.2\"\u003ethis very interesting glow effect\u003c/a\u003e.\u003c/p\u003e\n\u003ch2 id=\"prototyping-the-game-ideas\"\u003ePrototyping the game ideas\u003c/h2\u003e\n\u003cp\u003eThen I started to really think about the game I could do, \nI sketched some game mecanisms and thought about the gameplay.\u003c/p\u003e\n\u003cp\u003eMy game was designed to be a \u003cstrong\u003eone-button\u003c/strong\u003e \u003ca href=\"https://en.wikipedia.org/wiki/Dance_Dance_Revolution\"\u003eDDR\u003c/a\u003e-like \u003cstrong\u003erhythm game\u003c/strong\u003e\nwith the main idea that \u003cstrong\u003ethe user controls the speed\u003c/strong\u003e \u003cem\u003e(the BPM, beats per minute)\u003c/em\u003e of the song.\nI wanted an \u003cstrong\u003einertia system\u003c/strong\u003e: tap a bit early and your song will speed up, tap a bit late and the song will slow down.\nThis speed freedom isn\u0026#39;t without constraints: You can reach a gameover if your speed isn\u0026#39;t enough fast, or contrariwise if it is too fast (like a overheat).\u003c/p\u003e\n\u003cblockquote\u003e\n\u003cp\u003eThe game listen to your inputs to adapt the song BPM.\u003c/p\u003e\n\u003c/blockquote\u003e\n\u003cp\u003eThe game is basically about SPACE-typing on each beat, but also introduce some \u003cstrong\u003efreestyle \u0026quot;dubstep\u0026quot; phase\u003c/strong\u003e\n\u003cem\u003e(It\u0026#39;s not really dubstep though!)\u003c/em\u003e: the gameplay is either typing on the key like hell or holding and releasing some \u0026quot;riff\u0026quot;. \u003c/p\u003e\n\u003cp\u003eThe score mecanisms give good scores for very precise beats and will be negative for very bad/loss rhythms.\nDuring the freestyle section, each action gives a score, also each riff (holding the button for more than 1 tick) gives a score. Making small riffs has been designed to give more points that a very long riff so you have to find the good balance.\n(The score also increases at the end of each freestyle phase).\u003c/p\u003e\n\u003cimg src=\"/images/2013/09/highscores.png\" style=\"max-width: 300px; width: 50%\" /\u003e\n\n\u003cp\u003eI also had to find a game end, I first thought about trying to make the game harder and harder but it wasn\u0026#39;t trivial to make\nbecause I wanted to keep my \u003cem\u003e\u0026quot;player is free to take any speed he wants\u0026quot;\u003c/em\u003e idea.\u003c/p\u003e\n\u003cp\u003eInstead, I chose to \u003cstrong\u003elimit the game time by one minute\u003c/strong\u003e, \nwhich makes my game a psychedelic rush game if you want a good score: \nA good strategy to make a good score is to first speed up the song inertia as fast as possible, and then keep the rhythm on an high BPM.\u003c/p\u003e\n\u003cblockquote\u003e\n\u003cp\u003eThat mecanism is interesting because it is also harder to make precise scores on higher speed, it can even be risky (reaching the BPM limit, failing some beats), the player has to find the speed it fits the most!\u003c/p\u003e\n\u003c/blockquote\u003e\n\u003ch2 id=\"the-game-experience\"\u003eThe game experience\u003c/h2\u003e\n\u003cp\u003eI wanted my game experience to be both on the \u003cstrong\u003egraphics\u003c/strong\u003e and on the \u003cstrong\u003eaudio\u003c/strong\u003e aspects:\nyou have both a feedback on your actions with the graphics using a color (\n\u003cspan style=\"color:#0F0\"\u003egreen=good\u003c/span\u003e,\n\u003cspan style=\"color:#CC0\"\u003eyellow=meh\u003c/span\u003e,\n\u003cspan style=\"color:#F00\"\u003ered=bad\u003c/span\u003e\n) and with the audio (different sound depending on the rate of the action).\u003c/p\u003e\n\u003cimg src=\"/images/2013/09/good.png\" style=\"width: 30%\" /\u003e\n\u003cimg src=\"/images/2013/09/timelapse.png\" style=\"width: 30%\" /\u003e\n\u003cimg src=\"/images/2013/09/toofast.png\" style=\"width: 30%\" /\u003e\n\n\u003cp\u003eThe audio BPM is also graphically visualized using a circle with a rotating pulse\nwhich also helps you on the rhythm.\u003c/p\u003e\n\u003cp\u003eDuring the freestyle phase, the circle turns fully highlighted and the audio \u0026quot;wob wob wob\u0026quot; part is playing.\nEach user freestyle \u0026quot;riff\u0026quot; (hold a note) will randomly change the delay of a \u0026quot;repeater\u0026quot;, an important part on the audio of that section I will discuss in the \u003cem\u003eAudio Section\u003c/em\u003e.\u003c/p\u003e\n\u003cimg src=\"/images/2013/09/killer-riff.png\" style=\"max-width: 300px; width: 100%\" /\u003e\n\n\u003cp\u003eIf the player runs the song too fast, an overheat happens and the circle turns very light:\u003c/p\u003e\n\u003cimg src=\"/images/2013/09/lighted.png\" style=\"max-width: 300px; width: 100%\" /\u003e\n\n\u003cp\u003eOn the contrary, it turns very dark and glitchy when the BPM is very slow:\u003c/p\u003e\n\u003cimg src=\"/images/2013/09/slow.png\" style=\"max-width: 300px; width: 100%\" /\u003e\n\n\u003ch2 id=\"more-about-the-audio\"\u003eMore about the audio\u003c/h2\u003e\n\u003cp\u003eAs described in the \u003ca href=\"https://dvcs.w3.org/hg/audio/raw-file/tip/webaudio/specification.html\"\u003especification\u003c/a\u003e, the \u003cem\u003eWeb Audio API\u003c/em\u003e is an audio routing graph composed of low level audio nodes.\nUsing it raw can be quite verbose, I\u0026#39;ve made my own reusable component using those nodes.\nMy convention is to use Javascript constructor for those components and to have a \u0026quot;inp\u0026quot; and an \u0026quot;out\u0026quot; \u003cem\u003eAudioNode\u003c/em\u003e field.\u003c/p\u003e\n\u003cp\u003eFirst I create a \u003ccode\u003ectx\u003c/code\u003e \u003cem\u003eAudioContext\u003c/em\u003e (works for Chrome \u0026amp; Firefox Aurora):\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"language-javascript\"\u003evar ctx = new (window.AudioContext || window.webkitAudioContext)();\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eThis \u003ccode\u003ectx\u003c/code\u003e variable now offers all methods to work with sound.\u003c/p\u003e\n\u003ch3 id=\"global-effects-reverbation-compressor\"\u003eGlobal effects: Reverbation, Compressor\u003c/h3\u003e\n\u003cp\u003eWeb Audio API have a \u003cstrong\u003eConvolver\u003c/strong\u003e node which allows to make diverse audio effects like \u003cstrong\u003ereverbation\u003c/strong\u003e, which is basically emulating your song played in a room. You can find more information \u003ca href=\"http://creativejs.com/resources/web-audio-api-a-bit-more-advanced/\"\u003ehere\u003c/a\u003e.\u003c/p\u003e\n\u003cp\u003eI\u0026#39;ve used a simple Reverb effect to pass the whole sound. This simple reverb implementation can be found on \u003ca href=\"https://github.com/web-audio-components/simple-reverb\"\u003ehttps://github.com/web-audio-components/simple-reverb\u003c/a\u003e.\u003c/p\u003e\n\u003cp\u003eAnother \u003cstrong\u003every\u003c/strong\u003e important brick of the Audio graph is the \u003cstrong\u003eCompressor\u003c/strong\u003e.\nThe \u003ca href=\"https://dvcs.w3.org/hg/audio/raw-file/tip/webaudio/specification.html\"\u003eWeb Audio API\u003c/a\u003e have a built-in Compressor with some parameters.\u003c/p\u003e\n\u003cp\u003eA compressor dynamically adapts the input sound to a normalized output. It ensures the output is not distorted (saturated because amplitude is too high) or inaudible because too low.\nIn other words, it consists of dynamically raise the volume if the input is lower, and decrease the volume if the input is higher, that a given rate.\u003c/p\u003e\n\u003cp\u003eHere is the global audio setup I\u0026#39;ve used as an output for all different sounds of the song:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"language-javascript\"\u003e  var out = ctx.createGain(); // My global output\n  var outCompressor = ctx.createDynamicsCompressor();\n  var reverb = new Reverb(0.5);\n  out.gain.value = 0; // We will increase the main volume when the song starts\n  out.connect(reverb.inp);\n  reverb.out.connect(outCompressor);\n  outCompressor.connect(ctx.destination);\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch3 id=\"ambiant-sounds\"\u003eAmbiant sounds\u003c/h3\u003e\n\u003cp\u003eI\u0026#39;ve used a soft \u003cstrong\u003esine Oscillator\u003c/strong\u003e and some \u003cstrong\u003eNoise generator\u003c/strong\u003e (protected by a bandpass Filter) for the \u003cstrong\u003eambiant sound\u003c/strong\u003e.\nThat gives more depth to the song.\u003c/p\u003e\n\u003cp\u003eIt was also used to give more audio feedback on the gameplay:\u003c/p\u003e\n\u003cul\u003e\n\u003cli\u003eThe \u003cstrong\u003eOscillator frequency follows the BPM\u003c/strong\u003e (goes higher in frequency with the song speed).\u003c/li\u003e\n\u003cli\u003eThe BPM also affects the \u003cstrong\u003efrequency of a LFO\u003c/strong\u003e which oscillate the \u003cstrong\u003evolume of the Noise\u003c/strong\u003e to make an \u003cstrong\u003ehelicopter-like sound\u003c/strong\u003e.\u003c/li\u003e\n\u003cli\u003eThe Oscillator is fastly \u003cstrong\u003edetuned on each user action\u003c/strong\u003e, and especially if the user tap too early it will produce a \u0026quot;bip\u0026quot; like you can hear in the following Soundcloud.\u003c/li\u003e\n\u003cli\u003eFinally, a second noise passed into a highpass filter will be louder if the player is in danger (BPM is too slow or too fast). \u003cem\u003e(we won\u0026#39;t show the code for this one)\u003c/em\u003e\u003c/li\u003e\n\u003c/ul\u003e\n\u003cp\u003eI have muted all other sounds to make you hear only the ambiant sound when speeding up the song up to a gameover:\u003c/p\u003e\n\u003ciframe width=\"100%\" height=\"166\" scrolling=\"no\" frameborder=\"no\" src=\"https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F110774935\"\u003e\u003c/iframe\u003e\n\n\u003cp\u003eThe Noise component:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"language-javascript\"\u003e  function Noise () {\n    // Here we loop on a 2s noise buffer, it is more efficient that generating on the fly\n    var bufferSize = 2 * ctx.sampleRate,\n    noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate),\n    output = noiseBuffer.getChannelData(0);\n    for (var i = 0; i \u0026lt; bufferSize; i++) {\n      output[i] = Math.random() * 2 - 1;\n    }\n    var whiteNoise = ctx.createBufferSource();\n    whiteNoise.buffer = noiseBuffer;\n    whiteNoise.loop = true;\n\n    var gain = createGain();\n    whiteNoise.connect(gain);\n\n    var filter = ctx.createBiquadFilter();\n    gain.connect(filter);\n    filter.type = \u0026quot;lowpass\u0026quot;; // Generally lowpass, but can be overrided\n\n    this.white = whiteNoise;\n    this.gain = gain;\n    this.out = this.filter = filter;\n  }\n\n  Noise.prototype = {\n    start: function (time, duration) {\n      this.white.start(time, 0, duration);\n    }\n  };\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eHere is some code I used for making the ambiant sound:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"language-javascript\"\u003e  var bpmOsc2mult = 3;\n  var bpmNoiseMult = 10;\n  var noiseBpmGain = ctx.createGain();\n  noiseBpmGain.connect(out);\n  var noiseBpm = new Noise();\n  noiseBpm.out.connect(noiseBpmGain);\n  noiseBpm.start(0);\n  noiseBpm.gain.gain.value = 0.2;\n  noiseBpm.filter.type = \u0026quot;bandpass\u0026quot;;\n  noiseBpm.filter.Q.value = 20;\n  noiseBpm.filter.frequency.value = 0;\n\n  var bpmNoiseLfoMult = 0.05;\n  var bpmNoiseLfoPow = 1.3;\n  var lfoBpm = ctx.createOscillator();\n  lfoBpm.start(0);\n  var lfoBpmGain = ctx.createGain();\n  lfoBpmGain.gain.value = 0.8;\n  lfoBpm.connect(lfoBpmGain);\n  lfoBpmGain.connect(noiseBpmGain.gain);\n\n  var osc2 = new OscGain();\n  osc2.type = \u0026quot;sawtooth\u0026quot;;\n  osc2.osc.frequency.value = vars.bpm * bpmOsc2mult;\n  osc2.osc.detune.value = 5;\n  osc2.gain.gain.value = 0.1;\n  osc2.out.connect(out);\n  osc2.start(0);\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch3 id=\"notes\"\u003eNOTES\u003c/h3\u003e\n\u003cp\u003eTo easily define melodies, I first define \u0026quot;NOTES\u0026quot;, a map of \u003ccode\u003enote -\u0026gt; frequency\u003c/code\u003e. \nFor instance \u003ccode\u003eNOTES.A4\u003c/code\u003e is \u003ccode\u003e440\u003c/code\u003e Hz:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"language-javascript\"\u003evar NOTES = (function () {\n  var notes = {};\n  var toneSymbols = \u0026quot;CcDdEFfGgAaB\u0026quot;;\n  function noteToFrequency (note) {\n    return Math.pow(2, (note-69)/12)*440; // Beauty of audio math!\n  };\n  for (var octave = 0; octave \u0026lt; 8; ++octave) {\n    for (var t = 0; t \u0026lt; 12; ++t) {\n      notes[toneSymbols[t]+octave] = noteToFrequency(octave * 12 + t);\n    }\n  }\n  return notes;\n}());\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eMy convention here is to use a cap for major notes like \u003ccode\u003eD\u003c/code\u003e and no cap for minor notes like \u003ccode\u003ed\u003c/code\u003e (the black keys on a Piano).\nThe following number is the octave. Notes are defined with two characters: Like A1, C2, B3, a4, ...\nYou will see that\u0026#39;s quite convenient to use the \u003ccode\u003ewith(NOTES){ ... }\u003c/code\u003e syntax.\u003c/p\u003e\n\u003cp\u003eSee Also \u003ca href=\"https://en.wikipedia.org/wiki/Frequencies_of_notes\"\u003eFrequencies of notes\u003c/a\u003e.\u003c/p\u003e\n\u003ch3 id=\"fm-synth-bass-melody\"\u003eFM Synth \u0026quot;bass\u0026quot; melody\u003c/h3\u003e\n\u003cp\u003eI used some \u003ca href=\"/2013/08/FM-audio-api\"\u003eFM synth\u003c/a\u003e for making the main \u0026quot;bass\u0026quot; melody:\u003c/p\u003e\n\u003ciframe width=\"100%\" height=\"166\" scrolling=\"no\" frameborder=\"no\" src=\"https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F110622269\"\u003e\u003c/iframe\u003e\n\n\n\u003cp\u003eFirst, I made a \u0026quot;OscGain\u0026quot; and a \u0026quot;FM\u0026quot; components.\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"language-javascript\"\u003e  function OscGain (t) {\n    this.osc = ctx.createOscillator();\n    if (t) this.osc.type = t;\n    this.out = this.gain = ctx.createGain();\n    this.osc.connect(this.gain);\n  }\n  OscGain.prototype = {\n    start: function (time, duration) {\n      this.osc.start(time, 0, duration);\n    }\n  };\n\n  function FM () {\n    OscGain.call(this);\n    this.mod = new OscGain();\n    this.mod.out.connect(this.osc.frequency);\n  }\n  FM.prototype = {\n    start: function (time, duration) {\n      this.osc.start(time, 0, duration);\n      this.mod.start(time, duration);\n    }\n  };\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eAnd used this melody:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"language-javascript\"\u003ewith (NOTES) {\n  bassMelo = [G4,D4,F4,C4];\n}\n\u003c/code\u003e\u003c/pre\u003e\n\u003cpre\u003e\u003ccode class=\"language-javascript\"\u003e  // Usage for the bass:\n  var bass = new FM();\n  bass.out.connect(out);\n  function tick (i, time) {\n    // ...\n    // Change the note each 4 tick\n    var oscFreq = bassMelo[Math.floor(i/4) % bassMelo.length];\n    bass.osc.frequency.value = oscFreq * 2.0;\n    bass.mod.osc.frequency.value = oscFreq * 0.5;\n    bass.mod.gain.gain.value = oscFreq * 0.5;\n    // ...\n  }\n\u003c/code\u003e\u003c/pre\u003e\n\u003cblockquote\u003e\n\u003cp\u003e\u003cstrong\u003eN.B.\u003c/strong\u003e:\nThe modulator frequency is 1/4 of the oscillator frequency which gives a cool bass sound. \u003cbr/\u003e\nAlso, That tick function is called at a (variable) frequency of \u003ccode\u003e60 / BPM\u003c/code\u003e Hz (BPM means Beat Per Minute, here it\u0026#39;s more a Tick Per Minute) with the tick number \u003ccode\u003e\u0026quot;i\u0026quot;\u003c/code\u003e and the tick time \u003ccode\u003e\u0026quot;time\u0026quot;\u003c/code\u003e.\u003c/p\u003e\n\u003c/blockquote\u003e\n\u003ch3 id=\"fm-synth-main-melody\"\u003eFM Synth \u0026quot;main\u0026quot; melody\u003c/h3\u003e\n\u003ciframe width=\"100%\" height=\"166\" scrolling=\"no\" frameborder=\"no\" src=\"https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F110620277\"\u003e\u003c/iframe\u003e\n\n\u003cp\u003eThis \u0026quot;main\u0026quot; synth is also a Frequency Modulation, but using a 3/4 ratio on the modulator frequency,\nand with an envelope on each notes.\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"language-javascript\"\u003ewith (NOTES) {\n  melo1 = [E3,G3,D3,G3,E3,A3,C3,G3];\n  melo2 = [E3,B3,D3,G3,E3,C4,C3,D3];\n}\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eMaking an envelope consists of scheduling the amplitude through time with a \u003cem\u003eGain\u003c/em\u003e. See my \u003ca href=\"/2013/08/FM-audio-api\"\u003eFM Article\u003c/a\u003e.\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"language-javascript\"\u003e  function envelope (gainNode, time, volume, duration, a, d, s, r) {\n    var gain = gainNode.gain;\n    gain.cancelScheduledValues(0);\n    gain.setValueAtTime(gain, 0, time);\n    gain.linearRampToValueAtTime(volume, time + a);\n    gain.linearRampToValueAtTime(volume * s, time + a + d);\n    gain.setValueAtTime(volume * s, time + a + d + duration);\n    gain.linearRampToValueAtTime(0, time + a + d + duration + r);\n  }\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eAlso, the melody periodically switch into \u0026quot;arpeggio note\u0026quot; with this function:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"language-javascript\"\u003e  var DELTAS = [\n    Math.pow(2, 0),\n    Math.pow(2, 1),\n    Math.pow(2, 2)\n  ];\n\n  function applyArpeggio (freqParam, baseFreq, time, duration, arpDuration, deltas) {\n    if (!deltas) deltas = DELTAS;\n    var length = deltas.length;\n    var ranges = [];\n    cancelScheduledValues(freqParam, 0);\n    for (var t = 0, i = 0; t \u0026lt;= duration; t += arpDuration, i = (i+1) % length) {\n      setValueAtTime(freqParam, baseFreq * deltas[i], time + t);\n    }\n  }\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eThe Arpeggio effect is about fastly changing some octaves higher (like C3,C4,C5,C3,C4,C5,... very fastly).\nI\u0026#39;ve keeped that \u0026quot;deltas\u0026quot; a parameter to try other arpeggios, I\u0026#39;ve only used \u003ccode\u003e[1,2,4]\u003c/code\u003e multiplicators in the game.\u003c/p\u003e\n\u003cp\u003eIndeed, thanks to the magic of audio math, \nincrementing the octave means multipling the frequency by 2,\nmore generally increment by N octaves means multiplying by \u003ccode\u003e2 ^ N\u003c/code\u003e.\u003c/p\u003e\n\u003cp\u003eFinally, here is \u0026quot;meloNote\u0026quot;, the function which triggers one melody note.\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"language-javascript\"\u003e  function meloNote (noteFreq, time, arpeggio, metallic) {\n    var fm = new FM();\n    var duration = 0.3;\n    var release = 0.1;\n    fm.osc.type = \u0026quot;triangle\u0026quot;;\n    fm.osc.frequency.value = 4 * noteFreq;\n    fm.mod.osc.frequency.value = 3 * noteFreq;\n    fm.mod.osc.type = \u0026quot;sine\u0026quot;;\n    fm.out.connect(meloOut.inp);\n    setTimeout(function () {\n      fm.out.disconnect(meloOut.inp);\n    }, 1000);\n    startNode(fm, time, 0, 1);\n    arpeggio \u0026amp;\u0026amp; applyArpeggio(fm.osc.frequency, 4 * noteFreq, time, duration+release, 0.025);\n    envelope(fm.gain, time, 0.5, duration, \n        0.01, 0.02, 0.6, 0.2);\n    envelope(fm.mod.gain, time, 4 * noteFreq * metallic, duration, \n        0.05, 0.1, 0.6, 0.2);\n  }\n\u003c/code\u003e\u003c/pre\u003e\n\u003cblockquote\u003e\n\u003cp\u003e\u003cstrong\u003eN.B.\u003c/strong\u003e The metallic parameter is a parameter from 0 to 1 to give a more metallic sound. \nIt changes the modulator intensity. In fact, that 3/4 ratio on the FM is the reason metallic sound.\u003c/p\u003e\n\u003c/blockquote\u003e\n\u003cp\u003eThis function is called each tick with a new note:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"language-javascript\"\u003efunction tick (i, time) {\n  // ...\n  var r = risk(); // How the player is in danger\n  var metallic = 0.4 * r + 0.3 * smoothstep(-1, 1, Math.cos(Math.PI * i / 16));\n  var melo = i % 16 \u0026lt; 8 ? melo1 : melo2;\n  var octave = i % 32 \u0026lt; 16 ? 0 : 1;\n  var m = melo[i % 8] * (1 \u0026lt;\u0026lt; octave);\n  meloNote(m, time, meloIsArpeggio, metallic);\n  // ...\n}\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch3 id=\"repeater-of-freestyle-part\"\u003eRepeater of freestyle part\u003c/h3\u003e\n\u003cp\u003eA \u003cstrong\u003e\u0026quot;repeater\u0026quot; with random delay add crazyness in the freestyle section\u003c/strong\u003e. The delay time is randomly changed each time you hold the key so it gives cool feedback.\u003c/p\u003e\n\u003ciframe width=\"100%\" height=\"166\" scrolling=\"no\" frameborder=\"no\" src=\"https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F110612559\"\u003e\u003c/iframe\u003e\n\n\u003cp\u003eThe \u003cem\u003eRepeater\u003c/em\u003e is made of a \u003cem\u003eDelay\u003c/em\u003e piped in a \u003cem\u003eGain\u003c/em\u003e and piped back in the delay input to produce feedback (echo).\nA particularity of this component is the input \u003cem\u003eGain\u003c/em\u003e is also the output \u003cem\u003eGain\u003c/em\u003e.\u003c/p\u003e\n\u003cp\u003e\u003cimg src=\"/images/2013/09/repeater_schema.png\" alt=\"\"\u003e\u003c/p\u003e\n\u003cp\u003eImplementation of a Repeater:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"language-javascript\"\u003e  function Repeater (delayValue, repeatGainValue) {\n    var out = ctx.createGain();\n    var delay = ctx.createDelay(1); // The Max Delay\n    delay.delayTime.value = delayValue;\n    out.connect(delay);\n    var repeatGain = ctx.createGain();\n    repeatGain.gain.value = repeatGainValue;\n    delay.connect(repeatGain);\n    repeatGain.connect(out);\n    this.delay = delay;\n    this.repeater = repeatGain;\n    this.gain = this.inp = this.out = out;\n  }\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch3 id=\"playing-with-stereo\"\u003ePlaying with Stereo\u003c/h3\u003e\n\u003cp\u003eDoing stereo with Web Audio API can be a bit verbose without wrapping it,\nhere is the Stereo component:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"language-javascript\"\u003e  function Stereo (left, right) {\n    var merger = ctx.createChannelMerger();\n    var inp = ctx.createGain();\n    inp.connect(left.inp);\n    inp.connect(right.inp);\n    this.inp = inp;\n    left.out.connect(merger, 0, 0);\n    right.out.connect(merger, 0, 1);\n    this.left = left;\n    this.right = right;\n    this.out = merger;\n  }\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch3 id=\"drumbox\"\u003eDrumbox\u003c/h3\u003e\n\u003cp\u003e\u003cstrong\u003eThe Drumbox is simply made of a Kick, a Snare and a Hihat.\u003c/strong\u003e\u003c/p\u003e\n\u003ciframe width=\"100%\" height=\"166\" scrolling=\"no\" frameborder=\"no\" src=\"https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F110781486\"\u003e\u003c/iframe\u003e\n\n\u003cp\u003eA \u003cstrong\u003eSnare\u003c/strong\u003e is implemented with a Noise and a Filter:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"language-javascript\"\u003e  function Snare (volume, freqFrom, freqTo) {\n    var noise = new Noise();\n    noise.filter.type = \u0026quot;lowpass\u0026quot;;\n    noise.filter.Q.value = 5;\n    noise.gain.gain.value = 0;\n    this.noise = noise;\n    this.out = noise.out;\n    this.volume = volume || 1;\n    this.freqFrom = freqFrom || 800;\n    this.freqTo = freqTo || 1000;\n    this.release = 0.3;\n  }\n\n  Snare.prototype = {\n    trigger: function (time) {\n      this.noise.start(time, 1);\n      envelope(this.noise.gain, time, this.volume, 0.05, \n          0.01, 0.03, 0.25, this.release);\n      var f = this.noise.filter.frequency;\n      f.setValueAtTime(this.freqFrom, time);\n      f.linearRampToValueAtTime(this.freqTo, time+0.1);\n    }\n  };\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eThe \u003cstrong\u003eHiHat\u003c/strong\u003e is also made with a Noise and a Filter, \nexcept the Filter is a highpass filter (only high frequency are audible).\u003c/p\u003e\n\u003cp\u003eFinally, The \u003cstrong\u003eKick\u003c/strong\u003e is made with a \u003ccode\u003eKicker\u003c/code\u003e and a \u003ccode\u003eSnare\u003c/code\u003e.\u003c/p\u003e\n\u003cp\u003eHere is the Kicker implementation:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"language-javascript\"\u003e  function Kicker (freq, attack, duration, fall) {\n    OscGain.call(this);\n    this.gain.gain.value = 0;\n    this.osc.frequency.value = freq;\n    this.freq = freq || 50;\n    this.fall = fall || 0;\n    this.attack = attack || 0;\n    this.duration = duration || 0;\n    this.volume = 1;\n  }\n\n  Kicker.prototype = {\n    start: function (time, duration) {\n      startNode(this.osc, time, 0, duration);\n    },\n    trigger: function (time) {\n      var a = this.attack, d = this.attack + 0.06, s = 0.8, r = 0.1;\n      this.start(time, this.duration + 1);\n      envelope(this.gain, time, this.volume, this.duration, a, d, s, r);\n      setValueAtTime(this.osc.frequency, this.freq, time);\n      linearRampToValueAtTime(this.osc.frequency, 0, time + this.fall);\n    }\n  };\n\u003c/code\u003e\u003c/pre\u003e\n\u003cp\u003eAnd finally, here is my \u0026quot;kick\u0026quot; method called each time a user press the key:\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"language-javascript\"\u003e  kick: function (t, errorRate) {\n    errorRate = errorRate * errorRate * errorRate;\n    var freq = mix(100, 120, errorRate);\n    var speed = mix(0.2, 0.3, errorRate) * 100 / vars.bpm;\n    var kick = new Kicker(freq, 0.01, speed, speed);\n    kick.volume = 1.5;\n    kick.osc.type = \u0026quot;sine\u0026quot;;\n    var filter = ctx.createBiquadFilter();\n    filter.frequency.value = mix(200, 300, errorRate);\n    filter.Q.value = 10 + 10 * errorRate;\n    kick.out.connect(filter);\n    filter.connect(drumOut.inp);\n    setTimeout(function () {\n      filter.disconnect(drumOut.inp);\n    }, 1000);\n    kick.trigger(t);\n\n    var snare = new Snare(0.5, 1000, 10);\n    snare.out.connect(drumOut.inp);\n    setTimeout(function () {\n      snare.out.disconnect(drumOut.inp);\n    }, 1000);\n    snare.trigger(t);\n\n    E.pub(\u0026quot;kick\u0026quot;, t);\n  }\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch3 id=\"stereo-drumbox\"\u003eStereo Drumbox\u003c/h3\u003e\n\u003cp\u003eI\u0026#39;ve used two Repeaters (one for the left, on for the right) on the Drumbox to produce some stereo echo effects.\u003c/p\u003e\n\u003cp\u003eThe effect can be very weak to hear, so I made in the following audio example 2 different delays so you can understand what I mean:\u003c/p\u003e\n\u003ciframe width=\"100%\" height=\"166\" scrolling=\"no\" frameborder=\"no\" src=\"https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F110622238\"\u003e\u003c/iframe\u003e\n\n\u003cp\u003eAll sounds from the drumbox (snare, hihat, kick) is piped into \u0026quot;drumOut\u0026quot;, which have that Stereo system.\u003c/p\u003e\n\u003cp\u003eHere is the code of the \u0026quot;drumOut\u0026quot; (the output where goes all Drum Box sounds):\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"language-javascript\"\u003e  var drumOut = (function () {\n    // using the second example delay effect (listen to the soundcloud sound)\n    var left = new Repeater(0.1, 0.5);\n    var right = new Repeater(0.2, 0.7); // Playing with different values for stereo effects\n    right.gain.gain.value = 0.8; // move the drum a bit to the left\n    return new Stereo(left, right);\n  }());\n  drumOut.out.connect(out);\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch2 id=\"the-glsl-shader\"\u003eThe GLSL shader\u003c/h2\u003e\n\u003cp\u003eHere is the GLSL code I used for the game, the final version is a bit crazy because I incrementally add features to it!\nAll the graphics are defined here!\u003c/p\u003e\n\u003cpre\u003e\u003ccode class=\"language-glsl\"\u003e#ifdef GL_ES\nprecision mediump float;\n#endif\n\n#define BPM_MIN 30.0\n#define BPM_MAX 150.0\n\nuniform vec2 resolution;\nuniform float time;\nuniform float kick;\nuniform float kickSpeed;\nuniform float bpm;\nuniform float lvl;\n\nuniform bool dubstepAction;\nuniform float useraction;\nuniform float successState;\n\nuniform float dubloading;\nuniform bool dubphase;\nuniform float pulseOpenFrom;\nuniform float pulseOpenTo;\n\nconst vec2 center = vec2(0.5, 0.5);\n\nconst float PI = 3.14159265359;\nconst float PI_x_2 = 6.28318530718;\n\nconst vec3 COLOR_NEUTRAL = vec3(0.1, 0.2, 0.7);\nconst vec3 COLOR_SUCCESS = vec3(0.0, 0.7, 0.1);\nconst vec3 COLOR_ERROR = vec3(0.7, 0.0, 0.05);\n\nfloat expInOut (float a) {\n  return 0.0==a ? 0.0 : 1.0==a ? 1.0 : 1.0 \u0026gt; (a *= 2.0) ? 0.5 * pow(1024.0,a-1.0):0.5*(-pow(2.0,-10.0*(a-1.0))+2.0);\n}\n\nfloat random (vec2 pos) {\n  return fract(sin(dot(pos.xy ,vec2(12.9898,78.233))) * 43758.5453);\n}\nvec3 random3 (vec2 pos) {\n  return vec3(\n    random(pos),\n    random(pos*3.),\n    random(pos*13.)\n  );\n}\n\nfloat distanceRadius (float a, float b) {\n  float d = mod(distance(a, b), PI_x_2);\n  return d \u0026lt; PI ? d : PI_x_2 - d;\n}\n\nfloat spiralDistance (vec2 v, float r) {\n  float d = length(v);\n  float a = (PI + atan(v.x, v.y))/PI_x_2;\n  float n = log(d/r)+a;\n  return distance(1.0, 2.0 * smoothstep(0.0, 1.0, fract(n)));\n}\n\nfloat bpmToSec (float bpm) {\n  return 60. / bpm;\n}\n\nfloat circlePulse (\n  vec2 v, float kickForce,\n  float kickGlitchFreq, float kickGlitchAmp,\n  float thin, float pulseAngle, bool dubphase,\n  float waveFreq, float waveAmp, float waveDuration,\n  float bullForce\n) {\n  float angle = atan(-v.x, -v.y);\n  float clock = distanceRadius(0.0, angle) / PI;\n  float distAngle = distanceRadius(angle, PI_x_2 * pulseAngle) / PI;\n  float f = mix(1.0, smoothstep(-1.0, 1.0, cos(kickGlitchFreq * (clock+0.1*angle+kickForce))), kickGlitchAmp);\n  float r = mix(0.35, 0.2, kickForce*f);\n  float sc = smoothstep(1.0-waveDuration, 1.0, distAngle);\n  float intensity = 0.1+0.05*sc;\n  r /= mix(0.95, 1.0, waveAmp*sc*cos(angle*waveFreq));\n  float a = mod(PI_x_2+atan(v.x, v.y), PI_x_2)/PI_x_2;\n  float ring = abs(length(v)-r) - 0.03*bullForce*(!dubphase ? \n    smoothstep(1.0-1.5*waveDuration, 1.0, clock) : \n    (\n    a \u0026lt; pulseOpenFrom ? smoothstep(0.05, 0.0, distance(a, pulseOpenFrom)) : \n    a \u0026gt; pulseOpenTo ? smoothstep(0.05, 0.0, distance(a, pulseOpenTo)) : \n    1.0\n    )\n  );\n  float value = smoothstep(0.0, intensity, ring);\n  float returnValue = 1.0/sqrt(abs(value))/1.0 * pow(thin, 2.);\n  if ( length(v) \u0026lt; r) {\n    float sr = PI;\n    float s = spiralDistance(v, sr);\n    float a = (PI + atan(v.x, v.y))/PI_x_2;;\n    float v = \n      smoothstep(0.02, 0., distanceRadius(PI+pulseAngle*PI_x_2, a*PI_x_2)/PI) *\n      smoothstep(0.2, 0., s);\n    returnValue += v * 2.0;\n    s = 1.0 - pow(smoothstep(0.0, 0.3, s), 0.3);\n    returnValue += s;\n  }\n  float centerIntensity = dubphase ? 0.1 : 0.1*dubloading;\n  if (centerIntensity \u0026gt; 0.0) {\n    float s = bpmToSec(bpm);\n    float c = mix(1.0, 10.0, mod(time, s)/s) * smoothstep(centerIntensity, 0.0, length(v));\n    returnValue += c;\n  }\n  return returnValue;\n}\n\nvoid main (void) {\n  vec3 c = vec3(0.0);\n  vec2 p = gl_FragCoord.xy / resolution;\n  float sec = bpmToSec(bpm);\n  float statePower = smoothstep(0.8, 0.0, time-useraction);\n  float colorPower = dubstepAction ? 1.0 : statePower;\n  float cPulse = circlePulse(\n    p - center,\n    smoothstep(kickSpeed, 0.0, time-kick),\n    20.0,\n    0.5,\n    0.5 + 0.5 * smoothstep(smoothstep(0.6, 1.0, statePower), 0.0, distance(smoothstep(0.8, 1.0, statePower), distance(p, center))),\n    mod((time-kick)/sec, 1.0),\n    dubphase,\n    1.2*sqrt(bpm) + 4.0*statePower,\n    2.0,\n    min(0.5, bpm / 800.0),\n    1.0 - statePower\n  );\n  vec3 mainColor = mix(\n    COLOR_NEUTRAL,\n    mix(COLOR_ERROR, COLOR_SUCCESS, successState),\n    colorPower);\n  \n  c += cPulse * mainColor;\n\n  c = clamp(\n    c,\n    vec3(0.05, 0.05, 0.05),\n    vec3(1.0, 1.0, 1.0)\n  );\n\n  float bpmLight = smoothstep(BPM_MIN, BPM_MAX, bpm);\n  c = mix(c * (0.5 * random(p + time) + 0.5 * random(floor(p * 100.) + 0.01*time) - 0.5 * random(floor(p * 10.) + time)), c, min(1.0, 15.0*bpmLight));\n\n  c *= 0.1 + max(0.95, 100.0*(bpmLight-0.85));\n\n  gl_FragColor = vec4(c, 1.0);\n}\n\u003c/code\u003e\u003c/pre\u003e\n\u003ch2 id=\"bonus\"\u003eBonus\u003c/h2\u003e\n\u003cp\u003e\u003cstrong\u003eDid you recognize the melody I used in the freestyle part?\u003c/strong\u003e\nThe melody doesn\u0026#39;t keep the rhythm though, but you should be able to recognize it!\u003c/p\u003e\n\u003ciframe width=\"100%\" height=\"166\" scrolling=\"no\" frameborder=\"no\" src=\"https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F110614352\"\u003e\u003c/iframe\u003e\n","data":{"title":"Making a rhythm game with bleeding-edge web","description":"While continuing to experiment with Web Audio API and GLSL, I've made a game called Timelapse for js13kgames (an HTML5 game competition where entries must be less than 13 kb zipped).","thumbnail":"/images/2013/09/timelapse.png","author":"Gaetan","layout":"post","tags":["js13k","GLSL","audio","gamedev"]}},"__N_SSG":true},"page":"/[year]/[month]/[slug]","query":{"year":"2013","month":"09","slug":"timelapse"},"buildId":"SRE41IJCBZThpM4sgIIYT","isFallback":false,"gsp":true,"scriptLoader":[]}</script></body></html>
