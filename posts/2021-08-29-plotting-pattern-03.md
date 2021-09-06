@@ -31,27 +31,31 @@ It will curate plots that I will start drawing in the coming days.
 
 It's going to be a time-consuming process as a plot takes about 1 hour to perform (depending on settings and complexity of the lines). The physical art is designed to be plotted with fountain pens on A4 water-colour 300g paper and then cut into a 21 by 21 centimeters piece with a 5mm padding (so your art is a 20x20cm square). The planned inks to use are those described by the "Ink" trait (Diamine inks). The digital NFT has simulated a rendering that will be relatively well respected. There is going to be unpredictability when plotting it for real.
 
-## First phase: 🎉 claim a physical plot
-
-This first phase will be limited in time (e.g. 60 days after each physical NFT of the physical NFT collection). It will be defined in each NFT description. NB: you must be owning the digital NFT to claim the physical one when it's created.
-
 > Disclaimer: Beware I will likely not be able to plot them all. There are 888 items and it takes an average 1 hour to plot. However, I'll start plotting following a bit this curation decision process:
 > - personal favorite picks
 > - I will look at Opensea most starred NFTs
 > - I will look at Opensea most sold NFTs
 > - also if you really want the physical piece. e.g. if you ask me on Discord / Twitter. I can sure take request and add it in the wished list But I can't guarantee it as it would probably takes me 800 hours =)
 
+## First phase: 🎉 claim a physical plot *before November 1st, 2021*
+
+This first phase will ends on November 1st, 2021 for all physical NFTs. The presented offer will only be available during that time. The NFT physical I own after this time will still be owned by me and a second phase will be documented later.
+
 **How will it work?**
 
-If you own the digital NFT, once a physical NFT exists, you will be able to claim the physical NFT that goes with the physical piece. To claim it, I will only ask for a very small Offer (pay what you want) on the NFT physical (e.g. 0.01 WETH) so I can verify you are the NFT digital owner & proceed to accepting the NFT transfer of that 'physical NFT'.
+You can claim a physical NFT (created on the collection shared above) **as long as you own the digital NFT**. 
+
+To claim it, you make a small Offer on the NFT physical (pay what you want, e.g. 0.01 WETH) so I can verify you are the NFT digital owner & proceed to the NFT transfer of that 'physical NFT'.
+
+You will then get a code to obtain it physically.
 
 **How shipping works?**
-- The 'physical NFT', once acquires, will have unlockable content with instruction on how to contact me for proceeding to shipping.
+- The 'physical NFT', once acquires, will have unlockable content with instructions on how to contact me for proceeding to shipping.
 - **IMPORTANT: Please use a PO Box or other postal service ( e.g. https://en.wikipedia.org/wiki/Poste_restante ). I do not want to know your home address, thanks.**
-- On my side, I will use a simple tracked letter to ship the 20x20cm art internationally.
+- On my side, I will use a simple (possibly tracked) letter to ship the 20x20cm art internationally.
 
 ## second phase?
 
-**I do not know yet if there will be a second phase**, will there be an interest for physical prints? We will see, for now, it's a very time consuming and dedication process and I do this as a hobby at this stage! The documented philosophy here makes it decentralized. I like when art can go beyond their initial artist and co-artists.
+**This phase is not yet planned and may happen if people are interested to these plots.**
 
 <img width="50%" src="/images/2021/08/artist-1.jpg" /><img width="50%" src="/images/2021/08/artist-2.jpg" />
