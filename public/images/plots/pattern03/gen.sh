@@ -1,0 +1,1 @@
+for f in *; do dir=/Users/grenaudeau/dev/gre/public/images/plots/pattern03/$f; mkdir $dir; cp ../plotted/$f.svg $dir/source.svg; cp $f/out.mp4 $dir/video.mp4; cp $f/raw.jpg $dir/full.jpg; convert $dir/full.jpg -resize 1600x1600 $dir/preview.jpg; gifenc.sh $dir/video.mp4 $dir/preview.gif; done
