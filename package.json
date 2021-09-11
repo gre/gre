@@ -23,6 +23,7 @@
     "@tensorflow/tfjs-backend-webgl": "^3.4.0",
     "@tensorflow/tfjs-converter": "^3.4.0",
     "@tensorflow/tfjs-core": "^3.4.0",
+    "@use-gesture/react": "^10.0.0-beta.24",
     "axios": "^0.21.1",
     "babel-loader": "^8.2.2",
     "base64-inline-loader": "^1.1.1",
@@ -53,6 +54,7 @@
     "webpack": "^5.51.1"
   },
   "devDependencies": {
+    "@parcel/transformer-image": "2.0.0-rc.0",
     "cssnano": "^4.1.11",
     "eslint": "^7.32.0",
     "eslint-config-next": "^11.1.0",
