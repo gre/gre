@@ -43,7 +43,7 @@ This first phase will ends on November 1st, 2021 for all physical NFTs. The pres
 
 You can claim a physical NFT (created on the collection shared above) **as long as you own the digital NFT**. 
 
-To claim it, you make a small Offer on the NFT physical (pay what you want, e.g. 0.01 WETH) so I can verify you are the NFT digital owner & proceed to the NFT transfer of that 'physical NFT'.
+To claim it, you make a small Offer on the NFT physical (pay what you want, e.g. 0.03 WETH – ideally >0.02 to cover the mint cost) so I can verify you are the NFT digital owner & proceed to the NFT transfer of that 'physical NFT'.
 
 You will then get a code to obtain it physically.
 
