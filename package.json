@@ -12,7 +12,10 @@
     "build-blockstyle-rust-pkg-release": "wasm-pack build --target web blockarts/Pattern03/blockstyle --release",
     "build-blockstyle-rust-pkg-debug": "wasm-pack build --target web blockarts/Pattern03/blockstyle --dev",
     "build-blockstyle": "NODE_ENV=production webpack --mode production --config blockstyle.webpack.config.js",
-    "build-blockstyle-dev": "webpack --mode development --config blockstyle.webpack.config.js"
+    "build-blockstyle-dev": "webpack --mode development --config blockstyle.webpack.config.js",
+    "mountains-circle-prod": "cd doodles/mountains-circle && rm -rf dist && webpack && cp index.html dist && cp thumbnail.png dist && rm -f dist.zip && cd dist && zip -r ../dist.zip *",
+    "mountains-circle-build": "cd doodles/mountains-circle && webpack && cp index.html dist",
+    "mountains-circle-start": "cd doodles/mountains-circle && http-server dist"
   },
   "dependencies": {
     "@babel/core": "^7.15.0",
@@ -51,16 +54,18 @@
     "react-toastify": "^7.0.4",
     "simplex-noise": "^2.4.0",
     "valtio": "^1.2.1",
-    "webpack": "^5.51.1"
+    "webpack": "^5.53.0"
   },
   "devDependencies": {
     "@parcel/transformer-image": "2.0.0-rc.0",
+    "@wasm-tool/wasm-pack-plugin": "^1.5.0",
     "cssnano": "^4.1.11",
     "eslint": "^7.32.0",
     "eslint-config-next": "^11.1.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^3.4.1",
     "eslint-plugin-react": "^7.24.0",
+    "http-server": "^13.0.2",
     "webpack-cli": "^4.8.0"
   },
   "browserslist": [
