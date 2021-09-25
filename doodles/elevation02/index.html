@@ -1,0 +1,158 @@
+<html>
+  <head>
+    <title>Elevation02</title>
+    <meta charset="UTF-8">
+    <meta property="og:image" content="thumbnail.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      * { 
+          -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+          -moz-tap-highlight-color: rgba(0, 0, 0, 0);
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #fff;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        font-family: Monaco, sans-serif;
+      }
+      h1, h2 {
+        padding: 0;
+        margin: 0;
+      }
+      a.download {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+      }
+      #main a {
+        display: inline-block;
+        background: white;
+        border: 2px solid black;
+        padding: 4px 6px;
+        color: black;
+        text-decoration: none;
+        font-size: 16px;
+        font-weight: bold;
+        transition: 200ms opacity;
+        user-select: none;
+      }
+      header {
+        position: fixed;
+        z-index: 1000;
+        padding: 10px;
+        top: 2px;
+        left: 0%;
+        width: 100%;
+      }
+      a.help {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        opacity: 0.5;
+        cursor: pointer;
+      }
+      footer {
+        position: fixed;
+        padding: 10px;
+        bottom: 2px;
+        left: 0%;
+        width: 100%;
+      }
+      a.choice {
+        cursor: pointer;
+        margin: 4px;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+      a.color {
+        cursor: pointer;
+        margin: 4px;
+      }
+      #help {
+        position: fixed;
+        top: 5vh;
+        left: 5vw;
+        width: 90vw;
+        height: 90vh;
+        padding: 1vw 2vw;
+        box-sizing: border-box;
+        font-size: 1.8vw;
+        border: 4px solid #F09;
+        background: white;
+        display: none;
+      }
+      #help main {
+        overflow: auto;
+        height: 100%;
+      }
+      #help a {
+        color: #f09;
+      }
+      #help.visible {
+        display: block;
+      }
+      #help #close {
+        padding: 10px;
+        color: #f09;
+        text-decoration: none;
+        font-size: 20px;
+        font-weight: bold;
+        user-select: none;
+        cursor: pointer;
+        position: absolute;
+        top: 0px;
+        right: 0px;
+      }
+      #noauth {
+        display: none;
+        font-weight: bold;
+        color: #f09;
+        position: absolute;
+        top: 0px;
+        right: 5vw;
+      }
+      </style>
+    </style>
+  </head>
+  <body>
+    <div id="main"></div>
+    <p id="noauth">You must be logged in to see this NFT.</p>
+    <div id="help">
+      <a id="close" onclick="javascript:setHelpOn(false)">
+        X
+      </a>
+      <main>
+      <h1>Elevation02 by <a target="_blank" href="https://twitter.com/greweb">@greweb</a></h1>
+
+      <p><strong>A generative art, unique for you</strong> – determined with your wallet address.</p>
+      <p>This is a "plottable art" – art that can be plotted with fountain pens.</p>
+      <p>buttons allow to chose an ink (11 colors).</p>
+
+      <h2>Physical art and secondary market?</h2>
+      <p>
+        <a target="_blank" href="https://twitter.com/greweb">@greweb</a> is happy to deliver physical plots for buys on the primary AND secondary markets!
+      </p>
+      <ol>
+        <li>
+          <strong>BEFORE BUY: contact me</strong> (<a target="_blank" href="https://twitter.com/greweb">@greweb</a> / <a target="_blank" href="mailto:renaudeau.gaetan@gmail.com">renaudeau.gaetan@gmail.com</a>) with: your Tezos wallet public address + intensity and ink chosen. (so I can confirm with you)
+        </li>
+        <li>
+          <strong>PHYSICAL ART:</strong> I ship one plot for each NFT edition you own. (once I confirm it with you, I will need to know the shipping address – ideally a PO Box / work address).
+        </li>
+        <li>
+          <strong>Second market:</strong> You can sell the NFT back to the second market (to same or higher price). The conditions above also works for second buyers so I will be able to produce plots for them. (which are unique per wallet)
+        </li>
+      </ol>
+
+      <p>The second market will be interesting, NFT have a true value as the physical offer is still active beyond the first buy and thanks to the NFT scarcity.</p>
+
+      <h2>Thank you!</h2>
+      <p>More work from @greweb at <a target="_blank" href="https://greweb.me">greweb.me</a> – <strong>Tech:</strong> <em>made with Rust+WASM producing an SVG rendered in WebGL.</em></p>
+      </main>
+    </div>
+    <script src="./bundle.js"></script>
+  </body>
+</html>

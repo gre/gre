@@ -13,9 +13,9 @@
     "build-blockstyle-rust-pkg-debug": "wasm-pack build --target web blockarts/Pattern03/blockstyle --dev",
     "build-blockstyle": "NODE_ENV=production webpack --mode production --config blockstyle.webpack.config.js",
     "build-blockstyle-dev": "webpack --mode development --config blockstyle.webpack.config.js",
-    "mountains-circle-prod": "cd doodles/mountains-circle && rm -rf dist && webpack && cp index.html dist && cp thumbnail.png dist && rm -f dist.zip && cd dist && zip -r ../dist.zip *",
-    "mountains-circle-build": "cd doodles/mountains-circle && webpack && cp index.html dist",
-    "mountains-circle-start": "cd doodles/mountains-circle && http-server dist"
+    "elevation03-prod": "cd doodles/elevation03 && rm -rf dist && webpack && cp index.html dist && cp thumbnail.png dist && rm -f dist.zip && cd dist && zip -r ../dist.zip *",
+    "elevation03-build": "cd doodles/elevation03 && webpack && cp index.html dist",
+    "elevation03-start": "cd doodles/elevation03 && http-server dist"
   },
   "dependencies": {
     "@babel/core": "^7.15.0",
