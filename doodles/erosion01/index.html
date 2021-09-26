@@ -1,0 +1,175 @@
+<html>
+  <head>
+    <title>Erosion01</title>
+    <meta charset="UTF-8">
+    <meta property="og:image" content="thumbnail.jpg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      * { 
+          -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+          -moz-tap-highlight-color: rgba(0, 0, 0, 0);
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #fff;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        font-family: Monaco, sans-serif;
+      }
+      h1, h2 {
+        padding: 0;
+        margin: 0;
+      }
+      a.download {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+      }
+      #main a {
+        display: inline-block;
+        background: white;
+        border: 2px solid black;
+        padding: 4px 6px;
+        color: black;
+        text-decoration: none;
+        font-size: 16px;
+        font-weight: bold;
+        transition: 200ms opacity;
+        user-select: none;
+      }
+      a.help {
+        z-index: 1000;
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        opacity: 0.5;
+        cursor: pointer;
+      }
+      a.choice {
+        cursor: pointer;
+        margin: 4px;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+      a.color {
+        cursor: pointer;
+        margin: 4px;
+      }
+      #help {
+        position: fixed;
+        top: 5vh;
+        left: 5vw;
+        width: 90vw;
+        height: 90vh;
+        padding: 1vw 2vw;
+        box-sizing: border-box;
+        font-size: 1.8vw;
+        border: 4px solid #F09;
+        background: white;
+        display: none;
+      }
+      #help main {
+        overflow: auto;
+        height: 100%;
+      }
+      #help a {
+        color: #f09;
+      }
+      #help.visible {
+        display: block;
+      }
+      #help #close {
+        padding: 10px;
+        color: #f09;
+        text-decoration: none;
+        font-size: 20px;
+        font-weight: bold;
+        user-select: none;
+        cursor: pointer;
+        position: absolute;
+        top: 0px;
+        right: 0px;
+      }
+      .loading {
+        font-size: 4vh;
+        position: absolute;
+        color: white;
+        font-weight: bold;
+      }
+      header {
+        pointer-events: none;
+        user-select: none;
+        position: fixed;
+        top: 0px;
+        width: 100%;
+        text-align: center;
+        color: #F09;
+        font-weight: bold;
+        font-size: 2vw;
+      }
+      footer {
+        position: fixed;
+        padding: 10px;
+        bottom: 2px;
+        left: 10%;
+        width: 80%;
+      }
+      .pages {
+        text-align: center;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        background: #eee;
+      }
+      #main .pages a {
+        cursor: pointer;
+        flex: 1;
+      }
+      #main .pages span {
+        display: flex;
+        flex: 1;
+      }
+      #main .pages span:hover a,
+      #main .pages span.current a,
+      #main .pages span.selected a {
+        display: inline-block;
+      }
+      #main .pages span.selected a {
+        color: #F09;
+        border-color: #F09;
+      }
+      #main .pages span a {
+        display: none;
+      }
+      </style>
+    </style>
+  </head>
+  <body>
+    <div id="main"></div>
+    <div id="help">
+      <a id="close" onclick="javascript:setHelpOn(false)">
+        X
+      </a>
+      <main>
+      <h1>Erosion01 by <a target="_blank" href="https://twitter.com/greweb">@greweb</a></h1>
+
+      <p>This NFT re-generates itself each time an edition is sold!</p>
+      <p>A history of all items accumulated is available on this interactive NFT itself.</p>
+      <p>The generated art is deterministic and unpredictable depending on the buyers.</p>
+      <p>This is a "plottable art" – art that can be plotted with fountain pens.</p>
+
+      <h2>Physical art?</h2>
+      <p>
+        <a target="_blank" href="https://twitter.com/greweb">@greweb</a> is happy to deliver physical plots for anyone who wants on the item number you want under the condition you have bought it once. The more the NFT gets bought, the more editions there will be. Please PM me before to confirm with me this is still a possibility.
+      </p>
+
+      <h2>Thank you!</h2>
+      <p>More work from @greweb at <a target="_blank" href="https://greweb.me">greweb.me</a> – <strong>Tech:</strong> <em>made with Rust+WASM producing an SVG rendered in WebGL.</em></p>
+      <p>Disclaimer: The history feature of this NFT will work while api.better-call.dev is up and if hicetnunc doesn't switch to another contract.</p>
+      </main>
+    </div>
+    <script src="./bundle.js"></script>
+  </body>
+</html>
