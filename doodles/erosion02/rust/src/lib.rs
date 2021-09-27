@@ -13,6 +13,7 @@ use serde::{Deserialize};
 #[derive(Deserialize)]
 pub struct Opts {
     pub seed: f64,
+    pub precision: f64,
 }
 
 pub fn art(opts: &Opts) -> Vec<Group> {
@@ -20,7 +21,7 @@ pub fn art(opts: &Opts) -> Vec<Group> {
     let height = 200.0;
     let stroke_width = 0.3;
     let samples = 80;
-    let precision = 1.;
+    let precision = opts.precision;
     let pad = 20.;
     let w = (width as f64 / precision) as u32;
     let h = (height as f64 / precision) as u32;
@@ -116,6 +117,8 @@ pub fn art(opts: &Opts) -> Vec<Group> {
         routes = crop_routes(&routes, bounds);
 
         let mut l = Group::new()
+            .set("inkscape:groupmode", "layer")
+            .set("inkscape:label", color)
             .set("fill", "none")
             .set("stroke", color)
             .set("stroke-width", stroke_width);

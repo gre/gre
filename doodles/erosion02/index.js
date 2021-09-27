@@ -5,6 +5,7 @@ import Main from "./Main";
 
 const params = new URLSearchParams(window.location.search);
 let viewer = params.get("viewer");
+let highQuality = params.get("highQuality");
 let objkt = parseInt(params.get("objkt"), 10);
 if (isNaN(objkt)) {
   objkt = null;
@@ -128,6 +129,7 @@ const Root = () => {
         setHelpOn={setHelpOn}
         viewer={viewer}
         histo={histo}
+        highQuality={!!highQuality}
       />
     </div>
   );

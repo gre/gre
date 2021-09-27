@@ -95,7 +95,15 @@ const Timer = () => {
     : Math.floor(remain / 60) + " minutes";
 };
 
-const Main = ({ width, height, helpOn, setHelpOn, histo, viewer }) => {
+const Main = ({
+  width,
+  height,
+  helpOn,
+  setHelpOn,
+  histo,
+  viewer,
+  highQuality,
+}) => {
   const dpr = window.devicePixelRatio || 1;
   const min = Math.min(width, height);
   const w = Math.min(MAX, Math.floor(dpr * min));
@@ -120,8 +128,9 @@ const Main = ({ width, height, helpOn, setHelpOn, histo, viewer }) => {
   const opts = useMemo(
     () => ({
       seed: r1,
+      precision: 1,
     }),
-    [pick]
+    [pick, highQuality]
   );
   const primary = COLORS[Math.floor(COLORS.length * r2)];
   const secondary = COLORS[Math.floor(COLORS.length * r3)];

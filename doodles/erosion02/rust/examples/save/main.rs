@@ -5,6 +5,7 @@ fn main() {
     let mut g = Group::new();
     let a = art(&Opts {
         seed: 10.,
+        precision: 1.
     });
     for e in a {
         g = g.add(e);
