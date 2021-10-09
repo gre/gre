@@ -9,10 +9,16 @@ export async function getPlots() {
     const m = folder.match(/^([0-9]+)$/);
     const content = await import(`./examples/${folder}/README.md`);
     const meta = matter(content.default);
+    const rustFile = meta.data.sourceFolderURL
+      ? "link"
+      : (meta.data.sourceFolder || folder) + "/main.rs";
     plots.push({
       n: m[1],
       key,
-      rustFile: (meta.data.sourceFolder || folder) + "/main.rs",
+      rustFile,
+      sourceURL:
+        meta.data.sourceFolderURL ||
+        `https://github.com/gre/gre/blob/master/plots/examples/${rustFile}`,
       content: marked(meta.content),
       data: meta.data,
     });

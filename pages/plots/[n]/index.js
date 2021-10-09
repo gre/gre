@@ -36,7 +36,7 @@ export async function getStaticProps({ params }) {
 }
 
 export default function Home({ plot, prev, next }) {
-  const { content, data, rustFile } = plot;
+  const { content, data, rustFile, sourceURL } = plot;
   const { thumbnail } = data;
   const title = `Plot #${plot.n} ${data.title ? " – " + data.title : ""}`;
   const description = data.description || "";
@@ -171,11 +171,7 @@ export default function Home({ plot, prev, next }) {
             <dl>
               <dt>Sourcecode</dt>
               <dd>
-                <a
-                  href={`https://github.com/gre/gre/blob/master/plots/examples/${rustFile}`}
-                >
-                  {rustFile}
-                </a>
+                <a href={sourceURL}>{rustFile}</a>
               </dd>
             </dl>
             {data.tags ? (
