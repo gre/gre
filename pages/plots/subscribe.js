@@ -108,8 +108,7 @@ export default function Home({ tag }) {
           width: "100%",
         }}
       >
-        BETA: this offer is currently in BETA TEST and on Ethereum Rinkeby
-        (testnet)
+        WIP WIP WIP – this is currently a work in progress – WIP WIP WIP
       </div>
       <Container>
         <Main>
