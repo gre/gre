@@ -134,7 +134,14 @@ export default function Home({ tag }) {
           `}</style>
 
           <Content>
-            <h3>
+            <h3
+              style={{
+                fontWeight: 200,
+                fontSize: "1.6em",
+                marginTop: 0,
+                padding: 0,
+              }}
+            >
               Every month, @greweb is shipping original plots worldwide to
               subscribers of this NFT membership, renewable each month.
             </h3>

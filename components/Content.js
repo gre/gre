@@ -6,7 +6,7 @@ export function Content({ children }) {
       {children}
       <style jsx>{`
         .content {
-          max-width: 600px;
+          max-width: 660px;
           padding: 0 10px;
         }
       `}</style>
