@@ -108,8 +108,8 @@ export default function Home({ tag }) {
           width: "100%",
         }}
       >
-        BETA: this offer is currently in BETA TEST and is done on Ethereum
-        Rinkeby at the moment.
+        BETA: this offer is currently in BETA TEST and on Ethereum Rinkeby
+        (testnet)
       </div>
       <Container>
         <Main>
@@ -139,17 +139,23 @@ export default function Home({ tag }) {
               subscribers of this NFT membership, renewable each month.
             </h3>
             <p>
-              <strong>On 1th of the month</strong>, a unique generator is
-              developed by @greweb specially for "Greweb Monthly Plot"
-              collectors. Every member will get a random original art piece from
-              the generator. It is physically plotted with an AxiDraw by the
-              artist.
+              <strong>On 1th of the month</strong>, @greweb develops and
+              announces on this page a new plottable generative art. The
+              generator allows to physically plot many unique art variants. Each
+              surprise pick is reserved for "Greweb Monthly Plot" collectors.
             </p>
             <p>
               <strong>On 15th of the month</strong>, a snapshot of the
-              membership is captured. The physical art originals are plotted and
-              shipped for each member, using a tracked letter. Don't forget to
-              renew your membership before this date!
+              membership is captured. The final collection of physical art
+              originals is curated, plotted and shipped for each member, using a
+              tracked letter. Don't forget to renew your membership before this
+              date!
+            </p>
+            <p>
+              <strong>By the end of the month</strong>, the source code of the
+              generator is published and photos of the picks are shared.
+              However, only the members will be shared their "seed" that allows
+              to reproduce their own variant with the generator.
             </p>
             <div
               style={{ background: "#eee", padding: 10, textAlign: "center" }}
@@ -182,10 +188,11 @@ export default function Home({ tag }) {
             </div>
             <img width="100%" src="/images/plots-promo/letters.jpeg" />
             <div style={{ padding: 20, background: "#EEE" }}>
-              <h3>Next Month Preview</h3>
+              <h3>Preview of this month</h3>
               Here is a preview of what is planned for December 2021 art.
               <br />
               [PREVIEW IMAGE WOULD BE HERE. TODO DYNAMIC CONTENT]
+              <br />
             </div>
 
             <footer
