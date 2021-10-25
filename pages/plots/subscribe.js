@@ -149,14 +149,12 @@ export default function Home({ tag }) {
 
             <blockquote
               style={{
-                borderLeft: "2px solid #000",
-                padding: 0,
+                padding: "0 40px",
                 margin: 0,
-                paddingLeft: 20,
               }}
             >
               <p>
-                <strong>Start of the month</strong>, a new art generator is
+                <strong>1st of the month</strong>, a new art generator is
                 developed and shared by @greweb.
               </p>
               <p>
@@ -165,8 +163,8 @@ export default function Home({ tag }) {
                 Plot" NFT. It gets plotted and shipped with a tracked letter.
               </p>
               <p>
-                <strong>End of the month</strong>, generator's source code is
-                published, variants photos are shared.
+                <strong>End of the month</strong>, the generator source code is
+                published. Photos of the different editions are also shared.
               </p>
             </blockquote>
 
@@ -251,12 +249,12 @@ export default function Home({ tag }) {
               }}
             >
               <p>
-                @greweb has been doing generative art for many years, shaders
+                @greweb has been doing generative art for many years, shaders,
                 and more recently fountain pens robot plotting!
               </p>
 
               <p>
-                His work is about exploring beauty of noise through many
+                His work is about exploring the beauty of noise through many
                 algorithms. See also{" "}
                 <Link href="/plots">
                   <a>https://greweb.me/plots</a>
