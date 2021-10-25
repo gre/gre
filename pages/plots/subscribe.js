@@ -147,7 +147,7 @@ export default function Home({ tag }) {
 
             <img width="100%" src="/images/plots-promo/letters.jpeg" />
 
-            <blockquote
+            <div
               style={{
                 padding: "0 40px",
                 margin: 0,
@@ -166,7 +166,7 @@ export default function Home({ tag }) {
                 <strong>End of the month</strong>, the generator source code is
                 published. Photos of the different editions are also shared.
               </p>
-            </blockquote>
+            </div>
 
             <video
               loop
