@@ -118,7 +118,7 @@ export default function Home({ tag }) {
 
           <style jsx>{`
             .cta {
-              background: #000;
+              background: #f0f;
               color: #fff;
               display: inline-block;
               margin: 0.4em 0;
@@ -138,49 +138,68 @@ export default function Home({ tag }) {
                 fontWeight: 200,
                 fontSize: "1.6em",
                 marginTop: 0,
-                padding: 0,
+                paddingTop: 10,
               }}
             >
               Every month, @greweb is shipping original plots worldwide to
               subscribers of this NFT membership, renewable each month.
             </h3>
-            <p>
-              <strong>Beginning of the month</strong>, @greweb develops and
-              announces on this page a new plottable generative art. The
-              generator allows to physically plot many unique art variants. Each
-              surprise pick is reserved for "Greweb Monthly Plot" collectors.
-            </p>
-            <p>
-              <strong>15th of the month</strong>, a snapshot of the membership
-              is captured. The final collection of physical art originals is
-              curated, plotted, and shipped for each member, using a tracked
-              letter. Don't forget to renew your membership before this date!
-            </p>
-            <p>
-              <strong>End of the month</strong>, the source code of the
-              generator is published, photos of the picks are shared. Only the
-              members get shared their "seed" – making their variant digitally
-              reproducible with the generator.
-            </p>
 
-            <div
+            <img width="100%" src="/images/plots-promo/letters.jpeg" />
+
+            <blockquote
               style={{
-                textAlign: "center",
-                padding: "10px 0",
-                margin: "40px 0",
-                borderTop: "4px solid #F0F",
-                borderBottom: "4px solid #F0F",
-                color: "#F0F",
+                borderLeft: "2px solid #000",
+                padding: 0,
+                margin: 0,
+                paddingLeft: 20,
               }}
             >
-              <h3 style={{ padding: 0, marginTop: 0 }}>
-                Release of this month
-              </h3>
-              [CONTENT WOULD BE INTRODUCED HERE]
-            </div>
+              <p>
+                <strong>Every month</strong>, a new art generator is developed
+                by @greweb. It is shared in "Release of this month" section.
+              </p>
+              <p>
+                <strong>15th of the month</strong>, a surprise variant of the
+                generator is curated (by the artist) for each active member of
+                "Greweb Monthly Plot" NFT membership. It gets plotted and
+                shipped with a tracked letter.
+              </p>
+              <p>
+                <strong>End of the month</strong>, the source code of the
+                generator is published, photos of the picks are shared.
+              </p>
+            </blockquote>
+
+            <video
+              loop
+              autoPlay
+              muted
+              src="/images/plots/164-plotting-speed-x200.mp4"
+              width="50%"
+            ></video>
+            <video
+              loop
+              autoPlay
+              muted
+              src="/images/plots/164-showcase.mp4"
+              width="50%"
+            ></video>
+
+            <p>
+              Every member receives a unique 1/1 art piece. Each art piece
+              physically comes with a "password seed" that is private to the
+              member and can be used to recreate the art with the generator as
+              they wish.
+            </p>
+            <p>
+              Plotting art is time-consuming which creates a limited supply each
+              month. These are not "prints" but original pen plots that are
+              delivered to each member.
+            </p>
 
             <div
-              style={{ background: "#eee", padding: 10, textAlign: "center" }}
+              style={{ background: "#EEE", padding: 10, textAlign: "center" }}
             >
               {unlockStatus ? (
                 unlockStatus.state === "unlocked" ? (
@@ -208,7 +227,22 @@ export default function Home({ tag }) {
                 </a>
               </p>
             </div>
-            <img width="100%" src="/images/plots-promo/letters.jpeg" />
+
+            <div
+              style={{
+                textAlign: "center",
+                padding: "10px 0",
+                margin: "40px 0",
+                borderTop: "4px solid #F0F",
+                borderBottom: "4px solid #F0F",
+                color: "#F0F",
+              }}
+            >
+              <h3 style={{ padding: 0, marginTop: 0 }}>
+                Release of this month
+              </h3>
+              [CONTENT WOULD BE INTRODUCED HERE]
+            </div>
 
             <footer
               style={{
@@ -225,21 +259,6 @@ export default function Home({ tag }) {
                 @greweb has been doing generative art for many years, shaders
                 and more recently fountain pens robot plotting!
               </p>
-
-              <video
-                loop
-                autoPlay
-                muted
-                src="/images/plots/164-plotting-speed-x200.mp4"
-                width="50%"
-              ></video>
-              <video
-                loop
-                autoPlay
-                muted
-                src="/images/plots/164-showcase.mp4"
-                width="50%"
-              ></video>
 
               <p>
                 His work is about exploring beauty of noise through many
