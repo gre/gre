@@ -156,18 +156,17 @@ export default function Home({ tag }) {
               }}
             >
               <p>
-                <strong>Every month</strong>, a new art generator is developed
-                by @greweb. It is shared in "Release of this month" section.
+                <strong>Start of the month</strong>, a new art generator is
+                developed and shared by @greweb.
               </p>
               <p>
-                <strong>15th of the month</strong>, a surprise variant of the
-                generator is curated (by the artist) for each active member of
-                "Greweb Monthly Plot" NFT membership. It gets plotted and
-                shipped with a tracked letter.
+                <strong>15th of the month</strong>, a surprise variant is
+                curated by the artist for each active member of "Greweb Monthly
+                Plot" NFT. It gets plotted and shipped with a tracked letter.
               </p>
               <p>
-                <strong>End of the month</strong>, the source code of the
-                generator is published, photos of the picks are shared.
+                <strong>End of the month</strong>, generator's source code is
+                published, variants photos are shared.
               </p>
             </blockquote>
 
@@ -187,14 +186,14 @@ export default function Home({ tag }) {
             ></video>
 
             <p>
-              Every member receives a unique 1/1 art piece. Each art piece
+              🎉🖼 Every member receives a unique 1/1 art piece. Each art piece
               physically comes with a "password seed" that is private to the
               member and can be used to recreate the art with the generator as
               they wish.
             </p>
             <p>
-              Plotting art is time-consuming which creates a limited supply each
-              month. These are not "prints" but original pen plots that are
+              🤖✒️ Plotting art is time-consuming which creates a limited supply
+              each month. These are not "prints" but original pen plots that are
               delivered to each member.
             </p>
 
@@ -206,15 +205,11 @@ export default function Home({ tag }) {
                   <strong>Your membership is active!</strong>
                 ) : (
                   <div>
-                    <p>
-                      Purchase membership of a "Greweb Monthly Plot" NFT to get
-                      physical art originals from @greweb. Shipping details are
-                      filled with the Unlock purchase.
-                    </p>
                     <p>No membership found (or expired/logged out)</p>
                     <a className="cta" onClick={onPurchase}>
                       Purchase membership
                     </a>
+                    <p>Shipping details are filled with the Unlock purchase.</p>
                   </div>
                 )
               ) : (
