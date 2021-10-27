@@ -10,9 +10,9 @@ use svg::node::element::*;
 #[derive(Clap)]
 #[clap()]
 struct Opts {
-    #[clap(short, long, default_value = "0.0")]
+    #[clap(short, long, default_value = "187.0")]
     seed: f64,
-    #[clap(short, long, default_value = "80")]
+    #[clap(short, long, default_value = "50")]
     samples: usize,
 }
 
@@ -50,43 +50,43 @@ fn art(opts: Opts) -> Vec<Group> {
             let mut rng = rng_from_seed(700. + 8.738 * opts.seed);
             let mut c = ((x-0.5) * width / height, y-0.5);
             c = p_r(c, ci as f64 * 2. * PI / 3.);
-            if rng.gen_range(0.0, 1.0) < 0.5 {
+            if rng.gen_range(0.0, 1.0) < 0.3 {
                 c.0 = c.0.abs();
             }
-            if rng.gen_range(0.0, 1.0) < 0.5 {
+            if rng.gen_range(0.0, 1.0) < 0.3 {
                 c.1 = c.1.abs();
             }
-            let res = rng.gen_range(2, 30);
+            let res = rng.gen_range(2, 50);
             let mut s = 100f64;
             let k = rng.gen_range(0.0, 0.2);
             for _i in 0..res {
               let mut p = (c.0, c.1);
               let ang = rng.gen_range(0f64, PI);
-              p.1 += rng.gen_range(-0.2, 0.2);
-              p.0 += rng.gen_range(-0.1, 0.1);
+              p.1 += rng.gen_range(-0.3, 0.3);
+              p.0 += rng.gen_range(-0.2, 0.2);
               p = p_r(p, ang);
               let dim = (
-                rng.gen_range(0.0, 0.1),
-                rng.gen_range(0.0, 0.1)
+                rng.gen_range(0.0, 0.2),
+                rng.gen_range(0.0, 0.2)
               );
               s = op_union_round(s, sdf_box2(p, dim), k);
             }
-            let f1 = rng.gen_range(0.0, 2.0);
-            let f2 = rng.gen_range(0.0, 4.0);
-            let f3 = rng.gen_range(0.0, 8.0);
-            let a2 = rng.gen_range(0.0, 1.0);
-            let a3 = rng.gen_range(0.0, 1.0);
-            let n = rng.gen_range(0.0, 0.8) * perlin.get([
+            let f1 = rng.gen_range(0.0, 4.0);
+            let f2 = rng.gen_range(0.0, 8.0);
+            let f3 = rng.gen_range(0.0, 16.0);
+            let a2 = 2.0 * rng.gen_range(0.0, 1f64).powf(2.0);
+            let a3 = 2.0 * rng.gen_range(0.0, 1f64).powf(2.0);
+            let n = 0.5 * rng.gen_range(0.0, 1f64).powf(2.0) * perlin.get([
                 f1 * c.0,
                 f1 * c.1,
-                opts.seed
-                - a2 * perlin.get([
+                100.0 + opts.seed * 7.3
+                + a2 * perlin.get([
                     opts.seed + rng.gen_range(0.0, 1.0f64).powf(4.0) * (ci as f64),
-                    f2 * c.0 + a3 * perlin.get([f3 * c.0, f3 * c.1, 1. + opts.seed]),
-                    f2 * c.1 + a3 * perlin.get([f3 * c.0, f3 * c.1, 2. + opts.seed])
+                    f2 * c.0 + a3 * perlin.get([f3 * c.0, f3 * c.1, 10. + 0.7 * opts.seed]),
+                    f2 * c.1 + a3 * perlin.get([f3 * c.0, f3 * c.1, 20. + 1.2 * opts.seed])
                   ])
                 ]);
-            lerp(-0.3, 0.5, s) + n
+            lerp(-0.3, 0.4, s) + n
         };
         
         let thresholds: Vec<f64> = 
