@@ -399,8 +399,10 @@ pub fn render_route_when<F: FnMut(
     let mut d = data;
     for p in route {
         if first {
-            first = false;
-            d = d.move_to(p);
+            if should_draw_line(p, p) {
+                first = false;
+                d = d.move_to(p);
+            }
         } else {
             if should_draw_line(last, p) {
                 if up {
