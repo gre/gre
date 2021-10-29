@@ -1,7 +1,8 @@
 ---
-title: "Maillage 01"
-thumbnail: /images/plots/301.jpg
+title: "Maillage 02"
+thumbnail: /images/plots/302.jpg
 description: "Rotation of the same shape 3 times creates an interesting pattern."
+sourceFolder: 301
 ---
 
 Rotation of the same shape 3 times creates an interesting pattern.
