@@ -12,6 +12,8 @@ use svg::node::element::*;
 struct Opts {
     #[clap(short, long, default_value = "0.0")]
     seed: f64,
+    #[clap(short, long, default_value = "180")]
+    resolution: usize,
 }
 
 fn art(opts: Opts) -> Vec<Group> {
@@ -21,7 +23,7 @@ fn art(opts: Opts) -> Vec<Group> {
     colors.iter().enumerate().map(|(ci, &color)| {
         let mut rng = rng_from_seed(opts.seed);
         let circles = rng.gen_range(3, 16);
-        let count = 180 / circles;
+        let count = opts.resolution / circles;
         let size = rng.gen_range(100.0, 120.0) / (circles as f64);
         let mut data = Data::new();
         let mut routes = Vec::new();

@@ -1,7 +1,11 @@
 ---
-title: "Maillage 01"
-thumbnail: /images/plots/301.jpg
-description: "Rotation of the same shape 3 times creates an interesting pattern."
+title: "Multiple Line Widths"
+thumbnail: /images/plots/313.jpg
+description: ""
+tags:
+  - plotparty
 ---
 
-Rotation of the same shape 3 times creates an interesting pattern.
+Entry for "Nov 9 – Multiple Line Widths".
+
+https://penplotterartwork.com/plotparty/
