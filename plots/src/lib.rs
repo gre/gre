@@ -143,6 +143,30 @@ pub fn layer(id: &str) -> Group {
         .set("inkscape:label", id);
 }
 
+pub fn base_a3_portrait(bg: &str) -> Document {
+    Document::new()
+        .set(
+            "xmlns:inkscape",
+            "http://www.inkscape.org/namespaces/inkscape",
+        )
+        .set("viewBox", (0, 0, 297, 420))
+        .set("width", "297mm")
+        .set("height", "420mm")
+        .set("style", format!("background:{}", bg))
+}
+
+pub fn base_a3_landscape(bg: &str) -> Document {
+    Document::new()
+        .set(
+            "xmlns:inkscape",
+            "http://www.inkscape.org/namespaces/inkscape",
+        )
+        .set("viewBox", (0, 0, 420, 297))
+        .set("width", "420mm")
+        .set("height", "297mm")
+        .set("style", format!("background:{}", bg))
+}
+
 pub fn base_a4_portrait(bg: &str) -> Document {
     Document::new()
         .set(
