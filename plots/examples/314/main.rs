@@ -124,16 +124,15 @@ fn art(opts: Opts) -> Vec<Group> {
     let stroke_width = 0.35;
     let precision = 0.002;
     let target_size = 40;
-    let tries = 200000;
+    let tries = 500000;
     let search_res = 1000;
-    let particles = 15000;
+    let particles = 16000;
     let bounds_container = VCircle::new(width/2.0, height/2.0, height);
     let mut rng = rng_from_seed(opts.seed);
     let mods = 6;
     let themes = vec![
-        ("darkslategray", 0, 1),
-        ("darkslateblue", 1, 2),
-        ("dogerblue", 2, 6),
+        ("firebrick", 0, 1),
+        ("orange", 1, 6),
     ];
     let mut layers = Vec::new();
     let mut passage = Passage2DCounter::new(0.4, width, height);
@@ -145,8 +144,8 @@ fn art(opts: Opts) -> Vec<Group> {
         1,
         rng.gen_range(0.0, 20.0),
         &bounds_container,
-        4.0,
-        rng.gen_range(20.0, 80.0),
+        2.0,
+        rng.gen_range(20.0, 50.0),
     );
 
     for (color, from, to) in themes {

@@ -17,4 +17,5 @@ It was released as Day#1 for #plotparty event. https://penplotterartwork.com/plo
 <img src="/images/plots/312b.jpg" width="100%">
 <img src="/images/plots/312c.jpg" width="100%">
 <img src="/images/plots/312e.jpg" width="100%">
+<img src="/images/plots/312d.jpg" width="100%">
 <img src="/images/plots/312f.jpg" width="100%">
