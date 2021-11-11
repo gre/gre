@@ -1,13 +1,13 @@
 ---
 title: "Amethyst Storm"
 thumbnail: /images/plots/315.jpg
-description: "'Destructive Storm' pushes the paper to its limits and lets things 'glitch' as the theme of this #plotparty day. The plot took more than 12 hours to draw, traveled about one kilometer on an A3 watercolor paper. The quantity of inks consumed represents about 2.5 fully-filled fountain pens. This is a continuation of #312 exploration using circle packing and domain warping techniques to make a force field and throw particles in it."
+description: "For #plotparty #4 "Postcard", I've made a fractioned art into 8 pieces of 10x14cm that will be distributed to other plotter artists all over the world."
 tags:
     - plotparty
     - A3
 ---
 
-For this 4th day of [#plotparty](https://penplotterartwork.com/plotparty/), the idea is to make "Postcards".
+For this [#plotparty](https://penplotterartwork.com/plotparty/) #4 "Postcard", I've made a fractioned art into 8 pieces of 10x14cm that will be distributed to other plotter artists all over the world.
 
 I've decided to continue digging my #312 exploration, moving now to 3 different inks (Amazing Amethyst, Soft Mint, Bloody Brexit) used at a ratio of 70%, 20%, 10%. Each color get randomly distributed on different spirals, randomness made it that the Amethyst color went on the biggest which is why it's named after that ink.
 
