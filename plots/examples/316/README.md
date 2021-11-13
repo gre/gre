@@ -2,6 +2,8 @@
 title: "Pink Satellites"
 thumbnail: /images/plots/316.jpg
 description: "Experimenting (again) ink drop and spirals"
+tags:
+  - inkdrop
 ---
 
 This is another experiment with ink drop and spirals. (Which is something I did a few months ago too)
