@@ -118,21 +118,20 @@ fn packing(
 
 fn art(opts: Opts) -> Vec<Group> {
     let seed = opts.seed;
-    let width = 420.0;
-    let height = 297.0;
+    let width = 297.0;
+    let height = 210.0;
     let pad = 10.0;
     let bounds = (pad, pad, width-pad, height-pad);
     let stroke_width = 0.35;
     let precision = 0.0025;
     let target_size = 30;
     let tries = 1000000;
-    let search_res = 2000;
-    let particles = 20000;
+    let search_res = 1200;
+    let particles = 10000;
     let bounds_container = VCircle::new(width/2.0, height/2.0, width);
     let themes = vec![
-        ("MediumPurple", 0, 70),
-        ("LightSeaGreen", 65, 90),
-        ("MidnightBlue", 90, 100),
+        ("Crimson", 0, 40),
+        ("deepskyblue", 30, 100),
     ];
     let mut layers = Vec::new();
     let mut rng = rng_from_seed(opts.seed);
@@ -267,7 +266,7 @@ fn art(opts: Opts) -> Vec<Group> {
 fn main() {
     let opts: Opts = Opts::parse();
     let groups = art(opts);
-    let mut document = base_a3_landscape("white");
+    let mut document = base_a4_landscape("white");
     for g in groups {
         document = document.add(g);
     }

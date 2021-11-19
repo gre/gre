@@ -328,7 +328,6 @@ const shaders = Shaders.create({
   },
   main: {
     frag: GLSL`
-    
     precision highp float;
     varying vec2 uv;
     uniform float grainAmp;
