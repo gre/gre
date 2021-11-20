@@ -10,7 +10,8 @@ tags:
 - [Post article: Part 1: covering the rarity aspects](/2021/08/the-day-after-pattern-03)
 - [Post article: Part 2: covering the future plots](/2021/08/plotting-pattern-03)
 
-> 🤗 **The ethblock.art BlockStyle ['Pattern 03'](https://ethblock.art/style/32) sold out yesterday in only 2 hours with 888 pieces.** I still can't believe it. There are no words to describe how thankful I am for all your support. THANK YOU!
+
+> 🤗 **The claiming phase has ended. Please now refer to https://greweb.me/plots/nft if you want a physical plot.**
 
 ## What about the physical art?
 
@@ -35,11 +36,11 @@ It's going to be a time-consuming process as a plot takes about 1 hour to perfor
 > - I will look at Opensea most sold NFTs
 > - also if you really want the physical piece. e.g. if you ask me on Discord / Twitter. I can sure take request and add it in the wished list But I can't guarantee it as it would probably takes me 800 hours =)
 
-## First phase: 🎉 claim a physical plot *before November 1st, 2021*
+## [EXPIRED] First phase: 🎉 claim a physical plot *before November 1st, 2021*
 
 This first phase will ends on November 1st, 2021 for all physical NFTs. The presented offer will only be available during that time. The NFT physical I own after this time will still be owned by me and a second phase will be documented later.
 
-**How will it work?**
+**How did it work?**
 
 You can claim a physical NFT (created on the collection shared above) **as long as you own the digital NFT**. 
 
@@ -52,8 +53,9 @@ You will then get a code to obtain it physically.
 - **IMPORTANT: Please use a PO Box or other postal service ( e.g. https://en.wikipedia.org/wiki/Poste_restante ). I do not want to know your home address, thanks.**
 - On my side, I will use a simple (possibly tracked) letter to ship the 20x20cm art internationally.
 
-## second phase?
+## second phase
 
-**This phase is not yet planned and may happen if people are interested to these plots.**
+**The second phase is done via https://greweb.me/plots/nft**
+
 
 <img width="50%" src="/images/2021/08/artist-1.jpg" /><img width="50%" src="/images/2021/08/artist-2.jpg" />
