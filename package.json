@@ -22,9 +22,9 @@
     "field02-prod": "cd doodles/field02 && rm -rf dist && webpack && cp index.html dist && cp thumbnail.jpg dist && rm -f dist.zip && cd dist && zip -r ../dist.zip *",
     "field02-build": "cd doodles/field02 && webpack && cp index.html dist",
     "field02-start": "cd doodles/field02 && http-server dist",
-    "build-playground-wip-rust": "wasm-pack build --target web pages/playground/wip/rust --release",
-    "build-playground-wip": "NODE_ENV=production webpack --mode production --config playground.webpack.config.js && cp pages/playground/wip/index.html dist && rm -f dist/*.wasm dist/*.txt && yarn zip-dist",
-    "build-playground-wip-dev": "webpack --mode development --config playground.webpack.config.js && cp pages/playground/wip/index.html dist"
+    "build-wip-rust": "wasm-pack build --target web doodles/wip/rust --release",
+    "build-wip": "NODE_ENV=production webpack --mode production --config doodles/wip/main.webpack.config.js && cp doodles/wip/index.html dist && rm -f dist/*.wasm dist/*.txt && yarn zip-dist",
+    "build-wip-dev": "webpack --mode development --config doodles/wip/main.webpack.config.js && cp doodles/wip/index.html dist"
   },
   "dependencies": {
     "@babel/core": "^7.15.0",
@@ -62,6 +62,8 @@
     "react-spring": "^9.2.4",
     "react-toastify": "^7.0.4",
     "regl": "^2.1.0",
+    "regl-camera": "^2.1.1",
+    "regl-gpu-lines": "^1.1.0",
     "simplex-noise": "^2.4.0",
     "valtio": "^1.2.1",
     "webpack": "^5.53.0"
