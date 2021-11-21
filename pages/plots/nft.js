@@ -13,7 +13,7 @@ const Row = ({ children }) => (
 );
 
 const Choice = ({ children, title }) => (
-  <div>
+  <div style={{ padding: "0 20px" }}>
     <p>
       <em>{title}</em>
     </p>
