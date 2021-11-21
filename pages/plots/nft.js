@@ -12,17 +12,21 @@ const Row = ({ children }) => (
   <div style={{ padding: "0.4em 0" }}>{children}</div>
 );
 
-const Choice = ({ children }) => (
-  <div
-    style={{
-      padding: "0.4em 0",
-      display: "flex",
-      flexDirection: "row",
-      alignItems: "center",
-      gap: 10,
-    }}
-  >
-    {children}
+const Choice = ({ children, title }) => (
+  <div>
+    <p>
+      <em>{title}</em>
+    </p>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 8,
+      }}
+    >
+      {children}
+    </div>
   </div>
 );
 
@@ -186,19 +190,18 @@ export default function Home({ tag }) {
                 <Circle n={2} />
                 <strong>Physical cost</strong>: Send from the{" "}
                 <span style={{ textDecoration: "underline" }}>
-                  same address that owns this NFT
+                  same address owning the NFT
                 </span>{" "}
-                a transaction of:
-                <div style={{ fontWeight: 200, padding: "2em 0 2em 3em" }}>
-                  <Choice>
-                    for Ethereum NFTs: <Price>0.02 ETH</Price> to{" "}
+                this amount:
+                <div style={{ fontWeight: 200, padding: "0 0 2em 3em" }}>
+                  <Choice title="for Ethereum NFTs">
+                    <Price>0.02 ETH</Price> to{" "}
                     <Address real="0x68db7D679969f265b14BA8A495E4028360AD6759">
                       greweb.eth
                     </Address>
                   </Choice>
-                  <p>OR</p>
-                  <Choice>
-                    for Tezos NFTs: <Price>15 tez</Price> to{" "}
+                  <Choice title="for Tezos NFTs">
+                    <Price>15 tez</Price> to{" "}
                     <Address real="tz1cgQAQfECg5bPASYTMyJ9QJQjSUi8rfL67">
                       greweb.tez
                     </Address>
