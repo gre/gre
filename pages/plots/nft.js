@@ -55,6 +55,8 @@ const Price = ({ children }) => (
         background: #f0f;
         color: #fff;
         font-weight: bold;
+        min-width: 120px;
+        text-align: center;
       }
     `}</style>
     <span className="price">{children}</span>
@@ -72,6 +74,8 @@ const Address = ({ children, real }) => (
         display: inline-flex;
         align-items: center;
         flex-direction: column;
+        min-width: 240px;
+        text-align: center;
       }
       .main {
         font-size: 1.2em;
@@ -193,7 +197,15 @@ export default function Home({ tag }) {
                   same address owning the NFT
                 </span>{" "}
                 this amount:
-                <div style={{ fontWeight: 200, padding: "0 0 2em 3em" }}>
+                <div
+                  style={{
+                    fontWeight: 200,
+                    padding: "0 0 1em 0",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                  }}
+                >
                   <Choice title="for Ethereum NFTs">
                     <Price>0.02 ETH</Price> to{" "}
                     <Address real="0x68db7D679969f265b14BA8A495E4028360AD6759">
