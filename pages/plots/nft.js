@@ -51,7 +51,7 @@ const Price = ({ children }) => (
       .price {
         display: inline-block;
         padding: 0.6em 0.5em;
-        font-size: 1.2em;
+        font-size: 1.25em;
         background: #f0f;
         color: #fff;
         font-weight: bold;
@@ -74,7 +74,7 @@ const Address = ({ children, real }) => (
         display: inline-flex;
         align-items: center;
         flex-direction: column;
-        min-width: 240px;
+        min-width: 200px;
         text-align: center;
       }
       .main {
@@ -84,7 +84,7 @@ const Address = ({ children, real }) => (
       }
       .sub {
         display: inline-block;
-        font-size: 0.5em;
+        font-size: 0.4em;
         color: #f0f;
         user-select: all;
         padding: 0.2em;
