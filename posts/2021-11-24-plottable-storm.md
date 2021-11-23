@@ -37,11 +37,11 @@ The NFT vs physical art decoupling allows a business model that allows both the 
 
 [**=> Open on fxhash.xyz <=**][fxhash]
 
-**Here is one digital ink simulated version:**
+**Here is one digital ink simulated version: (this is not a photo!)**
 
 <img width="100%" src="/images/2021/11/plottablestorm/digital.jpg">
 
-**Here is the physically plotted version: (3 hours of plot on A4 paper)**
+**Here is the physically plotted version: (photo of the 3 hours long plot on A4 paper)**
 
 <img width="100%" src="/images/2021/11/plottablestorm/physical.jpg">
 
