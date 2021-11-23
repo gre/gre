@@ -35,7 +35,7 @@ The NFT vs physical art decoupling allows a business model that allows both the 
 
 ### RELEASING "Plottable Storm" on fxhash.xyz
 
-[**=> Open on fxhash.xyz <=**][fxhash]
+[**=> Coming soon on fxhash.xyz <=**][fxhash]
 
 **Here is one digital ink simulated version: (this is not a photo!)**
 
