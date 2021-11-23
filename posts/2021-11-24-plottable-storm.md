@@ -7,7 +7,7 @@ tags:
   - plot
 ---
 [plotnft]: https://greweb.me/plots/nft
-[fxhash]: https://fxhash.xyz/
+[fxhash]: https://www.fxhash.xyz/u/greweb
 
 
 ## The "Plottable NFT" paradigm
@@ -35,13 +35,13 @@ The NFT vs physical art decoupling allows a business model that allows both the 
 
 ### RELEASING "Plottable Storm" on fxhash.xyz
 
-[LINK TO THE NFT GENERATOR ON FXHASH.XYZ][fxhash]
+[**=> Open on fxhash.xyz <=**][fxhash]
 
-**Here is one digital ink simulated version**
+**Here is one digital ink simulated version:**
 
 <img width="100%" src="/images/2021/11/plottablestorm/digital.jpg">
 
-**Here is the physically plotted version (3 hours of plot on A4 paper)**
+**Here is the physically plotted version: (3 hours of plot on A4 paper)**
 
 <img width="100%" src="/images/2021/11/plottablestorm/physical.jpg">
 
