@@ -23,7 +23,7 @@
     "field02-build": "cd doodles/field02 && webpack && cp index.html dist",
     "field02-start": "cd doodles/field02 && http-server dist",
     "build-wip-rust": "wasm-pack build --target web doodles/wip/rust --release",
-    "build-wip": "NODE_ENV=production webpack --mode production --config doodles/wip/main.webpack.config.js && cp doodles/wip/index.html dist && rm -f dist/*.wasm dist/*.txt && yarn zip-dist",
+    "build-wip": "NODE_ENV=production webpack --mode production --config doodles/wip/main.webpack.config.js && cp doodles/wip/index.html dist && rm -f dist/*.wasm && yarn zip-dist",
     "build-wip-dev": "webpack --mode development --config doodles/wip/main.webpack.config.js && cp doodles/wip/index.html dist"
   },
   "dependencies": {

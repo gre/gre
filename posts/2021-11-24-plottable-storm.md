@@ -7,7 +7,7 @@ tags:
   - plot
 ---
 [plotnft]: https://greweb.me/plots/nft
-[fxhash]: https://www.fxhash.xyz/u/greweb
+[fxhash]: https://www.fxhash.xyz/generative/1050
 
 
 ## The "Plottable NFT" paradigm
