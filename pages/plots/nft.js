@@ -281,7 +281,12 @@ export default function Home({ tag }) {
               <ul>
                 <li>
                   <a href="https://opensea.io/collection/blockart?search[sortAscending]=true&search[sortBy]=PRICE&search[stringTraits][0][name]=Style&search[stringTraits][0][values][0]=Pattern%2003">
-                    Pattern03 via ethblock.art on OpenSea (888 mints)
+                    (ETH) Pattern03 via ethblock.art on OpenSea (888 mints)
+                  </a>
+                </li>
+                <li>
+                  <a href="https://www.fxhash.xyz/u/greweb">
+                    (Tezos) all collections named "Plottable"
                   </a>
                 </li>
               </ul>
