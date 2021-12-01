@@ -29,7 +29,7 @@ Ok, this may be the best plot generator I have ever created so far. I have put s
 
 I have also improved the ink simulating shader and added animation to make it visually interesting on its digital rendered version. Here is a quick preview:
 
-<video loop autoPlay muted  src="/images/2021/12/plottable-mountain-moons/promo1.mp4"  width="100%"></video>
+<video loop autoPlay muted width="100%" src="/images/2021/12/plottable-mountain-moons/promo1.mp4"  width="100%"></video>
 
 **Find it on => https://www.fxhash.xyz/u/greweb <=**
 
