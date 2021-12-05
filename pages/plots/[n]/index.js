@@ -156,6 +156,16 @@ export default function Home({ plot, prev, next }) {
                 ))}
               </dl>
             ) : null}
+            {data.nftGenerator ? (
+              <dl>
+                <dt>NFT Generator</dt>
+                <dd>
+                  <a target="_blank" href={data.nftGenerator} rel="noreferrer">
+                    LINK
+                  </a>
+                </dd>
+              </dl>
+            ) : null}
             {data.plotterfiles ? (
               <dl>
                 <dt>Plotterfiles</dt>

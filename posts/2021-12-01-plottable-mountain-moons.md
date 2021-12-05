@@ -1,7 +1,7 @@
 ---
 title: "“Plottable Mountain Moons” and an approach to query generative art"
 thumbnail: /images/2021/12/plottable-mountain-moons/plot.jpg
-description: ""
+description: "I plan to release a plottable generator every Wednesday – this article covers today's release & share some thoughts on how to approach generative art variety."
 tags:
   - NFT
   - plot
