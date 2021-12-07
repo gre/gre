@@ -6,7 +6,7 @@ sourceFolderURL: https://github.com/gre/gre/tree/master/doodles/plottable-mounta
 sourceFolder: plottable-mountain-moons
 nftGenerator: https://www.fxhash.xyz/generative/1806
 tags:
-- plottable-storm
+- plottable-mountain-moons
 ---
 
 This plot is an early prototype made during the development of Plottable Mountain Moons generator.
