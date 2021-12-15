@@ -26,3 +26,9 @@ Plottable Circles explores concentric circles – varies in the different number
 <a href="/plots/344"><img src="/images/plots/344.jpg" width="100%"></a>
 <a href="/plots/343"><img src="/images/plots/343.jpg" width="100%"></a>
 <a href="/plots/342"><img src="/images/plots/342.jpg" width="100%"></a>
+
+### Getting the SVG from the digital version
+
+The SVG file is easily accessible with a Right Click save or drag & drop to facilitate plotting your piece, having an artistic doing it for you OR asking @greweb to do it (through https://greweb.me/plots/nft). **Please own the digital piece that you plot**.
+
+<video src="/images/plots/349save.mp4" width="100%" loop autoplay controls></video>
