@@ -147,7 +147,7 @@ export default function Home({ plot, prev, next }) {
                   <dd key={objkt}>
                     <a
                       target="_blank"
-                      href={`https://www.henext.xyz/o/${objkt}`}
+                      href={`https://www.objkt.com/objkt/${objkt}`}
                       rel="noreferrer"
                     >
                       OBJKT#{objkt}
