@@ -1,8 +1,25 @@
-WIP tech notes of the generator.
-
 # Cirque de lumières
 
-## About the artist
+## License
+
+CC BY-NC-ND 4.0
+
+## Technical libraries
+
+- regl library (dependency) (MIT)
+- forked version of library 'mersenne-twister' (embedded)
+
+## Inspiration and thanks
+
+Cirque de Lumières is mainly combining two generative art technique: domain warping and 2D raymarching. This is only possible thanks to main previous work and paper on the topics.
+
+I have discovered many years ago the incredible work of Inigo Quilez who published articles on exploring the world of shaders and raymarching. As a developer, I've also always been keen to experiment with many web technologies (canvas, webgl, webaudio,..) while keeping a foot in demoscene art and game jams. Back in ~2014 I also grew a lot with glslsandbox (before shadertoy were a thing) to learn GLSL techniques. I always has been inspired by demosceners like p01, mrdoob, mattdesl,...
+
+I'm also very thanksful to Mikola Lysenko and the work he did in the shader and algorithmic scene. (regl, stack.gl libraries, headless-gl, ndarray,...)
+
+---
+
+## More about the artist
 
 @greweb is a passionate developer currently working at Ledger. Coming from multidisciplinary scenes like demoscene and gamejam culture, he enjoyed the most hacking into WebGL shaders. His motto is to do everything with code, sharing his passion for algorithms and creative coding techniques. In a continuous search for discomfort areas to explore, he got involved this year into "pen plotting" art, using fountain pens and robotic to draw physical art. Every day, he publishes a unique physical piece with its source code. He's now exploring many ways to bond physical art and digital art in the NFT scene.
 
@@ -182,13 +199,3 @@ The art is meant to explore a balance between very smooth shapes (typically with
 ### Hot vs Cold palette
 
 I've tried to make a balance between hot and cold colors. With an extra and complementary "dark" palette.
-
-## General tech keywords and creative coding techniques used
-
-- regl library (dependency)
-- forked version of library 'mersenne-twister' (embedded)
-- GLSL shader, templated with JavaScript
-- 2D Raymarching
-- trigonometric color palette
-- brownian noise and domain warping
-- inspiration: work of the great Inigo Quilez
