@@ -1,0 +1,8 @@
+video-*/
+node_modules/
+.DS_Store
+generating-*/
+results/
+out.mp4
+metadata.json
+files/

@@ -1,0 +1,23 @@
+{
+  "name": "art-generative-nano-s-plus",
+  "version": "1.0.0",
+  "description": "A generative art made by @greweb during Ledger hackathon visualizing Nano S Plus devices in GLSL",
+  "main": "index.js",
+  "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+  "author": "@greweb <renaudeau.gaetan@gmail.com>",
+  "private": true,
+  "dependencies": {
+    "canvas": "2.6.1",
+    "connect-busboy": "^0.0.2",
+    "express": "^4.17.2",
+    "gl": "^4.9.2",
+    "jest-diff": "^27.4.2",
+    "lodash": "^4.17.21",
+    "mkdirp": "^1.0.4",
+    "morgan": "^1.10.0",
+    "node-canvas-with-twemoji": "^0.1.8",
+    "regl": "^2.1.0",
+    "regl-recorder": "^0.2.0",
+    "rimraf": "^3.0.2"
+  }
+}

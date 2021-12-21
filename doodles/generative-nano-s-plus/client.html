@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preview Page</title>
+</head>
+<body>
+  <script language="javascript" src="https://npmcdn.com/regl@2.1.0/dist/regl.js"></script>
+    <script type="module">
+    import { art } from "./art.mjs";
+    import { generate } from "./features.mjs";
+    
+    const sz = 1920
+    const scale = 2;
+    const SZ = scale * 1920;
+    const duration = 4;
+    const speed = 2 / duration;
+    const fps = 30;
+    const frames = duration * fps;
+    const mapFrame = (t) => t / fps;
+
+    const createCanvas = (w, h) => {
+        const canvas = document.createElement("canvas");
+        canvas.width = w;
+        canvas.height = h;
+        return canvas;
+    }
+    const makeFillText = ctx => (...args) => ctx.fillText(...args);
+    const makeTexture = canvas => ({ data: canvas, flipY: true });
+
+    const mock=null
+
+    async function upload(index, file, data) {
+        await fetch(`/task/client/${index}/${file}`, {
+            method: "POST",
+            body: data,
+        });
+    }
+
+    async function cancel(index) {
+        await fetch(`/task/client/${index}`, {
+            method: "DELETE",
+        });
+    }
+
+    async function getJob() {
+        if(mock) return mock
+         const r = await fetch("/task/client"+(location.search||""));
+        const id = await r.text();
+        const i = parseInt(id, 10);
+        if (isNaN(i) || typeof i !== "number" || i < 0) {
+            throw new Error("invalid id")
+        }
+        return i
+    }
+    const debug=true;
+    const outputCanvas = createCanvas(sz, sz);
+    const ctx = outputCanvas.getContext("2d");
+
+    async function make (index) {
+        console.log("JOB", index);
+        const glCanvas = createCanvas(SZ, SZ);
+        return new Promise((success, reject)=>{
+            if (debug) {
+                outputCanvas.style.width="90vw"
+                outputCanvas.style.height="90vh"
+                document.body.appendChild(outputCanvas);
+            }
+            const regl = 
+                createREGL({
+                    pixelRatio: 1,
+                    canvas: glCanvas,
+                    attributes:{powerPreference:"high-performance"}
+                });
+            let destroy = () => regl.destroy();
+            const promises = []
+            const { opts, metadata } = generate(index);
+            console.log(opts)
+            console.log(metadata)
+            const file = new File([JSON.stringify(metadata)], name, { type: 'application/json' });
+            const data = new FormData();
+            data.append('file', file);
+            const p = upload(index, "metadata.json", data);
+            promises.push(p);
+            
+            function stopAll (e) {
+                console.warn("STOP ALL",e);
+                if (!destroy) return;
+                destroy()
+                destroy=null;
+                reject(e)
+                cancel(index)
+                throw e;
+            }
+
+            const onFrame = (i, t) => {
+                if (i >= frames || !destroy) return;
+                console.log("FRAME", i, t);
+                ctx.drawImage(glCanvas, 0, 0, sz, sz);
+                // const jpg = outputCanvas.toDataURL("jpg", 1);
+                // promises.push(upload("frame"+(i+"").padStart(8, "0")+".jpg", jpg))
+                if (!mock) {
+                    const type= 'image/png'
+                    outputCanvas.toBlob(blob => {
+                        if (!debug) {
+                            document.body.innerHTML=index+" frame "+i
+                        }
+                        const name = "frame"+(i+"").padStart(8, "0")+".png";
+                        const file = new File([blob], name, { type });
+                        const data = new FormData();
+                        data.append('file', file);
+                        promises.push(upload(index, name, data).catch(stopAll));
+                        if (i===frames-1) {
+                            Promise.all(promises).then(success, reject);
+                        }
+                    }, type, 1);
+                }
+
+                if (i===frames-1) {
+                    if (destroy) destroy();
+                }
+            };
+            const antialias = true;
+            p.then(() => {
+                art(
+                    regl,
+                    opts,
+                    mapFrame,
+                    onFrame,
+                    createCanvas,
+                    makeFillText,
+                    makeTexture,
+                    false,
+                    antialias,
+                    speed
+                );
+            }, stopAll);
+        })
+    }
+
+
+    async function main () {
+        let job;
+        let down=false;
+        while (true) {
+            job = await getJob();
+            await make(job).catch(()=>{
+                down=true;
+            });
+            if (down) {
+                await getJob()
+                .then(async ()=>{
+                    down = false;
+                    await new Promise(s=>setTimeout(s, 1000))
+                    location.href = location.href;
+                })
+                .catch(() => new Promise(s=>setTimeout(s, 10000)))
+            }
+        }
+    }
+
+
+    main();
+
+    </script>
+</body>
+</html>

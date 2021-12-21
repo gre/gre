@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preview Page</title>
+</head>
+<body>
+  <script language="javascript" src="https://npmcdn.com/regl@2.1.0/dist/regl.js"></script>
+    <script type="module">
+    import { art } from "./art.mjs";
+    import { generate } from "./features.mjs";
+    let index = location.search && parseInt(location.search.slice(1), 10);
+    if (typeof index !== "number" || isNaN(index)) {
+      index = Math.floor(2048*Math.random());
+    }
+    console.log(index)
+    const { opts, metadata } = generate(index);
+    const frameTime = (_, o) => o.time;
+    const onFrame = () => {};
+    const createCanvas = (w, h) => {
+      const canvas = document.createElement("canvas");
+      canvas.width = w;
+      canvas.height = h;
+      return canvas;
+    }
+    const antialias=location.search==="?aa";
+    art(
+      createREGL({attributes:{powerPreference:"high-performance"}}),
+      opts,
+      frameTime,
+      onFrame,
+      createCanvas,
+      ctx => (...args) => ctx.fillText(...args),
+      canvas => ({ data: canvas, flipY: true }),
+      false,
+      antialias,
+      0.25
+    );
+    console.log(metadata.attributes.map(o=>o.trait_type+": "+o.value).join("\n"))
+    </script>
+</body>
+</html>
