@@ -5,12 +5,26 @@ import { Title } from "./Title";
 export function SubTitle({ plot, prev, next }) {
   return (
     <>
-      <Title
-        withBreadcrumb
-        text={`Plot #${plot.n}${
-          plot.data.title ? ' "' + plot.data.title + '"' : ""
-        }`}
-      />
+      <h1 className="title">
+        <Link href="/">
+          <a>greweb.me</a>
+        </Link>
+        {" / "}
+        <Link href="/plots">
+          <a>Plots</a>
+        </Link>
+        {" / "}
+        {`${plot.n}${plot.data.title ? ' "' + plot.data.title + '"' : ""}`}
+      </h1>
+
+      <style jsx>{`
+        .title {
+          text-align: center;
+          margin: 0.5em 0;
+          font-size: 1.5rem;
+        }
+      `}</style>
+
       <nav>
         {prev ? (
           <Link href={`/plots/${prev.n}`}>
