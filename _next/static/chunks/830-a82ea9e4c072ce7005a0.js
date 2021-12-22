@@ -1,4 +1,4 @@
-"use strict";(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[668],{1532:function(e,t,o){o.d(t,{W:function(){return i}});var r=o(5893),a=o(5988);o(7294);function i({children:e}){return(0,r.jsxs)("div",{className:"jsx-3621368397 container",children:[e,(0,r.jsx)(a.default,{id:"3621368397",children:[".container.jsx-3621368397{min-height:100vh;padding:0 0.5rem;display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-flex-direction:column;-ms-flex-direction:column;flex-direction:column;-webkit-box-pack:center;-webkit-justify-content:center;-ms-flex-pack:center;justify-content:center;-webkit-align-items:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center;}"]})]})}},4276:function(e,t,o){o.d(t,{x:function(){return i},M:function(){return n}});var r=o(5893),a=o(5988);o(7294);function i({children:e}){return(0,r.jsxs)(r.Fragment,{children:[e,(0,r.jsx)(a.default,{id:"3469673304",children:["html,body{padding:0;margin:0;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto, Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue, sans-serif;}","*{box-sizing:border-box;}","a{color:inherit;-webkit-text-decoration:none;text-decoration:none;}","a:hover,a:active{-webkit-text-decoration:underline;text-decoration:underline;}"]})]})}function n({children:e}){return(0,r.jsxs)(i,{children:[e,(0,r.jsx)(a.default,{id:"2550269578",children:["body{background:#000;color:#fff;}"]})]})}},2266:function(e,t,o){o.d(t,{h:function(){return i}});var r=o(5893),a=o(5988);o(7294);function i({children:e}){return(0,r.jsxs)(r.Fragment,{children:[(0,r.jsx)("header",{className:"jsx-1329991137",children:e}),(0,r.jsx)(a.default,{id:"1329991137",children:["header.jsx-1329991137{padding:1rem 0;display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-flex-direction:column;-ms-flex-direction:column;flex-direction:column;-webkit-align-items:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center;}"]})]})}},3369:function(e,t,o){o.d(t,{o:function(){return i}});var r=o(5893),a=o(5988);o(7294);function i({children:e}){return(0,r.jsxs)(r.Fragment,{children:[(0,r.jsx)("main",{className:"jsx-1508801263",children:e}),(0,r.jsx)(a.default,{id:"1508801263",children:["main.jsx-1508801263{-webkit-flex:1;-ms-flex:1;flex:1;display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-flex-direction:column;-ms-flex-direction:column;flex-direction:column;-webkit-box-pack:center;-webkit-justify-content:center;-ms-flex-pack:center;justify-content:center;-webkit-align-items:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center;}"]})]})}},8483:function(e,t,o){o.d(t,{hU:function(){return ux},gw:function(){return px},x2:function(){return vx}});var r={};o.r(r),o.d(r,{Shader:function(){return ft},n:function(){return nt},title:function(){return ct}});var a={};o.r(a),o.d(a,{Shader:function(){return xt},exportEnd:function(){return mt},exportFramePerSecond:function(){return dt},exportSize:function(){return vt},exportSpeed:function(){return ht},exportStart:function(){return ut},n:function(){return lt},title:function(){return pt}});var i={};o.r(i),o.d(i,{Shader:function(){return zt},n:function(){return yt},title:function(){return bt}});var n={};o.r(n),o.d(n,{Shader:function(){return Ct},n:function(){return qt},title:function(){return kt}});var c={};o.r(c),o.d(c,{Shader:function(){return Mt},n:function(){return Ut},title:function(){return Ft}});var f={};o.r(f),o.d(f,{Shader:function(){return Ot},n:function(){return jt},title:function(){return Tt}});var s={};o.r(s),o.d(s,{Shader:function(){return Nt},n:function(){return _t},title:function(){return Bt}});var l={};o.r(l),o.d(l,{Shader:function(){return Qt},n:function(){return At},title:function(){return $t}});var p={};o.r(p),o.d(p,{Shader:function(){return to},exportEnd:function(){return Jt},exportFramePerSecond:function(){return Yt},exportSize:function(){return Wt},exportSpeed:function(){return eo},exportStart:function(){return Xt},n:function(){return Zt},title:function(){return Vt}});var v={};o.r(v),o.d(v,{Shader:function(){return io},n:function(){return ro},title:function(){return ao}});var u={};o.r(u),o.d(u,{Shader:function(){return so},n:function(){return co},title:function(){return fo}});var m={};o.r(m),o.d(m,{Shader:function(){return uo},n:function(){return po},title:function(){return vo}});var d={};o.r(d),o.d(d,{Shader:function(){return go},n:function(){return ho},title:function(){return xo}});var h={};o.r(h),o.d(h,{Shader:function(){return wo},n:function(){return bo},title:function(){return zo}});var x={};o.r(x),o.d(x,{Shader:function(){return Ho},n:function(){return Fo},title:function(){return Mo}});var g={};o.r(g),o.d(g,{Shader:function(){return Bo},n:function(){return Go},title:function(){return _o}});var y={};o.r(y),o.d(y,{Shader:function(){return $o},n:function(){return Eo},title:function(){return Ao}});var b={};o.r(b),o.d(b,{Shader:function(){return Vo},n:function(){return Ko},title:function(){return Zo}});var z={};o.r(z),o.d(z,{Shader:function(){return Yo},n:function(){return Xo},title:function(){return Jo}});var w={};o.r(w),o.d(w,{Shader:function(){return rr},n:function(){return tr},title:function(){return or}});var S={};o.r(S),o.d(S,{Shader:function(){return fr},n:function(){return nr},title:function(){return cr}});var P={};o.r(P),o.d(P,{Shader:function(){return ur},n:function(){return pr},title:function(){return vr}});var I={};o.r(I),o.d(I,{Shader:function(){return xr},n:function(){return dr},title:function(){return hr}});var q={};o.r(q),o.d(q,{Shader:function(){return zr},n:function(){return yr},title:function(){return br}});var k={};o.r(k),o.d(k,{Shader:function(){return Ir},n:function(){return Sr},title:function(){return Pr}});var D={};o.r(D),o.d(D,{Shader:function(){return Rr},n:function(){return Dr},title:function(){return Cr}});var C={};o.r(C),o.d(C,{Shader:function(){return _r},exportEnd:function(){return Tr},exportFramePerSecond:function(){return Or},exportSize:function(){return Hr},exportSpeed:function(){return Gr},exportStart:function(){return jr},n:function(){return Fr},title:function(){return Mr}});var R={};o.r(R),o.d(R,{Shader:function(){return $r},n:function(){return Er},title:function(){return Ar}});var L={};o.r(L),o.d(L,{Shader:function(){return Wr},n:function(){return Zr},title:function(){return Vr}});var U={};o.r(U),o.d(U,{Shader:function(){return ea},n:function(){return Jr},title:function(){return Yr}});var F={};o.r(F),o.d(F,{Shader:function(){return aa},n:function(){return oa},title:function(){return ra}});var M={};o.r(M),o.d(M,{Shader:function(){return sa},n:function(){return na},title:function(){return ca}});var H={};o.r(H),o.d(H,{Shader:function(){return ua},n:function(){return pa},title:function(){return va}});var j={};o.r(j),o.d(j,{Shader:function(){return xa},n:function(){return da},title:function(){return ha}});var T={};o.r(T),o.d(T,{Shader:function(){return za},n:function(){return ya},title:function(){return ba}});var O={};o.r(O),o.d(O,{Shader:function(){return qa},n:function(){return Pa},title:function(){return Ia}});var G={};o.r(G),o.d(G,{Shader:function(){return La},n:function(){return Ca},title:function(){return Ra}});var _={};o.r(_),o.d(_,{Shader:function(){return Ha},n:function(){return Fa},title:function(){return Ma}});var B={};o.r(B),o.d(B,{Shader:function(){return _a},n:function(){return Oa},title:function(){return Ga}});var N={};o.r(N),o.d(N,{Shader:function(){return Aa},n:function(){return Na},title:function(){return Ea}});var E={};o.r(E),o.d(E,{Shader:function(){return Za},n:function(){return Qa},title:function(){return Ka}});var A={};o.r(A),o.d(A,{Shader:function(){return Ja},n:function(){return Wa},title:function(){return Xa}});var $={};o.r($),o.d($,{Shader:function(){return oi},n:function(){return ei},title:function(){return ti}});var Q={};o.r(Q),o.d(Q,{Shader:function(){return ci},n:function(){return ii},title:function(){return ni}});var K={};o.r(K),o.d(K,{Shader:function(){return pi},n:function(){return si},title:function(){return li}});var Z={};o.r(Z),o.d(Z,{Shader:function(){return di},n:function(){return ui},title:function(){return mi}});var V={};o.r(V),o.d(V,{Shader:function(){return yi},n:function(){return xi},title:function(){return gi}});var W={};o.r(W),o.d(W,{Shader:function(){return Si},n:function(){return zi},title:function(){return wi}});var X={};o.r(X),o.d(X,{Shader:function(){return Ui},exportEnd:function(){return Ci},exportFramePerSecond:function(){return Ri},exportSize:function(){return ki},exportSpeed:function(){return Li},exportStart:function(){return Di},n:function(){return Ii},title:function(){return qi}});var J={};o.r(J),o.d(J,{Shader:function(){return Ti},n:function(){return Hi},title:function(){return ji}});var Y={};o.r(Y),o.d(Y,{Shader:function(){return Qi},exportEnd:function(){return Ei},exportFramePerSecond:function(){return Ai},exportSize:function(){return Bi},exportSpeed:function(){return $i},exportStart:function(){return Ni},n:function(){return Gi},title:function(){return _i}});var ee={};o.r(ee),o.d(ee,{Shader:function(){return Wi},n:function(){return Zi},title:function(){return Vi}});var te={};o.r(te),o.d(te,{Shader:function(){return en},n:function(){return Ji},title:function(){return Yi}});var oe={};o.r(oe),o.d(oe,{Shader:function(){return an},n:function(){return on},title:function(){return rn}});var re={};o.r(re),o.d(re,{Shader:function(){return mn},exportEnd:function(){return pn},exportFramePerSecond:function(){return vn},exportSize:function(){return sn},exportSpeed:function(){return un},exportStart:function(){return ln},n:function(){return cn},title:function(){return fn}});var ae={};o.r(ae),o.d(ae,{Shader:function(){return gn},n:function(){return hn},title:function(){return xn}});var ie={};o.r(ie),o.d(ie,{Shader:function(){return kn},exportEnd:function(){return Pn},exportFramePerSecond:function(){return In},exportSize:function(){return wn},exportSpeed:function(){return qn},exportStart:function(){return Sn},n:function(){return bn},title:function(){return zn}});var ne={};o.r(ne),o.d(ne,{Shader:function(){return Bn},exportEnd:function(){return Fn},exportFramePerSecond:function(){return Mn},exportMP4vb:function(){return jn},exportSize:function(){return Ln},exportSpeed:function(){return Hn},exportStart:function(){return Un},n:function(){return Tn},nfts:function(){return Gn},title:function(){return On}});var ce={};o.r(ce),o.d(ce,{Shader:function(){return Kn},description:function(){return Qn},n:function(){return An},title:function(){return $n}});var fe={};o.r(fe),o.d(fe,{Shader:function(){return Jn},n:function(){return Wn},title:function(){return Xn}});var se={};o.r(se),o.d(se,{Shader:function(){return ic},exportEnd:function(){return oc},exportFramePerSecond:function(){return rc},n:function(){return ec},preload:function(){return ac},title:function(){return tc}});var le={};o.r(le),o.d(le,{Logic:function(){return vc},Shader:function(){return xc},exportEnd:function(){return sc},exportFramePerSecond:function(){return lc},exportSpeed:function(){return pc},n:function(){return cc},title:function(){return fc}});var pe={};o.r(pe),o.d(pe,{Logic:function(){return Cc},Shader:function(){return Fc},exportEnd:function(){return Pc},exportFramePerSecond:function(){return Ic},exportMP4vb:function(){return kc},exportSize:function(){return wc},exportSpeed:function(){return qc},exportStart:function(){return Sc},n:function(){return bc},title:function(){return zc}});var ve={};o.r(ve),o.d(ve,{Shader:function(){return Gc},exportEnd:function(){return Tc},n:function(){return Hc},nfts:function(){return Oc},title:function(){return jc}});var ue={};o.r(ue),o.d(ue,{Shader:function(){return Jc},exportEnd:function(){return $c},exportFramePerSecond:function(){return Qc},exportPaletteGenOnce:function(){return Vc},exportPaletteSize:function(){return Wc},exportSize:function(){return Ec},exportSkipFrame:function(){return Zc},exportSpeed:function(){return Kc},exportStart:function(){return Ac},n:function(){return Bc},nfts:function(){return Xc},title:function(){return Nc}});var me={};o.r(me),o.d(me,{Shader:function(){return vf},exportEnd:function(){return nf},exportFramePerSecond:function(){return cf},exportPaletteGenOnce:function(){return lf},exportPaletteSize:function(){return pf},exportSize:function(){return rf},exportSkipFrame:function(){return sf},exportSpeed:function(){return ff},exportStart:function(){return af},n:function(){return tf},title:function(){return of}});var de={};o.r(de),o.d(de,{Shader:function(){return If},exportEnd:function(){return yf},exportFramePerSecond:function(){return bf},exportPaletteGenOnce:function(){return Sf},exportPaletteSize:function(){return Pf},exportSize:function(){return xf},exportSkipFrame:function(){return wf},exportSpeed:function(){return zf},exportStart:function(){return gf},n:function(){return df},title:function(){return hf}});var he={};o.r(he),o.d(he,{Shader:function(){return Of},exportEnd:function(){return Uf},exportFramePerSecond:function(){return Ff},exportPaletteGenOnce:function(){return jf},exportPaletteSize:function(){return Tf},exportSize:function(){return Rf},exportSkipFrame:function(){return Hf},exportSpeed:function(){return Mf},exportStart:function(){return Lf},n:function(){return Df},title:function(){return Cf}});var xe={};o.r(xe),o.d(xe,{Shader:function(){return Wf},exportEnd:function(){return $f},exportFramePerSecond:function(){return Qf},exportPaletteGenOnce:function(){return Zf},exportPaletteSize:function(){return Vf},exportSize:function(){return Ef},exportSpeed:function(){return Kf},exportStart:function(){return Af},n:function(){return Bf},title:function(){return Nf}});var ge={};o.r(ge),o.d(ge,{Shader:function(){return cs},exportEnd:function(){return os},exportFramePerSecond:function(){return rs},exportPaletteGenOnce:function(){return is},exportPaletteSize:function(){return ns},exportSize:function(){return es},exportSpeed:function(){return as},exportStart:function(){return ts},n:function(){return Jf},title:function(){return Yf}});var ye={};o.r(ye),o.d(ye,{Shader:function(){return gs},exportEnd:function(){return us},exportFramePerSecond:function(){return ms},exportPaletteGenOnce:function(){return hs},exportPaletteSize:function(){return xs},exportSize:function(){return ps},exportSpeed:function(){return ds},exportStart:function(){return vs},n:function(){return ss},title:function(){return ls}});var be={};o.r(be),o.d(be,{Shader:function(){return Rs},exportEnd:function(){return Ps},exportFramePerSecond:function(){return Is},exportPaletteGenOnce:function(){return ks},exportPaletteSize:function(){return Ds},exportSize:function(){return ws},exportSpeed:function(){return qs},exportStart:function(){return Ss},n:function(){return bs},nfts:function(){return Cs},title:function(){return zs}});var ze={};o.r(ze),o.d(ze,{Shader:function(){return Ns},exportEnd:function(){return js},exportFramePerSecond:function(){return Ts},exportPaletteGenOnce:function(){return Gs},exportPaletteSize:function(){return _s},exportSize:function(){return Ms},exportSpeed:function(){return Os},exportStart:function(){return Hs},n:function(){return Us},title:function(){return Fs}});var we={};o.r(we),o.d(we,{Shader:function(){return el},exportEnd:function(){return Zs},exportFramePerSecond:function(){return Vs},exportPaletteGenOnce:function(){return Xs},exportPaletteSize:function(){return Js},exportSize:function(){return Qs},exportSpeed:function(){return Ws},exportStart:function(){return Ks},n:function(){return As},title:function(){return $s}});var Se={};o.r(Se),o.d(Se,{Shader:function(){return vl},exportEnd:function(){return nl},exportFramePerSecond:function(){return cl},exportPaletteGenOnce:function(){return sl},exportPaletteSize:function(){return ll},exportSize:function(){return al},exportSpeed:function(){return fl},exportStart:function(){return il},n:function(){return ol},title:function(){return rl}});var Pe={};o.r(Pe),o.d(Pe,{Shader:function(){return Sl},exportEnd:function(){return gl},exportFramePerSecond:function(){return yl},exportPaletteGenOnce:function(){return zl},exportPaletteSize:function(){return wl},exportSize:function(){return hl},exportSpeed:function(){return bl},exportStart:function(){return xl},n:function(){return ml},title:function(){return dl}});var Ie={};o.r(Ie),o.d(Ie,{Shader:function(){return Ml},exportEnd:function(){return Cl},exportFramePerSecond:function(){return Rl},exportPaletteGenOnce:function(){return Ul},exportPaletteSize:function(){return Fl},exportSize:function(){return kl},exportSpeed:function(){return Ll},exportStart:function(){return Dl},n:function(){return Il},title:function(){return ql}});var qe={};o.r(qe),o.d(qe,{Shader:function(){return $l},exportEnd:function(){return _l},exportFramePerSecond:function(){return Bl},exportPaletteGenOnce:function(){return El},exportPaletteSize:function(){return Al},exportSize:function(){return Ol},exportSpeed:function(){return Nl},exportStart:function(){return Gl},n:function(){return jl},title:function(){return Tl}});var ke={};o.r(ke),o.d(ke,{Shader:function(){return op},exportEnd:function(){return Xl},exportFramePerSecond:function(){return Jl},exportPaletteGenOnce:function(){return ep},exportPaletteSize:function(){return tp},exportSize:function(){return Vl},exportSpeed:function(){return Yl},exportStart:function(){return Wl},n:function(){return Kl},title:function(){return Zl}});var De={};o.r(De),o.d(De,{Shader:function(){return up},exportEnd:function(){return fp},exportFramePerSecond:function(){return sp},exportPaletteGenOnce:function(){return pp},exportPaletteSize:function(){return vp},exportSize:function(){return np},exportSpeed:function(){return lp},exportStart:function(){return cp},n:function(){return ap},title:function(){return ip}});var Ce={};o.r(Ce),o.d(Ce,{Shader:function(){return Pp},exportEnd:function(){return yp},exportFramePerSecond:function(){return bp},exportPaletteGenOnce:function(){return wp},exportPaletteSize:function(){return Sp},exportSize:function(){return xp},exportSpeed:function(){return zp},exportStart:function(){return gp},n:function(){return dp},title:function(){return hp}});var Re={};o.r(Re),o.d(Re,{Shader:function(){return Hp},exportEnd:function(){return Rp},exportFramePerSecond:function(){return Lp},exportPaletteGenOnce:function(){return Fp},exportPaletteSize:function(){return Mp},exportSize:function(){return Dp},exportSpeed:function(){return Up},exportStart:function(){return Cp},n:function(){return qp},title:function(){return kp}});var Le={};o.r(Le),o.d(Le,{Shader:function(){return Qp},exportEnd:function(){return Bp},exportFramePerSecond:function(){return Np},exportPaletteGenOnce:function(){return Ap},exportPaletteSize:function(){return $p},exportSize:function(){return Gp},exportSpeed:function(){return Ep},exportStart:function(){return _p},n:function(){return Tp},title:function(){return Op}});var Ue={};o.r(Ue),o.d(Ue,{Shader:function(){return rv},exportEnd:function(){return Jp},exportFramePerSecond:function(){return Yp},exportPaletteGenOnce:function(){return tv},exportPaletteSize:function(){return ov},exportSize:function(){return Wp},exportSpeed:function(){return ev},exportStart:function(){return Xp},n:function(){return Zp},title:function(){return Vp}});var Fe={};o.r(Fe),o.d(Fe,{Shader:function(){return mv},exportEnd:function(){return sv},exportFramePerSecond:function(){return lv},exportPaletteGenOnce:function(){return vv},exportPaletteSize:function(){return uv},exportSize:function(){return cv},exportSpeed:function(){return pv},exportStart:function(){return fv},n:function(){return iv},title:function(){return nv}});var Me={};o.r(Me),o.d(Me,{Shader:function(){return Iv},exportEnd:function(){return bv},exportFramePerSecond:function(){return zv},exportPaletteGenOnce:function(){return Sv},exportPaletteSize:function(){return Pv},exportSize:function(){return gv},exportSpeed:function(){return wv},exportStart:function(){return yv},n:function(){return hv},title:function(){return xv}});var He={};o.r(He),o.d(He,{Shader:function(){return jv},exportEnd:function(){return Lv},exportFramePerSecond:function(){return Uv},exportPaletteGenOnce:function(){return Mv},exportPaletteSize:function(){return Hv},exportSize:function(){return Cv},exportSpeed:function(){return Fv},exportStart:function(){return Rv},n:function(){return kv},title:function(){return Dv}});var je={};o.r(je),o.d(je,{Shader:function(){return Kv},exportEnd:function(){return Nv},exportFramePerSecond:function(){return Ev},exportPaletteGenOnce:function(){return $v},exportPaletteSize:function(){return Qv},exportSize:function(){return _v},exportSpeed:function(){return Av},exportStart:function(){return Bv},n:function(){return Ov},title:function(){return Gv}});var Te={};o.r(Te),o.d(Te,{Shader:function(){return au},exportEnd:function(){return Yv},exportFramePerSecond:function(){return eu},exportPaletteGenOnce:function(){return ou},exportPaletteSize:function(){return ru},exportSize:function(){return Xv},exportSpeed:function(){return tu},exportStart:function(){return Jv},n:function(){return Vv},title:function(){return Wv}});var Oe={};o.r(Oe),o.d(Oe,{Shader:function(){return du},exportEnd:function(){return lu},exportFramePerSecond:function(){return pu},exportPaletteGenOnce:function(){return uu},exportPaletteSize:function(){return mu},exportSize:function(){return fu},exportSpeed:function(){return vu},exportStart:function(){return su},n:function(){return nu},title:function(){return cu}});var Ge={};o.r(Ge),o.d(Ge,{Shader:function(){return qu},exportEnd:function(){return zu},exportFramePerSecond:function(){return wu},exportPaletteGenOnce:function(){return Pu},exportPaletteSize:function(){return Iu},exportSize:function(){return yu},exportSpeed:function(){return Su},exportStart:function(){return bu},n:function(){return xu},title:function(){return gu}});var _e={};o.r(_e),o.d(_e,{Shader:function(){return Tu},exportEnd:function(){return Uu},exportFramePerSecond:function(){return Fu},exportPaletteGenOnce:function(){return Hu},exportPaletteSize:function(){return ju},exportSize:function(){return Ru},exportSpeed:function(){return Mu},exportStart:function(){return Lu},n:function(){return Du},title:function(){return Cu}});var Be={};o.r(Be),o.d(Be,{Shader:function(){return Zu},exportEnd:function(){return Eu},exportFramePerSecond:function(){return Au},exportPaletteGenOnce:function(){return Qu},exportPaletteSize:function(){return Ku},exportSize:function(){return Bu},exportSpeed:function(){return $u},exportStart:function(){return Nu},n:function(){return Gu},title:function(){return _u}});var Ne={};o.r(Ne),o.d(Ne,{Shader:function(){return im},exportEnd:function(){return em},exportFramePerSecond:function(){return tm},exportPaletteGenOnce:function(){return rm},exportPaletteSize:function(){return am},exportSize:function(){return Ju},exportSpeed:function(){return om},exportStart:function(){return Yu},n:function(){return Wu},title:function(){return Xu}});var Ee={};o.r(Ee),o.d(Ee,{Shader:function(){return hm},exportEnd:function(){return pm},exportFramePerSecond:function(){return vm},exportPaletteGenOnce:function(){return mm},exportPaletteSize:function(){return dm},exportSize:function(){return sm},exportSpeed:function(){return um},exportStart:function(){return lm},n:function(){return cm},title:function(){return fm}});var Ae={};o.r(Ae),o.d(Ae,{Shader:function(){return km},exportEnd:function(){return wm},exportFramePerSecond:function(){return Sm},exportPaletteGenOnce:function(){return Im},exportPaletteSize:function(){return qm},exportSize:function(){return bm},exportSpeed:function(){return Pm},exportStart:function(){return zm},n:function(){return gm},title:function(){return ym}});var $e={};o.r($e),o.d($e,{Shader:function(){return Om},exportEnd:function(){return Fm},exportFramePerSecond:function(){return Mm},exportPaletteGenOnce:function(){return jm},exportPaletteSize:function(){return Tm},exportSize:function(){return Lm},exportSpeed:function(){return Hm},exportStart:function(){return Um},n:function(){return Cm},title:function(){return Rm}});var Qe={};o.r(Qe),o.d(Qe,{Shader:function(){return Vm},exportEnd:function(){return Am},exportFramePerSecond:function(){return $m},exportPaletteGenOnce:function(){return Km},exportPaletteSize:function(){return Zm},exportSize:function(){return Nm},exportSpeed:function(){return Qm},exportStart:function(){return Em},n:function(){return _m},title:function(){return Bm}});var Ke={};o.r(Ke),o.d(Ke,{Shader:function(){return nd},exportEnd:function(){return td},exportFramePerSecond:function(){return od},exportPaletteGenOnce:function(){return ad},exportPaletteSize:function(){return id},exportSize:function(){return Ym},exportSpeed:function(){return rd},exportStart:function(){return ed},n:function(){return Xm},title:function(){return Jm}});var Ze={};o.r(Ze),o.d(Ze,{Shader:function(){return xd},exportEnd:function(){return vd},exportFramePerSecond:function(){return ud},exportPaletteGenOnce:function(){return dd},exportPaletteSize:function(){return hd},exportSize:function(){return ld},exportSpeed:function(){return md},exportStart:function(){return pd},n:function(){return fd},title:function(){return sd}});var Ve={};o.r(Ve),o.d(Ve,{Shader:function(){return Dd},exportEnd:function(){return Sd},exportFramePerSecond:function(){return Pd},exportPaletteGenOnce:function(){return qd},exportPaletteSize:function(){return kd},exportSize:function(){return zd},exportSpeed:function(){return Id},exportStart:function(){return wd},n:function(){return yd},title:function(){return bd}});var We={};o.r(We),o.d(We,{Shader:function(){return Gd},exportEnd:function(){return Md},exportFramePerSecond:function(){return Hd},exportPaletteGenOnce:function(){return Td},exportPaletteSize:function(){return Od},exportSize:function(){return Ud},exportSpeed:function(){return jd},exportStart:function(){return Fd},n:function(){return Rd},title:function(){return Ld}});var Xe={};o.r(Xe),o.d(Xe,{Shader:function(){return Wd},exportEnd:function(){return $d},exportFramePerSecond:function(){return Qd},exportPaletteGenOnce:function(){return Zd},exportPaletteSize:function(){return Vd},exportSize:function(){return Ed},exportSpeed:function(){return Kd},exportStart:function(){return Ad},n:function(){return Bd},title:function(){return Nd}});var Je={};o.r(Je),o.d(Je,{Shader:function(){return fh},exportEnd:function(){return rh},exportFramePerSecond:function(){return ah},exportPaletteGenOnce:function(){return nh},exportPaletteSize:function(){return ch},exportSize:function(){return th},exportSpeed:function(){return ih},exportStart:function(){return oh},n:function(){return Jd},preload:function(){return Yd},title:function(){return eh}});var Ye={};o.r(Ye),o.d(Ye,{Shader:function(){return bh},exportEnd:function(){return dh},exportFramePerSecond:function(){return hh},exportPaletteGenOnce:function(){return gh},exportPaletteSize:function(){return yh},exportSize:function(){return uh},exportSpeed:function(){return xh},exportStart:function(){return mh},n:function(){return lh},preload:function(){return ph},title:function(){return vh}});var et={};o.r(et),o.d(et,{Shader:function(){return Lh},exportEnd:function(){return kh},exportFramePerSecond:function(){return Dh},exportPaletteSize:function(){return Rh},exportSize:function(){return Ih},exportSpeed:function(){return Ch},exportStart:function(){return qh},n:function(){return wh},preload:function(){return Sh},title:function(){return Ph}});var tt={};o.r(tt),o.d(tt,{Shader:function(){return Bh},exportEnd:function(){return Th},exportFramePerSecond:function(){return Oh},exportPaletteSize:function(){return _h},exportSize:function(){return Hh},exportSpeed:function(){return Gh},exportStart:function(){return jh},n:function(){return Fh},title:function(){return Mh}});var ot={};o.r(ot),o.d(ot,{Shader:function(){return Jh},exportEnd:function(){return Zh},exportFramePerSecond:function(){return Vh},exportPaletteSize:function(){return Xh},exportSize:function(){return Qh},exportSpeed:function(){return Wh},exportStart:function(){return Kh},n:function(){return Eh},preload:function(){return Ah},title:function(){return $h}});var rt={};o.r(rt),o.d(rt,{Shader:function(){return fx},exportEnd:function(){return ax},exportFramePerSecond:function(){return ix},exportPaletteSize:function(){return cx},exportSize:function(){return ox},exportSpeed:function(){return nx},exportStart:function(){return rx},n:function(){return ex},title:function(){return tx}});var at=o(5893),it=o(3224);const nt=1,ct="Hello 2020",ft=({time:e})=>(0,at.jsx)(it.Node,{shader:st.day001,uniforms:{time:e}}),st=it.Shaders.create({day001:{frag:it.GLSL`
+"use strict";(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[830],{9830:function(e,t,o){o.d(t,{hU:function(){return wx},gw:function(){return bx},x2:function(){return zx}});var r={};o.r(r),o.d(r,{Shader:function(){return st},n:function(){return ct},title:function(){return ft}});var a={};o.r(a),o.d(a,{Shader:function(){return gt},exportEnd:function(){return dt},exportFramePerSecond:function(){return ht},exportSize:function(){return ut},exportSpeed:function(){return xt},exportStart:function(){return mt},n:function(){return pt},title:function(){return vt}});var i={};o.r(i),o.d(i,{Shader:function(){return wt},n:function(){return bt},title:function(){return zt}});var n={};o.r(n),o.d(n,{Shader:function(){return Rt},n:function(){return Dt},title:function(){return Ct}});var c={};o.r(c),o.d(c,{Shader:function(){return Ht},n:function(){return Ft},title:function(){return Mt}});var f={};o.r(f),o.d(f,{Shader:function(){return Gt},n:function(){return jt},title:function(){return Ot}});var s={};o.r(s),o.d(s,{Shader:function(){return Et},n:function(){return Bt},title:function(){return Nt}});var l={};o.r(l),o.d(l,{Shader:function(){return Kt},n:function(){return $t},title:function(){return Qt}});var p={};o.r(p),o.d(p,{Shader:function(){return oo},exportEnd:function(){return Jt},exportFramePerSecond:function(){return eo},exportSize:function(){return Xt},exportSpeed:function(){return to},exportStart:function(){return Yt},n:function(){return Vt},title:function(){return Wt}});var v={};o.r(v),o.d(v,{Shader:function(){return no},n:function(){return ao},title:function(){return io}});var u={};o.r(u),o.d(u,{Shader:function(){return lo},n:function(){return fo},title:function(){return so}});var m={};o.r(m),o.d(m,{Shader:function(){return mo},n:function(){return vo},title:function(){return uo}});var d={};o.r(d),o.d(d,{Shader:function(){return yo},n:function(){return xo},title:function(){return go}});var h={};o.r(h),o.d(h,{Shader:function(){return So},n:function(){return zo},title:function(){return wo}});var x={};o.r(x),o.d(x,{Shader:function(){return To},n:function(){return Mo},title:function(){return Ho}});var g={};o.r(g),o.d(g,{Shader:function(){return No},n:function(){return _o},title:function(){return Bo}});var y={};o.r(y),o.d(y,{Shader:function(){return Qo},n:function(){return Ao},title:function(){return $o}});var b={};o.r(b),o.d(b,{Shader:function(){return Wo},n:function(){return Zo},title:function(){return Vo}});var z={};o.r(z),o.d(z,{Shader:function(){return er},n:function(){return Yo},title:function(){return Jo}});var w={};o.r(w),o.d(w,{Shader:function(){return ar},n:function(){return or},title:function(){return rr}});var S={};o.r(S),o.d(S,{Shader:function(){return sr},n:function(){return cr},title:function(){return fr}});var P={};o.r(P),o.d(P,{Shader:function(){return mr},n:function(){return vr},title:function(){return ur}});var I={};o.r(I),o.d(I,{Shader:function(){return gr},n:function(){return hr},title:function(){return xr}});var q={};o.r(q),o.d(q,{Shader:function(){return wr},n:function(){return br},title:function(){return zr}});var D={};o.r(D),o.d(D,{Shader:function(){return qr},n:function(){return Pr},title:function(){return Ir}});var C={};o.r(C),o.d(C,{Shader:function(){return Lr},n:function(){return kr},title:function(){return Rr}});var k={};o.r(k),o.d(k,{Shader:function(){return Br},exportEnd:function(){return Or},exportFramePerSecond:function(){return Gr},exportSize:function(){return Tr},exportSpeed:function(){return _r},exportStart:function(){return jr},n:function(){return Mr},title:function(){return Hr}});var R={};o.r(R),o.d(R,{Shader:function(){return Qr},n:function(){return Ar},title:function(){return $r}});var L={};o.r(L),o.d(L,{Shader:function(){return Xr},n:function(){return Vr},title:function(){return Wr}});var U={};o.r(U),o.d(U,{Shader:function(){return ta},n:function(){return Jr},title:function(){return ea}});var F={};o.r(F),o.d(F,{Shader:function(){return ia},n:function(){return ra},title:function(){return aa}});var M={};o.r(M),o.d(M,{Shader:function(){return la},n:function(){return ca},title:function(){return fa}});var H={};o.r(H),o.d(H,{Shader:function(){return ma},n:function(){return va},title:function(){return ua}});var T={};o.r(T),o.d(T,{Shader:function(){return ga},n:function(){return ha},title:function(){return xa}});var j={};o.r(j),o.d(j,{Shader:function(){return wa},n:function(){return ba},title:function(){return za}});var O={};o.r(O),o.d(O,{Shader:function(){return Da},n:function(){return Ia},title:function(){return qa}});var G={};o.r(G),o.d(G,{Shader:function(){return Ua},n:function(){return Ra},title:function(){return La}});var _={};o.r(_),o.d(_,{Shader:function(){return Ta},n:function(){return Ma},title:function(){return Ha}});var B={};o.r(B),o.d(B,{Shader:function(){return Ba},n:function(){return Ga},title:function(){return _a}});var N={};o.r(N),o.d(N,{Shader:function(){return $a},n:function(){return Ea},title:function(){return Aa}});var E={};o.r(E),o.d(E,{Shader:function(){return Va},n:function(){return Ka},title:function(){return Za}});var A={};o.r(A),o.d(A,{Shader:function(){return Ja},n:function(){return Xa},title:function(){return Ya}});var $={};o.r($),o.d($,{Shader:function(){return ri},n:function(){return ti},title:function(){return oi}});var Q={};o.r(Q),o.d(Q,{Shader:function(){return fi},n:function(){return ni},title:function(){return ci}});var K={};o.r(K),o.d(K,{Shader:function(){return vi},n:function(){return li},title:function(){return pi}});var Z={};o.r(Z),o.d(Z,{Shader:function(){return hi},n:function(){return mi},title:function(){return di}});var V={};o.r(V),o.d(V,{Shader:function(){return bi},n:function(){return gi},title:function(){return yi}});var W={};o.r(W),o.d(W,{Shader:function(){return Pi},n:function(){return wi},title:function(){return Si}});var X={};o.r(X),o.d(X,{Shader:function(){return Fi},exportEnd:function(){return Ri},exportFramePerSecond:function(){return Li},exportSize:function(){return Ci},exportSpeed:function(){return Ui},exportStart:function(){return ki},n:function(){return qi},title:function(){return Di}});var Y={};o.r(Y),o.d(Y,{Shader:function(){return Oi},n:function(){return Ti},title:function(){return ji}});var J={};o.r(J),o.d(J,{Shader:function(){return Ki},exportEnd:function(){return Ai},exportFramePerSecond:function(){return $i},exportSize:function(){return Ni},exportSpeed:function(){return Qi},exportStart:function(){return Ei},n:function(){return _i},title:function(){return Bi}});var ee={};o.r(ee),o.d(ee,{Shader:function(){return Xi},n:function(){return Vi},title:function(){return Wi}});var te={};o.r(te),o.d(te,{Shader:function(){return tn},n:function(){return Ji},title:function(){return en}});var oe={};o.r(oe),o.d(oe,{Shader:function(){return nn},n:function(){return rn},title:function(){return an}});var re={};o.r(re),o.d(re,{Shader:function(){return dn},exportEnd:function(){return vn},exportFramePerSecond:function(){return un},exportSize:function(){return ln},exportSpeed:function(){return mn},exportStart:function(){return pn},n:function(){return fn},title:function(){return sn}});var ae={};o.r(ae),o.d(ae,{Shader:function(){return yn},n:function(){return xn},title:function(){return gn}});var ie={};o.r(ie),o.d(ie,{Shader:function(){return Cn},exportEnd:function(){return In},exportFramePerSecond:function(){return qn},exportSize:function(){return Sn},exportSpeed:function(){return Dn},exportStart:function(){return Pn},n:function(){return zn},title:function(){return wn}});var ne={};o.r(ne),o.d(ne,{Shader:function(){return Nn},exportEnd:function(){return Mn},exportFramePerSecond:function(){return Hn},exportMP4vb:function(){return jn},exportSize:function(){return Un},exportSpeed:function(){return Tn},exportStart:function(){return Fn},n:function(){return On},nfts:function(){return _n},title:function(){return Gn}});var ce={};o.r(ce),o.d(ce,{Shader:function(){return Zn},description:function(){return Kn},n:function(){return $n},title:function(){return Qn}});var fe={};o.r(fe),o.d(fe,{Shader:function(){return Jn},n:function(){return Xn},title:function(){return Yn}});var se={};o.r(se),o.d(se,{Shader:function(){return nc},exportEnd:function(){return rc},exportFramePerSecond:function(){return ac},n:function(){return tc},preload:function(){return ic},title:function(){return oc}});var le={};o.r(le),o.d(le,{Logic:function(){return uc},Shader:function(){return gc},exportEnd:function(){return lc},exportFramePerSecond:function(){return pc},exportSpeed:function(){return vc},n:function(){return fc},title:function(){return sc}});var pe={};o.r(pe),o.d(pe,{Logic:function(){return Rc},Shader:function(){return Mc},exportEnd:function(){return Ic},exportFramePerSecond:function(){return qc},exportMP4vb:function(){return Cc},exportSize:function(){return Sc},exportSpeed:function(){return Dc},exportStart:function(){return Pc},n:function(){return zc},title:function(){return wc}});var ve={};o.r(ve),o.d(ve,{Shader:function(){return _c},exportEnd:function(){return Oc},n:function(){return Tc},nfts:function(){return Gc},title:function(){return jc}});var ue={};o.r(ue),o.d(ue,{Shader:function(){return Jc},exportEnd:function(){return Qc},exportFramePerSecond:function(){return Kc},exportPaletteGenOnce:function(){return Wc},exportPaletteSize:function(){return Xc},exportSize:function(){return Ac},exportSkipFrame:function(){return Vc},exportSpeed:function(){return Zc},exportStart:function(){return $c},n:function(){return Nc},nfts:function(){return Yc},title:function(){return Ec}});var me={};o.r(me),o.d(me,{Shader:function(){return uf},exportEnd:function(){return cf},exportFramePerSecond:function(){return ff},exportPaletteGenOnce:function(){return pf},exportPaletteSize:function(){return vf},exportSize:function(){return af},exportSkipFrame:function(){return lf},exportSpeed:function(){return sf},exportStart:function(){return nf},n:function(){return of},title:function(){return rf}});var de={};o.r(de),o.d(de,{Shader:function(){return qf},exportEnd:function(){return bf},exportFramePerSecond:function(){return zf},exportPaletteGenOnce:function(){return Pf},exportPaletteSize:function(){return If},exportSize:function(){return gf},exportSkipFrame:function(){return Sf},exportSpeed:function(){return wf},exportStart:function(){return yf},n:function(){return hf},title:function(){return xf}});var he={};o.r(he),o.d(he,{Shader:function(){return Gf},exportEnd:function(){return Ff},exportFramePerSecond:function(){return Mf},exportPaletteGenOnce:function(){return jf},exportPaletteSize:function(){return Of},exportSize:function(){return Lf},exportSkipFrame:function(){return Tf},exportSpeed:function(){return Hf},exportStart:function(){return Uf},n:function(){return kf},title:function(){return Rf}});var xe={};o.r(xe),o.d(xe,{Shader:function(){return Xf},exportEnd:function(){return Qf},exportFramePerSecond:function(){return Kf},exportPaletteGenOnce:function(){return Vf},exportPaletteSize:function(){return Wf},exportSize:function(){return Af},exportSpeed:function(){return Zf},exportStart:function(){return $f},n:function(){return Nf},title:function(){return Ef}});var ge={};o.r(ge),o.d(ge,{Shader:function(){return fs},exportEnd:function(){return rs},exportFramePerSecond:function(){return as},exportPaletteGenOnce:function(){return ns},exportPaletteSize:function(){return cs},exportSize:function(){return ts},exportSpeed:function(){return is},exportStart:function(){return os},n:function(){return Jf},title:function(){return es}});var ye={};o.r(ye),o.d(ye,{Shader:function(){return ys},exportEnd:function(){return ms},exportFramePerSecond:function(){return ds},exportPaletteGenOnce:function(){return xs},exportPaletteSize:function(){return gs},exportSize:function(){return vs},exportSpeed:function(){return hs},exportStart:function(){return us},n:function(){return ls},title:function(){return ps}});var be={};o.r(be),o.d(be,{Shader:function(){return Ls},exportEnd:function(){return Is},exportFramePerSecond:function(){return qs},exportPaletteGenOnce:function(){return Cs},exportPaletteSize:function(){return ks},exportSize:function(){return Ss},exportSpeed:function(){return Ds},exportStart:function(){return Ps},n:function(){return zs},nfts:function(){return Rs},title:function(){return ws}});var ze={};o.r(ze),o.d(ze,{Shader:function(){return Es},exportEnd:function(){return js},exportFramePerSecond:function(){return Os},exportPaletteGenOnce:function(){return _s},exportPaletteSize:function(){return Bs},exportSize:function(){return Hs},exportSpeed:function(){return Gs},exportStart:function(){return Ts},n:function(){return Fs},title:function(){return Ms}});var we={};o.r(we),o.d(we,{Shader:function(){return tl},exportEnd:function(){return Vs},exportFramePerSecond:function(){return Ws},exportPaletteGenOnce:function(){return Ys},exportPaletteSize:function(){return Js},exportSize:function(){return Ks},exportSpeed:function(){return Xs},exportStart:function(){return Zs},n:function(){return $s},title:function(){return Qs}});var Se={};o.r(Se),o.d(Se,{Shader:function(){return ul},exportEnd:function(){return cl},exportFramePerSecond:function(){return fl},exportPaletteGenOnce:function(){return ll},exportPaletteSize:function(){return pl},exportSize:function(){return il},exportSpeed:function(){return sl},exportStart:function(){return nl},n:function(){return rl},title:function(){return al}});var Pe={};o.r(Pe),o.d(Pe,{Shader:function(){return Pl},exportEnd:function(){return yl},exportFramePerSecond:function(){return bl},exportPaletteGenOnce:function(){return wl},exportPaletteSize:function(){return Sl},exportSize:function(){return xl},exportSpeed:function(){return zl},exportStart:function(){return gl},n:function(){return dl},title:function(){return hl}});var Ie={};o.r(Ie),o.d(Ie,{Shader:function(){return Hl},exportEnd:function(){return Rl},exportFramePerSecond:function(){return Ll},exportPaletteGenOnce:function(){return Fl},exportPaletteSize:function(){return Ml},exportSize:function(){return Cl},exportSpeed:function(){return Ul},exportStart:function(){return kl},n:function(){return ql},title:function(){return Dl}});var qe={};o.r(qe),o.d(qe,{Shader:function(){return Ql},exportEnd:function(){return Bl},exportFramePerSecond:function(){return Nl},exportPaletteGenOnce:function(){return Al},exportPaletteSize:function(){return $l},exportSize:function(){return Gl},exportSpeed:function(){return El},exportStart:function(){return _l},n:function(){return jl},title:function(){return Ol}});var De={};o.r(De),o.d(De,{Shader:function(){return rp},exportEnd:function(){return Yl},exportFramePerSecond:function(){return Jl},exportPaletteGenOnce:function(){return tp},exportPaletteSize:function(){return op},exportSize:function(){return Wl},exportSpeed:function(){return ep},exportStart:function(){return Xl},n:function(){return Zl},title:function(){return Vl}});var Ce={};o.r(Ce),o.d(Ce,{Shader:function(){return mp},exportEnd:function(){return sp},exportFramePerSecond:function(){return lp},exportPaletteGenOnce:function(){return vp},exportPaletteSize:function(){return up},exportSize:function(){return cp},exportSpeed:function(){return pp},exportStart:function(){return fp},n:function(){return ip},title:function(){return np}});var ke={};o.r(ke),o.d(ke,{Shader:function(){return Ip},exportEnd:function(){return bp},exportFramePerSecond:function(){return zp},exportPaletteGenOnce:function(){return Sp},exportPaletteSize:function(){return Pp},exportSize:function(){return gp},exportSpeed:function(){return wp},exportStart:function(){return yp},n:function(){return hp},title:function(){return xp}});var Re={};o.r(Re),o.d(Re,{Shader:function(){return Tp},exportEnd:function(){return Lp},exportFramePerSecond:function(){return Up},exportPaletteGenOnce:function(){return Mp},exportPaletteSize:function(){return Hp},exportSize:function(){return kp},exportSpeed:function(){return Fp},exportStart:function(){return Rp},n:function(){return Dp},title:function(){return Cp}});var Le={};o.r(Le),o.d(Le,{Shader:function(){return Kp},exportEnd:function(){return Np},exportFramePerSecond:function(){return Ep},exportPaletteGenOnce:function(){return $p},exportPaletteSize:function(){return Qp},exportSize:function(){return _p},exportSpeed:function(){return Ap},exportStart:function(){return Bp},n:function(){return Op},title:function(){return Gp}});var Ue={};o.r(Ue),o.d(Ue,{Shader:function(){return av},exportEnd:function(){return Jp},exportFramePerSecond:function(){return ev},exportPaletteGenOnce:function(){return ov},exportPaletteSize:function(){return rv},exportSize:function(){return Xp},exportSpeed:function(){return tv},exportStart:function(){return Yp},n:function(){return Vp},title:function(){return Wp}});var Fe={};o.r(Fe),o.d(Fe,{Shader:function(){return dv},exportEnd:function(){return lv},exportFramePerSecond:function(){return pv},exportPaletteGenOnce:function(){return uv},exportPaletteSize:function(){return mv},exportSize:function(){return fv},exportSpeed:function(){return vv},exportStart:function(){return sv},n:function(){return nv},title:function(){return cv}});var Me={};o.r(Me),o.d(Me,{Shader:function(){return qv},exportEnd:function(){return zv},exportFramePerSecond:function(){return wv},exportPaletteGenOnce:function(){return Pv},exportPaletteSize:function(){return Iv},exportSize:function(){return yv},exportSpeed:function(){return Sv},exportStart:function(){return bv},n:function(){return xv},title:function(){return gv}});var He={};o.r(He),o.d(He,{Shader:function(){return jv},exportEnd:function(){return Uv},exportFramePerSecond:function(){return Fv},exportPaletteGenOnce:function(){return Hv},exportPaletteSize:function(){return Tv},exportSize:function(){return Rv},exportSpeed:function(){return Mv},exportStart:function(){return Lv},n:function(){return Cv},title:function(){return kv}});var Te={};o.r(Te),o.d(Te,{Shader:function(){return Zv},exportEnd:function(){return Ev},exportFramePerSecond:function(){return Av},exportPaletteGenOnce:function(){return Qv},exportPaletteSize:function(){return Kv},exportSize:function(){return Bv},exportSpeed:function(){return $v},exportStart:function(){return Nv},n:function(){return Gv},title:function(){return _v}});var je={};o.r(je),o.d(je,{Shader:function(){return iu},exportEnd:function(){return eu},exportFramePerSecond:function(){return tu},exportPaletteGenOnce:function(){return ru},exportPaletteSize:function(){return au},exportSize:function(){return Yv},exportSpeed:function(){return ou},exportStart:function(){return Jv},n:function(){return Wv},title:function(){return Xv}});var Oe={};o.r(Oe),o.d(Oe,{Shader:function(){return hu},exportEnd:function(){return pu},exportFramePerSecond:function(){return vu},exportPaletteGenOnce:function(){return mu},exportPaletteSize:function(){return du},exportSize:function(){return su},exportSpeed:function(){return uu},exportStart:function(){return lu},n:function(){return cu},title:function(){return fu}});var Ge={};o.r(Ge),o.d(Ge,{Shader:function(){return Du},exportEnd:function(){return wu},exportFramePerSecond:function(){return Su},exportPaletteGenOnce:function(){return Iu},exportPaletteSize:function(){return qu},exportSize:function(){return bu},exportSpeed:function(){return Pu},exportStart:function(){return zu},n:function(){return gu},title:function(){return yu}});var _e={};o.r(_e),o.d(_e,{Shader:function(){return Ou},exportEnd:function(){return Fu},exportFramePerSecond:function(){return Mu},exportPaletteGenOnce:function(){return Tu},exportPaletteSize:function(){return ju},exportSize:function(){return Lu},exportSpeed:function(){return Hu},exportStart:function(){return Uu},n:function(){return ku},title:function(){return Ru}});var Be={};o.r(Be),o.d(Be,{Shader:function(){return Vu},exportEnd:function(){return Au},exportFramePerSecond:function(){return $u},exportPaletteGenOnce:function(){return Ku},exportPaletteSize:function(){return Zu},exportSize:function(){return Nu},exportSpeed:function(){return Qu},exportStart:function(){return Eu},n:function(){return _u},title:function(){return Bu}});var Ne={};o.r(Ne),o.d(Ne,{Shader:function(){return nm},exportEnd:function(){return tm},exportFramePerSecond:function(){return om},exportPaletteGenOnce:function(){return am},exportPaletteSize:function(){return im},exportSize:function(){return Ju},exportSpeed:function(){return rm},exportStart:function(){return em},n:function(){return Xu},title:function(){return Yu}});var Ee={};o.r(Ee),o.d(Ee,{Shader:function(){return xm},exportEnd:function(){return vm},exportFramePerSecond:function(){return um},exportPaletteGenOnce:function(){return dm},exportPaletteSize:function(){return hm},exportSize:function(){return lm},exportSpeed:function(){return mm},exportStart:function(){return pm},n:function(){return fm},title:function(){return sm}});var Ae={};o.r(Ae),o.d(Ae,{Shader:function(){return Cm},exportEnd:function(){return Sm},exportFramePerSecond:function(){return Pm},exportPaletteGenOnce:function(){return qm},exportPaletteSize:function(){return Dm},exportSize:function(){return zm},exportSpeed:function(){return Im},exportStart:function(){return wm},n:function(){return ym},title:function(){return bm}});var $e={};o.r($e),o.d($e,{Shader:function(){return Gm},exportEnd:function(){return Mm},exportFramePerSecond:function(){return Hm},exportPaletteGenOnce:function(){return jm},exportPaletteSize:function(){return Om},exportSize:function(){return Um},exportSpeed:function(){return Tm},exportStart:function(){return Fm},n:function(){return Rm},title:function(){return Lm}});var Qe={};o.r(Qe),o.d(Qe,{Shader:function(){return Wm},exportEnd:function(){return $m},exportFramePerSecond:function(){return Qm},exportPaletteGenOnce:function(){return Zm},exportPaletteSize:function(){return Vm},exportSize:function(){return Em},exportSpeed:function(){return Km},exportStart:function(){return Am},n:function(){return Bm},title:function(){return Nm}});var Ke={};o.r(Ke),o.d(Ke,{Shader:function(){return cd},exportEnd:function(){return od},exportFramePerSecond:function(){return rd},exportPaletteGenOnce:function(){return id},exportPaletteSize:function(){return nd},exportSize:function(){return ed},exportSpeed:function(){return ad},exportStart:function(){return td},n:function(){return Ym},title:function(){return Jm}});var Ze={};o.r(Ze),o.d(Ze,{Shader:function(){return gd},exportEnd:function(){return ud},exportFramePerSecond:function(){return md},exportPaletteGenOnce:function(){return hd},exportPaletteSize:function(){return xd},exportSize:function(){return pd},exportSpeed:function(){return dd},exportStart:function(){return vd},n:function(){return sd},title:function(){return ld}});var Ve={};o.r(Ve),o.d(Ve,{Shader:function(){return kd},exportEnd:function(){return Pd},exportFramePerSecond:function(){return Id},exportPaletteGenOnce:function(){return Dd},exportPaletteSize:function(){return Cd},exportSize:function(){return wd},exportSpeed:function(){return qd},exportStart:function(){return Sd},n:function(){return bd},title:function(){return zd}});var We={};o.r(We),o.d(We,{Shader:function(){return _d},exportEnd:function(){return Hd},exportFramePerSecond:function(){return Td},exportPaletteGenOnce:function(){return Od},exportPaletteSize:function(){return Gd},exportSize:function(){return Fd},exportSpeed:function(){return jd},exportStart:function(){return Md},n:function(){return Ld},title:function(){return Ud}});var Xe={};o.r(Xe),o.d(Xe,{Shader:function(){return Xd},exportEnd:function(){return Qd},exportFramePerSecond:function(){return Kd},exportPaletteGenOnce:function(){return Vd},exportPaletteSize:function(){return Wd},exportSize:function(){return Ad},exportSpeed:function(){return Zd},exportStart:function(){return $d},n:function(){return Nd},title:function(){return Ed}});var Ye={};o.r(Ye),o.d(Ye,{Shader:function(){return sh},exportEnd:function(){return ah},exportFramePerSecond:function(){return ih},exportPaletteGenOnce:function(){return ch},exportPaletteSize:function(){return fh},exportSize:function(){return oh},exportSpeed:function(){return nh},exportStart:function(){return rh},n:function(){return Jd},preload:function(){return eh},title:function(){return th}});var Je={};o.r(Je),o.d(Je,{Shader:function(){return zh},exportEnd:function(){return hh},exportFramePerSecond:function(){return xh},exportPaletteGenOnce:function(){return yh},exportPaletteSize:function(){return bh},exportSize:function(){return mh},exportSpeed:function(){return gh},exportStart:function(){return dh},n:function(){return ph},preload:function(){return vh},title:function(){return uh}});var et={};o.r(et),o.d(et,{Shader:function(){return Uh},exportEnd:function(){return Ch},exportFramePerSecond:function(){return kh},exportPaletteSize:function(){return Lh},exportSize:function(){return qh},exportSpeed:function(){return Rh},exportStart:function(){return Dh},n:function(){return Sh},preload:function(){return Ph},title:function(){return Ih}});var tt={};o.r(tt),o.d(tt,{Shader:function(){return Nh},exportEnd:function(){return Oh},exportFramePerSecond:function(){return Gh},exportPaletteSize:function(){return Bh},exportSize:function(){return Th},exportSpeed:function(){return _h},exportStart:function(){return jh},n:function(){return Mh},title:function(){return Hh}});var ot={};o.r(ot),o.d(ot,{Shader:function(){return Jh},exportEnd:function(){return Vh},exportFramePerSecond:function(){return Wh},exportPaletteSize:function(){return Yh},exportSize:function(){return Kh},exportSpeed:function(){return Xh},exportStart:function(){return Zh},n:function(){return Ah},preload:function(){return $h},title:function(){return Qh}});var rt={};o.r(rt),o.d(rt,{Shader:function(){return sx},exportEnd:function(){return ix},exportFramePerSecond:function(){return nx},exportPaletteSize:function(){return fx},exportSize:function(){return rx},exportSpeed:function(){return cx},exportStart:function(){return ax},n:function(){return tx},title:function(){return ox}});var at={};o.r(at),o.d(at,{Render:function(){return gx},moreinfoLink:function(){return xx},n:function(){return dx},title:function(){return hx}});var it=o(5893),nt=o(3224);const ct=1,ft="Hello 2020",st=({time:e})=>(0,it.jsx)(nt.Node,{shader:lt.day001,uniforms:{time:e}}),lt=nt.Shaders.create({day001:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -31,7 +31,7 @@ void main() {
       vec3(uv.x, uv.y, 0.5 + 0.2 * cos(time)),
       step(0.5, s)
     ), 1.0);
-}`}}),lt=2,pt="stripes",vt=400,ut=0,mt=60,dt=24,ht=1,xt=({time:e})=>(0,at.jsx)(it.Node,{shader:gt.node,uniforms:{time:e}}),gt=it.Shaders.create({node:{frag:it.GLSL`
+}`}}),pt=2,vt="stripes",ut=400,mt=0,dt=60,ht=24,xt=1,gt=({time:e})=>(0,it.jsx)(nt.Node,{shader:yt.node,uniforms:{time:e}}),yt=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -71,7 +71,7 @@ void main() {
   c *= smoothstep(60., 59., time) * smoothstep(0., 1., time);
   #endif
   gl_FragColor = vec4(c, 1.0);
-}`}}),yt=3,bt="zephyr",zt=({time:e})=>(0,at.jsx)(it.Node,{shader:wt.node,uniforms:{time:e}}),wt=it.Shaders.create({node:{frag:it.GLSL`
+}`}}),bt=3,zt="zephyr",wt=({time:e})=>(0,it.jsx)(nt.Node,{shader:St.node,uniforms:{time:e}}),St=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -126,7 +126,7 @@ void main() {
     flower(pattern(uv, vec2(0.2)), 5., 0.1, time)
   );
   gl_FragColor = vec4(c, 1.0);
-}`}});var St=o(7294);const Pt=it.Shaders.create({InitGameOfLife:{frag:it.GLSL`
+}`}});var Pt=o(7294);const It=nt.Shaders.create({InitGameOfLife:{frag:nt.GLSL`
   precision highp float;
   uniform float seed;
   // i
@@ -137,7 +137,7 @@ void main() {
   // i
   void main() {
     gl_FragColor = vec4(vec3(step(0.5, random(uv))), 1.0);
-  }`},GameOfLife:{frag:it.GLSL`
+  }`},GameOfLife:{frag:nt.GLSL`
   precision highp float;
   varying vec2 uv;
   uniform float size;
@@ -156,7 +156,7 @@ void main() {
     step(0.5, texture2D(t, uv + vec2( 0.0, -1.0)*c).r);
     float next = prev==1.0 && sum >= 2.0 && sum <= 3.0 || sum == 3.0 ? 1.0 : 0.0;
     gl_FragColor = vec4(vec3(next), 1.0);
-  }`}}),It=St.memo((({tick:e,size:t,refreshEveryTicks:o})=>e%(o||1/0)===0?(0,at.jsx)(it.Node,{shader:Pt.InitGameOfLife,uniforms:{seed:Math.random()},width:t,height:t,backbuffering:!0,sync:!0}):(0,at.jsx)(it.Node,{shader:Pt.GameOfLife,width:t,height:t,backbuffering:!0,sync:!0,uniforms:{t:it.Uniform.Backbuffer,size:t}}))),qt=4,kt="Ray of Life";let Dt;const Ct=({time:e})=>{Dt||(Dt=e);const t=e-Dt,o=Math.floor(10*t),r=o+25,a=10*(1+Math.floor(o/50)),i=10*(1+Math.floor(r/50));return(0,at.jsx)(Rt,{time:e,a:(0,at.jsx)(it.NearestCopy,{children:(0,at.jsx)(It,{refreshEveryTicks:50,tick:o,size:a})}),b:(0,at.jsx)(it.NearestCopy,{children:(0,at.jsx)(It,{refreshEveryTicks:50,tick:r,size:i})})})},Rt=({a:e,b:t,time:o})=>(0,at.jsx)(it.Node,{uniforms:{a:e,b:t,time:o},shader:Lt.main}),Lt=it.Shaders.create({main:{frag:it.GLSL`
+  }`}}),qt=Pt.memo((({tick:e,size:t,refreshEveryTicks:o})=>e%(o||1/0)===0?(0,it.jsx)(nt.Node,{shader:It.InitGameOfLife,uniforms:{seed:Math.random()},width:t,height:t,backbuffering:!0,sync:!0}):(0,it.jsx)(nt.Node,{shader:It.GameOfLife,width:t,height:t,backbuffering:!0,sync:!0,uniforms:{t:nt.Uniform.Backbuffer,size:t}}))),Dt=4,Ct="Ray of Life";let kt;const Rt=({time:e})=>{kt||(kt=e);const t=e-kt,o=Math.floor(10*t),r=o+25,a=10*(1+Math.floor(o/50)),i=10*(1+Math.floor(r/50));return(0,it.jsx)(Lt,{time:e,a:(0,it.jsx)(nt.NearestCopy,{children:(0,it.jsx)(qt,{refreshEveryTicks:50,tick:o,size:a})}),b:(0,it.jsx)(nt.NearestCopy,{children:(0,it.jsx)(qt,{refreshEveryTicks:50,tick:r,size:i})})})},Lt=({a:e,b:t,time:o})=>(0,it.jsx)(nt.Node,{uniforms:{a:e,b:t,time:o},shader:Ut.main}),Ut=nt.Shaders.create({main:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -195,7 +195,7 @@ void main() {
       vec3(0.8, 0.3, 0.2)
     );
   gl_FragColor = vec4(c, 1.0);
-}`}}),Ut=5,Ft="Here We Go Again",Mt=({time:e})=>(0,at.jsx)(it.Node,{shader:Ht.node,uniforms:{time:e}}),Ht=it.Shaders.create({node:{frag:it.GLSL`
+}`}}),Ft=5,Mt="Here We Go Again",Ht=({time:e})=>(0,it.jsx)(nt.Node,{shader:Tt.node,uniforms:{time:e}}),Tt=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -278,7 +278,7 @@ void main() {
     pow(smoothstep(50., 0., p.z), 3.) *
     sqrt(vec3(1. - shad));
   gl_FragColor = vec4(c,1.0);
-}`}}),jt=6,Tt="Bestagons",Ot=({time:e})=>(0,at.jsx)(it.Node,{shader:Gt.node,uniforms:{time:e}}),Gt=it.Shaders.create({node:{frag:it.GLSL`
+}`}}),jt=6,Ot="Bestagons",Gt=({time:e})=>(0,it.jsx)(nt.Node,{shader:_t.node,uniforms:{time:e}}),_t=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -329,7 +329,7 @@ vec4 scene (vec4 h) {
 void main() {
   vec2 p = 1000.0 * SEED + 0.3 * time + 5. * uv;
   gl_FragColor = scene(getHex(p));
-}`}}),_t=7,Bt="Worms party",Nt=({time:e})=>(0,at.jsx)(it.Node,{shader:Et.node,uniforms:{time:e}}),Et=it.Shaders.create({node:{frag:it.GLSL`
+}`}}),Bt=7,Nt="Worms party",Et=({time:e})=>(0,it.jsx)(nt.Node,{shader:At.node,uniforms:{time:e}}),At=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -408,7 +408,7 @@ void main() {
       )) *
     sqrt(vec3(1. - shad));
   gl_FragColor = vec4(c,1.0);
-}`}}),At=8,$t="moontains",Qt=({time:e})=>(0,at.jsx)(it.Node,{shader:Kt.node,uniforms:{time:e}}),Kt=it.Shaders.create({node:{frag:it.GLSL`
+}`}}),$t=8,Qt="moontains",Kt=({time:e})=>(0,it.jsx)(nt.Node,{shader:Zt.node,uniforms:{time:e}}),Zt=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -484,7 +484,7 @@ void main() {
     vec3(sqrt(1. - shad));
   gl_FragColor = vec4(c,1.0);
 }
-`}}),Zt=9,Vt="Virus",Wt=400,Xt=16.3,Jt=26,Yt=24,eo=.8,to=({time:e})=>(0,at.jsx)(it.Node,{shader:oo.node,uniforms:{time:e}}),oo=it.Shaders.create({node:{frag:it.GLSL`
+`}}),Vt=9,Wt="Virus",Xt=400,Yt=16.3,Jt=26,eo=24,to=.8,oo=({time:e})=>(0,it.jsx)(nt.Node,{shader:ro.node,uniforms:{time:e}}),ro=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -619,7 +619,7 @@ void main() {
     )
     , 1.0);
 }
-`}}),ro=10,ao="ring",io=({time:e})=>(0,at.jsx)(it.Node,{shader:no.node,uniforms:{time:e}}),no=it.Shaders.create({node:{frag:it.GLSL`
+`}}),ao=10,io="ring",no=({time:e})=>(0,it.jsx)(nt.Node,{shader:co.node,uniforms:{time:e}}),co=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -733,7 +733,7 @@ void main() {
     color(length(p.xy), shad),
     1.0);
 }
-`}}),co=11,fo="magic mouse",so=({time:e})=>(0,at.jsx)(it.Node,{shader:lo.node,uniforms:{time:e}}),lo=it.Shaders.create({node:{frag:it.GLSL`
+`}}),fo=11,so="magic mouse",lo=({time:e})=>(0,it.jsx)(nt.Node,{shader:po.node,uniforms:{time:e}}),po=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -844,7 +844,7 @@ void main() {
     color(length(p.xy), shad),
     1.0);
 }
-`}}),po=12,vo="floor is lava",uo=({time:e})=>(0,at.jsx)(it.Node,{shader:mo.node,uniforms:{time:e}}),mo=it.Shaders.create({node:{frag:it.GLSL`
+`}}),vo=12,uo="floor is lava",mo=({time:e})=>(0,it.jsx)(nt.Node,{shader:ho.node,uniforms:{time:e}}),ho=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -900,7 +900,7 @@ void main() {
     color(p.z, shad),
     1.0);
 }
-`}}),ho=13,xo="chip",go=({time:e})=>(0,at.jsx)(it.Node,{shader:yo.node,uniforms:{time:e}}),yo=it.Shaders.create({node:{frag:it.GLSL`
+`}}),xo=13,go="chip",yo=({time:e})=>(0,it.jsx)(nt.Node,{shader:bo.node,uniforms:{time:e}}),bo=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -937,7 +937,7 @@ void main() {
     step(rect, 0.) * 0.4 * (.05 + vec3(p.y - p.x));
   gl_FragColor = vec4(shade + glow, 1.0);
 }
-`}}),bo=14,zo="seizure",wo=({time:e})=>(0,at.jsx)(it.Node,{shader:So.node,uniforms:{time:e}}),So=it.Shaders.create({node:{frag:it.GLSL`
+`}}),zo=14,wo="seizure",So=({time:e})=>(0,it.jsx)(nt.Node,{shader:Po.node,uniforms:{time:e}}),Po=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -967,7 +967,7 @@ void main() {
     step(0., tri) * color(sqrt(max(tri, 0.)) - 2. * time),
     1.0);
 }
-`}}),Po=it.Shaders.create({blur1D:{frag:it.GLSL`precision highp float;
+`}}),Io=nt.Shaders.create({blur1D:{frag:nt.GLSL`precision highp float;
 varying vec2 uv;
 uniform sampler2D t;
 uniform vec2 direction, resolution;
@@ -986,7 +986,7 @@ vec4 blur9(sampler2D image, vec2 uv, vec2 resolution, vec2 direction) {
 
 void main () {
   gl_FragColor = blur9(t, uv, resolution, direction);
-}`}});var Io=({width:e,height:t,pixelRatio:o,direction:r,children:a})=>(0,at.jsx)(it.Node,{shader:Po.blur1D,width:e,height:t,pixelRatio:o,uniforms:{direction:r,resolution:it.Uniform.Resolution,t:a}});const qo=Math.sqrt(2)/2;var ko=(e,t,o)=>{const r=2*t*Math.ceil(e/2)/o;switch((e-1)%4){case 0:return[r,0];case 1:return[0,r];case 2:return[r*qo,r*qo];case 3:return[r*qo,-r*qo]}};const Do=({width:e,height:t,pixelRatio:o,factor:r,children:a,passes:i,directionForPass:n})=>{const c=f=>f<=0?a:(0,at.jsx)(Io,{width:e,height:t,pixelRatio:o,direction:n(f,r,i),children:c(f-1)});return c(i)};Do.defaultProps={passes:2,directionForPass:ko};var Co=Do;const Ro=it.Shaders.create({blur1D:{frag:it.GLSL`
+}`}});var qo=({width:e,height:t,pixelRatio:o,direction:r,children:a})=>(0,it.jsx)(nt.Node,{shader:Io.blur1D,width:e,height:t,pixelRatio:o,uniforms:{direction:r,resolution:nt.Uniform.Resolution,t:a}});const Do=Math.sqrt(2)/2;var Co=(e,t,o)=>{const r=2*t*Math.ceil(e/2)/o;switch((e-1)%4){case 0:return[r,0];case 1:return[0,r];case 2:return[r*Do,r*Do];case 3:return[r*Do,-r*Do]}};const ko=({width:e,height:t,pixelRatio:o,factor:r,children:a,passes:i,directionForPass:n})=>{const c=f=>f<=0?a:(0,it.jsx)(qo,{width:e,height:t,pixelRatio:o,direction:n(f,r,i),children:c(f-1)});return c(i)};ko.defaultProps={passes:2,directionForPass:Co};var Ro=ko;const Lo=nt.Shaders.create({blur1D:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform sampler2D t, map;
@@ -1006,7 +1006,7 @@ vec4 blur9(sampler2D image, vec2 uv, vec2 resolution, vec2 direction) {
 
 void main () {
   gl_FragColor = blur9(t, uv, resolution, direction * texture2D(map, uv).rg);
-}`}});var Lo=({width:e,height:t,map:o,pixelRatio:r,direction:a,children:i})=>(0,at.jsx)(it.Node,{shader:Ro.blur1D,width:e,height:t,pixelRatio:r,uniforms:{direction:a,resolution:it.Uniform.Resolution,t:i,map:o}});const Uo=({width:e,height:t,map:o,pixelRatio:r,factor:a,children:i,passes:n,directionForPass:c})=>{const f=s=>s<=0?i:(0,at.jsx)(Lo,{width:e,height:t,map:o,pixelRatio:r,direction:c(s,a,n),children:f(s-1)});return f(n)};Uo.defaultProps={passes:2,directionForPass:ko};const Fo=15,Mo="parametric",Ho=({time:e})=>(0,at.jsx)(it.LinearCopy,{children:(0,at.jsx)(To,{persistence:.98+.02*Math.cos(e)+-.8*Math.exp(-e),children:(0,at.jsx)(Co,{passes:4,factor:.2,children:(0,at.jsx)(jo,{time:e})})})}),jo=({time:e})=>(0,at.jsx)(it.Node,{shader:Oo.node,uniforms:{time:e}}),To=({children:e,persistence:t})=>(0,at.jsx)(it.Node,{shader:Oo.persistence,backbuffering:!0,uniforms:{t:e,back:it.Uniform.Backbuffer,persistence:t}}),Oo=it.Shaders.create({persistence:{frag:it.GLSL`
+}`}});var Uo=({width:e,height:t,map:o,pixelRatio:r,direction:a,children:i})=>(0,it.jsx)(nt.Node,{shader:Lo.blur1D,width:e,height:t,pixelRatio:r,uniforms:{direction:a,resolution:nt.Uniform.Resolution,t:i,map:o}});const Fo=({width:e,height:t,map:o,pixelRatio:r,factor:a,children:i,passes:n,directionForPass:c})=>{const f=s=>s<=0?i:(0,it.jsx)(Uo,{width:e,height:t,map:o,pixelRatio:r,direction:c(s,a,n),children:f(s-1)});return f(n)};Fo.defaultProps={passes:2,directionForPass:Co};const Mo=15,Ho="parametric",To=({time:e})=>(0,it.jsx)(nt.LinearCopy,{children:(0,it.jsx)(Oo,{persistence:.98+.02*Math.cos(e)+-.8*Math.exp(-e),children:(0,it.jsx)(Ro,{passes:4,factor:.2,children:(0,it.jsx)(jo,{time:e})})})}),jo=({time:e})=>(0,it.jsx)(nt.Node,{shader:Go.node,uniforms:{time:e}}),Oo=({children:e,persistence:t})=>(0,it.jsx)(nt.Node,{shader:Go.persistence,backbuffering:!0,uniforms:{t:e,back:nt.Uniform.Backbuffer,persistence:t}}),Go=nt.Shaders.create({persistence:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform sampler2D t, back;
@@ -1015,7 +1015,7 @@ void main () {
   gl_FragColor =
     texture2D(t, uv) + persistence*texture2D(back, uv);
 }
-    `},node:{frag:it.GLSL`
+    `},node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -1062,7 +1062,7 @@ void main() {
   }
   gl_FragColor = vec4(clr, 1.0);
 }
-`}}),Go=16,_o="reuleaux",Bo=({time:e})=>(0,at.jsx)(it.Node,{shader:No.node,uniforms:{time:e}}),No=it.Shaders.create({node:{frag:it.GLSL`
+`}}),_o=16,Bo="reuleaux",No=({time:e})=>(0,it.jsx)(nt.Node,{shader:Eo.node,uniforms:{time:e}}),Eo=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -1142,7 +1142,7 @@ void main() {
     sqrt(1. - shad) *
     color(0.5 * time);
   gl_FragColor = vec4(c, 1.0);
-}`}}),Eo=17,Ao="screws",$o=({time:e})=>(0,at.jsx)(it.Node,{shader:Qo.node,uniforms:{time:e}}),Qo=it.Shaders.create({node:{frag:it.GLSL`
+}`}}),Ao=17,$o="screws",Qo=({time:e})=>(0,it.jsx)(nt.Node,{shader:Ko.node,uniforms:{time:e}}),Ko=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -1416,7 +1416,7 @@ float spe = pow( clamp( dot( nor, hal ), 0.0, 1.0 ),16.0);
   col = lin;
 
   gl_FragColor = vec4(clamp(col, 0.0, 1.0), 1.0);
-}`}}),Ko=18,Zo="queen",Vo=({time:e})=>(0,at.jsx)(it.Node,{shader:Wo.node,uniforms:{time:e}}),Wo=it.Shaders.create({node:{frag:it.GLSL`
+}`}}),Zo=18,Vo="queen",Wo=({time:e})=>(0,it.jsx)(nt.Node,{shader:Xo.node,uniforms:{time:e}}),Xo=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -1474,7 +1474,7 @@ void main() {
   vec2 pos = fract(g);
   gl_FragColor = vec4(tile(pos, g), 1.0);
 
-}`}}),Xo=19,Jo="they were six",Yo=({time:e})=>(0,at.jsx)(it.Node,{shader:er.node,uniforms:{time:e}}),er=it.Shaders.create({node:{frag:it.GLSL`
+}`}}),Yo=19,Jo="they were six",er=({time:e})=>(0,it.jsx)(nt.Node,{shader:tr.node,uniforms:{time:e}}),tr=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -1565,7 +1565,7 @@ void main() {
   p += step(nb + .1, f);
   c = mix(vec3(1.), c, blob(p, t + (1337. * f)));
   gl_FragColor = vec4(c, 1.0);
-}`}}),tr=20,or="trippy tiles",rr=({time:e})=>(0,at.jsx)(it.LinearCopy,{children:(0,at.jsx)(ar,{persistence:.85,children:(0,at.jsx)(it.Node,{shader:ir.node,uniforms:{time:e}})})}),ar=({children:e,persistence:t})=>(0,at.jsx)(it.Node,{shader:ir.persistence,backbuffering:!0,uniforms:{t:e,back:it.Uniform.Backbuffer,persistence:t}}),ir=it.Shaders.create({persistence:{frag:it.GLSL`
+}`}}),or=20,rr="trippy tiles",ar=({time:e})=>(0,it.jsx)(nt.LinearCopy,{children:(0,it.jsx)(ir,{persistence:.85,children:(0,it.jsx)(nt.Node,{shader:nr.node,uniforms:{time:e}})})}),ir=({children:e,persistence:t})=>(0,it.jsx)(nt.Node,{shader:nr.persistence,backbuffering:!0,uniforms:{t:e,back:nt.Uniform.Backbuffer,persistence:t}}),nr=nt.Shaders.create({persistence:{frag:nt.GLSL`
   precision highp float;
   varying vec2 uv;
   uniform sampler2D t, back;
@@ -1577,7 +1577,7 @@ void main() {
       persistence
     );
   }
-      `},node:{frag:it.GLSL`
+      `},node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -1640,7 +1640,7 @@ void main() {
   vec4 r = getHex(g);
   vec3 c = tile(r.xy * vec2(1., -1.), t);
   gl_FragColor = vec4(c, 1.0);
-}`}}),nr=21,cr="HODL",fr=({time:e})=>(0,at.jsx)(it.LinearCopy,{children:(0,at.jsx)(sr,{persistence:Math.min(.99,.015*e),time:e,children:(0,at.jsx)(it.Node,{shader:lr.node,uniforms:{time:e}})})}),sr=({children:e,persistence:t,time:o})=>(0,at.jsx)(it.Node,{shader:lr.shakePersistence,backbuffering:!0,uniforms:{t:e,back:it.Uniform.Backbuffer,persistence:t,time:o}}),lr=it.Shaders.create({shakePersistence:{frag:it.GLSL`
+}`}}),cr=21,fr="HODL",sr=({time:e})=>(0,it.jsx)(nt.LinearCopy,{children:(0,it.jsx)(lr,{persistence:Math.min(.99,.015*e),time:e,children:(0,it.jsx)(nt.Node,{shader:pr.node,uniforms:{time:e}})})}),lr=({children:e,persistence:t,time:o})=>(0,it.jsx)(nt.Node,{shader:pr.shakePersistence,backbuffering:!0,uniforms:{t:e,back:nt.Uniform.Backbuffer,persistence:t,time:o}}),pr=nt.Shaders.create({shakePersistence:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform sampler2D t, back;
@@ -1658,7 +1658,7 @@ void main () {
     persistence
   );
 }
-    `},node:{frag:it.GLSL`
+    `},node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -1709,7 +1709,7 @@ void main() {
     step(0.013, shape) * step(d, 0.41) * mix(cBase, cSec, smoothstep(.003, .002, abs(mod(d, .02)-.01))) +
     step(0.013, shape) * step(d, 0.48) * smoothstep(.011, .01, abs(d-.43)) * cMain;
   gl_FragColor = vec4(c * ((.3 * phase + .7 * abs(phase)) + .4), 1.0);
-}`}}),pr=22,vr="atoms",ur=({time:e})=>(0,at.jsx)(it.Node,{shader:mr.node,uniforms:{time:e,t:"/images/einstein-tongue-out.jpg"}}),mr=it.Shaders.create({node:{frag:it.GLSL`
+}`}}),vr=22,ur="atoms",mr=({time:e})=>(0,it.jsx)(nt.Node,{shader:dr.node,uniforms:{time:e,t:"/images/einstein-tongue-out.jpg"}}),dr=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -1748,7 +1748,7 @@ void main() {
   float rf = texture2D(t, gf / rez).r;
   vec3 c = smoothstep(.01, .0, length(l-.5) - r * 0.5) * mix(color(rf), vec3(rf), min(1., .002 * time));
   gl_FragColor = vec4(c, 1.);
-}`}}),dr=23,hr="Hexacubes",xr=({time:e})=>(0,at.jsx)(it.Node,{shader:gr.node,uniforms:{time:e}}),gr=it.Shaders.create({node:{frag:it.GLSL`
+}`}}),hr=23,xr="Hexacubes",gr=({time:e})=>(0,it.jsx)(nt.Node,{shader:yr.node,uniforms:{time:e}}),yr=nt.Shaders.create({node:{frag:nt.GLSL`
   precision highp float;
   varying vec2 uv;
   uniform float time;
@@ -1822,7 +1822,7 @@ void main() {
       -0.1 * (r2.z - r2.w));
     gl_FragColor = vec4(c, 1.0);
   }
-      `}}),yr=24,br="dark cubes",zr=({time:e})=>(0,at.jsx)(it.Node,{shader:wr.node,uniforms:{time:e}}),wr=it.Shaders.create({node:{frag:it.GLSL`
+      `}}),br=24,zr="dark cubes",wr=({time:e})=>(0,it.jsx)(nt.Node,{shader:Sr.node,uniforms:{time:e}}),Sr=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -2017,7 +2017,7 @@ vec4 mainImage() {
 
 void main() {
   gl_FragColor = mainImage();
-}`}}),Sr=25,Pr="Mandelbrot",Ir=({time:e})=>(0,at.jsx)(it.LinearCopy,{children:(0,at.jsx)(qr,{persistence:.9,children:(0,at.jsx)(Co,{passes:4,factor:.1,children:(0,at.jsx)(it.Node,{shader:kr.node,uniforms:{time:e}})})})}),qr=({children:e,persistence:t})=>(0,at.jsx)(it.Node,{shader:kr.persistence,backbuffering:!0,uniforms:{t:e,back:it.Uniform.Backbuffer,persistence:t}}),kr=it.Shaders.create({persistence:{frag:it.GLSL`
+}`}}),Pr=25,Ir="Mandelbrot",qr=({time:e})=>(0,it.jsx)(nt.LinearCopy,{children:(0,it.jsx)(Dr,{persistence:.9,children:(0,it.jsx)(Ro,{passes:4,factor:.1,children:(0,it.jsx)(nt.Node,{shader:Cr.node,uniforms:{time:e}})})})}),Dr=({children:e,persistence:t})=>(0,it.jsx)(nt.Node,{shader:Cr.persistence,backbuffering:!0,uniforms:{t:e,back:nt.Uniform.Backbuffer,persistence:t}}),Cr=nt.Shaders.create({persistence:{frag:nt.GLSL`
   precision highp float;
   varying vec2 uv;
   uniform sampler2D t, back;
@@ -2029,7 +2029,7 @@ void main() {
       persistence
     );
   }
-      `},node:{frag:it.GLSL`
+      `},node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -2072,7 +2072,7 @@ void main() {
   init += vec2(.335, .388); // offset to center
   gl_FragColor = vec4(color(mandelbrot(init)), 1.0);
 }
-`}}),Dr=26,Cr="fumes",Rr=({time:e})=>(0,at.jsx)(it.LinearCopy,{children:(0,at.jsx)(Lr,{persistence:.9,children:(0,at.jsx)(Co,{passes:4,factor:Math.min(.6,.01*e),children:(0,at.jsx)(it.Node,{shader:Ur.node,uniforms:{time:e}})})})}),Lr=({children:e,persistence:t})=>(0,at.jsx)(it.Node,{shader:Ur.persistence,backbuffering:!0,uniforms:{t:e,back:it.Uniform.Backbuffer,persistence:t}}),Ur=it.Shaders.create({persistence:{frag:it.GLSL`
+`}}),kr=26,Rr="fumes",Lr=({time:e})=>(0,it.jsx)(nt.LinearCopy,{children:(0,it.jsx)(Ur,{persistence:.9,children:(0,it.jsx)(Ro,{passes:4,factor:Math.min(.6,.01*e),children:(0,it.jsx)(nt.Node,{shader:Fr.node,uniforms:{time:e}})})})}),Ur=({children:e,persistence:t})=>(0,it.jsx)(nt.Node,{shader:Fr.persistence,backbuffering:!0,uniforms:{t:e,back:nt.Uniform.Backbuffer,persistence:t}}),Fr=nt.Shaders.create({persistence:{frag:nt.GLSL`
   precision highp float;
   varying vec2 uv;
   uniform sampler2D t, back;
@@ -2084,7 +2084,7 @@ void main() {
       persistence
     );
   }
-      `},node:{frag:it.GLSL`
+      `},node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -2132,7 +2132,7 @@ void main() {
   init -= vec2(.8, .0);
   gl_FragColor = vec4(color(pow(gre1(init, t), .5)), 1.0);
 }
-`}}),Fr=27,Mr="real burning ship",Hr=400,jr=0,Tr=60,Or=12,Gr=2,_r=({time:e})=>(0,at.jsx)(it.LinearCopy,{children:(0,at.jsx)(Br,{persistence:.8+.05*Math.random(),time:e,children:(0,at.jsx)(it.Node,{shader:Nr.node,uniforms:{time:e}})})}),Br=({children:e,persistence:t,time:o})=>(0,at.jsx)(it.Node,{shader:Nr.persistence,backbuffering:!0,uniforms:{t:e,back:it.Uniform.Backbuffer,persistence:t,time:o}}),Nr=it.Shaders.create({persistence:{frag:it.GLSL`
+`}}),Mr=27,Hr="real burning ship",Tr=400,jr=0,Or=60,Gr=12,_r=2,Br=({time:e})=>(0,it.jsx)(nt.LinearCopy,{children:(0,it.jsx)(Nr,{persistence:.8+.05*Math.random(),time:e,children:(0,it.jsx)(nt.Node,{shader:Er.node,uniforms:{time:e}})})}),Nr=({children:e,persistence:t,time:o})=>(0,it.jsx)(nt.Node,{shader:Er.persistence,backbuffering:!0,uniforms:{t:e,back:nt.Uniform.Backbuffer,persistence:t,time:o}}),Er=nt.Shaders.create({persistence:{frag:nt.GLSL`
   precision highp float;
   varying vec2 uv;
   uniform sampler2D t, back;
@@ -2146,7 +2146,7 @@ void main() {
       persistence
     );
   }
-      `},node:{frag:it.GLSL`
+      `},node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -2200,7 +2200,7 @@ void main() {
   #endif
   gl_FragColor = vec4(c, 1.0);
 }
-`}}),Er=28,Ar="No, I'M Batman",$r=({time:e})=>(0,at.jsx)(it.LinearCopy,{children:(0,at.jsx)(Qr,{persistence:.5+.48*Math.min(1,e/60),children:(0,at.jsx)(it.Node,{shader:Kr.node,uniforms:{time:e}})})}),Qr=({children:e,persistence:t})=>(0,at.jsx)(it.Node,{shader:Kr.persistence,backbuffering:!0,uniforms:{t:e,back:it.Uniform.Backbuffer,persistence:t}}),Kr=it.Shaders.create({persistence:{frag:it.GLSL`
+`}}),Ar=28,$r="No, I'M Batman",Qr=({time:e})=>(0,it.jsx)(nt.LinearCopy,{children:(0,it.jsx)(Kr,{persistence:.5+.48*Math.min(1,e/60),children:(0,it.jsx)(nt.Node,{shader:Zr.node,uniforms:{time:e}})})}),Kr=({children:e,persistence:t})=>(0,it.jsx)(nt.Node,{shader:Zr.persistence,backbuffering:!0,uniforms:{t:e,back:nt.Uniform.Backbuffer,persistence:t}}),Zr=nt.Shaders.create({persistence:{frag:nt.GLSL`
   precision highp float;
   varying vec2 uv;
   uniform sampler2D t, back;
@@ -2214,7 +2214,7 @@ void main() {
       persistence
     );
   }
-      `},node:{frag:it.GLSL`
+      `},node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -2267,7 +2267,7 @@ void main() {
   vec3 c = mix(clr, vec3(0.), step(f, -0.1));
   gl_FragColor = vec4(c, 1.0);
 }
-`}}),Zr=29,Vr="sdBitcoin(p)",Wr=({time:e})=>(0,at.jsx)(it.Node,{shader:Xr.node,uniforms:{time:e}}),Xr=it.Shaders.create({node:{frag:it.GLSL`
+`}}),Vr=29,Wr="sdBitcoin(p)",Xr=({time:e})=>(0,it.jsx)(nt.Node,{shader:Yr.node,uniforms:{time:e}}),Yr=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -2333,7 +2333,7 @@ void main() {
     smoothstep(.005, 0., shape) * vec3(1.);
   c += 0.5 * smoothstep(.25, .2, fract(shape*15. + 0.5));
   gl_FragColor = vec4(c, 1.0);
-}`}}),Jr=30,Yr="21 millions",ea=({time:e})=>(0,at.jsx)(it.Node,{shader:ta.node,uniforms:{time:e,numberInCirculation:18557031}}),ta=it.Shaders.create({node:{frag:it.GLSL`
+}`}}),Jr=30,ea="21 millions",ta=({time:e})=>(0,it.jsx)(nt.Node,{shader:oa.node,uniforms:{time:e,numberInCirculation:18557031}}),oa=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -2492,7 +2492,7 @@ void main() {
   vec3 lpos = vec3(0., 5., -4.);
   vec3 c = color(material) * getDiff(p, n, lpos);
   gl_FragColor = vec4(c, 1.0);
-}`}}),oa=31,ra="alien tower",aa=({time:e})=>(0,at.jsx)(it.Node,{shader:ia.node,uniforms:{time:e,numberInCirculation:18557031}}),ia=it.Shaders.create({node:{frag:it.GLSL`
+}`}}),ra=31,aa="alien tower",ia=({time:e})=>(0,it.jsx)(nt.Node,{shader:na.node,uniforms:{time:e,numberInCirculation:18557031}}),na=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -2632,7 +2632,7 @@ void main() {
   c += color(hit.y) * vec3(.2, .4, .5) * getDiff(p, n, vec3(2., 5., -4.));
   c *= ambientOcclusion(p, n, 2., 1.);
   gl_FragColor = vec4(c, 1.0);
-}`}}),na=32,ca="GoL valley";let fa;const sa=({time:e})=>{fa||(fa=e);const t=e-fa,o=Math.floor(12*t);return(0,at.jsx)(it.Node,{shader:la.node,uniforms:{time:e,t:(0,at.jsx)(It,{refreshEveryTicks:100,tick:o,size:100})}})},la=it.Shaders.create({node:{frag:it.GLSL`
+}`}}),ca=32,fa="GoL valley";let sa;const la=({time:e})=>{sa||(sa=e);const t=e-sa,o=Math.floor(12*t);return(0,it.jsx)(nt.Node,{shader:pa.node,uniforms:{time:e,t:(0,it.jsx)(qt,{refreshEveryTicks:100,tick:o,size:100})}})},pa=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -2763,7 +2763,7 @@ void main() {
   c *= a;
   c = mix(c, vec3(.9) + .1 * a, pow(clamp(.025 * length(origin - p), 0., 1.), 1.4));
   gl_FragColor = vec4(c, 1.0);
-}`}}),pa=33,va="x(x+32y)%(tN+1)%n";const ua=({time:e})=>(0,at.jsx)(it.Node,{shader:ma.node,uniforms:{time:e}}),ma=it.Shaders.create({node:{frag:it.GLSL`
+}`}}),va=33,ua="x(x+32y)%(tN+1)%n";const ma=({time:e})=>(0,it.jsx)(nt.Node,{shader:da.node,uniforms:{time:e}}),da=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -2793,7 +2793,7 @@ void main() {
   vec2 offset = vec2(-.25 * unzoom, -2. * pow(time, 1.3));
   vec3 c = color(.1 * cell(floor(uv * unzoom + offset)));
   gl_FragColor = vec4(c, 1.0);
-}`}}),da=34,ha="\u230a2cos(x)sin(y+t)\u230b%7";const xa=({time:e})=>(0,at.jsx)(it.Node,{shader:ga.node,uniforms:{time:e}}),ga=it.Shaders.create({node:{frag:it.GLSL`
+}`}}),ha=34,xa="\u230a2cos(x)sin(y+t)\u230b%7";const ga=({time:e})=>(0,it.jsx)(nt.Node,{shader:ya.node,uniforms:{time:e}}),ya=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -2828,7 +2828,7 @@ void main() {
   pR(p, PI/4.);
   vec3 c = color(.1 * floor(.2 * time) + (.1 + .005 * time) * cell(floor(p)));
   gl_FragColor = vec4(c, 1.0);
-}`}}),ya=35,ba="aie confiance",za=({time:e})=>(0,at.jsx)(it.LinearCopy,{children:(0,at.jsx)(wa,{persistence:.6,children:(0,at.jsx)(it.Node,{shader:Sa.node,uniforms:{time:e}})})}),wa=({children:e,persistence:t})=>(0,at.jsx)(it.Node,{shader:Sa.persistence,backbuffering:!0,uniforms:{t:e,back:it.Uniform.Backbuffer,persistence:t}}),Sa=it.Shaders.create({persistence:{frag:it.GLSL`
+}`}}),ba=35,za="aie confiance",wa=({time:e})=>(0,it.jsx)(nt.LinearCopy,{children:(0,it.jsx)(Sa,{persistence:.6,children:(0,it.jsx)(nt.Node,{shader:Pa.node,uniforms:{time:e}})})}),Sa=({children:e,persistence:t})=>(0,it.jsx)(nt.Node,{shader:Pa.persistence,backbuffering:!0,uniforms:{t:e,back:nt.Uniform.Backbuffer,persistence:t}}),Pa=nt.Shaders.create({persistence:{frag:nt.GLSL`
   precision highp float;
   varying vec2 uv;
   uniform sampler2D t, back;
@@ -2840,7 +2840,7 @@ void main() {
       persistence
     );
   }
-      `},node:{frag:it.GLSL`
+      `},node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -2877,7 +2877,7 @@ void main() {
   pR(p, PI/4.);
   vec3 c = color(cell(floor(p)), l);
   gl_FragColor = vec4(c, 1.0);
-}`}}),Pa=36,Ia="crois en moi",qa=({time:e})=>(0,at.jsx)(it.LinearCopy,{children:(0,at.jsx)(ka,{children:(0,at.jsx)(it.Node,{shader:Da.node,uniforms:{time:e}})})}),ka=({children:e,persistence:t})=>(0,at.jsx)(it.Node,{shader:Da.persistence,backbuffering:!0,uniforms:{t:e,back:it.Uniform.Backbuffer,persistence:t}}),Da=it.Shaders.create({persistence:{frag:it.GLSL`
+}`}}),Ia=36,qa="crois en moi",Da=({time:e})=>(0,it.jsx)(nt.LinearCopy,{children:(0,it.jsx)(Ca,{children:(0,it.jsx)(nt.Node,{shader:ka.node,uniforms:{time:e}})})}),Ca=({children:e,persistence:t})=>(0,it.jsx)(nt.Node,{shader:ka.persistence,backbuffering:!0,uniforms:{t:e,back:nt.Uniform.Backbuffer,persistence:t}}),ka=nt.Shaders.create({persistence:{frag:nt.GLSL`
   precision highp float;
   varying vec2 uv;
   uniform sampler2D t, back;
@@ -2889,7 +2889,7 @@ void main() {
       .6 + .5 * length(uv-.5)
     );
   }
-      `},node:{frag:it.GLSL`
+      `},node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -2927,7 +2927,7 @@ void main() {
   float n = .01 * time + .1 * pow(abs(sin(time)), 4.);
   vec3 c = color(2. + .1 * time + n * cell(floor(p)));
   gl_FragColor = vec4(c, 1.0);
-}`}}),Ca=37,Ra="sdBrick",La=({time:e})=>(0,at.jsx)(it.Node,{shader:Ua.node,uniforms:{time:e}}),Ua=it.Shaders.create({node:{frag:it.GLSL`
+}`}}),Ra=37,La="sdBrick",Ua=({time:e})=>(0,it.jsx)(nt.Node,{shader:Fa.node,uniforms:{time:e}}),Fa=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -3127,7 +3127,7 @@ void main() {
   c *= ambientOcclusion(p, n, 2., 1.5);
   c += smoothstep(5., 20., p.z);
   gl_FragColor = vec4(c, 1.0);
-}`}}),Fa=38,Ma="Golden mandelbulb",Ha=({time:e})=>(0,at.jsx)(it.LinearCopy,{children:(0,at.jsx)(ja,{persistence:.5,children:(0,at.jsx)(it.Node,{shader:Ta.node,uniforms:{time:e}})})}),ja=({children:e,persistence:t})=>(0,at.jsx)(it.Node,{shader:Ta.persistence,backbuffering:!0,uniforms:{t:e,back:it.Uniform.Backbuffer,persistence:t}}),Ta=it.Shaders.create({persistence:{frag:it.GLSL`
+}`}}),Ma=38,Ha="Golden mandelbulb",Ta=({time:e})=>(0,it.jsx)(nt.LinearCopy,{children:(0,it.jsx)(ja,{persistence:.5,children:(0,it.jsx)(nt.Node,{shader:Oa.node,uniforms:{time:e}})})}),ja=({children:e,persistence:t})=>(0,it.jsx)(nt.Node,{shader:Oa.persistence,backbuffering:!0,uniforms:{t:e,back:nt.Uniform.Backbuffer,persistence:t}}),Oa=nt.Shaders.create({persistence:{frag:nt.GLSL`
     precision highp float;
     varying vec2 uv;
     uniform sampler2D t, back;
@@ -3139,7 +3139,7 @@ void main() {
         persistence
       );
     }
-        `},node:{frag:it.GLSL`
+        `},node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -3298,7 +3298,7 @@ void main() {
   }
   clr /= 4.;
   gl_FragColor = vec4(clr, 1.0);
-}`}}),Oa=39,Ga="metaballs",_a=({time:e})=>(0,at.jsx)(it.Node,{shader:Ba.node,uniforms:{time:e}}),Ba=it.Shaders.create({node:{frag:it.GLSL`
+}`}}),Ga=39,_a="metaballs",Ba=({time:e})=>(0,it.jsx)(nt.Node,{shader:Na.node,uniforms:{time:e}}),Na=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -3396,7 +3396,7 @@ void main() {
   }
   clr /= 4.;
   gl_FragColor = vec4(clr, 1.0);
-}`}}),Na=40,Ea="pen-o-plasma",Aa=({time:e})=>(0,at.jsx)(it.Node,{shader:$a.node,uniforms:{time:e}}),$a=it.Shaders.create({node:{frag:it.GLSL`
+}`}}),Ea=40,Aa="pen-o-plasma",$a=({time:e})=>(0,it.jsx)(nt.Node,{shader:Qa.node,uniforms:{time:e}}),Qa=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -3573,7 +3573,7 @@ void main() {
   clr += c;
 
   gl_FragColor = vec4(clr, 1.0);
-}`}}),Qa=41,Ka="reflection",Za=({time:e})=>(0,at.jsx)(it.Node,{shader:Va.node,uniforms:{time:e}}),Va=it.Shaders.create({node:{frag:it.GLSL`
+}`}}),Ka=41,Za="reflection",Va=({time:e})=>(0,it.jsx)(nt.Node,{shader:Wa.node,uniforms:{time:e}}),Wa=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -3765,7 +3765,7 @@ void main() {
   float glossy = glossyness(hit.y); // TODO fresnel
   c = mix(c, reflection(p, n, 10.), glossy);
   gl_FragColor = vec4(c, 1.0);
-}`}}),Wa=42,Xa="reflection party",Ja=({time:e})=>(0,at.jsx)(it.Node,{shader:Ya.node,uniforms:{time:e}}),Ya=it.Shaders.create({node:{frag:it.GLSL`
+}`}}),Xa=42,Ya="reflection party",Ja=({time:e})=>(0,it.jsx)(nt.Node,{shader:ei.node,uniforms:{time:e}}),ei=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -4011,7 +4011,7 @@ void main() {
   float glossy = glossyness(hit.y); // TODO fresnel
   c = mix(c, reflection(p, n, 10.), glossy);
   gl_FragColor = vec4(c, 1.0);
-}`}}),ei=43,ti="irreconcilable queens",oi=({time:e})=>(0,at.jsx)(it.LinearCopy,{children:(0,at.jsx)(ri,{persistence:.4,children:(0,at.jsx)(it.Node,{shader:ai.node,uniforms:{time:e}})})}),ri=({children:e,persistence:t})=>(0,at.jsx)(it.Node,{shader:ai.persistence,backbuffering:!0,uniforms:{t:e,back:it.Uniform.Backbuffer,persistence:t}}),ai=it.Shaders.create({persistence:{frag:it.GLSL`
+}`}}),ti=43,oi="irreconcilable queens",ri=({time:e})=>(0,it.jsx)(nt.LinearCopy,{children:(0,it.jsx)(ai,{persistence:.4,children:(0,it.jsx)(nt.Node,{shader:ii.node,uniforms:{time:e}})})}),ai=({children:e,persistence:t})=>(0,it.jsx)(nt.Node,{shader:ii.persistence,backbuffering:!0,uniforms:{t:e,back:nt.Uniform.Backbuffer,persistence:t}}),ii=nt.Shaders.create({persistence:{frag:nt.GLSL`
     precision highp float;
     varying vec2 uv;
     uniform sampler2D t, back;
@@ -4023,7 +4023,7 @@ void main() {
         persistence
       );
     }
-        `},node:{frag:it.GLSL`
+        `},node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -4292,7 +4292,7 @@ void main() {
   vec3 n = normal(p);
   c += lighting(hit, p, n, dir);
   gl_FragColor = vec4(c, 1.0);
-}`}}),ii=44,ni="royal meeting",ci=({time:e})=>(0,at.jsx)(it.Node,{shader:fi.node,uniforms:{time:e}}),fi=it.Shaders.create({node:{frag:it.GLSL`
+}`}}),ni=44,ci="royal meeting",fi=({time:e})=>(0,it.jsx)(nt.Node,{shader:si.node,uniforms:{time:e}}),si=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -4596,7 +4596,7 @@ void main() {
   vec3 n = normal(p);
   c += lighting(hit, p, n, dir);
   gl_FragColor = vec4(c, 1.0);
-}`}}),si=45,li="wood pawns army",pi=({time:e})=>(0,at.jsx)(it.Node,{shader:vi.node,uniforms:{time:e,wood:"/images/seamless-wood-background-1.jpg"}}),vi=it.Shaders.create({node:{frag:it.GLSL`
+}`}}),li=45,pi="wood pawns army",vi=({time:e})=>(0,it.jsx)(nt.Node,{shader:ui.node,uniforms:{time:e,wood:"/images/seamless-wood-background-1.jpg"}}),ui=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -4960,7 +4960,7 @@ void main() {
   vec3 n = normal(p);
   c += lighting(hit, p, n, dir);
   gl_FragColor = vec4(c, 1.0);
-}`}}),ui=46,mi="Bank of Bicoin",di=({time:e})=>(0,at.jsx)(it.Node,{shader:hi.node,uniforms:{time:e}}),hi=it.Shaders.create({node:{frag:it.GLSL`
+}`}}),mi=46,di="Bank of Bicoin",hi=({time:e})=>(0,it.jsx)(nt.Node,{shader:xi.node,uniforms:{time:e}}),xi=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -5266,7 +5266,7 @@ void main() {
   vec3 n = normal(p);
   c += lighting(hit, p, n, dir);
   gl_FragColor = vec4(c, 1.0);
-}`}}),xi=47,gi="glow experiment",yi=({time:e})=>(0,at.jsx)(it.Node,{shader:bi.node,uniforms:{time:e}}),bi=it.Shaders.create({node:{frag:it.GLSL`
+}`}}),gi=47,yi="glow experiment",bi=({time:e})=>(0,it.jsx)(nt.Node,{shader:zi.node,uniforms:{time:e}}),zi=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -5470,7 +5470,7 @@ void main() {
     c = mix(c, glowing.rgb, glowing.a);
   }
   gl_FragColor = vec4(c, 1.0);
-}`}}),zi=48,wi="Starry Night",Si=({time:e})=>(0,at.jsx)(it.Node,{shader:Pi.node,uniforms:{time:e,img:"/images/seamless-wood2.jpg"}}),Pi=it.Shaders.create({node:{frag:it.GLSL`
+}`}}),wi=48,Si="Starry Night",Pi=({time:e})=>(0,it.jsx)(nt.Node,{shader:Ii.node,uniforms:{time:e,img:"/images/seamless-wood2.jpg"}}),Ii=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -5506,7 +5506,7 @@ void main() {
     smoothstep(.09, .08, length(p) + .01 * cos(time + a * 6. * PI + sin(a * 8. * PI - time) - cos(a * 10. * PI + pow(time-10., 1.4))))
   );
   gl_FragColor = vec4(clr, 1.0);
-}`}}),Ii=49,qi="chinese lantern",ki=400,Di=0,Ci=20,Ri=24,Li=1.1,Ui=({time:e})=>(0,at.jsx)(it.LinearCopy,{children:(0,at.jsx)(Fi,{persistence:.8,children:(0,at.jsx)(it.Node,{shader:Mi.node,uniforms:{time:e}})})}),Fi=({children:e,persistence:t})=>(0,at.jsx)(it.Node,{shader:Mi.persistence,backbuffering:!0,uniforms:{t:e,back:it.Uniform.Backbuffer,persistence:t}}),Mi=it.Shaders.create({persistence:{frag:it.GLSL`
+}`}}),qi=49,Di="chinese lantern",Ci=400,ki=0,Ri=20,Li=24,Ui=1.1,Fi=({time:e})=>(0,it.jsx)(nt.LinearCopy,{children:(0,it.jsx)(Mi,{persistence:.8,children:(0,it.jsx)(nt.Node,{shader:Hi.node,uniforms:{time:e}})})}),Mi=({children:e,persistence:t})=>(0,it.jsx)(nt.Node,{shader:Hi.persistence,backbuffering:!0,uniforms:{t:e,back:nt.Uniform.Backbuffer,persistence:t}}),Hi=nt.Shaders.create({persistence:{frag:nt.GLSL`
     precision highp float;
     varying vec2 uv;
     uniform sampler2D t, back;
@@ -5518,7 +5518,7 @@ void main() {
         persistence
       );
     }
-        `},node:{frag:it.GLSL`
+        `},node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -5713,7 +5713,7 @@ void main() {
   vec3 c = lighting(hit, p, n, dir);
   clr += c;
   gl_FragColor = vec4(clr, 1.0);
-}`}}),Hi=50,ji="jumpy rooks",Ti=({time:e})=>(0,at.jsx)(it.Node,{shader:Oi.node,uniforms:{time:e,wood:"/images/seamless-wood2.jpg"}}),Oi=it.Shaders.create({node:{frag:it.GLSL`
+}`}}),Ti=50,ji="jumpy rooks",Oi=({time:e})=>(0,it.jsx)(nt.Node,{shader:Gi.node,uniforms:{time:e,wood:"/images/seamless-wood2.jpg"}}),Gi=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -6130,7 +6130,7 @@ void main() {
   vec3 n = normal(p);
   c += lighting(hit, p, n, dir);
   gl_FragColor = vec4(c, 1.0);
-}`}}),Gi=51,_i="symmetry chess",Bi=400,Ni=0,Ei=20,Ai=24,$i=1,Qi=({time:e})=>(0,at.jsx)(it.Node,{shader:Ki.node,uniforms:{time:e,wood:"/images/seamless-wood2.jpg"}}),Ki=it.Shaders.create({node:{frag:it.GLSL`
+}`}}),_i=51,Bi="symmetry chess",Ni=400,Ei=0,Ai=20,$i=24,Qi=1,Ki=({time:e})=>(0,it.jsx)(nt.Node,{shader:Zi.node,uniforms:{time:e,wood:"/images/seamless-wood2.jpg"}}),Zi=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -6571,7 +6571,7 @@ void main() {
     c *= 1.2 - .5 * step(-.8, dot(dir, n));
   }
   gl_FragColor = vec4(c, 1.0);
-}`}}),Zi=52,Vi="knights dance",Wi=({time:e})=>(0,at.jsx)(it.Node,{shader:Xi.node,uniforms:{time:e,wood:"/images/seamless-wood2.jpg"}}),Xi=it.Shaders.create({node:{frag:it.GLSL`
+}`}}),Vi=52,Wi="knights dance",Xi=({time:e})=>(0,it.jsx)(nt.Node,{shader:Yi.node,uniforms:{time:e,wood:"/images/seamless-wood2.jpg"}}),Yi=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -7068,7 +7068,7 @@ void main() {
   vec3 n = normal(p);
   c += lighting(hit, p, n, dir);
   gl_FragColor = vec4(c, 1.0);
-}`}}),Ji=53,Yi="cross waves",en=({time:e})=>(0,at.jsx)(it.Node,{shader:tn.node,uniforms:{time:e}}),tn=it.Shaders.create({node:{frag:it.GLSL`
+}`}}),Ji=53,en="cross waves",tn=({time:e})=>(0,it.jsx)(nt.Node,{shader:on.node,uniforms:{time:e}}),on=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -7119,7 +7119,7 @@ void main() {
     gl_FragColor = vec4(color(uv.x), 1.0);
   }
   */
-}`}}),on=54,rn="chess set",an=({time:e})=>(0,at.jsx)(it.Node,{shader:nn.node,uniforms:{time:e,wood:"/images/seamless-wood2.jpg"}}),nn=it.Shaders.create({node:{frag:it.GLSL`#version 300 es
+}`}}),rn=54,an="chess set",nn=({time:e})=>(0,it.jsx)(nt.Node,{shader:cn.node,uniforms:{time:e,wood:"/images/seamless-wood2.jpg"}}),cn=nt.Shaders.create({node:{frag:nt.GLSL`#version 300 es
 precision highp float;
 in vec2 uv;
 out vec4 color;
@@ -7623,7 +7623,7 @@ void main() {
   vec3 n = normal(p);
   c += lighting(hit, p, n, dir);
   color = vec4(c, 1.0);
-}`}}),cn=55,fn="cube d'or",sn=400,ln=0,pn=20,vn=24,un=1,mn=({time:e})=>(0,at.jsx)(it.Node,{shader:dn.node,uniforms:{time:e}}),dn=it.Shaders.create({node:{frag:it.GLSL`#version 300 es
+}`}}),fn=55,sn="cube d'or",ln=400,pn=0,vn=20,un=24,mn=1,dn=({time:e})=>(0,it.jsx)(nt.Node,{shader:hn.node,uniforms:{time:e}}),hn=nt.Shaders.create({node:{frag:nt.GLSL`#version 300 es
 precision highp float;
 in vec2 uv;
 out vec4 color;
@@ -7820,7 +7820,7 @@ void main() {
   c /= 4.;
   #endif
   color = vec4(c, 1.0);
-}`}}),hn=56,xn="jade forest",gn=({time:e})=>(0,at.jsx)(it.Node,{shader:yn.node,uniforms:{time:e}}),yn=it.Shaders.create({node:{frag:it.GLSL`#version 300 es
+}`}}),xn=56,gn="jade forest",yn=({time:e})=>(0,it.jsx)(nt.Node,{shader:bn.node,uniforms:{time:e}}),bn=nt.Shaders.create({node:{frag:nt.GLSL`#version 300 es
 precision highp float;
 in vec2 uv;
 out vec4 color;
@@ -8056,7 +8056,7 @@ void main() {
   // mist
   c = mix(c, vec3(1.), pow(smoothstep(1., 4., length(p-origin)), .5));
   color = vec4(c, 1.0);
-}`}}),bn=57,zn="Virus v2",wn=400,Sn=0,Pn=20,In=24,qn=.8,kn=({time:e})=>(0,at.jsx)(it.Node,{shader:Dn.node,uniforms:{time:e}}),Dn=it.Shaders.create({node:{frag:it.GLSL`
+}`}}),zn=57,wn="Virus v2",Sn=400,Pn=0,In=20,qn=24,Dn=.8,Cn=({time:e})=>(0,it.jsx)(nt.Node,{shader:kn.node,uniforms:{time:e}}),kn=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -8196,7 +8196,7 @@ void main() {
     )
     , 1.0);
 }
-`}});var Cn=o(7996),Rn=o.n(Cn);const Ln=400,Un=0,Fn=30,Mn=20,Hn=1,jn="5M",Tn=58,On="Mandelglitch",Gn=[{url:"https://ethblock.art/create/17",text:"Mint on ethblock.art"},{url:"https://ghostmarket.io/asset/pha/ghost/3008841254969814369262311336331954453497120774334547905246474374493804042898/",text:"ghostmarket.io: 400 KCAL"},{url:"https://www.hicetnunc.xyz/objkt/3063",text:"hicetnunc.xyz: Mandelglitch #1 (5 XTZ)"},{url:"https://www.hicetnunc.xyz/objkt/3068",text:"hicetnunc.xyz: Mandelglitch #2 (5 XTZ)"},{url:"https://www.hicetnunc.xyz/objkt/3071",text:"hicetnunc.xyz: Mandelglitch #3 (5 XTZ)"},{url:"https://www.hicetnunc.xyz/objkt/3072",text:"hicetnunc.xyz: Mandelglitch #4 (5 XTZ)"},{url:"https://www.hicetnunc.xyz/objkt/3073",text:"hicetnunc.xyz: Mandelglitch #5 (5 XTZ)"},{url:"https://www.hicetnunc.xyz/objkt/3077",text:"hicetnunc.xyz: Mandelglitch #6 (5 XTZ)"},{url:"https://www.hicetnunc.xyz/objkt/3088",text:"hicetnunc.xyz: Mandelglitch #7 (5 XTZ)"},{url:"https://www.hicetnunc.xyz/objkt/3574",text:"hicetnunc.xyz: Mandelglitch #8 (5 XTZ)"}];const _n=e=>e<.5?2*e*e:(4-2*e)*e-1;const Bn=({time:e,n:t,exporting:o})=>{const r=(0,St.useMemo)((()=>function(e,t=0){const o=e?3:50,r=new(Rn())(t);return Array(o).fill(null).map((()=>Array(12).fill(null).map((()=>r.random()))))}(o,t)),[t,o]),a=e/10%r.length,i=Math.floor(a),n=a-i;let[c,f,s,l,p,v,u,m,d,h,x,g]=(y=r[i%r.length],b=r[(i+1)%r.length],z=_n(n),y.map(((e,t)=>e*(1-z)+b[t]*z)));var y,b,z;return s=_n(s),(0,at.jsx)(it.LinearCopy,{children:(0,at.jsx)(En,{persistence:o?0:.8,children:(0,at.jsx)(it.Node,{shader:Nn.main,uniforms:{aa:o?2:0,time:e,resolution:it.Uniform.Resolution,travel:c,love:f,dark:s,rot:o?2*Math.PI/Fn:.1,s1:l,s2:p,s3:v,s4:u,s5:m,s6:d,s7:h,s8:x,s9:g}})})})},Nn=it.Shaders.create({persistence:{frag:it.GLSL`
+`}});var Rn=o(7996),Ln=o.n(Rn);const Un=400,Fn=0,Mn=30,Hn=20,Tn=1,jn="5M",On=58,Gn="Mandelglitch",_n=[{url:"https://ethblock.art/create/17",text:"Mint on ethblock.art"},{url:"https://ghostmarket.io/asset/pha/ghost/3008841254969814369262311336331954453497120774334547905246474374493804042898/",text:"ghostmarket.io: 400 KCAL"},{url:"https://www.hicetnunc.xyz/objkt/3063",text:"hicetnunc.xyz: Mandelglitch #1 (5 XTZ)"},{url:"https://www.hicetnunc.xyz/objkt/3068",text:"hicetnunc.xyz: Mandelglitch #2 (5 XTZ)"},{url:"https://www.hicetnunc.xyz/objkt/3071",text:"hicetnunc.xyz: Mandelglitch #3 (5 XTZ)"},{url:"https://www.hicetnunc.xyz/objkt/3072",text:"hicetnunc.xyz: Mandelglitch #4 (5 XTZ)"},{url:"https://www.hicetnunc.xyz/objkt/3073",text:"hicetnunc.xyz: Mandelglitch #5 (5 XTZ)"},{url:"https://www.hicetnunc.xyz/objkt/3077",text:"hicetnunc.xyz: Mandelglitch #6 (5 XTZ)"},{url:"https://www.hicetnunc.xyz/objkt/3088",text:"hicetnunc.xyz: Mandelglitch #7 (5 XTZ)"},{url:"https://www.hicetnunc.xyz/objkt/3574",text:"hicetnunc.xyz: Mandelglitch #8 (5 XTZ)"}];const Bn=e=>e<.5?2*e*e:(4-2*e)*e-1;const Nn=({time:e,n:t,exporting:o})=>{const r=(0,Pt.useMemo)((()=>function(e,t=0){const o=e?3:50,r=new(Ln())(t);return Array(o).fill(null).map((()=>Array(12).fill(null).map((()=>r.random()))))}(o,t)),[t,o]),a=e/10%r.length,i=Math.floor(a),n=a-i;let[c,f,s,l,p,v,u,m,d,h,x,g]=(y=r[i%r.length],b=r[(i+1)%r.length],z=Bn(n),y.map(((e,t)=>e*(1-z)+b[t]*z)));var y,b,z;return s=Bn(s),(0,it.jsx)(nt.LinearCopy,{children:(0,it.jsx)(An,{persistence:o?0:.8,children:(0,it.jsx)(nt.Node,{shader:En.main,uniforms:{aa:o?2:0,time:e,resolution:nt.Uniform.Resolution,travel:c,love:f,dark:s,rot:o?2*Math.PI/Mn:.1,s1:l,s2:p,s3:v,s4:u,s5:m,s6:d,s7:h,s8:x,s9:g}})})})},En=nt.Shaders.create({persistence:{frag:nt.GLSL`
   precision highp float;
   varying vec2 uv;
   uniform sampler2D t, back;
@@ -8209,7 +8209,7 @@ void main() {
         persistence
       );
   }
-      `},main:{frag:it.GLSL`
+      `},main:{frag:nt.GLSL`
   #version 300 es
 precision highp float;
 in vec2 uv;
@@ -8296,7 +8296,7 @@ void main() {
   c /= total;
   color = vec4(c, 1.0);
 }
-  `}}),En=({children:e,persistence:t})=>(0,at.jsx)(it.Node,{shader:Nn.persistence,backbuffering:!0,uniforms:{t:e,back:it.Uniform.Backbuffer,persistence:t}}),An=59,$n="Pixels 256",Qn="There will be only 256 patterns generated by this single fragment shader.",Kn=({time:e,n:t,exporting:o})=>(0,at.jsx)(Zn,{n:t+1+(o?0:Math.floor(e))}),Zn=St.memo((({n:e})=>{const t=new(Rn())(e%256),o=t.random(),r=t.random(),a=t.random(),i=t.random(),n=t.random(),c=t.random();return(0,at.jsx)(it.Node,{shader:Vn.node,uniforms:{s1:o,s2:r,s3:a,s4:i,s5:n,s6:c}})})),Vn=it.Shaders.create({node:{frag:it.GLSL`
+  `}}),An=({children:e,persistence:t})=>(0,it.jsx)(nt.Node,{shader:En.persistence,backbuffering:!0,uniforms:{t:e,back:nt.Uniform.Backbuffer,persistence:t}}),$n=59,Qn="Pixels 256",Kn="There will be only 256 patterns generated by this single fragment shader.",Zn=({time:e,n:t,exporting:o})=>(0,it.jsx)(Vn,{n:t+1+(o?0:Math.floor(e))}),Vn=Pt.memo((({n:e})=>{const t=new(Ln())(e%256),o=t.random(),r=t.random(),a=t.random(),i=t.random(),n=t.random(),c=t.random();return(0,it.jsx)(nt.Node,{shader:Wn.node,uniforms:{s1:o,s2:r,s3:a,s4:i,s5:n,s6:c}})})),Wn=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float s1,s2,s3,s4,s5,s6;
@@ -8336,7 +8336,7 @@ void main() {
   vec3 c = color((.1 + .3 * s6 * s6) * cell(floor(uv * unzoom + offset)));
   gl_FragColor = vec4(c, 1.0);
 }
-`}}),Wn=60,Xn="Bitcoin rainbow",Jn=({time:e})=>(0,at.jsx)(it.Node,{shader:Yn.node,uniforms:{time:e}}),Yn=it.Shaders.create({node:{frag:it.GLSL`
+`}}),Xn=60,Yn="Bitcoin rainbow",Jn=({time:e})=>(0,it.jsx)(nt.Node,{shader:ec.node,uniforms:{time:e}}),ec=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -8423,7 +8423,7 @@ void main() {
     step(0., v) * color(sqrt(max(v, 0.)) - 2. * time),
     1.0);
 }
-`}}),ec=61,tc="Binance gradients",oc=1,rc=30,ac=["/images/shaders/binance.dist.png"],ic=({time:e})=>(0,at.jsx)(it.Node,{shader:nc.node,uniforms:{time:e,image:"/images/shaders/binance.dist.png"}}),nc=it.Shaders.create({node:{frag:it.GLSL`
+`}}),tc=61,oc="Binance gradients",rc=1,ac=30,ic=["/images/shaders/binance.dist.png"],nc=({time:e})=>(0,it.jsx)(nt.Node,{shader:cc.node,uniforms:{time:e,image:"/images/shaders/binance.dist.png"}}),cc=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -8450,7 +8450,7 @@ void main() {
     step(0., v) * color(sqrt(max(v, 0.)) - time),
     1.0);
 }
-`}}),cc=62,fc="Overgrowth",sc=20,lc=40,pc=1,vc=({generation:e,size:t,n:o})=>(0,at.jsx)(it.Node,{width:t,height:t,shader:gc.logic,uniforms:{generation:e,prev:it.Uniform.Backbuffer,size:t,seed:o/100},backbuffering:!0}),uc=St.memo(vc),mc=({time:e,generation:t,n:o})=>(0,at.jsx)(it.Node,{shader:gc.render,uniforms:{time:e,logic:(0,at.jsx)(uc,{generation:t,size:140,n:o})},uniformsOptions:{logic:{interpolation:"nearest"}}}),dc=St.memo(mc),hc=1e3*Math.random(),xc=({time:e,n:t})=>(0,at.jsx)(dc,{n:t+hc,time:e,generation:Math.floor(30*e)},t),gc=it.Shaders.create({logic:{frag:it.GLSL`
+`}}),fc=62,sc="Overgrowth",lc=20,pc=40,vc=1,uc=({generation:e,size:t,n:o})=>(0,it.jsx)(nt.Node,{width:t,height:t,shader:yc.logic,uniforms:{generation:e,prev:nt.Uniform.Backbuffer,size:t,seed:o/100},backbuffering:!0}),mc=Pt.memo(uc),dc=({time:e,generation:t,n:o})=>(0,it.jsx)(nt.Node,{shader:yc.render,uniforms:{time:e,logic:(0,it.jsx)(mc,{generation:t,size:140,n:o})},uniformsOptions:{logic:{interpolation:"nearest"}}}),hc=Pt.memo(dc),xc=1e3*Math.random(),gc=({time:e,n:t})=>(0,it.jsx)(hc,{n:t+xc,time:e,generation:Math.floor(30*e)},t),yc=nt.Shaders.create({logic:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float generation;
@@ -8526,7 +8526,7 @@ void main() {
   }
   gl_FragColor = vec4(c, 1.0);
 }
-    `},render:{frag:it.GLSL`
+    `},render:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -8563,7 +8563,7 @@ void main() {
   vec3 state = texture2D(logic, uv).rgb;
   gl_FragColor = vec4(color(state), 1.0);
 }
-`}});var yc=o(2116);const bc=63,zc="Relics",wc=400,Sc=2,Pc=4,Ic=20,qc=1,kc="5M",Dc={colors:[.7,.55,.4],logicSize:80,amp:1,base:2,persistance:.89,delta:.5,seed:0};console.log(Object.keys(Dc).map((e=>String(Dc[e]))).join("_"));const Cc=({g:e,size:t,seed:o,amp:r,base:a,persistance:i,delta:n})=>(0,at.jsx)(it.Node,{width:t,height:t,shader:Mc.logic,uniforms:{amp:r,base:a,g:e,prev:it.Uniform.Backbuffer,size:t,seed:o,persistance:i,delta:n},backbuffering:!0},t),Rc=St.memo(Cc),Lc=({g:e,colors:t,amp:o,base:r,persistance:a,delta:i,logicSize:n,seed:c})=>(0,at.jsx)(it.Node,{shader:Mc.render,uniforms:{colors:t,logic:(0,at.jsx)(Rc,{amp:o,base:r,g:e,size:n,seed:c,persistance:a,delta:i})},uniformsOptions:{logic:{interpolation:"nearest"}}}),Uc=St.memo(Lc),Fc=({time:e})=>{const{colors:t,logicSize:o,amp:r,base:a,persistance:i,delta:n,seed:c}=(0,yc.M4)(Dc);return(0,at.jsx)(Uc,{amp:r,base:a,g:Math.floor(20*e)%40,colors:t,persistance:i,delta:n,seed:c,logicSize:o})},Mc=it.Shaders.create({logic:{frag:it.GLSL`
+`}});var bc=o(2116);const zc=63,wc="Relics",Sc=400,Pc=2,Ic=4,qc=20,Dc=1,Cc="5M",kc={colors:[.7,.55,.4],logicSize:80,amp:1,base:2,persistance:.89,delta:.5,seed:0};console.log(Object.keys(kc).map((e=>String(kc[e]))).join("_"));const Rc=({g:e,size:t,seed:o,amp:r,base:a,persistance:i,delta:n})=>(0,it.jsx)(nt.Node,{width:t,height:t,shader:Hc.logic,uniforms:{amp:r,base:a,g:e,prev:nt.Uniform.Backbuffer,size:t,seed:o,persistance:i,delta:n},backbuffering:!0},t),Lc=Pt.memo(Rc),Uc=({g:e,colors:t,amp:o,base:r,persistance:a,delta:i,logicSize:n,seed:c})=>(0,it.jsx)(nt.Node,{shader:Hc.render,uniforms:{colors:t,logic:(0,it.jsx)(Lc,{amp:o,base:r,g:e,size:n,seed:c,persistance:a,delta:i})},uniformsOptions:{logic:{interpolation:"nearest"}}}),Fc=Pt.memo(Uc),Mc=({time:e})=>{const{colors:t,logicSize:o,amp:r,base:a,persistance:i,delta:n,seed:c}=(0,bc.M4)(kc);return(0,it.jsx)(Fc,{amp:r,base:a,g:Math.floor(20*e)%40,colors:t,persistance:i,delta:n,seed:c,logicSize:o})},Hc=nt.Shaders.create({logic:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform sampler2D prev;
@@ -8606,7 +8606,7 @@ void main() {
   );
   gl_FragColor = vec4(c, 1.0);
 }
-    `},render:{frag:it.GLSL`
+    `},render:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform sampler2D logic;
@@ -8627,7 +8627,7 @@ void main() {
   vec3 state = texture2D(logic, uv).rgb;
   gl_FragColor = vec4(color(state), 1.0);
 }
-`}}),Hc=64,jc="Intersection",Tc=8*Math.PI,Oc=[{url:"https://www.hicetnunc.xyz/objkt/28592",text:"hic et nunc NFT"}],Gc=({time:e})=>(0,at.jsx)(it.Node,{shader:_c.render,uniforms:{resolution:it.Uniform.Resolution,time:e}}),_c=it.Shaders.create({render:{frag:it.GLSL`
+`}}),Tc=64,jc="Intersection",Oc=8*Math.PI,Gc=[{url:"https://www.hicetnunc.xyz/objkt/28592",text:"hic et nunc NFT"}],_c=({time:e})=>(0,it.jsx)(nt.Node,{shader:Bc.render,uniforms:{resolution:nt.Uniform.Resolution,time:e}}),Bc=nt.Shaders.create({render:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -8689,7 +8689,7 @@ void main() {
     shape(base, 0.5),
     1.0);
 }
-`}}),Bc=65,Nc="Duality",Ec=800,Ac=4,$c=8,Qc=30,Kc=1,Zc=3,Vc=!0,Wc=16,Xc=[{url:"https://hicetnunc.xyz/objkt/64326",text:"hic et nunc NFT"}],Jc=({time:e})=>(0,at.jsx)(it.NearestCopy,{children:(0,at.jsx)(Yc,{persistence:.3,children:(0,at.jsx)(it.Node,{shader:ef.render,uniforms:{resolution:it.Uniform.Resolution,time:e}})})}),Yc=({children:e,persistence:t})=>(0,at.jsx)(it.Node,{shader:ef.persistence,backbuffering:!0,uniforms:{t:e,back:it.Uniform.Backbuffer,persistence:t}}),ef=it.Shaders.create({persistence:{frag:it.GLSL`
+`}}),Nc=65,Ec="Duality",Ac=800,$c=4,Qc=8,Kc=30,Zc=1,Vc=3,Wc=!0,Xc=16,Yc=[{url:"https://hicetnunc.xyz/objkt/64326",text:"hic et nunc NFT"}],Jc=({time:e})=>(0,it.jsx)(nt.NearestCopy,{children:(0,it.jsx)(ef,{persistence:.3,children:(0,it.jsx)(nt.Node,{shader:tf.render,uniforms:{resolution:nt.Uniform.Resolution,time:e}})})}),ef=({children:e,persistence:t})=>(0,it.jsx)(nt.Node,{shader:tf.persistence,backbuffering:!0,uniforms:{t:e,back:nt.Uniform.Backbuffer,persistence:t}}),tf=nt.Shaders.create({persistence:{frag:nt.GLSL`
   precision highp float;
   varying vec2 uv;
   uniform sampler2D t, back;
@@ -8702,7 +8702,7 @@ void main() {
         persistence
       );
   }
-      `},render:{frag:it.GLSL`
+      `},render:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -8749,7 +8749,7 @@ void main() {
   float b = shape(base, 0.);
   gl_FragColor = vec4(a, b, b, 1.0);
 }
-`}}),tf=66,of="hicetnunc",rf=800,af=2,nf=af+8,cf=30,ff=1,sf=7,lf=!0,pf=16,vf=({time:e})=>(0,at.jsx)(it.NearestCopy,{children:(0,at.jsx)(uf,{persistence:.5,children:(0,at.jsx)(it.Node,{shader:mf.render,uniforms:{resolution:it.Uniform.Resolution,time:e,freq:2}})})}),uf=({children:e,persistence:t})=>(0,at.jsx)(it.Node,{shader:mf.persistence,backbuffering:!0,uniforms:{t:e,back:it.Uniform.Backbuffer,persistence:t}}),mf=it.Shaders.create({persistence:{frag:it.GLSL`
+`}}),of=66,rf="hicetnunc",af=800,nf=2,cf=nf+8,ff=30,sf=1,lf=7,pf=!0,vf=16,uf=({time:e})=>(0,it.jsx)(nt.NearestCopy,{children:(0,it.jsx)(mf,{persistence:.5,children:(0,it.jsx)(nt.Node,{shader:df.render,uniforms:{resolution:nt.Uniform.Resolution,time:e,freq:2}})})}),mf=({children:e,persistence:t})=>(0,it.jsx)(nt.Node,{shader:df.persistence,backbuffering:!0,uniforms:{t:e,back:nt.Uniform.Backbuffer,persistence:t}}),df=nt.Shaders.create({persistence:{frag:nt.GLSL`
   precision highp float;
   varying vec2 uv;
   uniform sampler2D t, back;
@@ -8762,7 +8762,7 @@ void main() {
         persistence
       );
   }
-      `},render:{frag:it.GLSL`
+      `},render:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -8822,7 +8822,7 @@ void main() {
   float b = shape(base, 1.);
   gl_FragColor = vec4(a, b, b, 1.0);
 }
-`}}),df=67,hf="Jumping blob",xf=800,gf=2,yf=gf+8,bf=30,zf=1,wf=7,Sf=!0,Pf=16,If=({time:e})=>(0,at.jsx)(it.NearestCopy,{children:(0,at.jsx)(qf,{persistence:.6,children:(0,at.jsx)(it.Node,{shader:kf.render,uniforms:{resolution:it.Uniform.Resolution,time:e,freq:2}})})}),qf=({children:e,persistence:t})=>(0,at.jsx)(it.Node,{shader:kf.persistence,backbuffering:!0,uniforms:{t:e,back:it.Uniform.Backbuffer,persistence:t}}),kf=it.Shaders.create({persistence:{frag:it.GLSL`
+`}}),hf=67,xf="Jumping blob",gf=800,yf=2,bf=yf+8,zf=30,wf=1,Sf=7,Pf=!0,If=16,qf=({time:e})=>(0,it.jsx)(nt.NearestCopy,{children:(0,it.jsx)(Df,{persistence:.6,children:(0,it.jsx)(nt.Node,{shader:Cf.render,uniforms:{resolution:nt.Uniform.Resolution,time:e,freq:2}})})}),Df=({children:e,persistence:t})=>(0,it.jsx)(nt.Node,{shader:Cf.persistence,backbuffering:!0,uniforms:{t:e,back:nt.Uniform.Backbuffer,persistence:t}}),Cf=nt.Shaders.create({persistence:{frag:nt.GLSL`
   precision highp float;
   varying vec2 uv;
   uniform sampler2D t, back;
@@ -8835,7 +8835,7 @@ void main() {
         persistence
       );
   }
-      `},render:{frag:it.GLSL`
+      `},render:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -8892,7 +8892,7 @@ void main() {
     1.0
   );
 }
-`}}),Df=68,Cf="ring",Rf=800,Lf=2,Uf=Lf+10,Ff=30,Mf=1,Hf=7,jf=!0,Tf=128,Of=({time:e})=>(0,at.jsx)(it.NearestCopy,{children:(0,at.jsx)(Gf,{persistence:.9,children:(0,at.jsx)(it.Node,{shader:_f.render,uniforms:{resolution:it.Uniform.Resolution,time:e,freq:2}})})}),Gf=({children:e,persistence:t})=>(0,at.jsx)(it.Node,{shader:_f.persistence,backbuffering:!0,uniforms:{t:e,back:it.Uniform.Backbuffer,persistence:t}}),_f=it.Shaders.create({persistence:{frag:it.GLSL`
+`}}),kf=68,Rf="ring",Lf=800,Uf=2,Ff=Uf+10,Mf=30,Hf=1,Tf=7,jf=!0,Of=128,Gf=({time:e})=>(0,it.jsx)(nt.NearestCopy,{children:(0,it.jsx)(_f,{persistence:.9,children:(0,it.jsx)(nt.Node,{shader:Bf.render,uniforms:{resolution:nt.Uniform.Resolution,time:e,freq:2}})})}),_f=({children:e,persistence:t})=>(0,it.jsx)(nt.Node,{shader:Bf.persistence,backbuffering:!0,uniforms:{t:e,back:nt.Uniform.Backbuffer,persistence:t}}),Bf=nt.Shaders.create({persistence:{frag:nt.GLSL`
   precision highp float;
   varying vec2 uv;
   uniform sampler2D t, back;
@@ -8905,7 +8905,7 @@ void main() {
         persistence
       );
   }
-      `},render:{frag:it.GLSL`
+      `},render:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform float time;
@@ -8961,7 +8961,7 @@ void main() {
     1.0
   );
 }
-`}}),Bf=69,Nf="Bananas paradize",Ef=400,Af=0,$f=20,Qf=20,Kf=1,Zf=!0,Vf=128,Wf=({time:e})=>(0,at.jsx)(it.Node,{shader:Xf.node,uniforms:{time:e,resolution:it.Uniform.Resolution}}),Xf=it.Shaders.create({node:{frag:it.GLSL`
+`}}),Nf=69,Ef="Bananas paradize",Af=400,$f=0,Qf=20,Kf=20,Zf=1,Vf=!0,Wf=128,Xf=({time:e})=>(0,it.jsx)(nt.Node,{shader:Yf.node,uniforms:{time:e,resolution:nt.Uniform.Resolution}}),Yf=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 
@@ -9208,7 +9208,7 @@ void main() {
   vec3 c = render();
   gl_FragColor = vec4(c, 1.0);
 }
-`}}),Jf=70,Yf="warp1",es=400,ts=0,os=20,rs=20,as=1,is=!1,ns=256,cs=({time:e})=>(0,at.jsx)(it.Node,{shader:fs.node,uniforms:{time:e,resolution:it.Uniform.Resolution}}),fs=it.Shaders.create({node:{frag:it.GLSL`
+`}}),Jf=70,es="warp1",ts=400,os=0,rs=20,as=20,is=1,ns=!1,cs=256,fs=({time:e})=>(0,it.jsx)(nt.Node,{shader:ss.node,uniforms:{time:e,resolution:nt.Uniform.Resolution}}),ss=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 
@@ -9271,7 +9271,7 @@ void main() {
   vec3 c = pal(0.1 * time + smoothstep(0.5, 0.2, length(uv - .5)) * pattern(0.5 * uv));
   gl_FragColor = vec4(c, 1.0);
 }
-`}}),ss=71,ls="warp2",ps=640,vs=0,us=20,ms=24,ds=1,hs=!1,xs=256,gs=({time:e})=>(0,at.jsx)(it.Node,{shader:ys.node,uniforms:{time:e}}),ys=it.Shaders.create({node:{frag:it.GLSL`
+`}}),ls=71,ps="warp2",vs=640,us=0,ms=20,ds=24,hs=1,xs=!1,gs=256,ys=({time:e})=>(0,it.jsx)(nt.Node,{shader:bs.node,uniforms:{time:e}}),bs=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 
@@ -9341,7 +9341,7 @@ void main() {
   );
   gl_FragColor = vec4(c, 1.0);
 }
-`}}),bs=72,zs="Planet Hole",ws=640,Ss=0,Ps=20,Is=24,qs=1,ks=!1,Ds=256,Cs=[{url:"https://hicetnunc.xyz/objkt/87918",text:"hic et nunc NFT"}],Rs=({time:e,n:t})=>{const o=new(Rn())(t),r=.2+3*o.random()*o.random(),a=.2+10*o.random()*o.random(),i=o.random(),n=[i+.2-.5*o.random(),i+.02-.1*o.random(),i-.02+.1*o.random()];return(0,at.jsx)(it.Node,{shader:Ls.node,uniforms:{resolution:it.Uniform.Resolution,time:e,a:r,b:a,c:n}})},Ls=it.Shaders.create({node:{frag:it.GLSL`
+`}}),zs=72,ws="Planet Hole",Ss=640,Ps=0,Is=20,qs=24,Ds=1,Cs=!1,ks=256,Rs=[{url:"https://hicetnunc.xyz/objkt/87918",text:"hic et nunc NFT"}],Ls=({time:e,n:t})=>{const o=new(Ln())(t),r=.2+3*o.random()*o.random(),a=.2+10*o.random()*o.random(),i=o.random(),n=[i+.2-.5*o.random(),i+.02-.1*o.random(),i-.02+.1*o.random()];return(0,it.jsx)(nt.Node,{shader:Us.node,uniforms:{resolution:nt.Uniform.Resolution,time:e,a:r,b:a,c:n}})},Us=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform vec2 resolution;
@@ -9422,7 +9422,7 @@ void main() {
   c += pal(value * step(l, 0.4) * step(0.1, l));
   gl_FragColor = vec4(c, 1.0);
 }
-`}}),Us=73,Fs="purple square corridor",Ms=640,Hs=0,js=20,Ts=24,Os=1,Gs=!1,_s=256,Bs=72e5,Ns=({time:e})=>{const t=Date.now(),o=t/Bs-Math.floor(t/Bs);return(0,at.jsx)(it.Node,{shader:Es.node,uniforms:{resolution:it.Uniform.Resolution,time:e+1e3*o,speed:.01,c:[.8,.1,.3]}})},Es=it.Shaders.create({node:{frag:it.GLSL`
+`}}),Fs=73,Ms="purple square corridor",Hs=640,Ts=0,js=20,Os=24,Gs=1,_s=!1,Bs=256,Ns=72e5,Es=({time:e})=>{const t=Date.now(),o=t/Ns-Math.floor(t/Ns);return(0,it.jsx)(nt.Node,{shader:As.node,uniforms:{resolution:nt.Uniform.Resolution,time:e+1e3*o,speed:.01,c:[.8,.1,.3]}})},As=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform vec2 resolution;
@@ -9507,7 +9507,7 @@ void main() {
   c += pal(value);
   gl_FragColor = vec4(c, 1.0);
 }
-`}}),As=74,$s="blue square corridor",Qs=640,Ks=0,Zs=20,Vs=24,Ws=1,Xs=!1,Js=256,Ys=72e5,el=({time:e})=>{const t=Date.now(),o=t/Ys-Math.floor(t/Ys);return(0,at.jsx)(it.Node,{shader:tl.node,uniforms:{resolution:it.Uniform.Resolution,time:e+1e3*o,speed:.01,c:[0,.3,.4]}})},tl=it.Shaders.create({node:{frag:it.GLSL`
+`}}),$s=74,Qs="blue square corridor",Ks=640,Zs=0,Vs=20,Ws=24,Xs=1,Ys=!1,Js=256,el=72e5,tl=({time:e})=>{const t=Date.now(),o=t/el-Math.floor(t/el);return(0,it.jsx)(nt.Node,{shader:ol.node,uniforms:{resolution:nt.Uniform.Resolution,time:e+1e3*o,speed:.01,c:[0,.3,.4]}})},ol=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform vec2 resolution;
@@ -9591,7 +9591,7 @@ void main() {
   c += pal(value);
   gl_FragColor = vec4(c, 1.0);
 }
-`}}),ol=75,rl="moir\xe9 square smoke",al=640,il=0,nl=20,cl=24,fl=1,sl=!1,ll=256,pl=36e5,vl=({time:e})=>{const t=Date.now(),o=t/pl-Math.floor(t/pl);return(0,at.jsx)(it.Node,{shader:ul.node,uniforms:{resolution:it.Uniform.Resolution,time:e+1e3*o,speed:.01}})},ul=it.Shaders.create({node:{frag:it.GLSL`
+`}}),rl=75,al="moir\xe9 square smoke",il=640,nl=0,cl=20,fl=24,sl=1,ll=!1,pl=256,vl=36e5,ul=({time:e})=>{const t=Date.now(),o=t/vl-Math.floor(t/vl);return(0,it.jsx)(nt.Node,{shader:ml.node,uniforms:{resolution:nt.Uniform.Resolution,time:e+1e3*o,speed:.01}})},ml=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform vec2 resolution;
@@ -9675,7 +9675,7 @@ void main() {
   c += pal(value);
   gl_FragColor = vec4(c, 1.0);
 }
-`}}),ml=76,dl="Purple",hl=640,xl=0,gl=20,yl=24,bl=1,zl=!1,wl=256,Sl=({time:e})=>(0,at.jsx)(it.Node,{shader:Pl.node,uniforms:{resolution:it.Uniform.Resolution,time:e}}),Pl=it.Shaders.create({node:{frag:it.GLSL`
+`}}),dl=76,hl="Purple",xl=640,gl=0,yl=20,bl=24,zl=1,wl=!1,Sl=256,Pl=({time:e})=>(0,it.jsx)(nt.Node,{shader:Il.node,uniforms:{resolution:nt.Uniform.Resolution,time:e}}),Il=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform vec2 resolution;
@@ -9745,7 +9745,7 @@ void main() {
   c += pal(v);
   gl_FragColor = vec4(c, 1.0);
 }
-`}}),Il=77,ql="Roses",kl=512,Dl=0,Cl=8,Rl=20,Ll=1,Ul=!1,Fl=64,Ml=({time:e})=>(0,at.jsx)(it.Node,{shader:Hl.node,uniforms:{resolution:it.Uniform.Resolution,time:e}}),Hl=it.Shaders.create({node:{frag:it.GLSL`
+`}}),ql=77,Dl="Roses",Cl=512,kl=0,Rl=8,Ll=20,Ul=1,Fl=!1,Ml=64,Hl=({time:e})=>(0,it.jsx)(nt.Node,{shader:Tl.node,uniforms:{resolution:nt.Uniform.Resolution,time:e}}),Tl=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform vec2 resolution;
@@ -9815,7 +9815,7 @@ void main() {
   c += pal(v);
   gl_FragColor = vec4(c, 1.0);
 }
-`}}),jl=78,Tl="Nature",Ol=512,Gl=0,_l=10,Bl=16,Nl=1,El=!1,Al=64,$l=({time:e})=>(0,at.jsx)(it.Node,{shader:Ql.node,uniforms:{resolution:it.Uniform.Resolution,time:e}}),Ql=it.Shaders.create({node:{frag:it.GLSL`
+`}}),jl=78,Ol="Nature",Gl=512,_l=0,Bl=10,Nl=16,El=1,Al=!1,$l=64,Ql=({time:e})=>(0,it.jsx)(nt.Node,{shader:Kl.node,uniforms:{resolution:nt.Uniform.Resolution,time:e}}),Kl=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform vec2 resolution;
@@ -9884,7 +9884,7 @@ void main() {
   c += pal(v);
   gl_FragColor = vec4(c, 1.0);
 }
-`}}),Kl=79,Zl="Circle",Vl=512,Wl=0,Xl=10,Jl=16,Yl=1,ep=!1,tp=64,op=({time:e})=>(0,at.jsx)(it.Node,{shader:rp.node,uniforms:{resolution:it.Uniform.Resolution,time:e}}),rp=it.Shaders.create({node:{frag:it.GLSL`
+`}}),Zl=79,Vl="Circle",Wl=512,Xl=0,Yl=10,Jl=16,ep=1,tp=!1,op=64,rp=({time:e})=>(0,it.jsx)(nt.Node,{shader:ap.node,uniforms:{resolution:nt.Uniform.Resolution,time:e}}),ap=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform vec2 resolution;
@@ -9957,7 +9957,7 @@ void main() {
   );
   gl_FragColor = vec4(c, 1.0);
 }
-`}}),ap=80,ip="Morphing Tunnel",np=512,cp=0,fp=10,sp=16,lp=1,pp=!1,vp=64,up=({time:e})=>(0,at.jsx)(it.Node,{shader:mp.node,uniforms:{resolution:it.Uniform.Resolution,time:e}}),mp=it.Shaders.create({node:{frag:it.GLSL`
+`}}),ip=80,np="Morphing Tunnel",cp=512,fp=0,sp=10,lp=16,pp=1,vp=!1,up=64,mp=({time:e})=>(0,it.jsx)(nt.Node,{shader:dp.node,uniforms:{resolution:nt.Uniform.Resolution,time:e}}),dp=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform vec2 resolution;
@@ -10035,7 +10035,7 @@ void main() {
   c += pal(scene(p, time));
   gl_FragColor = vec4(c, 1.0);
 }
-`}}),dp=81,hp="Red Blue Stripes",xp=512,gp=0,yp=10,bp=16,zp=1,wp=!1,Sp=64,Pp=({time:e})=>(0,at.jsx)(it.Node,{shader:Ip.node,uniforms:{resolution:it.Uniform.Resolution,time:e}}),Ip=it.Shaders.create({node:{frag:it.GLSL`
+`}}),hp=81,xp="Red Blue Stripes",gp=512,yp=0,bp=10,zp=16,wp=1,Sp=!1,Pp=64,Ip=({time:e})=>(0,it.jsx)(nt.Node,{shader:qp.node,uniforms:{resolution:nt.Uniform.Resolution,time:e}}),qp=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform vec2 resolution;
@@ -10113,7 +10113,7 @@ void main() {
   c += pal(scene(p, time));
   gl_FragColor = vec4(c, 1.0);
 }
-`}}),qp=82,kp="Mountain waves",Dp=512,Cp=0,Rp=10,Lp=16,Up=1,Fp=!1,Mp=64,Hp=({time:e})=>(0,at.jsx)(it.Node,{shader:jp.node,uniforms:{resolution:it.Uniform.Resolution,time:e}}),jp=it.Shaders.create({node:{frag:it.GLSL`
+`}}),Dp=82,Cp="Mountain waves",kp=512,Rp=0,Lp=10,Up=16,Fp=1,Mp=!1,Hp=64,Tp=({time:e})=>(0,it.jsx)(nt.Node,{shader:jp.node,uniforms:{resolution:nt.Uniform.Resolution,time:e}}),jp=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform vec2 resolution;
@@ -10188,7 +10188,7 @@ void main() {
   c += pal(scene(p, time));
   gl_FragColor = vec4(c, 1.0);
 }
-`}}),Tp=83,Op="Pink Plume",Gp=512,_p=0,Bp=10,Np=16,Ep=1,Ap=!1,$p=64,Qp=({time:e})=>(0,at.jsx)(it.Node,{shader:Kp.node,uniforms:{resolution:it.Uniform.Resolution,time:e}}),Kp=it.Shaders.create({node:{frag:it.GLSL`
+`}}),Op=83,Gp="Pink Plume",_p=512,Bp=0,Np=10,Ep=16,Ap=1,$p=!1,Qp=64,Kp=({time:e})=>(0,it.jsx)(nt.Node,{shader:Zp.node,uniforms:{resolution:nt.Uniform.Resolution,time:e}}),Zp=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform vec2 resolution;
@@ -10263,7 +10263,7 @@ void main() {
   c += pal(scene(p, time));
   gl_FragColor = vec4(c, 1.0);
 }
-`}}),Zp=84,Vp="Flame Waves",Wp=512,Xp=0,Jp=10,Yp=16,ev=1,tv=!1,ov=64,rv=({time:e})=>(0,at.jsx)(it.Node,{shader:av.node,uniforms:{resolution:it.Uniform.Resolution,time:e}}),av=it.Shaders.create({node:{frag:it.GLSL`
+`}}),Vp=84,Wp="Flame Waves",Xp=512,Yp=0,Jp=10,ev=16,tv=1,ov=!1,rv=64,av=({time:e})=>(0,it.jsx)(nt.Node,{shader:iv.node,uniforms:{resolution:nt.Uniform.Resolution,time:e}}),iv=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform vec2 resolution;
@@ -10337,7 +10337,7 @@ void main() {
   c += pal(scene(p, time));
   gl_FragColor = vec4(c, 1.0);
 }
-`}}),iv=85,nv="Flaming Borders",cv=512,fv=0,sv=10,lv=16,pv=1,vv=!1,uv=64,mv=({time:e})=>(0,at.jsx)(it.Node,{shader:dv.node,uniforms:{resolution:it.Uniform.Resolution,time:e}}),dv=it.Shaders.create({node:{frag:it.GLSL`
+`}}),nv=85,cv="Flaming Borders",fv=512,sv=0,lv=10,pv=16,vv=1,uv=!1,mv=64,dv=({time:e})=>(0,it.jsx)(nt.Node,{shader:hv.node,uniforms:{resolution:nt.Uniform.Resolution,time:e}}),hv=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform vec2 resolution;
@@ -10411,7 +10411,7 @@ void main() {
   c += pal(scene(p, time));
   gl_FragColor = vec4(c, 1.0);
 }
-`}}),hv=86,xv="Waves",gv=512,yv=0,bv=10,zv=16,wv=1,Sv=!1,Pv=64,Iv=({time:e})=>(0,at.jsx)(it.Node,{shader:qv.node,uniforms:{resolution:it.Uniform.Resolution,time:e}}),qv=it.Shaders.create({node:{frag:it.GLSL`
+`}}),xv=86,gv="Waves",yv=512,bv=0,zv=10,wv=16,Sv=1,Pv=!1,Iv=64,qv=({time:e})=>(0,it.jsx)(nt.Node,{shader:Dv.node,uniforms:{resolution:nt.Uniform.Resolution,time:e}}),Dv=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform vec2 resolution;
@@ -10485,7 +10485,7 @@ void main() {
   c += pal(scene(p, time));
   gl_FragColor = vec4(c, 1.0);
 }
-`}}),kv=87,Dv="Square Waves",Cv=512,Rv=0,Lv=10,Uv=16,Fv=1,Mv=!1,Hv=64,jv=({time:e})=>(0,at.jsx)(it.Node,{shader:Tv.node,uniforms:{resolution:it.Uniform.Resolution,time:e}}),Tv=it.Shaders.create({node:{frag:it.GLSL`
+`}}),Cv=87,kv="Square Waves",Rv=512,Lv=0,Uv=10,Fv=16,Mv=1,Hv=!1,Tv=64,jv=({time:e})=>(0,it.jsx)(nt.Node,{shader:Ov.node,uniforms:{resolution:nt.Uniform.Resolution,time:e}}),Ov=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform vec2 resolution;
@@ -10559,7 +10559,7 @@ void main() {
   c += pal(scene(p, time));
   gl_FragColor = vec4(c, 1.0);
 }
-`}}),Ov=88,Gv="Unboxing",_v=512,Bv=0,Nv=10,Ev=16,Av=1,$v=!1,Qv=64,Kv=({time:e})=>(0,at.jsx)(it.Node,{shader:Zv.node,uniforms:{resolution:it.Uniform.Resolution,time:e}}),Zv=it.Shaders.create({node:{frag:it.GLSL`
+`}}),Gv=88,_v="Unboxing",Bv=512,Nv=0,Ev=10,Av=16,$v=1,Qv=!1,Kv=64,Zv=({time:e})=>(0,it.jsx)(nt.Node,{shader:Vv.node,uniforms:{resolution:nt.Uniform.Resolution,time:e}}),Vv=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform vec2 resolution;
@@ -10633,7 +10633,7 @@ void main() {
   c += pal(scene(p, time));
   gl_FragColor = vec4(c, 1.0);
 }
-`}}),Vv=89,Wv="Creepy",Xv=512,Jv=0,Yv=10,eu=16,tu=1,ou=!1,ru=64,au=({time:e})=>(0,at.jsx)(it.Node,{shader:iu.node,uniforms:{resolution:it.Uniform.Resolution,time:e}}),iu=it.Shaders.create({node:{frag:it.GLSL`
+`}}),Wv=89,Xv="Creepy",Yv=512,Jv=0,eu=10,tu=16,ou=1,ru=!1,au=64,iu=({time:e})=>(0,it.jsx)(nt.Node,{shader:nu.node,uniforms:{resolution:nt.Uniform.Resolution,time:e}}),nu=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform vec2 resolution;
@@ -10707,7 +10707,7 @@ void main() {
   c += pal(scene(p, time));
   gl_FragColor = vec4(c, 1.0);
 }
-`}}),nu=90,cu="Square Path",fu=512,su=0,lu=10,pu=16,vu=1,uu=!1,mu=64,du=({time:e})=>(0,at.jsx)(it.Node,{shader:hu.node,uniforms:{resolution:it.Uniform.Resolution,time:e}}),hu=it.Shaders.create({node:{frag:it.GLSL`
+`}}),cu=90,fu="Square Path",su=512,lu=0,pu=10,vu=16,uu=1,mu=!1,du=64,hu=({time:e})=>(0,it.jsx)(nt.Node,{shader:xu.node,uniforms:{resolution:nt.Uniform.Resolution,time:e}}),xu=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform vec2 resolution;
@@ -10781,7 +10781,7 @@ void main() {
   c += pal(scene(p, time));
   gl_FragColor = vec4(c, 1.0);
 }
-`}}),xu=91,gu="Door Path",yu=512,bu=0,zu=10,wu=16,Su=1,Pu=!1,Iu=64,qu=({time:e})=>(0,at.jsx)(it.Node,{shader:ku.node,uniforms:{resolution:it.Uniform.Resolution,time:e}}),ku=it.Shaders.create({node:{frag:it.GLSL`
+`}}),gu=91,yu="Door Path",bu=512,zu=0,wu=10,Su=16,Pu=1,Iu=!1,qu=64,Du=({time:e})=>(0,it.jsx)(nt.Node,{shader:Cu.node,uniforms:{resolution:nt.Uniform.Resolution,time:e}}),Cu=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform vec2 resolution;
@@ -10855,7 +10855,7 @@ void main() {
   c += pal(scene(p, time));
   gl_FragColor = vec4(c, 1.0);
 }
-`}}),Du=92,Cu="Green Cosmos",Ru=512,Lu=0,Uu=10,Fu=16,Mu=1,Hu=!1,ju=64,Tu=({time:e})=>(0,at.jsx)(it.Node,{shader:Ou.node,uniforms:{resolution:it.Uniform.Resolution,time:e}}),Ou=it.Shaders.create({node:{frag:it.GLSL`
+`}}),ku=92,Ru="Green Cosmos",Lu=512,Uu=0,Fu=10,Mu=16,Hu=1,Tu=!1,ju=64,Ou=({time:e})=>(0,it.jsx)(nt.Node,{shader:Gu.node,uniforms:{resolution:nt.Uniform.Resolution,time:e}}),Gu=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform vec2 resolution;
@@ -10929,7 +10929,7 @@ void main() {
   c += pal(scene(p, time));
   gl_FragColor = vec4(c, 1.0);
 }
-`}}),Gu=93,_u="Is it alive",Bu=512,Nu=0,Eu=10,Au=16,$u=1,Qu=!1,Ku=64,Zu=({time:e})=>(0,at.jsx)(it.Node,{shader:Vu.node,uniforms:{resolution:it.Uniform.Resolution,time:e}}),Vu=it.Shaders.create({node:{frag:it.GLSL`
+`}}),_u=93,Bu="Is it alive",Nu=512,Eu=0,Au=10,$u=16,Qu=1,Ku=!1,Zu=64,Vu=({time:e})=>(0,it.jsx)(nt.Node,{shader:Wu.node,uniforms:{resolution:nt.Uniform.Resolution,time:e}}),Wu=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform vec2 resolution;
@@ -11004,7 +11004,7 @@ void main() {
   c += pal(scene(p, time));
   gl_FragColor = vec4(c, 1.0);
 }
-`}}),Wu=94,Xu="Sand",Ju=512,Yu=0,em=10,tm=16,om=1,rm=!1,am=128,im=({time:e})=>(0,at.jsx)(it.Node,{shader:nm.node,uniforms:{resolution:it.Uniform.Resolution,time:e}}),nm=it.Shaders.create({node:{frag:it.GLSL`
+`}}),Xu=94,Yu="Sand",Ju=512,em=0,tm=10,om=16,rm=1,am=!1,im=128,nm=({time:e})=>(0,it.jsx)(nt.Node,{shader:cm.node,uniforms:{resolution:nt.Uniform.Resolution,time:e}}),cm=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform vec2 resolution;
@@ -11074,7 +11074,7 @@ void main() {
   c += pal(scene(p, time));
   gl_FragColor = vec4(c, 1.0);
 }
-`}}),cm=95,fm="Diamond Dream",sm=512,lm=0,pm=10,vm=16,um=1,mm=!1,dm=128,hm=({time:e})=>(0,at.jsx)(it.Node,{shader:xm.node,uniforms:{resolution:it.Uniform.Resolution,time:e}}),xm=it.Shaders.create({node:{frag:it.GLSL`
+`}}),fm=95,sm="Diamond Dream",lm=512,pm=0,vm=10,um=16,mm=1,dm=!1,hm=128,xm=({time:e})=>(0,it.jsx)(nt.Node,{shader:gm.node,uniforms:{resolution:nt.Uniform.Resolution,time:e}}),gm=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform vec2 resolution;
@@ -11144,7 +11144,7 @@ void main() {
   c += pal(scene(p, time));
   gl_FragColor = vec4(c, 1.0);
 }
-`}}),gm=96,ym="Blue Brain",bm=512,zm=0,wm=10,Sm=16,Pm=1,Im=!1,qm=128,km=({time:e})=>(0,at.jsx)(it.Node,{shader:Dm.node,uniforms:{resolution:it.Uniform.Resolution,time:e}}),Dm=it.Shaders.create({node:{frag:it.GLSL`
+`}}),ym=96,bm="Blue Brain",zm=512,wm=0,Sm=10,Pm=16,Im=1,qm=!1,Dm=128,Cm=({time:e})=>(0,it.jsx)(nt.Node,{shader:km.node,uniforms:{resolution:nt.Uniform.Resolution,time:e}}),km=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform vec2 resolution;
@@ -11215,7 +11215,7 @@ void main() {
   c += pal(scene(p, time));
   gl_FragColor = vec4(c, 1.0);
 }
-`}}),Cm=97,Rm="Blue Yellow Storm",Lm=512,Um=0,Fm=10,Mm=16,Hm=1,jm=!1,Tm=128,Om=({time:e})=>(0,at.jsx)(it.Node,{shader:Gm.node,uniforms:{resolution:it.Uniform.Resolution,time:e}}),Gm=it.Shaders.create({node:{frag:it.GLSL`
+`}}),Rm=97,Lm="Blue Yellow Storm",Um=512,Fm=0,Mm=10,Hm=16,Tm=1,jm=!1,Om=128,Gm=({time:e})=>(0,it.jsx)(nt.Node,{shader:_m.node,uniforms:{resolution:nt.Uniform.Resolution,time:e}}),_m=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform vec2 resolution;
@@ -11286,7 +11286,7 @@ void main() {
   c += pal(scene(p, time));
   gl_FragColor = vec4(c, 1.0);
 }
-`}}),_m=98,Bm="Crossing",Nm=512,Em=0,Am=10,$m=16,Qm=1,Km=!1,Zm=64,Vm=({time:e})=>(0,at.jsx)(it.Node,{shader:Wm.node,uniforms:{resolution:it.Uniform.Resolution,time:e}}),Wm=it.Shaders.create({node:{frag:it.GLSL`
+`}}),Bm=98,Nm="Crossing",Em=512,Am=0,$m=10,Qm=16,Km=1,Zm=!1,Vm=64,Wm=({time:e})=>(0,it.jsx)(nt.Node,{shader:Xm.node,uniforms:{resolution:nt.Uniform.Resolution,time:e}}),Xm=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform vec2 resolution;
@@ -11355,7 +11355,7 @@ void main() {
   c += pal(scene(p, time));
   gl_FragColor = vec4(c, 1.0);
 }
-`}}),Xm=99,Jm="Wave fire storm",Ym=512,ed=0,td=10,od=16,rd=1,ad=!1,id=64,nd=({time:e})=>(0,at.jsx)(it.Node,{shader:cd.node,uniforms:{resolution:it.Uniform.Resolution,time:e}}),cd=it.Shaders.create({node:{frag:it.GLSL`
+`}}),Ym=99,Jm="Wave fire storm",ed=512,td=0,od=10,rd=16,ad=1,id=!1,nd=64,cd=({time:e})=>(0,it.jsx)(nt.Node,{shader:fd.node,uniforms:{resolution:nt.Uniform.Resolution,time:e}}),fd=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform vec2 resolution;
@@ -11440,7 +11440,7 @@ void main() {
   c /= 4.0;
   gl_FragColor = vec4(c, 1.0);
 }
-`}}),fd=100,sd="Cloud tunnel",ld=512,pd=0,vd=10,ud=16,md=1,dd=!1,hd=64,xd=({time:e})=>(0,at.jsx)(it.Node,{shader:gd.node,uniforms:{resolution:it.Uniform.Resolution,time:e}}),gd=it.Shaders.create({node:{frag:it.GLSL`
+`}}),sd=100,ld="Cloud tunnel",pd=512,vd=0,ud=10,md=16,dd=1,hd=!1,xd=64,gd=({time:e})=>(0,it.jsx)(nt.Node,{shader:yd.node,uniforms:{resolution:nt.Uniform.Resolution,time:e}}),yd=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform vec2 resolution;
@@ -11521,7 +11521,7 @@ void main() {
   c /= 4.0;
   gl_FragColor = vec4(c, 1.0);
 }
-`}}),yd=101,bd="Scale cloud",zd=512,wd=0,Sd=10,Pd=16,Id=1,qd=!1,kd=64,Dd=({time:e})=>(0,at.jsx)(it.Node,{shader:Cd.node,uniforms:{resolution:it.Uniform.Resolution,time:e}}),Cd=it.Shaders.create({node:{frag:it.GLSL`
+`}}),bd=101,zd="Scale cloud",wd=512,Sd=0,Pd=10,Id=16,qd=1,Dd=!1,Cd=64,kd=({time:e})=>(0,it.jsx)(nt.Node,{shader:Rd.node,uniforms:{resolution:nt.Uniform.Resolution,time:e}}),Rd=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform vec2 resolution;
@@ -11595,7 +11595,7 @@ void main() {
   c += pal(scene(p, time));
   gl_FragColor = vec4(c, 1.0);
 }
-`}}),Rd=102,Ld="Pinky green cloud",Ud=512,Fd=0,Md=10,Hd=16,jd=1,Td=!1,Od=64,Gd=({time:e})=>(0,at.jsx)(it.Node,{shader:_d.node,uniforms:{resolution:it.Uniform.Resolution,time:e}}),_d=it.Shaders.create({node:{frag:it.GLSL`
+`}}),Ld=102,Ud="Pinky green cloud",Fd=512,Md=0,Hd=10,Td=16,jd=1,Od=!1,Gd=64,_d=({time:e})=>(0,it.jsx)(nt.Node,{shader:Bd.node,uniforms:{resolution:nt.Uniform.Resolution,time:e}}),Bd=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform vec2 resolution;
@@ -11670,7 +11670,7 @@ void main() {
   c += pal(scene(p, time));
   gl_FragColor = vec4(c, 1.0);
 }
-`}}),Bd=103,Nd="Spiral noise",Ed=512,Ad=0,$d=10,Qd=16,Kd=1,Zd=!1,Vd=64,Wd=({time:e})=>(0,at.jsx)(it.Node,{shader:Xd.node,uniforms:{resolution:it.Uniform.Resolution,time:e}}),Xd=it.Shaders.create({node:{frag:it.GLSL`
+`}}),Nd=103,Ed="Spiral noise",Ad=512,$d=0,Qd=10,Kd=16,Zd=1,Vd=!1,Wd=64,Xd=({time:e})=>(0,it.jsx)(nt.Node,{shader:Yd.node,uniforms:{resolution:nt.Uniform.Resolution,time:e}}),Yd=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform vec2 resolution;
@@ -11743,7 +11743,7 @@ void main() {
   c += pal(scene(p, time));
   gl_FragColor = vec4(c, 1.0);
 }
-`}}),Jd=104,Yd=["/images/shaders/binance.dist.png"],eh="Binance warp",th=512,oh=0,rh=10,ah=16,ih=1,nh=!1,ch=64,fh=({time:e})=>(0,at.jsx)(it.Node,{shader:sh.node,uniforms:{time:e,resolution:it.Uniform.Resolution,image:"/images/shaders/binance.dist.png"}}),sh=it.Shaders.create({node:{frag:it.GLSL`
+`}}),Jd=104,eh=["/images/shaders/binance.dist.png"],th="Binance warp",oh=512,rh=0,ah=10,ih=16,nh=1,ch=!1,fh=64,sh=({time:e})=>(0,it.jsx)(nt.Node,{shader:lh.node,uniforms:{time:e,resolution:nt.Uniform.Resolution,image:"/images/shaders/binance.dist.png"}}),lh=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform vec2 resolution;
@@ -11815,7 +11815,7 @@ void main() {
   c += pal(scene(p));
   gl_FragColor = vec4(c, 1.0);
 }
-`}}),lh=105,ph=["/images/tezos-dist.png"],vh="Tezos swarm",uh=512,mh=0,dh=10,hh=16,xh=1,gh=!1,yh=64,bh=({time:e})=>(0,at.jsx)(it.Node,{shader:zh.node,uniforms:{time:e,resolution:it.Uniform.Resolution,image:"/images/tezos-dist.png"}}),zh=it.Shaders.create({node:{frag:it.GLSL`
+`}}),ph=105,vh=["/images/tezos-dist.png"],uh="Tezos swarm",mh=512,dh=0,hh=10,xh=16,gh=1,yh=!1,bh=64,zh=({time:e})=>(0,it.jsx)(nt.Node,{shader:wh.node,uniforms:{time:e,resolution:nt.Uniform.Resolution,image:"/images/tezos-dist.png"}}),wh=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform vec2 resolution;
@@ -11887,7 +11887,7 @@ void main() {
   c += pal(scene(p));
   gl_FragColor = vec4(c, 1.0);
 }
-`}}),wh=106,Sh=["/images/shaders/live.dist.png"],Ph="Pink Live",Ih=600,qh=0,kh=10,Dh=20,Ch=1,Rh=64,Lh=({time:e})=>(0,at.jsx)(it.Node,{shader:Uh.node,uniforms:{time:e,resolution:it.Uniform.Resolution,image:"/images/shaders/live.dist.png"}}),Uh=it.Shaders.create({node:{frag:it.GLSL`
+`}}),Sh=106,Ph=["/images/shaders/live.dist.png"],Ih="Pink Live",qh=600,Dh=0,Ch=10,kh=20,Rh=1,Lh=64,Uh=({time:e})=>(0,it.jsx)(nt.Node,{shader:Fh.node,uniforms:{time:e,resolution:nt.Uniform.Resolution,image:"/images/shaders/live.dist.png"}}),Fh=nt.Shaders.create({node:{frag:nt.GLSL`
     precision highp float;
     varying vec2 uv;
     uniform vec2 resolution;
@@ -11959,7 +11959,7 @@ void main() {
       c += pal(scene(p));
       gl_FragColor = vec4(c, 1.0);
     }
-`}}),Fh=107,Mh="SDF fBM",Hh=360,jh=20,Th=36,Oh=16,Gh=1,_h=64,Bh=({time:e})=>(0,at.jsx)(it.Node,{shader:Nh.node,uniforms:{time:e,resolution:it.Uniform.Resolution}}),Nh=it.Shaders.create({node:{frag:it.GLSL`
+`}}),Mh=107,Hh="SDF fBM",Th=360,jh=20,Oh=36,Gh=16,_h=1,Bh=64,Nh=({time:e})=>(0,it.jsx)(nt.Node,{shader:Eh.node,uniforms:{time:e,resolution:nt.Uniform.Resolution}}),Eh=nt.Shaders.create({node:{frag:nt.GLSL`
     
 precision highp float;
 varying vec2 uv;
@@ -12163,7 +12163,7 @@ void main() {
   vec3 c = render();
   gl_FragColor = vec4(c, 1.0);
 }
-`}}),Eh=108,Ah=["/profile.jpg"],$h="Photo experiment 01",Qh=400,Kh=0,Zh=10,Vh=16,Wh=1,Xh=64,Jh=({time:e})=>(0,at.jsx)(it.Node,{shader:Yh.node,uniforms:{time:e,resolution:it.Uniform.Resolution,image:"/profile.jpg"}}),Yh=it.Shaders.create({node:{frag:it.GLSL`
+`}}),Ah=108,$h=["/profile.jpg"],Qh="Photo experiment 01",Kh=400,Zh=0,Vh=10,Wh=16,Xh=1,Yh=64,Jh=({time:e})=>(0,it.jsx)(nt.Node,{shader:ex.node,uniforms:{time:e,resolution:nt.Uniform.Resolution,image:"/profile.jpg"}}),ex=nt.Shaders.create({node:{frag:nt.GLSL`
 precision highp float;
 varying vec2 uv;
 uniform vec2 resolution;
@@ -12236,7 +12236,7 @@ void main() {
   c += pal(scene(p));
   gl_FragColor = vec4(c, 1.0);
 }
-`}}),ex=109,tx="Secure your cryptos",ox=360,rx=0,ax=4,ix=24,nx=1,cx=64,fx=({time:e})=>(0,at.jsx)(it.Node,{shader:sx.node,uniforms:{time:e,resolution:it.Uniform.Resolution,origin:[0,.8,-2]}}),sx=it.Shaders.create({node:{frag:it.GLSL`
+`}}),tx=109,ox="Secure your cryptos",rx=360,ax=0,ix=4,nx=24,cx=1,fx=64,sx=({time:e})=>(0,it.jsx)(nt.Node,{shader:lx.node,uniforms:{time:e,resolution:nt.Uniform.Resolution,origin:[0,.8,-2]}}),lx=nt.Shaders.create({node:{frag:nt.GLSL`
     
 precision highp float;
 varying vec2 uv;
@@ -12518,4 +12518,4 @@ void main() {
   vec3 c = render();
   gl_FragColor = vec4(c, 1.0);
 }
-`}}),lx=[r,a,i,n,c,f,s,l,p,v,u,m,d,h,x,g,y,b,z,w,S,P,I,q,k,D,C,R,L,U,F,M,H,j,T,O,G,_,B,N,E,A,$,Q,K,Z,V,W,X,J,Y,ee,te,oe,re,ae,ie,ne,ce,fe,se,le,pe,ve,ue,me,de,he,xe,ge,ye,be,ze,we,Se,Pe,Ie,qe,ke,De,Ce,Re,Le,Ue,Fe,Me,He,je,Te,Oe,Ge,_e,Be,Ne,Ee,Ae,$e,Qe,Ke,Ze,Ve,We,Xe,Je,Ye,et,tt,ot,rt];function px(){return lx}function vx(){let e=px();return e[e.length-1]}function ux(e){return px().find((t=>t.n===e))}}}]);
+`}});var px=o(1550),vx=o.n(px),ux=o(1664),mx=o(8841);const dx=110,hx="GNSP",xx="https://greweb.me/gnsp";function gx({width:e,height:t}){const{0:o,1:r}=(0,Pt.useState)((()=>Math.floor(2048*Math.random()))),a=(0,Pt.useRef)(),{opts:i,metadata:n}=(0,Pt.useMemo)((()=>(0,mx.generate)(o)),[o]);(0,Pt.useEffect)((()=>{const e=setInterval((()=>{r((e=>(e+1)%2048))}),8e3);return()=>clearInterval(e)}),[]),(0,Pt.useEffect)((()=>{const e=vx()(a.current);return(0,mx.art)(e,i,((e,t)=>t.time),(()=>{}),((e,t)=>{const o=document.createElement("canvas");return o.width=e,o.height=t,o}),(e=>(...t)=>e.fillText(...t)),(e=>({data:e,flipY:!0})),!1,!1,.25),()=>{e.destroy()}}),[o,i]);const c=window.devicePixelRatio||1;return(0,it.jsx)("div",{style:{position:"relative",width:e,height:t,boxSizing:"content-box"},children:(0,it.jsx)(ux.default,{href:"/gnsp/"+o,children:(0,it.jsxs)("a",{target:"_blank",children:[(0,it.jsxs)("p",{style:{position:"absolute",bottom:12,left:6,margin:0,color:"#444",fontWeight:300,fontSize:"10px"},children:[n.name," (",o+1," / 2048)"]}),(0,it.jsx)("canvas",{ref:a,width:Math.round(e*c),height:Math.round(t*c),style:{width:e,height:t}})]})})})}const yx=[r,a,i,n,c,f,s,l,p,v,u,m,d,h,x,g,y,b,z,w,S,P,I,q,D,C,k,R,L,U,F,M,H,T,j,O,G,_,B,N,E,A,$,Q,K,Z,V,W,X,Y,J,ee,te,oe,re,ae,ie,ne,ce,fe,se,le,pe,ve,ue,me,de,he,xe,ge,ye,be,ze,we,Se,Pe,Ie,qe,De,Ce,ke,Re,Le,Ue,Fe,Me,He,Te,je,Oe,Ge,_e,Be,Ne,Ee,Ae,$e,Qe,Ke,Ze,Ve,We,Xe,Ye,Je,et,tt,ot,rt,at];function bx(){return yx}function zx(){let e=bx();return e[e.length-1]}function wx(e){return bx().find((t=>t.n===e))}}}]);
