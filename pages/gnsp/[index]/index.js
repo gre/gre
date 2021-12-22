@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import regl from "regl";
 import Head from "next/head";
 import Link from "next/link";
@@ -12,6 +12,7 @@ import {
   art,
   generate,
 } from "../../../doodles/generative-nano-s-plus/dist/main";
+import useDimensions from "react-cool-dimensions";
 
 const all = Array(2048)
   .fill(null)
@@ -39,8 +40,8 @@ export async function getStaticProps({ params }) {
 
 function Render({ index, width, height }) {
   const ref = useRef();
+  const { opts, metadata } = useMemo(() => generate(index), [index]);
   useEffect(() => {
-    const { opts } = generate(index);
     console.log(opts);
     const c = regl(ref.current);
     const frameTime = (_, o) => o.time;
@@ -67,7 +68,7 @@ function Render({ index, width, height }) {
       0.25
     );
     return () => c.destroy();
-  }, [index]);
+  }, [opts, index]);
   const dpr =
     (typeof window !== "undefined" ? window.devicePixelRatio : null) || 1;
   return (
@@ -84,7 +85,21 @@ function Render({ index, width, height }) {
 }
 
 export default function Home({ index }) {
-  const { metadata } = generate(index);
+  const { metadata, opts } = generate(index);
+  const [width, setWidth] = useState(() =>
+    typeof window === "undefined" ? 0 : window.innerWidth
+  );
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+    function onResize() {
+      setWidth(window.innerWidth);
+    }
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+  const sz = Math.max(120, Math.min(width - 40, 400));
 
   const title = metadata.name;
 
@@ -114,8 +129,49 @@ export default function Home({ index }) {
       <Container>
         <Main>
           <Header>
-            <Title withBreadcrumb text={title} />
+            <h1
+              style={{
+                textAlign: "center",
+                margin: "0.4em 0",
+                fontSize: "1.5rem",
+              }}
+            >
+              <Link href="/">
+                <a>greweb.me</a>
+              </Link>
+              {" / "}
+              <Link href="/gnsp">
+                <a>GNSP</a>
+              </Link>
+              {" / "}'{opts.word}'
+            </h1>
           </Header>
+
+          <nav
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              width: "100%",
+            }}
+          >
+            {index <= 0 ? (
+              <span />
+            ) : (
+              <Link href={"/gnsp/" + (index - 1)}>
+                <a>prev</a>
+              </Link>
+            )}
+            <span>{index + 1} out of 2048</span>
+            {index >= 2047 ? (
+              <span />
+            ) : (
+              <Link href={"/gnsp/" + (index + 1)}>
+                <a>next</a>
+              </Link>
+            )}
+          </nav>
 
           <style jsx>{`
             .cta {
@@ -134,43 +190,44 @@ export default function Home({ index }) {
           `}</style>
 
           <Content>
-            <h3 style={{ padding: 0, marginTop: 0 }}>{metadata.name}</h3>
             <p>{metadata.description}</p>
-            <nav
+            <div
               style={{
                 display: "flex",
-                flexDirection: "row",
+                flexDirection: "column",
                 alignItems: "center",
-                justifyContent: "space-between",
-                padding: "10px 0",
               }}
             >
-              {index <= 0 ? (
-                <span />
-              ) : (
-                <Link href={"/gnsp/" + (index - 1)}>
-                  <a>prev</a>
-                </Link>
+              {typeof window === "undefined" ? null : (
+                <div
+                  style={{
+                    padding: 40,
+                    backgroundColor: metadata.background_color,
+                    display: "flex",
+                  }}
+                >
+                  <Render index={index} width={sz} height={sz} />
+                </div>
               )}
-              <span>{index + 1} out of 2048</span>
-              {index >= 2047 ? (
-                <span />
-              ) : (
-                <Link href={"/gnsp/" + (index + 1)}>
-                  <a>next</a>
+
+              <footer style={{ padding: "20px 0" }}>
+                <Link href="/gnsp">
+                  <a>See homepage explanation of GNSP</a>
                 </Link>
-              )}
-            </nav>
-            <Render index={index} width={640} height={640} />
-            <footer>
-              <pre>
-                <code>
-                  {metadata.attributes
-                    .map(({ trait_type, value }) => trait_type + ": " + value)
-                    .join("\n")}
-                </code>
-              </pre>
-            </footer>
+              </footer>
+
+              {/*
+              <footer>
+                <pre>
+                  <code>
+                    {metadata.attributes
+                      .map(({ trait_type, value }) => trait_type + ": " + value)
+                      .join("\n")}
+                  </code>
+                </pre>
+              </footer>
+              */}
+            </div>
           </Content>
         </Main>
       </Container>
