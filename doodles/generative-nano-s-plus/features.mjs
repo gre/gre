@@ -173,33 +173,81 @@ export function generate(index) {
     hasEmojis,
     hasEmojiSticker,
   };
+
+  const featuresBg = {
+    "Background Color": bgColor,
+  };
+  if (bgOrangeNoise) {
+    featuresBg["Background Noise"] = "Orange Noise";
+  } else if (bgNoise < 0.1) {
+    featuresBg["Background Noise"] = "None";
+  } else {
+    featuresBg["Background Noise"] =
+      bgNoise < 0.25 ? "Light" : bgNoise < 0.75 ? "Normal" : "Dense";
+    featuresBg["Background Radial"] = scoring(bgRadial, [
+      "None",
+      1,
+      "Minimal",
+      2,
+      "Small",
+      4,
+      "Medium",
+      8,
+      "High",
+      16,
+      "Important",
+    ]);
+    featuresBg["Background Frequency"] = scoring(bgNoiseFreq, [
+      "Low",
+      1,
+      "Medium",
+      2,
+      "High",
+      4,
+      "Very High",
+    ]);
+    featuresBg["Background Animation"] = scoring(bgNoiseMotion, [
+      "Very Low",
+      0.05,
+      "Low",
+      0.1,
+      "Medium",
+      0.25,
+      "High",
+      0.5,
+      "Very High",
+      1,
+      "Intense",
+    ]);
+  }
+
   const features = {
     Word: word,
     "Swivel Text": sentence,
+    "Swivel Mode": swivel,
     Sticker: sticker,
     Color: COLORS[color],
-    Background: bgColor,
-    "Background Noise": bgOrangeNoise ? "Orange Noise" : "",
-    "Swivel Plotted": swivelPlotted ? "Yes" : "No",
-    "Camera Motion Complex": motionComplex ? "Yes" : "No",
+    ...featuresBg,
     "Camera Motion": Motions.length === 0 ? "None" : Motions.join(" with "),
-    "Primary Motion": Motions[0],
-    "Secondary Motion": Motions[0],
-    "Screen Color": halfnegativeScreen
+    "Camera Motion Complex": motionComplex ? "Yes" : "No",
+    "Camera Primary Motion": Motions[0],
+    "Camera Secondary Motion": Motions[1],
+    "Nano Screen Color": halfnegativeScreen
       ? "half-negative"
       : negativeScreen
       ? "negative"
       : "normal",
-    "Screen Animation": screenAnimation
+    "Nano Screen Animation": screenAnimation
       ? "complex"
       : blinkingScreen
       ? "blinking"
       : scrollingScreen
       ? "scrolling"
       : "none",
-    Swivel: swivel,
-    "Buttons Animated": btnAnimate ? "Yes" : "No",
-    Emojis: hasEmojis ? "Yes" : "No",
+    "Plotted Swivel": swivelPlotted ? "Yes" : "No",
+    "Animated Buttons": btnAnimate ? "Yes" : "No",
+    "Includes Emojis": hasEmojis ? "Yes" : "No",
+    "Includes Emoji Sticker": hasEmojiSticker ? "Yes" : "No",
   };
   const attributes = [];
   for (let trait_type in features) {
@@ -216,7 +264,9 @@ export function generate(index) {
     name: `GNSP '${word}'`,
     description: `The collection has 2048 NFTs, one for each unique word in the BIP39 wordlist. '${word}' is the ${
       index + 1
-    }${index === 0 ? "st" : index === 1 ? "nd" : "th"} word of this wordlist.
+    }${
+      index === 0 ? "st" : index === 1 ? "nd" : index === 2 ? "rd" : "th"
+    } word of this wordlist.
 
 GNSP is short for Generative Nano S+ – Ledger's new hardware wallet – which this collection is celebrating. There are rarity aspects in the colors, background, animations and swivel engraved content.
 

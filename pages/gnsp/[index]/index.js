@@ -41,6 +41,7 @@ function Render({ index, width, height }) {
   const ref = useRef();
   useEffect(() => {
     const { opts } = generate(index);
+    console.log(opts);
     const c = regl(ref.current);
     const frameTime = (_, o) => o.time;
     const onFrame = () => {};
@@ -83,7 +84,7 @@ function Render({ index, width, height }) {
 }
 
 export default function Home({ index }) {
-  const { opts, metadata } = generate(index);
+  const { metadata } = generate(index);
 
   const title = metadata.name;
 
