@@ -60,13 +60,24 @@ function Render({ index, width, height }) {
           height,
           boxSizing: "content-box",
           transition: "1s border",
-          border: "10px solid " + metadata.background_color,
+          border: "40px solid " + metadata.background_color,
         }}
       >
         <Link href={"/gnsp/" + index}>
           <a target="_blank">
-            <p style={{ position: "absolute", top: 4, right: 4, margin: 0 }}>
-              <strong>{metadata.name}</strong> ({index + 1} / 2048)
+            <p
+              style={{
+                position: "absolute",
+                bottom: -20,
+                right: 0,
+                margin: 0,
+                width: "100%",
+                textAlign: "center",
+                color: "#444",
+                fontWeight: 300,
+              }}
+            >
+              {metadata.name} ({index + 1} / 2048)
             </p>
             <canvas
               ref={ref}
@@ -97,13 +108,13 @@ export default function Home() {
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, []);
-  const sz = Math.max(120, Math.min(width - 20, 400));
+  const sz = Math.max(120, Math.min(width - 80, 360));
 
   const [index, setIndex] = useState(() => Math.floor(2048 * Math.random()));
   useEffect(() => {
     const i = setInterval(() => {
       setIndex((i) => (i + 1) % 2048);
-    }, 4000);
+    }, 8000);
     return () => clearInterval(i);
   }, []);
   return (
@@ -152,29 +163,22 @@ export default function Home() {
           `}</style>
 
           <Content>
+            {typeof window === "undefined" ? null : (
+              <Render index={index} width={sz} height={sz} />
+            )}
+
             <p>
-              GNSP is a NFT collection of 2048 items, one for each unique word
-              in the BIP39 wordlist.
-            </p>
-            <p>
-              GNSP is short for Generative Nano S+ – Ledger's new hardware
-              wallet – which this collection is celebrating. There are rarity
-              aspects in the colors, background, animations and swivel engraved
-              content.
+              2048 items NFT collection, one per unique word in the BIP39
+              wordlist. GNSP is short for Generative Nano S+ – Ledger's new
+              hardware wallet – which this collection is celebrating. There are
+              rarity aspects in the colors, background, animations and swivel
+              engraved content.
             </p>
             <p>
               Using a hardware wallet is important to secure your crypto and
               secure your NFTs and making a NFT collection about it was for me a
               way to share this importance.
             </p>
-            <p>
-              You can see below a real time rendering (not a video!) of the NFTs
-              (randomly changing every 4 seconds). You can click on it if you
-              want to explore more on this website itself.
-            </p>
-            {typeof window === "undefined" ? null : (
-              <Render index={index} width={sz} height={sz} />
-            )}
 
             <h2>Distribution</h2>
 
@@ -187,8 +191,9 @@ export default function Home() {
             </p>
 
             <p>
-              The current minted collection is visible on
-              https://opensea.io/collection/gnsp
+              The collection is available on
+              <a href="https://opensea.io/collection/gnsp">OpenSea</a> but not
+              everything has been minted yet!
             </p>
 
             <h2>More content will be shared later</h2>

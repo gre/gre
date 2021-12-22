@@ -99,7 +99,7 @@ export default function Home({ index }) {
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, []);
-  const sz = Math.max(120, Math.min(width - 40, 400));
+  const sz = Math.max(120, Math.min(width - 80, 400));
 
   const title = metadata.name;
 
