@@ -29,10 +29,6 @@ export default function Home({ posts, plots }) {
   const siteURL = me.thumbnailDomain;
   const { title, description, thumbnail } = me;
 
-  const plotLoops = plots.filter((p) =>
-    p.data.tags?.some((t) => t === "plotloop")
-  );
-
   return (
     <Global>
       <Container>
@@ -138,58 +134,7 @@ export default function Home({ posts, plots }) {
                 <a href={`/shaderday/${days[0].n}`}>
                   <Visual width={300} height={300} Day={days[0]} />
                 </a>
-                {plotLoops.slice(0, 1).map((p) => (
-                  <a key={p.n} href={`/plots/${p.n}`}>
-                    <img
-                      src={p.data.thumbnail}
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                      }}
-                    />
-                  </a>
-                ))}
               </div>
-
-              <Link href="/plots/tags/plotloop">
-                <a
-                  style={{
-                    display: "block",
-                    textAlign: "center",
-                    padding: 10,
-                    textDecoration: "underline",
-                  }}
-                >
-                  {plotLoops.length - 1} more plot loops!
-                </a>
-              </Link>
-
-              <dt>
-                <Link href="/plots">
-                  <a>All plots...</a>
-                </Link>
-              </dt>
-              {plots.map((d) => (
-                <dd className="inline" key={d.key}>
-                  <Link href={`/plots/${d.n}`}>
-                    <a>{String(d.n)}</a>
-                  </Link>
-                </dd>
-              ))}
-
-              <dt>
-                <Link href="/shaderday">
-                  <a>All shaders...</a>
-                </Link>
-              </dt>
-              {days.map((d) => (
-                <dd className="inline" key={d.n}>
-                  <Link href={`/shaderday/${d.n}`}>
-                    <a>{String(d.n)}</a>
-                  </Link>
-                </dd>
-              ))}
 
               <dt>
                 <Link href="/posts">
@@ -232,6 +177,32 @@ export default function Home({ posts, plots }) {
                   {posts.length - 3} more blog posts
                 </a>
               </Link>
+
+              <dt>
+                <Link href="/plots">
+                  <a>All plots...</a>
+                </Link>
+              </dt>
+              {plots.map((d) => (
+                <dd className="inline" key={d.key}>
+                  <Link href={`/plots/${d.n}`}>
+                    <a>{String(d.n)}</a>
+                  </Link>
+                </dd>
+              ))}
+
+              <dt>
+                <Link href="/shaderday">
+                  <a>All shaders...</a>
+                </Link>
+              </dt>
+              {days.map((d) => (
+                <dd className="inline" key={d.n}>
+                  <Link href={`/shaderday/${d.n}`}>
+                    <a>{String(d.n)}</a>
+                  </Link>
+                </dd>
+              ))}
             </dl>
 
             <a
