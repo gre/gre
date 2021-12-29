@@ -235,12 +235,10 @@ float fOpIntersectionRound(float a, float b, float r) {
 float fOpDifferenceRound (float a, float b, float r) {
 	return fOpIntersectionRound(a, -b, r);
 }
-
 float opSmoothSubtraction( float d1, float d2, float k ) {
   float h = clamp( 0.5 - 0.5*(d2+d1)/k, 0.0, 1.0 );
   return mix( d2, -d1, h ) + k*h*(1.0-h);
 }
-
 float sdCylinder( vec3 p, vec3 c ) {
   return length(p.xz-c.xy)-c.z;
 }
@@ -249,11 +247,6 @@ float sdCappedCylinder( vec3 p, float h, float r )
   vec2 d = abs(vec2(length(p.xz),p.y)) - vec2(h,r);
   return min(max(d.x,d.y),0.0) + length(max(d,0.0));
 }
-float sdSegment (in vec3 p, in float L, in float R) {
-  p.y -= min(L, max(0.0, p.y));
-  return length(p) - R;
-}
-
 float sdBox( vec3 p, vec3 b ) {
   vec3 q = abs(p) - b;
   return length(max(q,0.0)) + min(max(q.x,max(q.y,q.z)),0.0);
@@ -502,10 +495,6 @@ ${
     return sticker_color;
   }
   return vec3(0.0);
-}
-
-float fOpUnionChamfer(float a, float b, float r) {
-	return min(min(a, b), (a - r + b)*sqrt(0.5));
 }
 
 // ref: 5mm -> 0.1
