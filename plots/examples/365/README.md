@@ -8,4 +8,4 @@ tags:
 
 Entry for https://genuary.art/ Jan.3 "Space"
 
-Packing circles with various shapes. A3 watercolor paper, fountain pen and Diamine Bloody Brexit ink.
+Packing circles with various shapes. A4 watercolor paper, fountain pen and Diamine Bloody Brexit ink.
