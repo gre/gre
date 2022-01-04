@@ -320,13 +320,13 @@ pub fn render_polygon_stroke(
     d
 }
 
-fn samples_polygon(
-    poly: Polygon<f64>,
+pub fn samples_polygon(
+    poly: &Polygon<f64>,
     samples: usize,
+    sz: usize,
     rng: &mut impl Rng,
 ) -> Vec<(f64, f64)> {
     let bounds = poly.bounding_rect().unwrap();
-    let sz = 32;
     let mut candidates = Vec::new();
     for x in 0..sz {
         for y in 0..sz {
@@ -474,7 +474,7 @@ pub fn render_polygon_fill_tsp(
     rng: &mut impl Rng,
     duration: Duration,
 ) -> Data {
-    let candidates = samples_polygon(poly, samples, rng);
+    let candidates = samples_polygon(&poly, samples, 32, rng);
     return render_tsp(data, candidates, duration);
 }
 
@@ -528,7 +528,7 @@ pub fn render_polygon_fill_spiral(
     samples: usize,
     rng: &mut impl Rng,
 ) -> Data {
-    let candidates = samples_polygon(poly, samples, rng);
+    let candidates = samples_polygon(&poly, samples, 32, rng);
     render_fill_spiral(data, candidates)
 }
 
