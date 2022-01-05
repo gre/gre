@@ -42,7 +42,7 @@ pub fn grayscale((r, g, b): (f64, f64, f64)) -> f64 {
 }
 
 pub fn lerp(a: f64, b: f64, x: f64) -> f64 {
-    (x - a) / (b - a)
+    if a == b { a } else { (x - a) / (b - a) }
 }
 
 pub fn smoothstep(a: f64, b: f64, x: f64) -> f64 {
