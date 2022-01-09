@@ -15,7 +15,7 @@
     if (typeof index !== "number" || isNaN(index)) {
       index = Math.floor(2048*Math.random());
     }
-    console.log(index)
+    index=-1
     const { opts, metadata } = generate(index);
     const frameTime = (_, o) => o.time;
     const onFrame = () => {};

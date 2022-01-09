@@ -380,12 +380,14 @@ vec3 lighting (HIT hit, vec3 p, vec3 n, vec3 dir) {
   l = vec3(0., 2., 8.);
   ldir = normalize(l - p);
   c += ${
-    bgColor === "White" || bgColor === "Black"
+    opts.word === "GNSP"
+      ? "Orange"
+      : bgColor === "White" || bgColor === "Black"
       ? opts.bgOrangeNoise
-        ? "Orange*"
-        : "0.3*"
-      : "0.8*"
-  }${bgColor} * (
+        ? "Orange*" + bgColor
+        : "0.3*" + bgColor
+      : "0.8*" + bgColor
+  } * (
   + obj
     * diffuse(p, n, l)
   + specular(n, p, hit.y, ldir, dir, 20.)
@@ -618,6 +620,7 @@ vec3 scene(vec2 uv) {
     opts.motionComplex ? `+cos(PI*${opts.motionComplex.toFixed(1)}*time)` : ""
   })
   );
+  ${opts.word === "GNSP" ? "origin.z -= 4.0;origin.y+=0.5;" : ""}
   vec3 p = origin;
 
   vec3 dir = normalize(vec3(uv - .5, 1.));
@@ -626,7 +629,7 @@ vec3 scene(vec2 uv) {
   HIT hit = marcher(p, dir);
   vec3 n = normal(p);
   c += lighting(hit, p, n, dir);
-  c = mix(c, sceneBgColor, pow(smoothstep(4., 10., length(p-origin)), .5));
+  c = mix(c, sceneBgColor, pow(smoothstep(8., 10., length(p-origin)), .5));
   return c;
 }
 vec3 render() {

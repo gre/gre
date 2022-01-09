@@ -31,20 +31,24 @@ function getMotion(axis, amp, acc) {
 
 export function generate(index) {
   const random = RNG(index + offsetSeed);
-  const word = WORDS[index];
-  const bgNoiseSeed = 9 * random();
-  const bgNoise = random() * random();
-  const bgNoiseFreq = 2 * random() + 0.1 / (0.005 + random());
+  const word = index < 0 ? "GNSP" : WORDS[index];
+  const bgNoiseSeed = index === -1 ? 1.8 : 9 * random();
+  const bgNoise = index === -1 ? 0.3 : random() * random();
+  const bgNoiseFreq =
+    index === -1 ? 8 : 2 * random() + 0.1 / (0.005 + random());
   const bgNoiseMotion =
-    random() * mix(bgNoise, 2 * random() * random(), random());
-  const bgRadial = random() / (0.001 + random());
-  let color = Math.floor(COLORS.length * random() * random());
+    index === -1
+      ? 0
+      : random() * mix(bgNoise, 2 * random() * random(), random());
+  const bgRadial = index === -1 ? 6 : random() / (0.001 + random());
+  let color =
+    index === -1 ? 0 : Math.floor(COLORS.length * random() * random());
   const motion = [0, 0, 0];
   const motionPhase = ["cos", "cos", "cos"];
   const motionAcc = [1, 1, 1];
   const lightPos = 8 * (random() - 0.5) * random();
   let Motions = [];
-  if (random() < 0.9) {
+  if (random() < 0.9 && index >= 0) {
     const axis1 = Math.floor(3 * random() * random());
     const axis2 = Math.floor(3 * random());
     let amp1 = 0.2 + 0.8 * random() * random();
@@ -70,7 +74,9 @@ export function generate(index) {
       ? 1 + Math.floor(2 * random() * random())
       : 0;
   const bgColor =
-    color < 2 && random() < 0.3
+    index === -1
+      ? "White"
+      : color < 2 && random() < 0.3
       ? random() < 0.7
         ? "Orange"
         : "Purple"
@@ -79,19 +85,23 @@ export function generate(index) {
       : "White";
 
   const bgOrangeNoise =
-    bgNoiseFreq > 1 && color < 2 && bgColor !== "Orange" && random() < 0.2;
-  if (bgColor === COLORS[color] && random() < 0.9) {
+    index === -1 ||
+    (bgNoiseFreq > 1 && color < 2 && bgColor !== "Orange" && random() < 0.2);
+  if (bgColor === COLORS[color] && random() < 0.9 && index >= 0) {
     color = (color + 1) % COLORS.length;
   }
   const negativeScreen = random() < 0.05;
   const halfnegativeScreen = random() < 0.005;
-  const swivelRotate = random() < 0.7;
+  const swivelRotate = index >= 0 && random() < 0.7;
   const slowSwivelRotate = random() < 0.2;
-  const scrollingScreen = swivelRotate ? random() < 0.05 : random() < 0.3;
+  const scrollingScreen =
+    index < 0 ? false : swivelRotate ? random() < 0.05 : random() < 0.3;
   const blinkingScreen =
-    !scrollingScreen && (swivelRotate ? random() < 0.03 : random() < 0.2);
+    index < 0
+      ? false
+      : !scrollingScreen && (swivelRotate ? random() < 0.03 : random() < 0.2);
   let swivelAngle = 5 * (random() - 0.5);
-  if (Math.abs(swivelAngle) < 0.6) {
+  if (Math.abs(swivelAngle) < 0.6 || index === -1) {
     swivelAngle = 0;
   }
   const swivel = swivelRotate
@@ -124,7 +134,9 @@ export function generate(index) {
   const btnAnimate = random() < 0.02 + (screenAnimation ? 0.2 : 0);
 
   let swivelPlotted =
-    random() < 0.1 ? [random(), random(), random(), random(), random()] : 0;
+    random() < 0.1 || index === -1
+      ? [random(), random(), random(), random(), random()]
+      : 0;
 
   if ((!sentence || random() < 0.01) && (swivelRotate || swivelAngle)) {
     const pick = emojis_array[Math.floor(emojis_array.length * random())];
@@ -180,14 +192,12 @@ export function generate(index) {
   if (bgOrangeNoise) {
     featuresBg["Background Noise"] = "Orange Noise";
   } else if (bgNoise < 0.1) {
-    featuresBg["Background Noise"] = "None";
+    featuresBg["Background Noise"] = undefined;
   } else {
     featuresBg["Background Noise"] =
       bgNoise < 0.25 ? "Light" : bgNoise < 0.75 ? "Normal" : "Dense";
     featuresBg["Background Radial"] = scoring(bgRadial, [
-      "None",
-      1,
-      "Minimal",
+      undefined,
       2,
       "Small",
       4,
@@ -197,58 +207,49 @@ export function generate(index) {
       16,
       "Important",
     ]);
-    featuresBg["Background Frequency"] = scoring(bgNoiseFreq, [
-      "Low",
-      1,
-      "Medium",
-      2,
-      "High",
-      4,
-      "Very High",
-    ]);
     featuresBg["Background Animation"] = scoring(bgNoiseMotion, [
-      "Very Low",
-      0.05,
-      "Low",
+      undefined,
       0.1,
       "Medium",
-      0.25,
+      0.3,
       "High",
-      0.5,
-      "Very High",
-      1,
+      0.8,
       "Intense",
     ]);
   }
 
   const features = {
-    Word: word,
     "Swivel Text": sentence,
     "Swivel Mode": swivel,
     Sticker: sticker,
+    Screen: [
+      halfnegativeScreen
+        ? "half-negative"
+        : negativeScreen
+        ? "negative"
+        : undefined,
+      screenAnimation
+        ? "complex"
+        : blinkingScreen
+        ? "blinking"
+        : scrollingScreen
+        ? "scrolling"
+        : undefined,
+    ]
+      .filter(Boolean)
+      .join(" and "),
     Color: COLORS[color],
     ...featuresBg,
-    "Camera Motion": Motions.length === 0 ? "None" : Motions.join(" with "),
-    "Camera Motion Complex": motionComplex ? "Yes" : "No",
-    "Camera Primary Motion": Motions[0],
-    "Camera Secondary Motion": Motions[1],
-    "Nano Screen Color": halfnegativeScreen
-      ? "half-negative"
-      : negativeScreen
-      ? "negative"
-      : "normal",
-    "Nano Screen Animation": screenAnimation
-      ? "complex"
-      : blinkingScreen
-      ? "blinking"
-      : scrollingScreen
-      ? "scrolling"
-      : "none",
-    "Plotted Swivel": swivelPlotted ? "Yes" : "No",
-    "Animated Buttons": btnAnimate ? "Yes" : "No",
-    "Includes Emojis": hasEmojis ? "Yes" : "No",
-    "Includes Emoji Sticker": hasEmojiSticker ? "Yes" : "No",
+    "Camera Motion": Motions.length === 0 ? undefined : Motions.join(" with "),
+    "Complex Motion": motionComplex ? "Yes" : undefined,
   };
+
+  if (swivelPlotted) {
+    features["Plotted Swivel"] = "Yes";
+  }
+  if (btnAnimate) {
+    features["Animated Buttons"] = "Yes";
+  }
   const attributes = [];
   for (let trait_type in features) {
     const value = features[trait_type];
