@@ -3,7 +3,7 @@ use gre::*;
 use svg::node::element::path::Data;
 use svg::node::element::*;
 
-fn art(opts: Opts) -> Vec<Group> {
+fn art(_opts: Opts) -> Vec<Group> {
     let width = 210.0;
     let height = 297.0;
     let pad = 10.0;

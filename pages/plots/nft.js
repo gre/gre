@@ -207,13 +207,13 @@ export default function Home({ tag }) {
                   }}
                 >
                   <Choice title="for Ethereum NFTs">
-                    <Price>0.02 ETH</Price> to{" "}
+                    <Price>0.04 ETH</Price> to{" "}
                     <Address real="0x68db7D679969f265b14BA8A495E4028360AD6759">
                       greweb.eth
                     </Address>
                   </Choice>
                   <Choice title="for Tezos NFTs">
-                    <Price>15 tez</Price> to{" "}
+                    <Price>25 tez</Price> to{" "}
                     <Address real="tz1cgQAQfECg5bPASYTMyJ9QJQjSUi8rfL67">
                       greweb.tez
                     </Address>
