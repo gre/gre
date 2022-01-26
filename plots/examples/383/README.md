@@ -1,5 +1,5 @@
 ---
-title: "Fire sand"
+title: "Skyscrapers"
 thumbnail: /images/plots/383.jpg
 sourceFolder: 372
 ---
