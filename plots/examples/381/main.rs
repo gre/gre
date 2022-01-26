@@ -1,5 +1,3 @@
-use std::cmp::Ordering;
-
 use clap::Clap;
 use gre::*;
 use rand::prelude::*;
@@ -32,12 +30,6 @@ impl VCircle {
     }
     fn collides(self: &Self, c: &VCircle) -> bool {
         self.dist(c) <= 0.0
-    }
-    fn contains(self: &Self, c: &VCircle) -> bool {
-        euclidian_dist((self.x,self.y), (c.x, c.y)) - self.r + c.r < 0.0
-    }
-    fn includes(self: &Self, p: (f64, f64)) -> bool {
-        euclidian_dist((self.x,self.y), (p.0, p.1)) - self.r < 0.0
     }
 }
 

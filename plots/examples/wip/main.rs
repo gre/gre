@@ -1,5 +1,3 @@
-use std::f64::consts::PI;
-
 use clap::Clap;
 use gre::*;
 use noise::*;
@@ -20,25 +18,19 @@ fn art(opts: Opts) -> Vec<Group> {
         let mut data = Data::new();
         let perlin = Perlin::new();
         let mut rng = rng_from_seed(opts.seed);
-        // TODO(9) avoid any point outside the boundaries
-        // TODO(8) dedup points
-        // TODO(4) colors?
-        // TODO(2) center the general shape
-        // IDEA(6) one axis (e.g. distance to bottom) can lead the "blurryness"
-        // IDEA(6) feedback loop
-        // IDEA(6) reverse the randomness to have negative version
-        // IDEA(6) use diff color on distance to diff noise. color 0 near 0, color 1 near 1
-        // IDEA(6) orient the stroke following a path.
-        // IDEA(6) try different stroke lines. (variable on diff places possibly)
-        // TODO(3) group points by chunk of <path> (optim for inkscape plugin)
+        // OFF TODO(8) dedup points
+        // OFF TODO(2) center the general shape
+        // OFF TODO(9) avoid any point outside the boundaries
+        // WIP IDEA(6) one axis (e.g. distance to bottom / center) can lead the "blurryness"
+        // OFF TODO(3) group points by chunk of <path> (optim for inkscape plugin)
         let xdivider = rng.gen_range(1000.0, 3000.0);
         let ydivider = 0.9 * xdivider;
-        let cidiv = ci as f64 / 77.;
+        let cidiv = ci as f64 / 99.;
         
-        for i in 0..50000 {
+        let f = |i, ampx, ampy| {
           let x = width / 2.0 + r * perlin.get([
             i as f64 / xdivider,
-            9.7 + perlin.get([
+            9.7 + ampx * perlin.get([
               5.7 + 3.4 * opts.seed,
               i as f64 / 7.2934
             ]),
@@ -46,15 +38,23 @@ fn art(opts: Opts) -> Vec<Group> {
           ]);
           let y = height / 2.0 + r * perlin.get([
             i as f64 / ydivider,
-            7.3 + 0.005 * perlin.get([
+            7.3 + ampy * perlin.get([
               5.7 + 3.4 * opts.seed,
               i as f64 / 88.2934
             ]),
             7.7 - opts.seed / 11. + cidiv
           ]);
-          data = data.move_to((x,y));
-          let angle = rng.gen_range(0.0, 2.0 * PI);
-          let amp = 1.0;
+          (x, y)
+        };
+
+        for i in 0..40000 {
+          let p = f(i, 0.0, 0.0);
+          let dist = euclidian_dist(p, (width / 2., height / 2.));
+          let amp = 0.5 + 1.5 * (2. * dist / width).powf(2.0);
+          let (x, y) = f(i, amp, 0.1 * amp);
+          data = data.move_to((x, y));
+          let angle = (x-width/2.).atan2(y-height/2.) + rng.gen_range(-0.5, 0.5);
+          let amp = rng.gen_range(1.0, 2.0);
           data = data.line_to((
             x + amp * angle.cos(),
             y + amp * angle.sin()
