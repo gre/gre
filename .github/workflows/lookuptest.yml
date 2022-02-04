@@ -9,7 +9,11 @@ jobs:
   run:
     runs-on: ubuntu-latest
     steps:
-      - name: test
+      - name: set envs
         env:
-          T: ${{ ${{ format('secrets.TEST{0}', github.event.inputs.value) }} }}
-        run: echo $T
+          value: ${{ github.event.inputs.value }}
+          TEST0: ${{ secrets.TEST0 }}
+          TEST1: ${{ secrets.TEST1 }}
+        run: echo "export T=TEST${value}" > env.sh
+      - name: test
+        run: . env.sh; echo $T
