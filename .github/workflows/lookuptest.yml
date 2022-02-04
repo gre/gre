@@ -12,4 +12,4 @@ jobs:
       - name: test
         env:
           T: ${{ secrets[format('TEST{0}', github.event.inputs.value)] }}
-        run: . env.sh; echo $T
+        run: echo $T
