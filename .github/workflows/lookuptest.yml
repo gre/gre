@@ -11,5 +11,5 @@ jobs:
     steps:
       - name: test
         env:
-          T: ${{ format('secrets.TEST{0}', github.event.inputs.value) }}
+          T: ${{ ${{ format('secrets.TEST{0}', github.event.inputs.value) }} }}
         run: echo $T
