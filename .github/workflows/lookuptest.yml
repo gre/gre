@@ -11,9 +11,9 @@ jobs:
     steps:
       - name: set envs
         env:
-          value: ${{ github.event.inputs.value }}
-          TEST0: ${{ secrets.TEST0 }}
-          TEST1: ${{ secrets.TEST1 }}
-        run: echo "export T=TEST${value}" > env.sh
+          VALUE: ${{ github.event.inputs.value }}
+          SECRETS: ${{ secrets }}
+        run: |
+         node -e "console.log('export T=\"'+JSON.parse(process.env.SECRETS)['TEST'+process.env.VALUE]+'\"')" > env.sh
       - name: test
         run: . env.sh; echo $T
