@@ -11,7 +11,7 @@ import {
 } from "../../../../components/HighlightAll";
 
 export async function getStaticPaths() {
-  const posts = await getAllPosts();
+  const posts = await getAllPosts(true);
   const paths = posts.map(({ year, month, slug }) => ({
     params: {
       year,
