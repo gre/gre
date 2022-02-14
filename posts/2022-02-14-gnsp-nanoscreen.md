@@ -1,13 +1,13 @@
 ---
 title: "GNSP – the Nano screen rendering"
 thumbnail: /images/2022/gnsp/screen-thumbnail.png
-description: ""
+description: "This third article reveals the technique used to render the screen display itself."
 tags:
   - NFT
 ---
 
 
-This third article (in a series of 7 articles) reveals the technique used to render the screen itself.
+This third article (in a series of 7 articles) reveals the technique used to render the screen display itself.
 
 <video muted loop autoplay controls src="/images/2021/12/gnsp/419.mp4" width="50%" style="float:left; margin-right: 40px; margin-bottom:20px"></video>
 
