@@ -23,7 +23,9 @@ export function Visual({ Day, width, height }) {
   if (Day.Render) return <Day.Render width={width} height={height} />;
   return !Day.Shader ? null : (
     <>
-      <Surface width={width || 400} height={height || 400}></Surface>
+      <Surface width={width || 400} height={height || 400}>
+        <Refresh key={Day.n} Day={Day} n={n} />
+      </Surface>
       {null && (
         <input
           style={{ margin: 10 }}

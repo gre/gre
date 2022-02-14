@@ -35,8 +35,8 @@ Object.keys(keys)
               v.length +
               " = " +
               ((100 * v.length) / all.length).toFixed(1) +
-              "%\n" +
-              v.join(" ")
+              "%" /* +
+              v.join(" ")*/
           )
           .join("\n")
     );
