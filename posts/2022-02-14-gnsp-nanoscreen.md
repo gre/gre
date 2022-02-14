@@ -1,6 +1,6 @@
 ---
 title: "GNSP – the Nano screen rendering"
-thumbnail: /images/2022/02/screen-thumbnail.png
+thumbnail: /images/2022/gnsp/screen-thumbnail.png
 description: ""
 tags:
   - NFT
