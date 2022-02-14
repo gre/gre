@@ -1,21 +1,21 @@
 ---
-title: "GNSP – the 3D distance to a Nano S+"
+title: "GNSP – the 3D distance to a Nano S Plus"
 thumbnail: /images/2021/12/gnsp/glitch.png
-description: "This second article (in a series of 7 articles) reveals the technique used to 3D render the Generative Nano S+ collection: using a GLSL fragment shader, without any 3D model, but with raymarching distance function technique."
+description: "This second article (in a series of 7 articles) reveals the technique used to 3D render the Generative Nano S Plus collection: using a GLSL fragment shader, without any 3D model, but with raymarching distance function technique."
 tags:
   - NFT
 ---
 
 
-This second article (in a series of 7 articles) reveals the technique used to 3D render the Generative Nano S+ collection: using a GLSL fragment shader, without any 3D model, raymarching a calculated distance to a Nano S+.
+This second article (in a series of 7 articles) reveals the technique used to 3D render the Generative Nano S Plus collection: using a GLSL fragment shader, without any 3D model, raymarching a calculated distance to a Nano S Plus.
 
 <video muted loop autoplay controls src="/images/2021/12/gnsp/509model.mp4" width="50%" style="float:left; margin-right: 40px; margin-bottom:20px"></video>
 
 **Timeline:**
 
 - [article 1: GNSP – the concept](/2021/12/gnsp)
-- [**article 2: the 3D distance to a Nano S+**](/2021/12/gnsp-raymarching)
-- article 3: the nano screen
+- [**article 2: the 3D distance to a Nano S Plus**](/2021/12/gnsp-raymarching)
+- [article 3: the nano screen](/2022/02/nanoscreen)
 - article 4: the swivel
 - article 5: the background
 - article 6: the video generation
@@ -73,9 +73,9 @@ HIT map (vec3 position) {
 }
 ```
 
-## The 3D distance to a Nano S+
+## The 3D distance to a Nano S Plus
 
-Essentially, a Nano S+ can be rendered with a bunch of union, difference and intersection math operations. Here are the basic utilities I used:
+Essentially, a Nano S Plus can be rendered with a bunch of union, difference and intersection math operations. Here are the basic utilities I used:
 
 ```glsl
 // SHAPE PRIMITIVES:
@@ -121,17 +121,17 @@ void pR(inout vec2 p, float a) {
 This code might seems complex, but it's relatively simple primitives, some are from this great article: https://iquilezles.org/www/articles/distfunctions/distfunctions.htm
 
 
-With these utilities, I have developed that function called `sdLedgerNanoSPlus`, that implements the **distance to a Nano S+**:
+With these utilities, I have developed that function called `sdLedgerNanoSPlus`, that implements the **distance to a Nano S Plus**:
 
 `HIT sdLedgerNanoSPlus (vec3 p, float rot)`
 
 Knowing the "space distance to an object" allows to use a raymarching algorithm to render it in 3D.
 
 The function takes two parameters `p` and `rot`:
-- `p` is the 3D point from which to evaluate the distance. If the Nano S+ is at 1 meter away from the Nano S+, it must return a value of 1 meter. as simple as this.
+- `p` is the 3D point from which to evaluate the distance. If the Nano S Plus is at 1 meter away from the Nano S Plus, it must return a value of 1 meter. as simple as this.
 - `rot` allows for me to control the rotation of the swivel, so it can be animated from the caller.
 
-The function returns one `HIT` value. `HIT` is a simple alias to `vec2`, which actually allows me to return a tuple of two values: `(distance, material)`. On top of the distance, I need to track what is the "closest material". Basically answering the question: from the point `p` what is the part of the Nano S+ that is the closest? For instance, the swivel, the plastic part, the screen,...
+The function returns one `HIT` value. `HIT` is a simple alias to `vec2`, which actually allows me to return a tuple of two values: `(distance, material)`. On top of the distance, I need to track what is the "closest material". Basically answering the question: from the point `p` what is the part of the Nano S Plus that is the closest? For instance, the swivel, the plastic part, the screen,...
 
 > I was able to take precise measurements from some wireframes of the actual device and tried to make it as close as possible, transposed into code.
 
