@@ -10,7 +10,7 @@ export function Header({ children }) {
           display: flex;
           flex-direction: column;
           align-items: center;
-          font-size: 20px;
+          font-size: 16px;
         }
       `}</style>
     </>

@@ -13,6 +13,8 @@ import { getAllPosts } from "../posts";
 import { getPlots } from "../plots";
 import me from "../me";
 
+const projects2021 = [];
+
 export async function getStaticProps() {
   const posts = await getAllPosts();
   const plots = await getPlots();
@@ -91,6 +93,10 @@ export const CarouselPlots = ({ plots }) => {
   );
 };
 
+export const HighlightProjects = ({ projects }) => {
+  return null;
+};
+
 export const HighlightShader = ({ day }) => {
   return (
     <>
@@ -124,7 +130,7 @@ export const HighlightShader = ({ day }) => {
           display: "flex",
         }}
       >
-        <Visual width={592} height={592} Day={day} />
+        <Visual width={592} height={300} Day={day} />
       </a>
     </>
   );
@@ -159,7 +165,7 @@ export default function Home({ posts, plots }) {
         <Main>
           <style jsx>{`
             blockquote {
-              max-width: 420px;
+              max-width: 440px;
               font-weight: 300;
               opacity: 0.5;
             }
@@ -187,6 +193,7 @@ export default function Home({ posts, plots }) {
               margin: 50px 0;
             }
             .subtitle {
+              font-size: 24px;
               font-weight: 300;
             }
             .subtitle strong {
@@ -217,9 +224,9 @@ export default function Home({ posts, plots }) {
             </div>
             <blockquote>{description}</blockquote>
             <p className="subtitle">
-              <strong>greweb.me</strong> have{" "}
+              <strong>greweb.me</strong> ={" "}
               <a href="/plots">{plots.length} plots</a>,{" "}
-              <a href="/shaderday">{days.length} shaders</a> and{" "}
+              <a href="/shaderday">{days.length} shaders</a>,{" "}
               <a href="/posts">{posts.length} blog posts</a>.
             </p>
           </Header>
@@ -230,46 +237,37 @@ export default function Home({ posts, plots }) {
             <section>
               <HighlightShader day={days.find((d) => d.n === 102)} />
             </section>
+            <section>
+              <h2>
+                <Link href="/posts">
+                  <a>Recent blog posts</a>
+                </Link>
+              </h2>
 
-            <h2>
-              <Link href="/posts">
-                <a>Latest blog posts</a>
-              </Link>
-            </h2>
-
-            {posts.slice(0, 3).map((p, i) => (
-              <div
-                key={i}
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                }}
-              >
-                <img
-                  src={p.data.thumbnail}
-                  alt=""
-                  style={{ width: 150, height: 150, objectFit: "cover" }}
-                />
-                <div style={{ padding: 10 }}>
-                  <Link href={`/${p.year}/${p.month}/${p.slug}`}>
-                    <a>
-                      <strong>{p.data.title}</strong>
-                    </a>
-                  </Link>
-                  <p>{p.data.description}</p>
-                </div>
-              </div>
-            ))}
-
-            <a
-              className="twitter-timeline"
-              href="https://twitter.com/greweb?ref_src=twsrc%5Etfw"
-            ></a>
-            <script
-              async
-              src="https://platform.twitter.com/widgets.js"
-              charSet="utf-8"
-            ></script>
+              {posts.slice(0, 12).map((p, i) => (
+                <Link key={i} href={`/${p.year}/${p.month}/${p.slug}`}>
+                  <a>
+                    <img
+                      src={p.data.thumbnail}
+                      alt=""
+                      style={{ width: 200, height: 200, objectFit: "cover" }}
+                    />
+                  </a>
+                </Link>
+              ))}
+            </section>
+            {
+              null /*
+            <section>
+              <h2>2022 projects</h2>
+              <HighlightProjects projects={projects2021} />
+            </section>
+            <section>
+              <h2>2021 projects</h2>
+              <HighlightProjects projects={projects2021} />
+            </section>
+              */
+            }
           </div>
         </Main>
       </Container>

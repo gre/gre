@@ -1,7 +1,6 @@
 export default {
   title: "greweb.me",
-  description:
-    "I explore generative art with shaders and plotting with fountain pens.",
+  description: "generative art, shaders, plotting with fountain pens",
   thumbnail: "/profile.jpg",
   thumbnailDomain: "http://greweb.me",
   siteDomain: "https://greweb.me",
@@ -31,16 +30,22 @@ export default {
       text: "greweb",
     },
     {
+      id: "fxhash",
+      url: "https://fxhash.xyz/u/greweb",
+      icon: "/icons/tz.svg",
+      text: "fxhash.xyz",
+    },
+    {
+      id: "objkt",
+      url: "https://objkt.com/profile/tz1cgQAQfECg5bPASYTMyJ9QJQjSUi8rfL67",
+      icon: "/icons/tz.svg",
+      text: "objkt.com",
+    },
+    {
       id: "itch.io",
       url: "https://greweb.itch.io",
       icon: "/icons/iconmonstr-gamepad-3.svg",
-      text: "greweb.itch.io",
-    },
-    {
-      id: "hicetnunc",
-      url: "https://hic.link/greweb",
-      icon: "/icons/hic.svg",
-      text: "hic.link/greweb",
+      text: "greweb games",
     },
   ],
 };
