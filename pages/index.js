@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
+import sample from "lodash/sample";
 import { Leva } from "leva";
-import { Title } from "../components/Title";
 import { Container } from "../components/Container";
 import { Global } from "../components/Global";
 import { Main } from "../components/Main";
@@ -20,6 +20,115 @@ export async function getStaticProps() {
     props: { posts, plots },
   };
 }
+
+export const CarouselPlots = ({ plots }) => {
+  const [plot, setPlot] = useState(plots[0]);
+  const [nonce, setNonce] = useState(0);
+  const [prog, setProg] = useState(0);
+  useEffect(() => {
+    const all = plots.filter((p) => p.data.thumbnail);
+    setPlot(nonce < 9 ? all[nonce] : sample(all));
+  }, [plots, nonce]);
+  useEffect(() => {
+    const start = Date.now();
+    const delay = 5000;
+    const i = setInterval(() => {
+      const p = (Date.now() - start) / delay;
+      if (p > 1) {
+        clearInterval(i);
+        setNonce((n) => n + 1);
+      } else {
+        setProg(p);
+      }
+    }, 50);
+    return () => clearInterval(i);
+  }, [plot]);
+
+  return (
+    <>
+      <style jsx>{`
+        h2 {
+          padding: 0;
+          margin: 0;
+        }
+      `}</style>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <h2>
+          <a href="/plots">Plots</a>
+        </h2>
+        <a href={`/plots/${plot.n}`}>
+          #{plot.n} – {plot.data.title}
+        </a>
+      </div>
+      <div
+        style={{
+          background: "#000",
+          height: 1,
+          margin: "4px 0px 0px 0px",
+          boxSizing: "border-box",
+          width: (prog * 100).toFixed(2) + "%",
+        }}
+      />
+      <a href={`/plots/${plot.n}`}>
+        <img
+          src={plot.data.thumbnail}
+          style={{
+            width: "100%",
+            height: 600,
+            objectFit: "cover",
+            border: "4px #000 solid",
+          }}
+        />
+      </a>
+    </>
+  );
+};
+
+export const HighlightShader = ({ day }) => {
+  return (
+    <>
+      <style jsx>{`
+        h2 {
+          padding: 0;
+          margin: 0;
+          margin-bottom: 5px;
+        }
+      `}</style>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <h2>
+          <a href="/shaderday">Highlighted Shader</a>
+        </h2>
+        <a href={`/shaderday/${day.n}`}>
+          #{day.n} – {day.title}
+        </a>
+      </div>
+      <a
+        href={`/shaderday/${day.n}`}
+        style={{
+          border: "4px solid black",
+          boxSizing: "border-box",
+          display: "flex",
+        }}
+      >
+        <Visual width={592} height={592} Day={day} />
+      </a>
+    </>
+  );
+};
 
 export default function Home({ posts, plots }) {
   const days = getDays()
@@ -50,23 +159,9 @@ export default function Home({ posts, plots }) {
         <Main>
           <style jsx>{`
             blockquote {
-              max-width: 500px;
-            }
-            dl {
-            }
-            dt {
-              margin-top: 1.6em;
-              margin-bottom: 0.8em;
-              font-weight: bold;
-            }
-            dd.inline {
-              display: inline;
-            }
-            dd.inline + dd.inline {
-              margin: 0;
-            }
-            dd.inline + dd.inline:before {
-              content: ", ";
+              max-width: 420px;
+              font-weight: 300;
+              opacity: 0.5;
             }
             .social {
               padding: 0px;
@@ -87,9 +182,19 @@ export default function Home({ posts, plots }) {
             }
             .content {
               max-width: 600px;
-              padding-top: 10px;
-              margin-top: 10px;
-              border-top: 4px solid #000;
+            }
+            section {
+              margin: 50px 0;
+            }
+            .subtitle {
+              font-weight: 300;
+            }
+            .subtitle strong {
+              font-weight: 800;
+            }
+            .subtitle a {
+              font-weight: 400;
+              text-decoration: underline;
             }
           `}</style>
 
@@ -111,99 +216,50 @@ export default function Home({ posts, plots }) {
               </div>
             </div>
             <blockquote>{description}</blockquote>
-            <Title text="greweb.me" />
+            <p className="subtitle">
+              <strong>greweb.me</strong> have{" "}
+              <a href="/plots">{plots.length} plots</a>,{" "}
+              <a href="/shaderday">{days.length} shaders</a> and{" "}
+              <a href="/posts">{posts.length} blog posts</a>.
+            </p>
           </Header>
           <div className="content">
-            <dl>
-              <dt>Latest work</dt>
+            <section>
+              <CarouselPlots plots={plots} />
+            </section>
+            <section>
+              <HighlightShader day={days.find((d) => d.n === 102)} />
+            </section>
+
+            <h2>
+              <Link href="/posts">
+                <a>Latest blog posts</a>
+              </Link>
+            </h2>
+
+            {posts.slice(0, 3).map((p, i) => (
               <div
+                key={i}
                 style={{
                   display: "flex",
-                  flexFlow: "row wrap",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  lineHeight: 0,
+                  flexDirection: "row",
                 }}
               >
-                <a href={`/plots/${plots[0].n}`}>
-                  <img
-                    src={plots[0].data.thumbnail}
-                    style={{ width: 300, height: 300, objectFit: "cover" }}
-                  />
-                </a>
-                <a href={`/shaderday/${days[0].n}`}>
-                  <Visual width={300} height={300} Day={days[0]} />
-                </a>
-              </div>
-
-              <dt>
-                <Link href="/posts">
-                  <a>Latest blog posts</a>
-                </Link>
-              </dt>
-
-              {posts.slice(0, 3).map((p, i) => (
-                <div
-                  key={i}
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                  }}
-                >
-                  <img
-                    src={p.data.thumbnail}
-                    alt=""
-                    style={{ width: 150, height: 150, objectFit: "cover" }}
-                  />
-                  <div style={{ padding: 10 }}>
-                    <Link href={`/${p.year}/${p.month}/${p.slug}`}>
-                      <a>
-                        <strong>{p.data.title}</strong>
-                      </a>
-                    </Link>
-                    <p>{p.data.description}</p>
-                  </div>
+                <img
+                  src={p.data.thumbnail}
+                  alt=""
+                  style={{ width: 150, height: 150, objectFit: "cover" }}
+                />
+                <div style={{ padding: 10 }}>
+                  <Link href={`/${p.year}/${p.month}/${p.slug}`}>
+                    <a>
+                      <strong>{p.data.title}</strong>
+                    </a>
+                  </Link>
+                  <p>{p.data.description}</p>
                 </div>
-              ))}
-              <Link href="/posts">
-                <a
-                  style={{
-                    display: "block",
-                    textAlign: "center",
-                    padding: 10,
-                    textDecoration: "underline",
-                  }}
-                >
-                  {posts.length - 3} more blog posts
-                </a>
-              </Link>
-
-              <dt>
-                <Link href="/plots">
-                  <a>All plots...</a>
-                </Link>
-              </dt>
-              {plots.map((d) => (
-                <dd className="inline" key={d.key}>
-                  <Link href={`/plots/${d.n}`}>
-                    <a>{String(d.n)}</a>
-                  </Link>
-                </dd>
-              ))}
-
-              <dt>
-                <Link href="/shaderday">
-                  <a>All shaders...</a>
-                </Link>
-              </dt>
-              {days.map((d) => (
-                <dd className="inline" key={d.n}>
-                  <Link href={`/shaderday/${d.n}`}>
-                    <a>{String(d.n)}</a>
-                  </Link>
-                </dd>
-              ))}
-            </dl>
+              </div>
+            ))}
 
             <a
               className="twitter-timeline"

@@ -6,10 +6,11 @@ export function Header({ children }) {
       <header>{children}</header>
       <style jsx>{`
         header {
-          padding: 1rem 0;
+          margin: 1rem 0;
           display: flex;
           flex-direction: column;
           align-items: center;
+          font-size: 20px;
         }
       `}</style>
     </>

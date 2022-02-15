@@ -1,7 +1,7 @@
 export default {
   title: "greweb.me",
   description:
-    "creative coder experimenting with GLSL shaders, Rust, and fountain pens robot plots. infinite noise explorer.",
+    "I explore generative art with shaders and plotting with fountain pens.",
   thumbnail: "/profile.jpg",
   thumbnailDomain: "http://greweb.me",
   siteDomain: "https://greweb.me",

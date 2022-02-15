@@ -18,12 +18,12 @@ const Refresh = ({ Day, ...rest }) => {
   return <Day.Shader time={time} {...rest} />;
 };
 
-export function Visual({ Day, width, height }) {
+export function Visual({ Day, width, height, style }) {
   const [n, setN] = useState(0);
   if (Day.Render) return <Day.Render width={width} height={height} />;
   return !Day.Shader ? null : (
     <>
-      <Surface width={width || 400} height={height || 400}>
+      <Surface width={width || 400} height={height || 400} style={style}>
         <Refresh key={Day.n} Day={Day} n={n} />
       </Surface>
       {null && (
