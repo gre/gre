@@ -190,6 +190,17 @@ pub fn base_a4_landscape(bg: &str) -> Document {
         .set("height", "210mm")
         .set("style", format!("background:{}", bg))
 }
+pub fn base_a4_square(bg: &str) -> Document {
+    Document::new()
+        .set(
+            "xmlns:inkscape",
+            "http://www.inkscape.org/namespaces/inkscape",
+        )
+        .set("viewBox", (0, 0, 210, 210))
+        .set("width", "210mm")
+        .set("height", "210mm")
+        .set("style", format!("background:{}", bg))
+}
 
 pub fn base_a5_landscape(bg: &str) -> Document {
     Document::new()
