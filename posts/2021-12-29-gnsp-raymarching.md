@@ -15,8 +15,8 @@ This second article (in a series of 7 articles) reveals the technique used to 3D
 
 - [article 1: GNSP – the concept](/2021/12/gnsp)
 - [**article 2: the 3D distance to a Nano S Plus**](/2021/12/gnsp-raymarching)
-- [article 3: the nano screen](/2022/02/nanoscreen)
-- article 4: the swivel
+- [article 3: the nano screen](/2022/02/gnsp-nanoscreen)
+- [article 4: the swivel](/2022/02/gnsp-swivel)
 - article 5: the background
 - article 6: the video generation
 - article 7: the final drop

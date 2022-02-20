@@ -25,7 +25,7 @@ pub struct Opts {
 
 
 pub fn art(opts: &Opts) -> Vec<Group> {
-    let samples = 60;
+    let samples = 50;
 
     let width = 210.0;
     let height = 297.0;
@@ -75,17 +75,17 @@ pub fn art(opts: &Opts) -> Vec<Group> {
               );
               s = op_union_round(s, sdf_box2(p, dim), k);
             }
-            let f1 = rng.gen_range(4.0, 6.0);
-            let f3 = rng.gen_range(5.0, 9.0);
+            let f1 = rng.gen_range(3.0, 5.0) + 0.1 * opts.seed1;
+            let f3 = rng.gen_range(4.0, 8.0) + 0.1 * opts.seed2;
             let a1 = 0.35;
             let a2 = 2.0;
             let n = a1 * perlin.get([
                 f1 * c.0,
                 f1 * c.1,
                 3.7 * opts.seed +
-                opts.seed3 +
+                0.4 * opts.seed3 +
                 a2 * perlin.get([
-                    opts.seed / 3. + 0.2 * opts.seed1,
+                    opts.seed / 3. + 0.1 * opts.seed3,
                     c.0 + 2.0 * perlin.get([
                         f3 * c.0,
                         f3 * c.1,
@@ -95,7 +95,7 @@ pub fn art(opts: &Opts) -> Vec<Group> {
                     8.0 * c.1 + 2.0 * perlin.get([
                         f3 * c.0,
                         f3 * c.1,
-                        2.7 * opts.seed + 0.2 * opts.seed3])
+                        2.7 * opts.seed + 0.1 * opts.seed3])
                   ])
                 ]);
             lerp(-0.15, 0.1, s) + n

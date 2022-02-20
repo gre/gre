@@ -9,7 +9,7 @@ tags:
 
 <img width="50%" src="/images/2022/shattered/thumbnail.jpg" style="float: right">
 
-"Shattered" is a new generative and plottable art that should be released the February 23rd, 2022 on the emerging platform https://plottables.io/.
+"Shattered" is a new generative and plottable art that will be released the February 23rd, 2022 (6PM Paris time) on the emerging platform https://plottables.io/.
 
 > Shattered [adj] – broken into many small pieces.
 >
