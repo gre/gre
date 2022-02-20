@@ -20,7 +20,7 @@ This third article (in a series of 7 articles) reveals the technique used to ren
 - article 5: the background
 - article 6: the video generation
 - article 7: the final drop
-- (Mid-January) public mint
+- (?March) public mint
 
 **The collection is browsable on https://greweb.me/gnsp**
 
