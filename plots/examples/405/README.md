@@ -10,3 +10,5 @@ I am deeply concerned with the current world situation. Sharing some love and su
 History repeats itself.
 
 **Stay Safe Frens.**
+
+<video loop autoplay controls src="/images/plots/405.mp4" width="100%"></video>
