@@ -12,7 +12,7 @@ use svg::node::element::*;
 pub struct Opts {
     #[clap(short, long, default_value = "image.svg")]
     file: String,
-    #[clap(short, long, default_value = "7.0")]
+    #[clap(short, long, default_value = "24.0")]
     pub seed: f64,
     #[clap(short, long, default_value = "0.0")]
     pub seed1: f64,
@@ -75,8 +75,8 @@ pub fn art(opts: &Opts) -> Vec<Group> {
               );
               s = op_union_round(s, sdf_box2(p, dim), k);
             }
-            let f1 = rng.gen_range(3.0, 5.0) + 0.1 * opts.seed1;
-            let f3 = rng.gen_range(4.0, 8.0) + 0.1 * opts.seed2;
+            let f1 = rng.gen_range(2.0, 3.0) + 0.2 * opts.seed1;
+            let f3 = rng.gen_range(3.0, 4.0) + 0.2 * opts.seed2;
             let a1 = 0.35;
             let a2 = 2.0;
             let n = a1 * perlin.get([
@@ -90,7 +90,7 @@ pub fn art(opts: &Opts) -> Vec<Group> {
                         f3 * c.0,
                         f3 * c.1,
                         2.1 * opts.seed
-                        + 0.2 * opts.seed2
+                        + 0.5 * opts.seed2
                         ]),
                     8.0 * c.1 + 2.0 * perlin.get([
                         f3 * c.0,

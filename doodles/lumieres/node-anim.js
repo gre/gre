@@ -1,14 +1,19 @@
-const VIDEO_WIDTH = 4096;
-const VIDEO_HEIGHT = 4096;
-const fps = 20;
+const VIDEO_WIDTH = 2 * 4725;
+const VIDEO_HEIGHT = 2 * 4725;
+const fps = 1;
 const frames = fps * 8;
 const createReglRecorder = require("regl-recorder");
 const regl = require("regl")(
   require("gl")(VIDEO_WIDTH, VIDEO_HEIGHT, { preserveDrawingBuffer: true })
 );
 var recorder = createReglRecorder(regl, frames);
-art(regl, process.argv[2] || 0);
-
+art(regl, seedAsArray(process.argv[2] || 0));
+function seedAsArray(s) {
+  s.startsWith("0x") && (s = s.slice(2));
+  const t = [];
+  for (let e = 0; e < s.length; e += 2) t.push(parseInt(s.slice(e, e + 2), 16));
+  return t;
+}
 function art(regl, hash, onImageRendered) {
   const random = RNG(hash);
   const colored = random() < 0.05;
