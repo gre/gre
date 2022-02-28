@@ -11,7 +11,9 @@ export async function getPlots() {
     const meta = matter(content.default);
     const rustFile = meta.data.sourceFolderURL
       ? "link"
-      : (meta.data.sourceFolder || folder) + "/main.rs";
+      : (meta.data.sourceFolder || folder) +
+        "/" +
+        (meta.data.rootFile || "main.rs");
     plots.push({
       n: m[1],
       key,
