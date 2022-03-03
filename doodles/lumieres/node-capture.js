@@ -1,5 +1,5 @@
-const W = 5907;
-const H = 8268;
+const W = 8000;
+const H = 8000;
 const seed = process.argv[2] || 0;
 const fps = 4;
 const frames = fps * 8;

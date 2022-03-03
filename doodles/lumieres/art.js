@@ -57,7 +57,7 @@ function art(regl, hash, onImageRendered) {
   const vsym = random() < 0.2;
   const hsym = random() < 0.8;
   const textureGranularity = (1 + 50 * random()).toFixed(3);
-  const textureGranularityIntensity = (0.05 + 0.15 * random()).toFixed(3);
+  const textureGranularityIntensity = random() * random();
   const bubble = 0.03 * random();
   const sharpness = random();
 
@@ -177,21 +177,19 @@ float noise(vec2 x){vec2 i=floor(x);vec2 f=fract(x);float a=hash(i);float b=hash
 float fbm(vec2 x){float f=2.;float s=.55;float a=0.;float b=.5;for(int i=0;i<5;i++){float n=noise(x);a+=b*n;b*=s;x=f*x;}return a;}
 float fbm9(vec2 x){float f=2.;float s=.55;float a=0.;float b=.5;for(int i=0;i<9;i++){float n=noise(x);a+=b*n;b*=s;x=f*x;}return a;}
 vec3 palette(float t,vec3 a,vec3 b,vec3 c,vec3 d){return a+b*cos(6.28318*(c*t+d));}
-vec3 pal(float t){return palette(t,${baseColor},vec3(${colordelta
-    .map((c) => c.toFixed(2))
-    .join(",")}),vec3(1.),vec3(${paletteVec3}));}
+vec3 pal(float t){return mix(vec3(1.0, 0.84, 0.0), vec3(0.0, 0.35, 0.71), smoothstep(0.501, 0.5, fract(t - 2.*uv.y)));}
 float pmi1(inout float p,float size,float start,float stop){float halfsize=size/2.;float c=floor((p+halfsize)/size);p=mod(p+halfsize,size)-halfsize;if(c>stop){p+=size*(c-stop);c=stop;}if(c<start){p+=size*(c - start);c=start;}return c;}
 vec2 tr(vec2 p,float dx,float dy,float a){p.x+=dx;p.y+=dy;return cos(a)*p + sin(a)*vec2(p.y,-p.x);}
 float sf(vec2 p,float s,float lw,float w,float h){s-=1.;p.y+=h/2.;pmi1(p.y,h/s,0.,s);return box(p,vec2(w/2.,lw/2.));}
 float pmm1(inout float p,float s){float halfs=s/2.;float c=floor((p+halfs)/s);p=mod(p+halfs,s)-halfs;p*=mod(c,2.)*2.-1.;return c;}
 float pmp(inout vec2 p,float rep){float an=2.*PI/rep;float a=atan(p.y,p.x)+an/2.;float r=length(p);float c=floor(a/an);a=mod(a,an)-an/2.;p=vec2(cos(a),sin(a))*r;if(abs(c)>=rep/2.)c=abs(c);return c;}
 vec3 scene(vec2 p){
-vec2 q=vec2(fbm(30.*p),fbm(8.*p+vec2(6.6,-.1*T)));
-vec2 r=vec2(fbm(100.*q),fbm(88.*s1+p+${textureGranularity}*(q+vec2(0.04*T))));
+vec2 q=vec2(fbm(8.*p),fbm(8.*p));
+vec2 r=vec2(fbm(16.*q),fbm(16.*s1+p+${textureGranularity}*(q+0.04*vec2(cos(2.*PI*T), sin(2.*PI*T)))));
 float v=fbm(${(0.05 + random() * random()).toFixed(
     3
   )}*p+${textureGranularityIntensity}*r+s2);
-float t1=.4*T;float t2=t1/2.;float t3=t2/2.;
+float t1=8.*PI*T;float t2=t1/2.;float t3=t2/2.;
 p*=${zoom.toFixed(3)};
 vec2 o=p;${vsym ? "p.y=abs(p.y);" : ""}${
     hsym ? "p.x=abs(p.x);" : ""
@@ -217,7 +215,7 @@ s+=${(0.1 * (1.0 - sharpness)).toFixed(3)};
 float d=smoothstep(0.,.2,s);
 v=mix(v,.5,smoothstep(.01,0.,s));
 v-=.5*pow(d,.05+.5*abs(uv.y-.5));
-return pal(v)+smoothstep(.0,-.2,s);}
+return pal(v);}
 void main(){gl_FragColor=vec4(scene((uv-0.5)*R/min(R.x,R.y)),1.);}`;
 
   const render = regl({
@@ -236,7 +234,7 @@ void main(){gl_FragColor=vec4(scene((uv-0.5)*R/min(R.x,R.y)),1.);}`;
   let firstCall = onImageRendered;
 
   regl.frame(({ time }) => {
-    render({ T: time });
+    render({ T: time / 4 });
     if (firstCall) {
       firstCall();
       firstCall = null;
