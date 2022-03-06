@@ -166,6 +166,16 @@ export default function Home({ plot, prev, next }) {
                 </dd>
               </dl>
             ) : null}
+            {data.nft ? (
+              <dl>
+                <dt>NFT</dt>
+                <dd>
+                  <a target="_blank" href={data.nft} rel="noreferrer">
+                    LINK
+                  </a>
+                </dd>
+              </dl>
+            ) : null}
             {data.plotterfiles ? (
               <dl>
                 <dt>Plotterfiles</dt>
