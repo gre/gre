@@ -5,8 +5,8 @@ import { GLSL, LinearCopy, Node, Shaders, Uniform } from "gl-react";
 import config from "./config";
 
 const MAX = 4096;
-const ratio = config.width / config.height;
-const svgSize = [config.width + "mm", config.height + "mm"];
+const ratio = config.mmWidth / config.mmHeight;
+const svgSize = [config.mmWidth + "mm", config.mmHeight + "mm"];
 const widths = [500, 1000, 2000];
 
 function useFetchSvg(path) {
@@ -49,20 +49,17 @@ const Main = ({ width, height }) => {
 
   const svg = useFetchSvg("image.svg");
 
-  const renderedSVG = useMemo(
-    () =>
-      "data:image/svg+xml;base64," +
-      btoa(
-        svg
-          .replace(svgSize[1], heightPx)
-          .replace(svgSize[0], widthPx)
-          .replaceAll("mix-blend-mode: multiply;", "opacity:" + config.opacity)
-          .replaceAll(config.primaryMatch, "#0FF")
-          .replaceAll(config.secondaryMatch, "#F0F")
-          .replaceAll(config.thirdMatch, "#FF0")
-      ),
-    [svg, widthPx, heightPx]
-  );
+  const renderedSVG = useMemo(() => {
+    const newSvg = svg
+      .replace(svgSize[1], heightPx)
+      .replace(svgSize[0], widthPx)
+      .replaceAll("mix-blend-mode: multiply;", "opacity:" + config.opacity)
+      .replaceAll(config.primaryMatch, "#0FF")
+      .replaceAll(config.secondaryMatch, "#F0F")
+      .replaceAll(config.thirdMatch, "#FF0");
+    console.log(newSvg);
+    return "data:image/svg+xml;base64," + btoa(newSvg);
+  }, [svg, widthPx, heightPx]);
 
   return (
     <div

@@ -1,0 +1,43 @@
+
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<script src="https://npmcdn.com/regl@2.1.0/dist/regl.min.js"></script>
+<script>
+function random_hash() {
+let chars = "0123456789abcdef";
+let result = '0x';
+for (let i = 64; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];
+return result;
+}
+let tokenData = {"tokenId": 1000000, "hash": random_hash()}
+console.log(`tokenData = {\"tokenId\": \"${tokenData["tokenId"]}\", \"hash\": \"${tokenData["hash"]}\"};`);
+</script>
+<style type="text/css">
+html {
+    height: 100%;
+}
+body {
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
+}
+canvas {
+    padding: 0;
+    margin: auto;
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+</style>
+</head>
+<body>
+<script src="./index.mjs"></script>
+<script>main()</script>
+<script src="./dist/features.js"></script>
+<script>setTimeout(()=>{ console.log(calculateFeatures(tokenData)) }, 500)</script>
+</body>
+</html>
