@@ -29,6 +29,31 @@ function adaptiveSvgWidth(width) {
   return w;
 }
 
+function splitPathsLogic(svgHTML) {
+  const div = document.createElement("div");
+  div.innerHTML = svgHTML;
+  const svgNode = div.children[0];
+  for (const path of svgNode.querySelectorAll("path")) {
+    const d = path.getAttribute("d");
+    const moves = d.split("M");
+    path.setAttribute("d", "M0,0");
+    const template = path.outerHTML;
+    console.log(template);
+    let all = "";
+    if (moves.length > 1) {
+      moves.splice(0, 1);
+      for (const m of moves) {
+        const newD = "M" + m;
+        all += template.replace("M0,0", newD) + "\n";
+      }
+      const parent = path.parentElement;
+      parent.removeChild(path);
+      parent.innerHTML += all;
+    }
+  }
+  return div.innerHTML;
+}
+
 const Main = ({ width, height }) => {
   const dpr = window.devicePixelRatio || 1;
   let W = width;
@@ -50,13 +75,17 @@ const Main = ({ width, height }) => {
   const svg = useFetchSvg("image.svg");
 
   const renderedSVG = useMemo(() => {
-    const newSvg = svg
+    if (!svg) return null;
+    let newSvg = (config.extraReplace ? config.extraReplace(svg) : svg)
       .replace(svgSize[1], heightPx)
       .replace(svgSize[0], widthPx)
       .replaceAll("mix-blend-mode: multiply;", "opacity:" + config.opacity)
       .replaceAll(config.primaryMatch, "#0FF")
       .replaceAll(config.secondaryMatch, "#F0F")
       .replaceAll(config.thirdMatch, "#FF0");
+    if (config.splitPaths) {
+      newSvg = splitPathsLogic(newSvg);
+    }
     console.log(newSvg);
     return "data:image/svg+xml;base64," + btoa(newSvg);
   }, [svg, widthPx, heightPx]);
@@ -82,7 +111,11 @@ const Main = ({ width, height }) => {
         >
           <Surface width={W} height={H}>
             <LinearCopy>
-              <Post ready={!!svg} size={{ width: w, height: h }}>
+              <Post
+                widthMM={config.mmWidth}
+                ready={!!svg}
+                size={{ width: w, height: h }}
+              >
                 {renderedSVG}
               </Post>
             </LinearCopy>
@@ -93,16 +126,16 @@ const Main = ({ width, height }) => {
   );
 };
 
-const Paper = ({ seed, grain }) => (
+const Paper = ({ seed, grain, widthMM }) => (
   <Node
     shader={shaders.paper}
-    uniforms={{ seed, grain, resolution: Uniform.Resolution }}
+    uniforms={{ seed, grain, widthMM, resolution: Uniform.Resolution }}
   />
 );
 
 const PaperCache = React.memo(Paper);
 
-const Post = ({ size, children }) => {
+const Post = ({ size, children, widthMM }) => {
   const primary = config.colors[0] || config.colors[0];
   const secondary = config.colors[1] || config.colors[0];
   const third = config.colors[2] || config.colors[0];
@@ -113,7 +146,9 @@ const Post = ({ size, children }) => {
       shader={shaders.main}
       uniforms={{
         t: children,
-        paper: <PaperCache width={size.width} seed={paperSeed} grain={100} />,
+        paper: (
+          <PaperCache width={size.width} seed={paperSeed} grain={widthMM / 2} />
+        ),
         time: 0,
         seed: paperSeed,
         primary: primary.main,
@@ -122,7 +157,7 @@ const Post = ({ size, children }) => {
         secondaryHighlight: secondary.highlight,
         third: third.main,
         thirdHighlight: third.highlight,
-        grainAmp: 0.15,
+        grainAmp: 0.1,
         baseColor: [0, -0.005, -0.01],
       }}
     />

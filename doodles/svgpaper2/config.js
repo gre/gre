@@ -58,13 +58,13 @@ const colors = [
   */
   {
     name: "Turquoise",
-    main: [0 / 255, 180 / 255, 230 / 255],
-    highlight: [0 / 255, 90 / 255, 140 / 255],
+    main: [0 / 255, 165 / 255, 225 / 255],
+    highlight: [60 / 255, 60 / 255, 160 / 255],
   },
   {
     name: "Amber",
     main: [1.0, 0.66, 0.28],
-    highlight: [1.0, 0.5, 0.0],
+    highlight: [0.9, 0.3, 0.0],
   },
   /*
   {
@@ -81,5 +81,13 @@ export default {
   primaryMatch: "#09f",
   secondaryMatch: "#f90",
   thirdMatch: "#000",
-  opacity: 0.5,
+  opacity: 0.54,
+  extraReplace: (svg) =>
+    svg
+      .split('"0.35"')
+      .map((v, i) =>
+        i === 0 ? v : `"${0.32 + 1.1 * Math.random() * Math.random()}"` + v
+      )
+      .join(""),
+  splitPaths: true,
 };
