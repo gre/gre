@@ -144,6 +144,9 @@ export default function Home({ posts, plots }) {
   const siteURL = me.thumbnailDomain;
   const { title, description, thumbnail } = me;
 
+  const minimal =
+    typeof location !== "undefined" && location.search === "?minimal";
+
   return (
     <Global>
       <Container>
@@ -178,10 +181,12 @@ export default function Home({ posts, plots }) {
             }
             .social li {
               padding: 5px 0;
+              margin-right: 16px;
             }
             .header-top {
               display: flex;
               flex-direction: row;
+              align-items: center;
             }
             .avatarbox {
               padding-right: 20px;
@@ -203,61 +208,100 @@ export default function Home({ posts, plots }) {
               font-weight: 400;
               text-decoration: underline;
             }
+            .minimalfoot strong {
+              display: block;
+              font-size: 1.2em;
+              margin-bottom: 1em;
+            }
+            .minimalfoot blockquote {
+              padding: 0;
+              margin: 0;
+            }
+            .minimal .social {
+              width: 340px;
+              margin-bottom: 0;
+            }
+            .minimal .social ul {
+              margin: 0;
+              padding: 0;
+            }
+            .minimal .social li {
+              display: inline-block;
+              font-size: 1.2em;
+            }
           `}</style>
 
           <Header>
             <div className="header-top">
               <div className="avatarbox">
-                <img width="200" src={thumbnail} />
+                <img width="230" src={thumbnail} />
               </div>
-              <div>
+              <div className={minimal ? "minimal" : ""}>
+                {minimal ? (
+                  <div className="minimalfoot">
+                    <strong>greweb.me</strong>
+                    <blockquote>{description}</blockquote>
+                  </div>
+                ) : null}
                 <ul className="social">
-                  {me.social.map(({ id, url, icon, text }) => (
-                    <li key={id}>
-                      <a href={url}>
-                        <img alt="" src={icon} height="16" /> {text}
-                      </a>
-                    </li>
-                  ))}
+                  {me.social.map(({ id, url, icon, text, extra }) =>
+                    minimal && extra ? null : (
+                      <li key={id}>
+                        <a href={url}>
+                          <img
+                            alt=""
+                            src={icon}
+                            height={minimal ? "20" : "16"}
+                          />{" "}
+                          {text}
+                        </a>
+                      </li>
+                    )
+                  )}
                 </ul>
               </div>
             </div>
-            <blockquote>{description}</blockquote>
-            <p className="subtitle">
-              <strong>greweb.me</strong> ={" "}
-              <a href="/plots">{plots.length} plots</a>,{" "}
-              <a href="/shaderday">{days.length} shaders</a>,{" "}
-              <a href="/posts">{posts.length} blog posts</a>.
-            </p>
+            {minimal ? null : (
+              <>
+                <blockquote>{description}</blockquote>
+                <p className="subtitle">
+                  <strong>greweb.me</strong> ={" "}
+                  <a href="/plots">{plots.length} plots</a>,{" "}
+                  <a href="/shaderday">{days.length} shaders</a>,{" "}
+                  <a href="/posts">{posts.length} blog posts</a>.
+                </p>
+              </>
+            )}
           </Header>
-          <div className="content">
-            <section>
-              <CarouselPlots plots={plots} />
-            </section>
-            <section>
-              <HighlightShader day={days.find((d) => d.n === 102)} />
-            </section>
-            <section>
-              <h2>
-                <Link href="/posts">
-                  <a>Recent blog posts</a>
-                </Link>
-              </h2>
+          {minimal ? null : (
+            <div className="content">
+              <section>
+                <CarouselPlots plots={plots} />
+              </section>
+              <section>
+                <HighlightShader day={days.find((d) => d.n === 102)} />
+              </section>
+              <section>
+                <h2>
+                  <Link href="/posts">
+                    <a>Recent blog posts</a>
+                  </Link>
+                </h2>
 
-              {posts.slice(0, 12).map((p, i) => (
-                <Link key={i} href={`/${p.year}/${p.month}/${p.slug}`}>
-                  <a>
-                    <img
-                      src={p.data.thumbnail}
-                      alt=""
-                      style={{ width: 200, height: 200, objectFit: "cover" }}
-                    />
-                  </a>
-                </Link>
-              ))}
-            </section>
-            {
-              null /*
+                {posts.slice(0, 12).map((p, i) => (
+                  <Link key={i} href={`/${p.year}/${p.month}/${p.slug}`}>
+                    <a>
+                      <img
+                        src={p.data.thumbnail}
+                        alt=""
+                        style={{ width: 200, height: 200, objectFit: "cover" }}
+                      />
+                    </a>
+                  </Link>
+                ))}
+              </section>
+              {
+                null /*
             <section>
               <h2>2022 projects</h2>
               <HighlightProjects projects={projects2021} />
@@ -267,8 +311,9 @@ export default function Home({ posts, plots }) {
               <HighlightProjects projects={projects2021} />
             </section>
               */
-            }
-          </div>
+              }
+            </div>
+          )}
         </Main>
       </Container>
     </Global>

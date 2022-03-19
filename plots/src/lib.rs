@@ -143,99 +143,42 @@ pub fn layer(id: &str) -> Group {
         .set("inkscape:label", id);
 }
 
+
+pub fn base_document(bg: &str, width: f64, height: f64) -> Document {
+    Document::new()
+        .set(
+            "xmlns:inkscape",
+            "http://www.inkscape.org/namespaces/inkscape",
+        )
+        .set("viewBox", (0, 0, width, height))
+        .set("width", format!("{}mm", width))
+        .set("height", format!("{}mm", height))
+        .set("style", format!("background:{}", bg))
+}
+
 pub fn base_a3_portrait(bg: &str) -> Document {
-    Document::new()
-        .set(
-            "xmlns:inkscape",
-            "http://www.inkscape.org/namespaces/inkscape",
-        )
-        .set("viewBox", (0, 0, 297, 420))
-        .set("width", "297mm")
-        .set("height", "420mm")
-        .set("style", format!("background:{}", bg))
+    base_document(bg, 297., 420.)
 }
-
 pub fn base_a3_landscape(bg: &str) -> Document {
-    Document::new()
-        .set(
-            "xmlns:inkscape",
-            "http://www.inkscape.org/namespaces/inkscape",
-        )
-        .set("viewBox", (0, 0, 420, 297))
-        .set("width", "420mm")
-        .set("height", "297mm")
-        .set("style", format!("background:{}", bg))
+    base_document(bg, 420., 297.)
 }
-
 pub fn base_a4_portrait(bg: &str) -> Document {
-    Document::new()
-        .set(
-            "xmlns:inkscape",
-            "http://www.inkscape.org/namespaces/inkscape",
-        )
-        .set("viewBox", (0, 0, 210, 297))
-        .set("width", "210mm")
-        .set("height", "297mm")
-        .set("style", format!("background:{}", bg))
+    base_document(bg, 210., 297.)
 }
-
 pub fn base_a4_landscape(bg: &str) -> Document {
-    Document::new()
-        .set(
-            "xmlns:inkscape",
-            "http://www.inkscape.org/namespaces/inkscape",
-        )
-        .set("viewBox", (0, 0, 297, 210))
-        .set("width", "297mm")
-        .set("height", "210mm")
-        .set("style", format!("background:{}", bg))
+    base_document(bg, 297., 210.)
 }
 pub fn base_a4_square(bg: &str) -> Document {
-    Document::new()
-        .set(
-            "xmlns:inkscape",
-            "http://www.inkscape.org/namespaces/inkscape",
-        )
-        .set("viewBox", (0, 0, 210, 210))
-        .set("width", "210mm")
-        .set("height", "210mm")
-        .set("style", format!("background:{}", bg))
+    base_document(bg, 210., 210.)
 }
-
 pub fn base_a5_landscape(bg: &str) -> Document {
-    Document::new()
-        .set(
-            "xmlns:inkscape",
-            "http://www.inkscape.org/namespaces/inkscape",
-        )
-        .set("viewBox", (0, 0, 210, 297. / 2.))
-        .set("height", "148.5mm")
-        .set("width", "210mm")
-        .set("style", format!("background:{}", bg))
+    base_document(bg, 210., 297./2.)
 }
-
 pub fn base_24x30_portrait(bg: &str) -> Document {
-    Document::new()
-        .set(
-            "xmlns:inkscape",
-            "http://www.inkscape.org/namespaces/inkscape",
-        )
-        .set("viewBox", (0, 0, 240, 300))
-        .set("width", "240mm")
-        .set("height", "300mm")
-        .set("style", format!("background:{}", bg))
+    base_document(bg, 240., 300.)
 }
-
 pub fn base_24x30_landscape(bg: &str) -> Document {
-    Document::new()
-        .set(
-            "xmlns:inkscape",
-            "http://www.inkscape.org/namespaces/inkscape",
-        )
-        .set("viewBox", (0, 0, 300, 240))
-        .set("width", "300mm")
-        .set("height", "240mm")
-        .set("style", format!("background:{}", bg))
+    base_document(bg, 300., 240.)
 }
 
 pub fn euclidian_rgb_distance(
