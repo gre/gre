@@ -1,6 +1,6 @@
 [**greweb.me**](https://greweb.me) – [@greweb](https://twitter.com/greweb)
 
-[twitch](twitch.tv/greweb)
+[twitch](https://twitch.tv/greweb)
 
 > 👋  I'm **gre** (Gaëtan Renaudeau),
 > 
