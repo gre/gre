@@ -63,7 +63,7 @@ export const CarouselPlots = ({ plots }) => {
         }}
       >
         <h2>
-          <a href="/plots">Plots</a>
+          <a href="/plots">Explore plots collection</a>
         </h2>
         <a href={`/plots/${plot.n}`}>
           #{plot.n} – {plot.data.title}

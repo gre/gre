@@ -1,41 +1,13 @@
 import React from "react";
 import Head from "next/head";
-import Link from "next/link";
 import { getPlots } from "../../../../plots";
 import { Global } from "../../../../components/Global";
 import { Container } from "../../../../components/Container";
 import { Main } from "../../../../components/Main";
-import { Content } from "../../../../components/Content";
 import { Header } from "../../../../components/Header";
 import { Title } from "../../../../components/Title";
 import MeBlock from "../../../../components/MeBlock";
-
-function Plot({ plot }) {
-  const { data, n } = plot;
-  const { thumbnail } = data;
-  const title = `Plot #${plot.n} ${data.title ? " – " + data.title : ""}`;
-  const description = data.description || "";
-  const url = `/plots/${n}`;
-  return (
-    <div className="plot">
-      <style jsx>{`
-        .plot {
-          margin-bottom: 40px;
-          padding-bottom: 40px;
-          border-bottom: 4px solid black;
-        }
-      `}</style>
-
-      <Link href={url}>
-        <a>
-          <h2>{title}</h2>
-          <img src={thumbnail} width="100%" />
-        </a>
-      </Link>
-      <em>{description}</em>
-    </div>
-  );
-}
+import { Plot, PlotGrid, Content } from "../..";
 
 export async function getStaticPaths() {
   const plots = await getPlots();
@@ -99,9 +71,11 @@ export default function Home({ tag, plots }) {
           </Header>
 
           <Content>
-            {plots.map((plot) => (
-              <Plot plot={plot} key={plot.n} />
-            ))}
+            <PlotGrid>
+              {plots.map((plot) => (
+                <Plot plot={plot} key={plot.n} />
+              ))}
+            </PlotGrid>
 
             <footer>
               <MeBlock />
