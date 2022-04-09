@@ -1,5 +1,4 @@
 use geo::prelude::{BoundingRect, Contains};
-use geo::algorithm::centroid::Centroid;
 use gre::*;
 use rand::prelude::*;
 use rayon::prelude::*;
@@ -16,8 +15,9 @@ fn art(seed: u8) -> Vec<Group> {
     let height = 260.;
     let poly_threshold = 0.5;
 
-    let project =
-        |(x, y): (f64, f64)| (pad + x * width, pad + y * height);
+    let project = |(x, y): (f64, f64)| {
+        (pad + x * width, pad + y * height)
+    };
 
     let mut rng = SmallRng::from_seed([
         seed, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -44,7 +44,8 @@ fn art(seed: u8) -> Vec<Group> {
     .unwrap();
 
     let get = |p| {
-        smoothstep(0.9, 0.0, grayscale(get_color(p))).powf(2.)
+        smoothstep(0.9, 0.0, grayscale(get_color(p)))
+            .powf(2.)
     };
 
     let mut data = Data::new();
@@ -85,21 +86,18 @@ fn art(seed: u8) -> Vec<Group> {
             if candidates.len() < 5 {
                 vec![]
             } else {
-                let l = candidates.len() % 5;
                 candidates = route_spiral(candidates);
-                
                 if candidates.len() < 40 {
                     candidates.sort_by(|&a, &b| {
                         (a.0 - a.1)
                             .partial_cmp(&(b.0 - b.1))
                             .unwrap()
                             .then(
-                                a.1.partial_cmp(&b.1).unwrap(),
+                                a.1.partial_cmp(&b.1)
+                                    .unwrap(),
                             )
                     });
                 }
-            
-                  
                 candidates
             }
         })
