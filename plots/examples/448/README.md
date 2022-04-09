@@ -8,6 +8,7 @@ sourceFolder: 428
 tags:
   - nfc
   - 10cm
+  - plotloop
 ---
 
 8 frames were plotted live during NFC Lisbon conference on 10 cm square watercolor paper with fountain pen and Fire and ice ink.
