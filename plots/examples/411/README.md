@@ -1,6 +1,6 @@
 ---
 title: "Tunnel of hope (1)"
-thumbnail: /images/plots/411.jpg
+image: /images/plots/411.jpg
 tags:
   - shape-packing
 ---

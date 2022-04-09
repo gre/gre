@@ -1,6 +1,6 @@
 ---
 title: "Shell (6 frames)"
-thumbnail: /images/plots/178.gif
+image: /images/plots/178.gif
 tags:
   - plotloop
 objkts:
@@ -10,7 +10,6 @@ objkts:
 @greweb's #9 plot loop. The 1920p animation is the main digital art. NFT is available in 6 editions, one per frame. First buyer of each edition can collect related frame to acquire the physical art (selected by buy order. PM @greweb, ship anywhere in the world). Secondary market is digital only. plotted on Bristol paper with black fountain pen. See greweb.me/plots/178
 
 plotloop, physical, phygital, plot, loop, fountainpen
-
 
 Here is "Shell" my 9th ["plot loop" (see article)](https://greweb.me/2021/05/plot-loops). The main digital art is a 1920p video loop of 6 frames available as a [Tezos hicetnunc NFT](https://www.hicetnunc.xyz/objkt/154538). The physical art is 6 frames of A4 size, plotted with a black fountain pen on Bristol paper, and offered when [buying the NFT](https://www.hicetnunc.xyz/objkt/154538) (6 editions, assigned in buy order).
 

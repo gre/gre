@@ -1,6 +1,6 @@
 ---
 title: "Blue Circle Packing"
-thumbnail: /images/plots/176.jpg
+image: /images/plots/176.jpg
 description: "My first plot experiment using 'circle packing' technique. More ideas and explorations to come!"
 tags:
   - circle-packing

@@ -1,6 +1,6 @@
 ---
 title: "Maillage 04"
-thumbnail: /images/plots/304.jpg
+image: /images/plots/304.jpg
 description: "Rotation of the same shape 3 times creates an interesting pattern."
 sourceFolder: 301
 ---

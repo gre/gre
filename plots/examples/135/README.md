@@ -1,6 +1,6 @@
 ---
 title: "topographic warp"
-thumbnail: /images/plots/135.jpg
+image: /images/plots/135.jpg
 description: "Domain warping meets marching squares algorithms"
 tags:
   - marching-squares

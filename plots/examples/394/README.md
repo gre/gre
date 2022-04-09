@@ -1,6 +1,6 @@
 ---
 title: "Yellow Night Storm"
-thumbnail: /images/plots/394.jpg
+image: /images/plots/394.jpg
 sourceFolder: 312
 ---
 

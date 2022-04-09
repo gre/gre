@@ -1,6 +1,6 @@
 ---
 title: "Multiple Line Widths"
-thumbnail: /images/plots/313.jpg
+image: /images/plots/313.jpg
 description: "Pushing the paper to its limits with a lot of collocated lines more or less distancing from each other. Entry for 'Nov 9 – Multiple Line Widths'"
 tags:
   - plotparty
@@ -14,4 +14,3 @@ Pushing the paper to its limits with a lot of collocated lines more or less dist
 <img src="/images/plots/313e.jpg" width="100%">
 
 Entry for "Nov 9 – Multiple Line Widths". https://penplotterartwork.com/plotparty/
-

@@ -1,6 +1,6 @@
 ---
 title: "Perlin mountains"
-thumbnail: /images/plots/108.jpg
+image: /images/plots/108.jpg
 objkts:
   - 36604
 plotterfiles:

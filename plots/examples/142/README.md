@@ -1,6 +1,6 @@
 ---
 title: "brushed ball"
-thumbnail: /images/plots/142.jpg
+image: /images/plots/142.jpg
 description: "A reboot of the 'wool ball' done with 2 pen brushes."
 ---
 

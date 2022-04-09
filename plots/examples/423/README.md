@@ -1,9 +1,9 @@
 ---
 title: "Dunes of hope"
-thumbnail: /images/plots/423.jpg
+image: /images/plots/423.jpg
 description: "This is a first plot of its kind, I call this new generator Dunes and the innovation used here is making a low poly perlin noise. Plotted on A3 watercolor paper using fountain pens (Turquoise and Amber). 230 meters of ink. ~180 minutes."
 tags:
-    - A3
+  - A3
 nft: https://objkt.com/asset/KT1XBzsXAGCAPCp69T2fZmQitpu77iE2D1he/5
 ---
 

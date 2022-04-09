@@ -1,6 +1,6 @@
 ---
 title: "squares packing 002"
-thumbnail: /images/plots/180.jpg
+image: /images/plots/180.jpg
 description: "Second iteration on packing rotated squares in a square. Black fountain pens on 300g/m paper."
 tags:
   - shape-packing

@@ -1,6 +1,6 @@
 ---
 title: "Forgotten mountain moons"
-thumbnail: /images/plots/220.jpg
+image: /images/plots/220.jpg
 tags:
   - shape-packing
 ---

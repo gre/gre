@@ -1,6 +1,6 @@
 ---
 title: "espoir"
-thumbnail: /images/plots/419.jpg
+image: /images/plots/419.jpg
 rootFile: index.js
 ---
 

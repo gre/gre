@@ -1,7 +1,7 @@
 ---
 title: "[NFC] Storm"
 description: "Plotted live during NFC Lisbon conference on 10 cm square watercolor paper with fountain pen."
-thumbnail: /images/plots/433.jpg
+image: /images/plots/433.jpg
 tags:
   - nfc
   - 10cm

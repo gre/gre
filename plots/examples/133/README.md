@@ -1,6 +1,6 @@
 ---
 title: "Cross sines"
-thumbnail: /images/plots/133.jpg
+image: /images/plots/133.jpg
 description: "A simple experiment with crosses and sine waves. Fountain Pens with Pink and Turquoise ink on Bristol A4."
 tags:
   - cross

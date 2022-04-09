@@ -1,6 +1,6 @@
 ---
 title: "Anneaux musclés"
-thumbnail: "/images/plots/084.jpg"
+image: "/images/plots/084.jpg"
 description: "interleaving curves following a parametric function. 2 fountain pens on Bristol."
 tags:
   - parametric

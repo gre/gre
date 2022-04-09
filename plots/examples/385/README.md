@@ -1,6 +1,6 @@
 ---
 title: "9 inks"
-thumbnail: /images/plots/385.jpg
+image: /images/plots/385.jpg
 description: "generative wave using 9 different inks"
 ---
 

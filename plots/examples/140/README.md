@@ -1,6 +1,6 @@
 ---
 title: "many plus"
-thumbnail: "/images/plots/140.jpg"
+image: "/images/plots/140.jpg"
 description: "Plotter's journey is made of simple plots like these. The robot had one job: plot a lot of plus."
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: "Pattern 02 plot"
-thumbnail: /images/plots/223.jpg
+image: /images/plots/223.jpg
 tags:
   - halftone-lines
 ---

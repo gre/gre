@@ -1,6 +1,6 @@
 ---
 title: "Glitched Parametric"
-thumbnail: "/images/plots/407.jpg"
+image: "/images/plots/407.jpg"
 tags:
   - parametric
 ---

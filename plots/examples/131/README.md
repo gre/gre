@@ -1,6 +1,6 @@
 ---
 title: "hexa flower noise"
-thumbnail: "/images/plots/131.jpg"
+image: "/images/plots/131.jpg"
 description: "Yet another spiral transitioning between two parametric functions. 'Bloody Brexit' ink from Diamine with brush pens on A4 Bristol."
 tags:
   - parametric

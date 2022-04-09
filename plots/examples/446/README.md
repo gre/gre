@@ -1,7 +1,7 @@
 ---
 title: "[NFC] Field 2"
 description: "Plotted live during NFC Lisbon conference on 10 cm square watercolor paper with fountain pen."
-thumbnail: /images/plots/446.jpg
+image: /images/plots/446.jpg
 sourceFolder: 445
 tags:
   - nfc

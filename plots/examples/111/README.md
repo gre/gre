@@ -1,7 +1,7 @@
 ---
 title: "Growing parametric"
 description: "stacking multiple parametric functions, fountain pen with 'Bloody Brexit' ink which produces an interesting reflection. A4 bristol."
-thumbnail: /images/plots/111.jpg
+image: /images/plots/111.jpg
 tags:
   - parametric
 ---

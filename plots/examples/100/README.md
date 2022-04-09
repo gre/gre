@@ -1,6 +1,6 @@
 ---
 title: "Planet Holes #1"
-thumbnail: /images/plots/100.jpg
+image: /images/plots/100.jpg
 tweet: https://twitter.com/greweb/status/1380855370101448705
 objkts:
   - 28236

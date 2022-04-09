@@ -14,6 +14,7 @@ export async function getPlots() {
       : (meta.data.sourceFolder || folder) +
         "/" +
         (meta.data.rootFile || "main.rs");
+
     plots.push({
       n: m[1],
       key,

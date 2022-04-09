@@ -1,7 +1,7 @@
 ---
 title: "Sunflowers overlap"
 description: "An experiment of reproducing sunflowers using a golden spiral and some perlin noise."
-thumbnail: /images/plots/415.jpg
+image: /images/plots/415.jpg
 ---
 
 An experiment of reproducing sunflowers using a golden spiral and some perlin noise.

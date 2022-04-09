@@ -1,6 +1,6 @@
 ---
 title: "squares packing 001"
-thumbnail: /images/plots/179.jpg
+image: /images/plots/179.jpg
 description: "Packing rotated squares in a square. Black fountain pens on Bristol."
 tags:
   - shape-packing

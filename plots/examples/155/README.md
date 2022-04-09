@@ -1,6 +1,6 @@
 ---
 title: "Corridor planet"
-thumbnail: /images/plots/155.jpg
+image: /images/plots/155.jpg
 description: "Using distance functions primitives with marching squares and noise displacement to produce another planet hole."
 tags:
   - planethole

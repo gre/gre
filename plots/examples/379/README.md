@@ -1,6 +1,6 @@
 ---
 title: "Indigo sand"
-thumbnail: /images/plots/379.jpg
+image: /images/plots/379.jpg
 sourceFolder: 376
 ---
 

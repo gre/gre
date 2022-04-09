@@ -1,6 +1,6 @@
 ---
 title: "Jumping man"
-thumbnail: /images/plots/60.jpg
+image: /images/plots/60.jpg
 description: "Photo of a jumping man with TSP."
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: "Pentaflower"
-thumbnail: "/images/plots/128.jpg"
+image: "/images/plots/128.jpg"
 description: "Parametric flower plotted with two brush pens."
 tags:
   - parametric

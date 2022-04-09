@@ -1,6 +1,6 @@
 ---
 title: "Bricks"
-thumbnail: /images/plots/159.jpg
+image: /images/plots/159.jpg
 description: "A simple idea with bricks and slight variation of width/height of each brick."
 ---
 

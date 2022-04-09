@@ -1,6 +1,6 @@
 ---
 title: "Fibers 2"
-thumbnail: /images/plots/398.jpg
+image: /images/plots/398.jpg
 ---
 
 Continuing "Fibers" which is a series of exploration started on [plots/397](/plots/397).
@@ -12,6 +12,5 @@ Here is another version of the photo with a sun low-angled light.
 Here is a zoom of the Diamine Bloody Brexit ink reflection:
 
 <img width="100%" src="/images/plots/398z.jpg" />
-
 
 Done during a live stream on https://twitch.tv/greweb

@@ -1,6 +1,6 @@
 ---
 title: "VHS"
-thumbnail: /images/plots/388.jpg
+image: /images/plots/388.jpg
 description: "This was implemented for genuary.art VHS of JAN.18. This is making fun of curves to recreate the idea of digital tapes. Using two colors."
 ---
 

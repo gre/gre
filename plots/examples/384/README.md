@@ -1,6 +1,6 @@
 ---
 title: "#2E294E #541388 #F1E9DA #FFD400 #D90368"
-thumbnail: /images/plots/384.jpg
+image: /images/plots/384.jpg
 description: "Genuary.art JAN.27 challenge was to use these 5 colors, challenge accepted with fountain pen and actual ink."
 ---
 

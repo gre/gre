@@ -1,10 +1,9 @@
 ---
 title: "Brain"
-thumbnail: /images/plots/373.jpg
+image: /images/plots/373.jpg
 tags:
   - genuary
 ---
-
 
 This implements the prompt **"Machine learning, wrong answers only." (JAN.10)** for the [Genuary](https://genuary.art/) event.
 

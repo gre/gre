@@ -1,6 +1,6 @@
 ---
 title: "Fibers 5"
-thumbnail: /images/plots/401.jpg
+image: /images/plots/401.jpg
 ---
 
 Continuing "Fibers" which is a series of exploration started on [plots/397](/plots/397).

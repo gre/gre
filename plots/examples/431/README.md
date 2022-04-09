@@ -1,7 +1,7 @@
 ---
 title: "[NFC] Web"
 description: "Plotted live during NFC Lisbon conference on 10 cm square watercolor paper with fountain pen."
-thumbnail: /images/plots/431.jpg
+image: /images/plots/431.jpg
 tags:
   - nfc
   - 10cm

@@ -1,6 +1,6 @@
 ---
 title: "Abstract vegetation"
-thumbnail: /images/plots/391.jpg
+image: /images/plots/391.jpg
 ---
 
 This was implemented for [genuary.art](https://genuary.art) "Abstract vegetation" of JAN.23.

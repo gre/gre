@@ -1,6 +1,6 @@
 ---
 title: "Dancing mountain (4 frames)"
-thumbnail: /images/plots/195.gif
+image: /images/plots/195.gif
 description: "@greweb's #11 plot loop."
 tags:
   - plotloop

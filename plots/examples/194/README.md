@@ -1,6 +1,6 @@
 ---
 title: "Elevation glitch"
-thumbnail: /images/plots/194.jpg
+image: /images/plots/194.jpg
 description: "Usage of different harmonies of noise to reveal glitches. Various noise experiments and inks."
 ---
 

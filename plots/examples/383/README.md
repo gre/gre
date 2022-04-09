@@ -1,6 +1,6 @@
 ---
 title: "Skyscrapers"
-thumbnail: /images/plots/383.jpg
+image: /images/plots/383.jpg
 sourceFolder: 372
 ---
 

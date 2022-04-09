@@ -1,11 +1,11 @@
 ---
 title: "Plottable Letters"
-thumbnail: /images/plots/368.jpg
+image: /images/plots/368.jpg
 description: "Plottable Letters plays with letters, digits, and basic shapes. There is a great chance to obtain a 'GM', but also many other letter combination."
 sourceFolderURL: https://github.com/gre/gre/tree/master/doodles/plottable-letters
 nftGenerator: https://www.fxhash.xyz/u/greweb
 tags:
-    - plottable-letters
+  - plottable-letters
 ---
 
 Plottable Letters plays with letters, digits, and basic shapes. There is a great chance to obtain a "GM", but also many other letter combination.

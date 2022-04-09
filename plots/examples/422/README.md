@@ -1,9 +1,9 @@
 ---
 title: "Volcano of hope"
-thumbnail: /images/plots/422.jpg
+image: /images/plots/422.jpg
 description: "This plot explores 4 stripes of Amber and Turquoise inks displaced using domain warping technique of various perlin noises. A volcano shape emerge on the center of the piece."
 tags:
-    - A3
+  - A3
 nft: https://objkt.com/asset/KT1XBzsXAGCAPCp69T2fZmQitpu77iE2D1he/4
 ---
 

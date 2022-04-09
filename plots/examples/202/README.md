@@ -1,11 +1,10 @@
 ---
 title: "œil pour œil (4 frames)"
-thumbnail: /images/plots/202.gif
+image: /images/plots/202.gif
 description: "@greweb's #12 plot loop"
 tags:
   - plotloop
 ---
-
 
 @greweb's #12 plot loop. Taking the idea of [plot#198](/plots/198) to the next level using an animated eye.
 

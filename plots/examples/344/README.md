@@ -1,13 +1,13 @@
 ---
 title: "Circles (Reveal 3 / 7)"
-thumbnail: /images/plots/344.jpg
+image: /images/plots/344.jpg
 description: "This plot is the third of a series of 7 plots that reveal 'Plottable Circles' – my next plottable generative art on fxhash"
 nftGenerator: https://www.fxhash.xyz/u/greweb
 tags:
-- plottable-circles
+  - plottable-circles
 ---
 
-*This plot is the third of a series of 7 plots that reveal "Plottable Circles" – my next plottable generative art on [fx(hash) platform](https://fxhash.xyz/u/greweb).*
+_This plot is the third of a series of 7 plots that reveal "Plottable Circles" – my next plottable generative art on [fx(hash) platform](https://fxhash.xyz/u/greweb)._
 
 **the low polygon shape** is revealed here. It makes the ring shape made of longer segments (instead of small ones which form a curves in the other shape). It will be relatively rare feature.
 

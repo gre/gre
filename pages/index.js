@@ -28,7 +28,7 @@ export const CarouselPlots = ({ plots }) => {
   const [nonce, setNonce] = useState(0);
   const [prog, setProg] = useState(0);
   useEffect(() => {
-    const all = plots.filter((p) => p.data.thumbnail);
+    const all = plots.filter((p) => p.data.image);
     setPlot(nonce < 9 ? all[nonce] : sample(all));
   }, [plots, nonce]);
   useEffect(() => {
@@ -80,7 +80,7 @@ export const CarouselPlots = ({ plots }) => {
       />
       <a href={`/plots/${plot.n}`}>
         <img
-          src={plot.data.thumbnail}
+          src={plot.data.image}
           style={{
             width: "100%",
             height: 600,

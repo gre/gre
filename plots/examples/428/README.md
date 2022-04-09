@@ -1,7 +1,7 @@
 ---
 title: "[NFC] Vallons"
 description: "Plotted live during NFC Lisbon conference on 10 cm square watercolor paper with fountain pen."
-thumbnail: /images/plots/428.jpg
+image: /images/plots/428.jpg
 tags:
   - nfc
   - 10cm

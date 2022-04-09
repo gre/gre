@@ -1,5 +1,5 @@
 ---
 title: ""
-thumbnail: /images/plots/.jpg
+image: /images/plots/.jpg
 description: ""
 ---

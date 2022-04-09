@@ -1,6 +1,6 @@
 ---
 title: "10000 various circles (A3)"
-thumbnail: /images/plots/363.jpg
+image: /images/plots/363.jpg
 tags:
   - shape-packing
   - genuary

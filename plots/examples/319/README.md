@@ -1,10 +1,9 @@
 ---
 title: "Evolutive Bug 04"
-thumbnail: /images/plots/319.jpg
+image: /images/plots/319.jpg
 description: "Plotted for an hour with a fountain pen and Bloody Brexit ink on A4 watercolor paper."
 sourceFolderURL: https://github.com/gre/gre/tree/master/doodles/evolutive-bug-01
 sourceFolder: evolutive-bug-01
 ---
-
 
 Plotted for an hour with a fountain pen and Bloody Brexit ink on A4 watercolor paper.

@@ -37,7 +37,7 @@ export async function getStaticProps({ params }) {
 export default function Home({ tag, plots }) {
   const title = `Plots with tag '${tag}'`;
 
-  const firstThumbnail = plots.map((p) => p.data.thumbnail).filter(Boolean)[0];
+  const firstThumbnail = plots.map((p) => p.data.image).filter(Boolean)[0];
 
   return (
     <Global>

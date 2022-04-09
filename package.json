@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "gen-thumbnails": "cd public/images/plots; for f in ???.jpg; do if [ ! -f ${f%%.*}-thumbnail.jpg ]; then echo convert $f -resize 600x600 ${f%%.*}-thumbnail.jpg; fi; done",
     "build-doodle": "./scripts/build-webpack-doodle.sh",
     "zip-dist": "rm -f dist.zip; cd dist && zip -r ../dist.zip *",
     "start-doodle": "parcel",

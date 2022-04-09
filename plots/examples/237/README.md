@@ -1,6 +1,6 @@
 ---
 title: "Bi-color eye"
-thumbnail: /images/plots/237.jpg
+image: /images/plots/237.jpg
 description: "Stippling technique on my beloved wife's eye. Using two different inks."
 ---
 

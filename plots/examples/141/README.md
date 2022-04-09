@@ -1,6 +1,6 @@
 ---
 title: "Ink fabrics"
-thumbnail: "/images/plots/141.jpg"
+image: "/images/plots/141.jpg"
 description: "Drop inks on simple robotic motions and let the medium speak."
 ---
 

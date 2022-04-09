@@ -1,6 +1,6 @@
 ---
 title: "ink drops in square spiral"
-thumbnail: "/images/plots/139.jpg"
+image: "/images/plots/139.jpg"
 description: "I used a dropper to drop some ink on a canvas while the plotter was running."
 tags:
   - inkdrop

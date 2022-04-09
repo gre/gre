@@ -1,6 +1,6 @@
 ---
 title: "concentric parametric flowers"
-thumbnail: /images/plots/118.jpg
+image: /images/plots/118.jpg
 tags:
   - parametric
 ---

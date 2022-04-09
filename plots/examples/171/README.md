@@ -1,6 +1,6 @@
 ---
 title: "Ring of faces (8 frames)"
-thumbnail: "/images/plots/171.gif"
+image: "/images/plots/171.gif"
 description: "8 frames plotted making an animated loop. A 1920p video and A4 physical art is available as an NFT."
 tags:
   - plotloop
@@ -30,6 +30,7 @@ The general animation is inspired by a shader I wrote https://greweb.me/shaderda
 The effect called 'Apophenia' is, in this case, our ability to recognize a face silhouette in pure noise.
 
 I see these different silhouettes:
+
 - an indigenous face
 - Churchill
 - a bearded man

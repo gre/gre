@@ -1,12 +1,13 @@
 ---
 title: "Packing doodle curves"
-thumbnail: /images/plots/386.jpg
+image: /images/plots/386.jpg
 description: "Packing doodle curves explore the idea to combine a few classical generative art technique to draw curious curves."
 ---
 
 Packing doodle curves explore the idea to combine a few classical generative art technique to draw curious curves.
 
 Factually here are the techniques used:
+
 - Circle packing to distribute the doodles.
 - Travelling Salesman Problem to solve connecting closest circles together.
 - kmeans clustering to distribute the circles into groups and optimise the TSP.

@@ -1,4 +1,4 @@
 ---
 title: "Eye Variant"
-thumbnail: /images/plots/217.jpg
+image: /images/plots/217.jpg
 ---

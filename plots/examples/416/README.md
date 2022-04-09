@@ -1,9 +1,9 @@
 ---
 title: "Storm of hope"
 description: 'This is a continuation of "Storm" series. The idea of "two levels" packing were introduced to create "group" of storms which make some area using only one color.'
-thumbnail: /images/plots/416.jpg
+image: /images/plots/416.jpg
 tags:
-    - A3
+  - A3
 nft: https://objkt.com/asset/KT1XBzsXAGCAPCp69T2fZmQitpu77iE2D1he/2
 ---
 
@@ -14,7 +14,6 @@ Plotted on A3 watercolor paper using fountain pens (Turquoise and Amber). The tw
 550 meters of ink were plotted for 7 hours.
 
 <video loop autoplay controls src="/images/plots/416.mp4" width="100%"></video>
-
 
 <img width="100%" src="/images/plots/416z1.jpg"/>
 <img width="100%" src="/images/plots/416z2.jpg"/>

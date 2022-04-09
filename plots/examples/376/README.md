@@ -1,12 +1,12 @@
 ---
 title: "Sand"
-thumbnail: /images/plots/376.jpg
+image: /images/plots/376.jpg
 description: "This implements the prompt 'Sand' (JAN.15) for the Genuary event"
 tags:
   - genuary
 ---
 
-This implements the prompt **"Sand" (JAN.15)** for the [Genuary](https://genuary.art/) event. 
+This implements the prompt **"Sand" (JAN.15)** for the [Genuary](https://genuary.art/) event.
 
 Plotting a lot of strokes to make the texture of sand and using ONLY perlin noise. Actually glitching perlin noise with a bit of domain warping too.
 

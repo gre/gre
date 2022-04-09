@@ -1,6 +1,6 @@
 ---
 title: "Distance Field Colombus"
-thumbnail: /images/plots/284.jpg
+image: /images/plots/284.jpg
 description: "Techniques: distance field, Perlin noise, domain warping, marching square. Fountain pen on Watercolor A4 paper."
 sourceFolder: 280
 tags:

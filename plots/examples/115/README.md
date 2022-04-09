@@ -1,6 +1,6 @@
 ---
 title: "Yellow fibers"
-thumbnail: /images/plots/115.jpg
+image: /images/plots/115.jpg
 tags:
   - fibers
 ---

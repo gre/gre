@@ -1,6 +1,6 @@
 ---
 title: "Forgotten squares warping"
-thumbnail: /images/plots/231.jpg
+image: /images/plots/231.jpg
 ---
 
 <img width="100%" src="/images/plots/231b.jpg">

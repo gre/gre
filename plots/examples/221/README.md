@@ -1,5 +1,4 @@
 ---
 title: "Noisy terrain"
-thumbnail: /images/plots/221.jpg
+image: /images/plots/221.jpg
 ---
-

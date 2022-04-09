@@ -1,6 +1,6 @@
 ---
 title: "triangle packing"
-thumbnail: /images/plots/181.jpg
+image: /images/plots/181.jpg
 description: "Third iteration on packing iso triangles in a square. two fountain pens on 300g/m paper."
 tags:
   - shape-packing

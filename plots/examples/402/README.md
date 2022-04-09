@@ -1,6 +1,6 @@
 ---
 title: "Maillage 10"
-thumbnail: /images/plots/402.jpg
+image: /images/plots/402.jpg
 sourceFolder: 301
 ---
 

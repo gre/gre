@@ -1,6 +1,6 @@
 ---
 title: "Hack-a-plot avatar hatching 2"
-thumbnail: "/images/plots/173.jpg"
+image: "/images/plots/173.jpg"
 description: "Plots made during an internal Hackathon at Ledger using profile picture, hatching and contouring techniques."
 tags:
   - contour

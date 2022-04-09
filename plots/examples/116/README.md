@@ -1,6 +1,6 @@
 ---
 title: "Triangle planet"
-thumbnail: /images/plots/116.jpg
+image: /images/plots/116.jpg
 description: "Exploration of perlin noise triangle planets. various fountain pen on A4 bristol."
 tags:
   - parametric

@@ -1,6 +1,6 @@
 ---
 title: "Space debris"
-thumbnail: /images/plots/365.jpg
+image: /images/plots/365.jpg
 tags:
   - shape-packing
   - genuary

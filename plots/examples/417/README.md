@@ -1,7 +1,7 @@
 ---
 title: "Sunflower inner"
 description: "Packing of golden spiral."
-thumbnail: /images/plots/417.jpg
+image: /images/plots/417.jpg
 ---
 
 Packing of golden spiral.

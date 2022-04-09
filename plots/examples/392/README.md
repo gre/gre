@@ -1,9 +1,9 @@
 ---
 title: "PI RNG"
-thumbnail: /images/plots/392.jpg
+image: /images/plots/392.jpg
 ---
 
-This was implemented for [genuary.art](https://genuary.art) *"Create your own pseudo-random number generator and visually check the results."* of JAN.24. let me explain why:
+This was implemented for [genuary.art](https://genuary.art) _"Create your own pseudo-random number generator and visually check the results."_ of JAN.24. let me explain why:
 
 **Each line is drawn from the bottom to the top.** Actually the line is splitted into many segments that are drawn one after the other following an angle. The angle is initially pointing up but on each iteration, it gets randomly offset by a random value. That's where the random number generator (RNG) happens: a value of 0.0 means (go left) a value of 0.5 keep moving forward and a value of 1.0 (go right).
 

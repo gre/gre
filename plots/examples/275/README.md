@@ -1,6 +1,6 @@
 ---
 title: "Distance Field Vanishing Ring"
-thumbnail: /images/plots/275.jpg
+image: /images/plots/275.jpg
 description: "Techniques: distance field, Perlin noise, domain warping, marching square. Fountain pen on Watercolor A4 paper."
 sourceFolder: 272
 tags:

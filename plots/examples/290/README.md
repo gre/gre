@@ -1,6 +1,6 @@
 ---
 title: "Mint Red Field Overlap"
-thumbnail: /images/plots/290.jpg
+image: /images/plots/290.jpg
 description: "Techniques: distance field, Perlin noise, domain warping, marching square. Fountain pen on Watercolor A4 paper."
 sourceFolder: 285
 tags:

@@ -1,6 +1,6 @@
 ---
 title: "VHS splitted"
-thumbnail: /images/plots/389.jpg
+image: /images/plots/389.jpg
 ---
 
 Another version of [plots/388](/plots/388).

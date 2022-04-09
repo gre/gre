@@ -1,6 +1,6 @@
 ---
 title: "3-Blob"
-thumbnail: /images/plots/175.jpg
+image: /images/plots/175.jpg
 description: "Exploration of marching squares contour and distance function technique"
 ---
 

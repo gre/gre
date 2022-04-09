@@ -1,6 +1,6 @@
 ---
 title: "Alien planet"
-thumbnail: "/images/plots/137.jpg"
+image: "/images/plots/137.jpg"
 description: "transition of two parametric spirals repeated twice with different displacement. Fountain pen with 'Aurora Borealis' on white bristol A4."
 tags:
   - parametric

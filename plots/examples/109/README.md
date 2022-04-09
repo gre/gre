@@ -1,6 +1,6 @@
 ---
 title: "Clothes"
-thumbnail: /images/plots/109.jpg
+image: /images/plots/109.jpg
 tags:
   - fibers
 ---

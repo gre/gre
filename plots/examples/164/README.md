@@ -1,6 +1,6 @@
 ---
 title: "Montagne muable (8 frames)"
-thumbnail: /images/plots/164.gif
+image: /images/plots/164.gif
 description: ""
 tags:
   - plotloop
@@ -8,21 +8,17 @@ tags:
   - perlin
 ---
 
-
 **Every NFT sold allows acquiring a plotted frame. (code in the unlockable content)**
 
 <nft-card contractAddress="0x495f947276749ce646f68ac8c248420045cb7b5e" tokenId="47428341271170390733253974222101382154768714392453356712130950043610789183496"> </nft-card> <script src="https://unpkg.com/embeddable-nfts/dist/nft-card.min.js"></script>
 
 <video loop autoplay controls src="/images/plots/164-showcase.mp4" width="100%"></video>
 
-
 My 7th [plotloop](/plots/tags/plotloop) is a very special one, inspired from the mother of all of my plot loops: [plot#108](/plots/108) which wasn't planned to be animated but a way to visualize randomness and chose one frame! This is still what gave me the idea to do these plot loops.
 
 > The concept of Plot Loop, as described in https://greweb.me/2021/05/plot-loops article, is an hybrid concept between a digital video art and physical plot that produces topology of the same art.
 
-
 The main digital art is a 1920p video loop of 8 frames available as NFT on Opensea.io sold by [@achetezdelart](https://twitter.com/achetezdelart) famous Paris' art gallery. I am so thrilled to work for the first time with an art gallery and looking forward to do more collaboration in the future! The physical art is the 8 frames, plotted with 3 fountain pens on Bristol A4 paper (250g), and offered when buying the NFT.
-
 
 ## 24+ hours of near non-stop plotting!
 
@@ -86,7 +82,7 @@ It's important to also note that noise/perlin noise, is quite challenging to "lo
 let n1 = perlin.get([ a, b, opts.seed + i as f64 * divergence + 200.2 ]);
 let n2 = perlin.get([ a, b, opts.seed + i as f64 * divergence + 300.514 ]);
 let n3 = perlin.get([ a, b, opts.seed + i as f64 * divergence + 400.31 ]);
-let n = 0.8 * 
+let n = 0.8 *
     (
         n1 * (2. * PI * p).cos() +
         n2 * (2. * PI * (p + 0.33)).cos() +

@@ -1,6 +1,6 @@
 ---
 title: "Noisy fibers"
-thumbnail: /images/plots/124.jpg
+image: /images/plots/124.jpg
 description: "Jumping man with fibers."
 tags:
   - fibers

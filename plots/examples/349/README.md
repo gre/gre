@@ -1,10 +1,10 @@
 ---
 title: "Plottable Circles"
-thumbnail: /images/plots/349.jpg
+image: /images/plots/349.jpg
 description: "Plottable Circles explores concentric circles – varies in the different number of circles, noise scales, inks, line widths and includes some rare shapes."
 nftGenerator: https://www.fxhash.xyz/u/greweb
 tags:
-- plottable-circles
+  - plottable-circles
 ---
 
 > This plottable NFT generator is available on https://www.fxhash.xyz/u/greweb
@@ -12,8 +12,9 @@ tags:
 Plottable Circles explores concentric circles – varies in the different number of circles, noise scales, inks, line widths and includes some rare shapes.
 
 > The digital NFT is the recipe to a plottable art: Owning this NFT confers the right to request a physical plot (A4 square, 21cm by 21cm) – this is an optional possibility as you can already enjoy the digital version.
-> 
+>
 > Digital and Physical art, hybrid and decoupled:
+>
 > - art published via a digital NFT on Tezos – its digital representation simulates fountain pen inks drawing on paper with animated effects.
 > - Token to the physical world: owning each NFT confer the power to request the related physical plot at https://greweb.me/plots/nft
 

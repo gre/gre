@@ -1,7 +1,7 @@
 ---
 title: "Bitcoin"
 description: "a parametric spiral, similar to recent exploration, allows to fill the color of the Bitcoin logo"
-thumbnail: /images/plots/120.jpg
+image: /images/plots/120.jpg
 tags:
   - bitcoin
 ---

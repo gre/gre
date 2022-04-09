@@ -1,10 +1,10 @@
 ---
 title: "Evolutive Bug – genesis"
-thumbnail: /images/plots/310.gif
+image: /images/plots/310.gif
 sourceFolderURL: https://github.com/gre/gre/tree/master/doodles/evolutive-bug-01
 sourceFolder: evolutive-bug-01
 objkts:
-- 512531
+  - 512531
 ---
 
 This is part of an NFT concept on Tezos blockchain.

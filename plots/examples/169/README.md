@@ -1,6 +1,6 @@
 ---
 title: "Anomalie carrée (3/4)"
-thumbnail: /images/plots/169.jpg
+image: /images/plots/169.jpg
 description: "One of the 4 plots of the series of 'Anomalie carrée'. made with 2 fountain pens on A4 Bristol paper. The first buyer of this NFT sold by achetezdelart can collect the original copy. No other copy will be made. See information in the NFT."
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: "The Spaghetti Kid"
-thumbnail: /images/plots/364.jpg
+image: /images/plots/364.jpg
 description: "Stippling technique made of 50'000 strokes plotted in 7 hours with fountain pen and Claret (Robert Oster) ink on watercolor paper."
 tags:
   - stippling

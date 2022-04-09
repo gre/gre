@@ -1,12 +1,12 @@
 ---
 title: "Plottable Storm (OG plot)"
-thumbnail: /images/plots/327.jpg
+image: /images/plots/327.jpg
 description: "Plottable Storm is a flow field simulating fountain pen ink drawing on paper on its digital form. 10 inks, many rarity features varying noise, size and color positionning. Having only one color is rare. The digital NFTs can be used to perform a physical action: @greweb plotting on demand a fountain pen plot for those who also want physical originals."
 sourceFolderURL: https://github.com/gre/gre/tree/master/doodles/plottable-storm
 sourceFolder: plottable-storm
 nftGenerator: https://www.fxhash.xyz/generative/1050
 tags:
-- plottable-storm
+  - plottable-storm
 ---
 
 Plottable Storm is a flow field simulating fountain pen ink drawing on paper on its digital form. 10 inks, many rarity features varying noise, size and color positionning. Having only one color is rare. The digital NFTs can be used to perform a physical action: @greweb plotting on demand a fountain pen plot for those who also want physical originals.

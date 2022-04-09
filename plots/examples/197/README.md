@@ -1,6 +1,6 @@
 ---
 title: "Eye 01"
-thumbnail: /images/plots/197.jpg
+image: /images/plots/197.jpg
 description: "Using layered lines combined with an eye photo with two fountain pens on watercolor paper."
 ---
 

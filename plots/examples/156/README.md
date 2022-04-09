@@ -1,6 +1,6 @@
 ---
 title: "Elevation 01"
-thumbnail: /images/plots/156.jpg
+image: /images/plots/156.jpg
 description: "First experiment of Molotow pen on Bristol paper."
 ---
 

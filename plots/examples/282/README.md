@@ -1,6 +1,6 @@
 ---
 title: "Distance Field Blue Diamond"
-thumbnail: /images/plots/282.jpg
+image: /images/plots/282.jpg
 description: "Techniques: distance field, Perlin noise, domain warping, marching square. Fountain pen on Watercolor A4 paper."
 sourceFolder: 280
 tags:

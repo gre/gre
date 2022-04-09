@@ -1,6 +1,6 @@
 ---
 title: "Eye field"
-thumbnail: /images/plots/224.jpg
+image: /images/plots/224.jpg
 tags:
   - stippling
 ---

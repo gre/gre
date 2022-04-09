@@ -1,6 +1,6 @@
 ---
 title: "Colored mountains 01"
-thumbnail: /images/plots/192.jpg
+image: /images/plots/192.jpg
 description: "Continuation of noise elevation. Fountain pens with various inks on watercolour paper (300g/m)."
 ---
 

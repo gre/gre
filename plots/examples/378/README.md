@@ -1,6 +1,6 @@
 ---
 title: "Fire sand"
-thumbnail: /images/plots/378.jpg
+image: /images/plots/378.jpg
 sourceFolder: 376
 ---
 

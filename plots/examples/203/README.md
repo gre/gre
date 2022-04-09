@@ -1,6 +1,6 @@
 ---
 title: "circles recursion & ordered noise"
-thumbnail: /images/plots/203.jpg
+image: /images/plots/203.jpg
 description: "I like randomness a lot. Exploring the beauty of noise is also recreating Nature's pattern and trying to put back some order in that randomness."
 tags:
   - shape-packing
@@ -17,7 +17,7 @@ fn packing(
     seed: f64,
     iterations: usize,
     desired_count: usize,
-    optimize_size: usize, // <--- number of retries to optimize the size 
+    optimize_size: usize, // <--- number of retries to optimize the size
     pad: f64,
     container: &VCircle,
     min_scale: f64,

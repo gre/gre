@@ -1,4 +1,4 @@
 ---
 title: "Dense Circles Nesting"
-thumbnail: /images/plots/216.jpg
+image: /images/plots/216.jpg
 ---

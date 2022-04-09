@@ -1,11 +1,11 @@
 ---
 title: "yarn balls"
-thumbnail: /images/plots/371.jpg
+image: /images/plots/371.jpg
 description: "Genuary entry for 'Single curve only.' (JAN.8)"
 tags:
   - genuary
 ---
 
-[Genuary](https://genuary.art/) entry for ***"Single curve only."*** (JAN.8)
+[Genuary](https://genuary.art/) entry for **_"Single curve only."_** (JAN.8)
 
 A4 watercolor paper, fountain pen with Black ink.

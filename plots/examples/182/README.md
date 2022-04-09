@@ -1,6 +1,6 @@
 ---
 title: "packing squares in triangles"
-thumbnail: /images/plots/182.jpg
+image: /images/plots/182.jpg
 description: "Continuing my geometry minimalism series. This time, packing squares in triangles. Black fountain pen on 300g/m paper."
 tags:
   - shape-packing

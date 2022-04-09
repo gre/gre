@@ -1,6 +1,6 @@
 ---
 title: "Self portrait"
-thumbnail: /images/plots/390.jpg
+image: /images/plots/390.jpg
 description: "using curves, spirals and distributing them based on my avatar."
 ---
 

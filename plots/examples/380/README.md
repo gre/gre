@@ -1,8 +1,7 @@
 ---
 title: "Ink Matrix"
-thumbnail: /images/plots/380.jpg
+image: /images/plots/380.jpg
 ---
-
 
 This implements the prompt **"Color gradients gone wrong." (JAN.16)** for the [Genuary](https://genuary.art/) event.
 

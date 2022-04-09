@@ -1,7 +1,7 @@
 ---
 title: "Blurry waves"
 description: "Yet another parametric stack, noisy one this time! white uniball on black A4."
-thumbnail: /images/plots/119.jpg
+image: /images/plots/119.jpg
 tags:
   - parametric
 ---

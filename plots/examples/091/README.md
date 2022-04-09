@@ -1,6 +1,6 @@
 ---
 title: "seasonal roots"
-thumbnail: /images/plots/091fall.jpg
+image: /images/plots/091fall.jpg
 description: "Experimentation of vector fields with a sinusoïdal distribution of lines."
 tags:
   - field

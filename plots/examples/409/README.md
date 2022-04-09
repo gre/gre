@@ -1,6 +1,6 @@
 ---
 title: "This is not generative art"
-thumbnail: /images/plots/409.jpg
+image: /images/plots/409.jpg
 rootFile: index.js
 ---
 

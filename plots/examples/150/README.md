@@ -1,6 +1,6 @@
 ---
 title: "Dancing Planet"
-thumbnail: /images/plots/150.gif
+image: /images/plots/150.gif
 description: "8 frames plotted making an animated loop. A 1920p video and A4 physical art is available as an NFT."
 tags:
   - field

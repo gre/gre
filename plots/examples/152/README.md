@@ -1,6 +1,6 @@
 ---
 title: "Warp Glitch 01"
-thumbnail: /images/plots/152.jpg
+image: /images/plots/152.jpg
 description: "This is a fresh experimentation of noise domain warping with glitches"
 tweet: https://twitter.com/greweb/status/1399823206215831556
 tags:

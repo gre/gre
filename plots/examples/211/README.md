@@ -1,6 +1,6 @@
 ---
 title: "Crimson & Indigo Squares"
-thumbnail: /images/plots/211.jpg
+image: /images/plots/211.jpg
 tags:
   - shape-packing
 ---

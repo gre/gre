@@ -37,7 +37,7 @@ export async function getStaticProps({ params }) {
 
 export default function Home({ plot, prev, next }) {
   const { content, data, rustFile, sourceURL } = plot;
-  const { thumbnail } = data;
+  const { image } = data;
   const title = `Plot #${plot.n} ${data.title ? " – " + data.title : ""}`;
   const description = data.description || "";
 
@@ -61,17 +61,11 @@ export default function Home({ plot, prev, next }) {
         <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={description} />
         <meta name="twitter:creator" content="@greweb" />
-        {thumbnail ? (
+        {image ? (
           <>
-            <meta
-              name="twitter:image"
-              content={`http://greweb.me${thumbnail}`}
-            />
-            <link rel="image_src" href={`http://greweb.me${thumbnail}`} />
-            <meta
-              property="og:image"
-              content={`http://greweb.me${thumbnail}`}
-            />
+            <meta name="twitter:image" content={`http://greweb.me${image}`} />
+            <link rel="image_src" href={`http://greweb.me${image}`} />
+            <meta property="og:image" content={`http://greweb.me${image}`} />
           </>
         ) : null}
 
@@ -208,7 +202,7 @@ export default function Home({ plot, prev, next }) {
             ) : null}
             <span />
           </div>
-          {thumbnail ? <img src={thumbnail} width="100%" /> : null}
+          {image ? <img src={image} width="100%" /> : null}
         </header>
         <div className="content" key={plot.n}>
           <div

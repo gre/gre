@@ -1,12 +1,12 @@
 ---
 title: "Plottable Mountain Moons (OG plot)"
-thumbnail: /images/plots/331.jpg
+image: /images/plots/331.jpg
 description: "This plot represents the 'Plottable Mountain Moons' generator."
 sourceFolderURL: https://github.com/gre/gre/tree/master/doodles/plottable-mountain-moons
 sourceFolder: plottable-mountain-moons
 nftGenerator: https://www.fxhash.xyz/generative/1806
 tags:
-- plottable-mountain-moons
+  - plottable-mountain-moons
 ---
 
 This plot represents the "Plottable Mountain Moons" generator.

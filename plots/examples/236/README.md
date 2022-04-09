@@ -1,6 +1,6 @@
 ---
 title: "My king"
-thumbnail: /images/plots/236.jpg
+image: /images/plots/236.jpg
 description: "Stippling technique made of 40'000 strokes plotted in 6 hours with fountain pen and Diamine Indigo ink on watercolor paper."
 tags:
   - stippling

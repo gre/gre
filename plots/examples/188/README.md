@@ -1,6 +1,6 @@
 ---
 title: "Rotation (11 frames)"
-thumbnail: /images/plots/188.gif
+image: /images/plots/188.gif
 description: "@greweb's #10 plot loop. That animation is the main digital art. A high-quality video is available in 11 NFT editions, one per frame, for buyers to acquire each physical frame."
 tags:
   - shape-packing
@@ -15,7 +15,7 @@ tags:
 
 A high-quality video is available in 11 NFT editions, one per frame, for buyers to acquire each physical frame.
 
-This work took me a lot of dedication to plot the 11 frames for an (interrupted) one week long! Each frame taking almost 2 hours to plot, you can't really cheat here, I like to think the process to be some sort of *Proof Of Plot*.
+This work took me a lot of dedication to plot the 11 frames for an (interrupted) one week long! Each frame taking almost 2 hours to plot, you can't really cheat here, I like to think the process to be some sort of _Proof Of Plot_.
 
 It is getting sold by **achetezdelart** on OpenSea. Detail is in the description.
 
@@ -24,7 +24,6 @@ It is getting sold by **achetezdelart** on OpenSea. Detail is in the description
 <img width="100%" src="/images/plots/188plot1.gif">
 <img width="100%" src="/images/plots/188plot2.gif">
 <img width="100%" src="/images/plots/188plot3.gif">
-
 
 ## Making-of and technical notes
 
@@ -37,7 +36,6 @@ The work is technically composed of 3 circles rotating in the middle of a lot of
 - shape contouring, to remind a bit exploration of [plotloop#136](/plots/136)
 - square packing, which is a direct reuse of logic of [plot#180](/plots/180) with however a unique nesting of squares to create more depth.
 - layered lines in circles, which is an innovation that I'm going to re-explore (starting with next [plot#189](/plots/189))
-
 
 ## Full picture photos
 

@@ -1,7 +1,7 @@
 ---
 title: "[NFC] Wireframes (8 frames)"
 description: "8 frames were plotted live during NFC Lisbon conference on 10 cm square watercolor paper with fountain pen and Fire and ice ink."
-thumbnail: /images/plots/448.gif
+image: /images/plots/448.gif
 tweet: https://twitter.com/Ledger/status/1511026144644145158
 nft: https://objkt.com/asset/KT1AZYsEjt8HFEXWZUjGVfBxtzKPobNo3x1t/0
 sourceFolder: 428

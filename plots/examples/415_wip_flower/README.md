@@ -1,6 +1,6 @@
 ---
 title: "Packing circles with curves"
-thumbnail: /images/plots/396.jpg
+image: /images/plots/396.jpg
 ---
 
 This reuses [plots/396](/plots/396) generator to generate another variant.

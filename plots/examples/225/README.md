@@ -1,6 +1,6 @@
 ---
 title: "Field"
-thumbnail: /images/plots/225.jpg
+image: /images/plots/225.jpg
 tags:
   - stippling
 ---

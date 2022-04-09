@@ -1,4 +1,4 @@
 ---
 title: "Contouring Molotow Test"
-thumbnail: /images/plots/230.jpg
+image: /images/plots/230.jpg
 ---

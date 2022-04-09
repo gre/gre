@@ -1,6 +1,6 @@
 ---
 title: "parametric oddity"
-thumbnail: "/images/plots/138.jpg"
+image: "/images/plots/138.jpg"
 description: "transition of two parametric spirals. I called it 'parametric oddity' because one of the parametric frequency is literally an 'odd number' which makes it having this mesh effect. Fountain pen with 'Red Dragon' on white bristol A4."
 tags:
   - parametric

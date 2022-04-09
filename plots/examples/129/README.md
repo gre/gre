@@ -1,6 +1,6 @@
 ---
 title: "Jumping blob (8 frames)"
-thumbnail: "/images/plots/129.gif"
+image: "/images/plots/129.gif"
 description: "8 frames plotted making an animated loop of a jumping blob. A 1920p video and 12cm square physical art is available as an NFT."
 tags:
   - plotloop

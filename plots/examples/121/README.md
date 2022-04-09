@@ -1,7 +1,7 @@
 ---
 title: "Triplanet (16 frames)"
 description: "Triplanet is my first plot loop, physical animation of 16 plotted frames. transition between parametric functions and perlin noise."
-thumbnail: /images/plots/121.gif
+image: /images/plots/121.gif
 tags:
   - plotloop
   - parametric

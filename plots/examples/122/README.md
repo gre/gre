@@ -1,6 +1,6 @@
 ---
 title: "Growing parametric splitted"
-thumbnail: /images/plots/122.jpg
+image: /images/plots/122.jpg
 description: "stacking multiple parametric functions with 3 stops. playing with moiré effects. STA pigment liner on A4 bristol."
 tags:
   - parametric

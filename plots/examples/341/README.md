@@ -1,10 +1,10 @@
 ---
 title: "Plottable Mesh"
-thumbnail: /images/plots/341.jpg
+image: /images/plots/341.jpg
 description: "This plot is the 'OG plot' that covers my new Plottable Mesh generator."
 nftGenerator: https://www.fxhash.xyz/u/greweb
 tags:
-- plottable-mesh
+  - plottable-mesh
 ---
 
 This plot is the genesis piece that covers my new Plottable Mesh generator.
@@ -24,7 +24,6 @@ One of the important innovations is the "intersection" mecanism: lines of a shap
 One rarity aspect is the color you will get. It will sometimes be a 2-colors plot to emphasize on the mirror duality.
 
 There are many other rarity aspects and the general variety will offer a wide range of results.
-
 
 ## The density technical challenge
 

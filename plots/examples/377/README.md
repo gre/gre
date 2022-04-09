@@ -1,6 +1,6 @@
 ---
 title: "Evergreen sand"
-thumbnail: /images/plots/377.jpg
+image: /images/plots/377.jpg
 sourceFolder: 376
 ---
 

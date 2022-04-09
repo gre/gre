@@ -1,7 +1,7 @@
 ---
 title: "[NFC] Minifibers 3"
 description: "Plotted live during NFC Lisbon conference on 10 cm square watercolor paper with fountain pen."
-thumbnail: /images/plots/438.jpg
+image: /images/plots/438.jpg
 sourceFolder: 436
 tags:
   - nfc

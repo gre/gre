@@ -1,6 +1,6 @@
 ---
 title: "Fibers 6"
-thumbnail: /images/plots/403.jpg
+image: /images/plots/403.jpg
 sourceFolder: 401
 ---
 

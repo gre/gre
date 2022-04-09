@@ -1,7 +1,7 @@
 ---
 title: "[NFC] Mountains"
 description: "Plotted live during NFC Lisbon conference on 10 cm square watercolor paper with fountain pen."
-thumbnail: /images/plots/430.jpg
+image: /images/plots/430.jpg
 sourceFolder: 428
 tags:
   - nfc

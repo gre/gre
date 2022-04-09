@@ -1,6 +1,6 @@
 ---
 title: "Gold disc"
-thumbnail: /images/plots/110.jpg
+image: /images/plots/110.jpg
 tags:
   - polar
   - disc

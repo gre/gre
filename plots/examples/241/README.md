@@ -1,6 +1,6 @@
 ---
 title: "Pattern03 #6396"
-thumbnail: /images/plots/pattern03/6396/preview.jpg
+image: /images/plots/pattern03/6396/preview.jpg
 description: "one of the plot of 888s 'Pattern 03' mints"
 tags:
   - pattern03

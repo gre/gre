@@ -1,6 +1,6 @@
 ---
 title: "Layers"
-thumbnail: /images/plots/189.jpg
+image: /images/plots/189.jpg
 description: "Packing circles with layered lines inside. exploration made before plot#188."
 tags:
   - shape-packing

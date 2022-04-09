@@ -1,6 +1,6 @@
 ---
 title: "Mutating Bug"
-thumbnail: /images/plots/404.jpg
+image: /images/plots/404.jpg
 ---
 
 Rebooting my "Evolving Bug" series.

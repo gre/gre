@@ -1,6 +1,6 @@
 ---
 title: "Bubbles"
-thumbnail: /images/plots/166.jpg
+image: /images/plots/166.jpg
 description: "Marching squares on cosinus 😂"
 ---
 

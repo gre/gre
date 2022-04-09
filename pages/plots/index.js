@@ -74,9 +74,14 @@ export function PlotGrid({ children }) {
 
 export function Plot({ plot }) {
   const { data, n } = plot;
-  const { thumbnail } = data;
+  const { image } = data;
   const title = `Plot #${plot.n} ${data.title ? " – " + data.title : ""}`;
   const url = `/plots/${n}`;
+  const thumbnail =
+    image && image.endsWith(".jpg")
+      ? image.replace(/\.([^.]+)$/, "-thumbnail.$1")
+      : null;
+
   return (
     <div className="plot">
       <style jsx>{`
@@ -97,7 +102,7 @@ export function Plot({ plot }) {
           font-size: 12px;
           background: #fff;
         }
-        .plot img {
+        .plot image {
           object-fit: cover;
         }
       `}</style>
@@ -105,7 +110,7 @@ export function Plot({ plot }) {
       <Link href={url}>
         <a title={title}>
           <span className="title">{title}</span>
-          <img src={thumbnail} width="100%" height="100%" />
+          <img width="100%" height="100%" src={thumbnail || image} />
         </a>
       </Link>
     </div>

@@ -1,6 +1,6 @@
 ---
 title: "Noisy fibers"
-thumbnail: /images/plots/117.jpg
+image: /images/plots/117.jpg
 description: "Exploration of fibers with a centered noise. two color tones."
 tags:
   - fibers

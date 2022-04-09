@@ -1,6 +1,6 @@
 ---
 title: "Pink fibers"
-thumbnail: /images/plots/112.jpg
+image: /images/plots/112.jpg
 tags:
   - fibers
 ---

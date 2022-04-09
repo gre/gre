@@ -1,6 +1,6 @@
 ---
 title: "Not really the next Fidenza"
-thumbnail: /images/plots/366.jpg
+image: /images/plots/366.jpg
 tags:
   - genuary
 ---

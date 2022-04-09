@@ -1,6 +1,6 @@
 ---
 title: "packing hexagons in hexagons"
-thumbnail: /images/plots/184.jpg
+image: /images/plots/184.jpg
 description: "Packing 3963 filled hexagons in hexagons. 2 hours of plotting with fountain pens on watercolor 300g/m paper."
 tags:
   - shape-packing

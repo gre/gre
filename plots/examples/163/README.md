@@ -1,6 +1,6 @@
 ---
 title: "Jumping man spiral"
-thumbnail: /images/plots/163.jpg
+image: /images/plots/163.jpg
 description: "Revisit of plot#060 'Jumping man' using two fountain pen inks and a spiral fill technique with slight noise."
 ---
 
