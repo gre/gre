@@ -8,6 +8,32 @@ import { Main } from "../../components/Main";
 import { Header } from "../../components/Header";
 import { Title } from "../../components/Title";
 import MeBlock from "../../components/MeBlock";
+import { PlottingSectionVideos } from "./nft";
+
+export function PlottingHeader() {
+  return (
+    <footer
+      style={{
+        textAlign: "center",
+        fontStyle: "italic",
+        fontSize: "20px",
+        margin: "20px 0",
+        padding: "4px 16px",
+        background: "#000",
+        color: "white",
+      }}
+    >
+      <p>
+        @greweb has been doing generative art for many years, shaders, and more
+        recently fountain pens robot plotting!
+      </p>
+
+      <p>
+        His work is about exploring the beauty of noise through many algorithms.
+      </p>
+    </footer>
+  );
+}
 
 export function Content({ children }) {
   return (
@@ -130,6 +156,9 @@ export default function Home({ plots }) {
           </Header>
 
           <Content>
+            <PlottingSectionVideos />
+            <PlottingHeader />
+
             <PlotGrid>
               {plots.map((plot) => (
                 <Plot plot={plot} key={plot.n} />

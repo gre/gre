@@ -8,6 +8,59 @@ import { Content } from "../../components/Content";
 import { Header } from "../../components/Header";
 import { Title } from "../../components/Title";
 
+export function PlottingSectionVideos() {
+  return (
+    <>
+      <video
+        loop
+        autoPlay
+        muted
+        src="/images/plots/164-plotting-speed-x200.mp4"
+        width="50%"
+      ></video>
+      <video
+        loop
+        autoPlay
+        muted
+        src="/images/plots/164-showcase.mp4"
+        width="50%"
+      ></video>
+    </>
+  );
+}
+
+export function PlottingFooter() {
+  return (
+    <footer
+      style={{
+        textAlign: "center",
+        fontStyle: "italic",
+        fontSize: "20px",
+        margin: "20px 0",
+        padding: "4px 16px",
+        background: "#000",
+        color: "white",
+      }}
+    >
+      <p>
+        @greweb has been doing generative art for many years, shaders, and more
+        recently fountain pens robot plotting!
+      </p>
+
+      <p>
+        His work is about exploring the beauty of noise through many algorithms.
+        See also{" "}
+        <Link href="/plots">
+          <a>https://greweb.me/plots</a>
+        </Link>
+      </p>
+
+      <img width="50%" src="/images/2021/08/artist-1.jpg" />
+      <img width="50%" src="/images/2021/08/artist-2.jpg" />
+    </footer>
+  );
+}
+
 const Row = ({ children }) => (
   <div style={{ padding: "0.4em 0" }}>{children}</div>
 );
@@ -291,49 +344,8 @@ export default function Home({ tag }) {
                 </li>
               </ul>
             </div>
-
-            <video
-              loop
-              autoPlay
-              muted
-              src="/images/plots/164-plotting-speed-x200.mp4"
-              width="50%"
-            ></video>
-            <video
-              loop
-              autoPlay
-              muted
-              src="/images/plots/164-showcase.mp4"
-              width="50%"
-            ></video>
-
-            <footer
-              style={{
-                textAlign: "center",
-                fontStyle: "italic",
-                fontSize: "20px",
-                margin: "20px 0",
-                padding: "4px 16px",
-                background: "#000",
-                color: "white",
-              }}
-            >
-              <p>
-                @greweb has been doing generative art for many years, shaders,
-                and more recently fountain pens robot plotting!
-              </p>
-
-              <p>
-                His work is about exploring the beauty of noise through many
-                algorithms. See also{" "}
-                <Link href="/plots">
-                  <a>https://greweb.me/plots</a>
-                </Link>
-              </p>
-
-              <img width="50%" src="/images/2021/08/artist-1.jpg" />
-              <img width="50%" src="/images/2021/08/artist-2.jpg" />
-            </footer>
+            <PlottingSectionVideos />
+            <PlottingFooter />
           </Content>
         </Main>
       </Container>
