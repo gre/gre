@@ -102,7 +102,7 @@ export function Plot({ plot }) {
           font-size: 12px;
           background: #fff;
         }
-        .plot image {
+        .plot img {
           object-fit: cover;
         }
       `}</style>
