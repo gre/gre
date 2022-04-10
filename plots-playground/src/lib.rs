@@ -33,7 +33,7 @@ pub fn signature(scale: f64, translation: (f64, f64), color: &str) -> Group {
         .set("transform", format!("translate({},{}) scale({})", translation.0, translation.1, 0.3 * scale)));
 }
 
-pub fn grayscale((r, g, b): (f64, f64, f64)) -> f64 {
+pub fn grayscale((r, g, b, _a): (f64, f64, f64, f64)) -> f64 {
     return 0.299 * r + 0.587 * g + 0.114 * b;
 }
 
@@ -80,7 +80,7 @@ pub fn preserve_ratio_outside((x, y): (f64, f64), (w, h): (f64, f64)) -> (f64, f
 // returned value is a rgb tuple in 0..1 range
 pub fn image_get_color(
     path: &str,
-) -> Result<impl Fn((f64, f64)) -> (f64, f64, f64), image::ImageError> {
+) -> Result<impl Fn((f64, f64)) -> (f64, f64, f64, f64), image::ImageError> {
     let img = ImageReader::open(path)?.decode()?;
     return Ok(dynamic_image_get_color(img.to_rgba8()));
 }
@@ -88,7 +88,7 @@ pub fn image_get_color(
 pub fn image_gif_get_color(
     path: &str,
     index: usize,
-) -> Result<impl Fn((f64, f64)) -> (f64, f64, f64), image::ImageError> {
+) -> Result<impl Fn((f64, f64)) -> (f64, f64, f64, f64), image::ImageError> {
     let file_in = File::open(path)?;
     let decoder = GifDecoder::new(file_in).unwrap();
     let frames = decoder.into_frames();
@@ -98,7 +98,7 @@ pub fn image_gif_get_color(
     return Ok(dynamic_image_get_color(buffer.clone()));
 }
 
-pub fn dynamic_image_get_color(img: RgbaImage) -> impl Fn((f64, f64)) -> (f64, f64, f64) {
+pub fn dynamic_image_get_color(img: RgbaImage) -> impl Fn((f64, f64)) -> (f64, f64, f64, f64) {
     let (width, height) = img.dimensions();
     return move |(x, y): (f64, f64)| {
         // quadratic implementation
@@ -129,7 +129,12 @@ pub fn dynamic_image_get_color(img: RgbaImage) -> impl Fn((f64, f64)) -> (f64, f
             mix(p4[2] as f64, p3[2] as f64, xp),
             yp,
         )) / 255.0;
-        return (r, g, b);
+        let a = (mix(
+            mix(p1[3] as f64, p2[3] as f64, xp),
+            mix(p4[3] as f64, p3[3] as f64, xp),
+            yp,
+        )) / 255.0;
+        return (r, g, b, a);
     };
 }
 
