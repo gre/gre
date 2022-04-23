@@ -43,7 +43,7 @@ en dessinant 4 frames proches les unes des autres, nous pouvons recréer un dess
 
 C'est la technique que j'appelle "plot loop", explorée l'an dernier – autres créations de ce type: https://greweb.me/plots/tags/plotloop – le format A3 est néanmoins une première.
 
-<img src="/images/plots/478-artist.gif" width="50%"/>
+<img src="/images/plots/478-artist.gif" width="50%"/><img src="/images/plots/478-z4.gif" width="50%" />
 
 ### Quelques statistiques
 
