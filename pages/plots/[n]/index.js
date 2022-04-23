@@ -37,7 +37,7 @@ export async function getStaticProps({ params }) {
 
 export default function Home({ plot, prev, next }) {
   const { content, data, rustFile, sourceURL } = plot;
-  const { image } = data;
+  const { image, video } = data;
   const title = `Plot #${plot.n} ${data.title ? " – " + data.title : ""}`;
   const description = data.description || "";
 
@@ -209,7 +209,11 @@ export default function Home({ plot, prev, next }) {
             ) : null}
             <span />
           </div>
-          {image ? <img src={image} width="100%" /> : null}
+          {video ? (
+            <video loop autoPlay controls src={video} width="100%"></video>
+          ) : image ? (
+            <img src={image} width="100%" />
+          ) : null}
         </header>
         <div className="content" key={plot.n}>
           <div
