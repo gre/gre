@@ -72,7 +72,7 @@ export default function Home({ plot, prev, next }) {
         {highlightAllResources}
       </Head>
 
-      <style jsx>{`
+      <style jsx global>{`
         main {
           max-width: 680px;
           margin: 0px auto;
@@ -112,6 +112,13 @@ export default function Home({ plot, prev, next }) {
         }
         .content a {
           text-decoration: underline;
+        }
+        .content hr {
+          padding: 0;
+          margin: 50px 0;
+          border: none;
+          height: 5px;
+          background: #eee;
         }
         footer {
           margin-top: 20px;

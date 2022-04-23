@@ -1,6 +1,7 @@
 export default {
   title: "greweb.me",
-  description: "generative art, shaders, plotting with fountain pens",
+  description:
+    "generative artist. doodling with algorithms (creative coding). shaders & fountain pens robot plotting.",
   thumbnail: "/logo.svg",
   photo: "/profile.jpg",
   thumbnailDomain: "http://greweb.me",
