@@ -33,9 +33,7 @@ Même si des croquis ont été dessinés pour travailler sur l'idée, la réalis
 
 Il faudra ensuite compter environ 20 heures de plus pour la réalisation physique. Comme une grande partie de mes créations ([https://greweb.me/plots](/plots)), un robot traceur (plus généralement appelé "plotter" en anglais) est utilisé pour dessiner tous les traits du SVG au stylo plume sur papier aquarelle A3. Chaque frame utilise 3 encres, calques dessinés l'un après l'autre: Diamine Amber (yellow), Diamine Pumpkin (orange) and Diamine Bloody Brexit (dark blue).
 
-<video controls src="/images/plots/478-plotlive.mp4" width="100%"></video>
-
-<video loop autoplay controls src="/images/plots/478-timelapse.mp4" width="100%"></video>
+<iframe width="100%" height="380" src="https://www.youtube.com/embed/AzGMNyjaRts?rel=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 **...qui redevient digitale, sous forme d'animation!**
 
@@ -64,7 +62,7 @@ Cette semaine de mi Avril a eu lieu le concours ["Week and Art" (WAT)](https://w
 
 J'ai streamé plusieurs journées sur [twitch.tv/greweb](https://twitch.tv/greweb) pour avancer doucement sur plusieurs idées en développant mon [générateur d'art génératif](https://en.wikipedia.org/wiki/Generative_art) tout en l'éprouvant les traits en utilisant **ma machine de dessin [AxiDraw A3](https://www.axidraw.com/) qui est en réalité un robot sur lequel je met des stylos plumes.** Cette technique appelé "plotting" est utilisé par de nombreux artistes, qui partagent quotidiennement leur créations sur [#plottertwitter](https://twitter.com/search?q=%23plottertwitter).
 
-<img src="/images/plots/448timelapse.gif" width="100%"/>
+<video controls src="/images/plots/478-plotlive.mp4" width="100%"></video>
 
 Le thème de cette année était le **Transhumanisme** ce qui épousait particulièrement bien le genre de technique que j'utilise ici: le [code créatif](https://en.wikipedia.org/wiki/Creative_coding) et le ["plotting"](/plots).
 
