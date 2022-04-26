@@ -9,6 +9,8 @@ tags:
   - a3
 ---
 
+<img src="/images/plots/478-frames.gif" width="100%" />
+
 > _NB: This article is in French because it was made in context of a French contest. I deeply explain (in French) all the concepts at stake._
 
 ## Le résultat
