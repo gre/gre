@@ -11,6 +11,8 @@ tags:
 
 Physical version of #17 mint of Plottable Fibers.
 
+<img src="/images/plots/485z.jpg" width="100%"/>
+
 Offered randomly from the tweets of last week sharing a collected plottable.
 
 Done during a live stream on https://twitch.tv/greweb
