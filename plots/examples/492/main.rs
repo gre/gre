@@ -4,8 +4,15 @@ use clap::Clap;
 use gre::*;
 use noise::*;
 use rand::Rng;
-use svg::node::element::path::Data;
+use svg::node::element::path::Data;  
 use svg::node::element::*;
+
+// todo passage
+// todo x,y displacement
+// symmetry in the noise or other kind of glitch directly in the noise
+  // use grid of hexa grid to also have diff noise. maybe
+// localized noise that impact diff amplitudes 
+// diff scale of x vs y
 
 #[derive(Clap)]
 #[clap()]
@@ -16,7 +23,7 @@ pub struct Opts {
     pub width: f64,
     #[clap(short, long, default_value = "210.0")]
     pub height: f64,
-    #[clap(short, long, default_value = "191.0")]
+    #[clap(short, long, default_value = "61.0")]
     pub seed: f64,
     #[clap(short, long, default_value = "0.0")]
     pub seed1: f64,
@@ -34,19 +41,21 @@ fn art(opts: &Opts) -> Vec<Group> {
     let mut rng = rng_from_seed(opts.seed);
 
     let amp1pow = rng.gen_range(0.8, 1.6);
-    let freq1 = rng.gen_range(0.01, 0.04);
-    let amp1 = rng.gen_range(0.2, 0.4);
-    let freq2 = rng.gen_range(2.0, 4.0) * freq1;
-    let amp2 = rng.gen_range(1.0, 3.0);
-    let freq3 = rng.gen_range(4.0, 16.0) * freq1;
-    let amp3 = rng.gen_range(0.05, 0.2);
+    let amp_factor = rng.gen_range(0.0, 1.0);
+    let freq1 = rng.gen_range(0.01, 0.08) * (1. - amp_factor);
+    let amp1 = 0.1 + 0.4 * amp_factor;
+    let freq2 = rng.gen_range(2.0, 4.0) * mix(freq1, rng.gen_range(0.01, 0.08), rng.gen_range(0.0, 1.0));
+    let amp2 = rng.gen_range(0.0, 4.0);
+    let freq3 = rng.gen_range(4.0, 16.0) * mix(freq1, rng.gen_range(0.01, 0.08), rng.gen_range(0.0, 1.0));
+    let amp3 = rng.gen_range(0.0, 0.5) * rng.gen_range(0.0, 1.0);
+    let r_increment = rng.gen_range(0.3, 0.5);
+    let safe_h = rng.gen_range(-0.2, 0.5);
 
+    let angle_map_count = rng.gen_range(2000, 20000);
+    let angle_const: f64 = rng.gen_range(8.0, 600.0);
+    let angle_mul = (rng.gen_range(-10f64, 60.0) * rng.gen_range(0.0, 1.0)).max(0f64);
 
-    let angle_map_count = rng.gen_range(4000, 12000);
-    let angle_const: f64 = rng.gen_range(8.0, 400.0);
-    let angle_mul = rng.gen_range(4.0, 60.0);
-
-    let amp_r_const = 0.2;
+    let amp_r_const = rng.gen_range(0.1, 0.4);
 
     let max_r = 80.0;
     
@@ -56,18 +65,17 @@ fn art(opts: &Opts) -> Vec<Group> {
     let mut highest_by_angle = vec![0f64; angle_map_count];
     let mut shape_bound = (opts.width, opts.height, 0.0, 0.0);
 
-    let safe_h = 0.2;
-    let r_increment = 0.4;
     let mut base_r = 0.2;
     loop {
         if base_r > max_r {
             break;
         }
     let mut route = Vec::new();
-    let mut a = 0.0;
+    let angle_delta = rng.gen_range(0.0, 2.0 * PI);
+    let mut a = angle_delta;
     let angle_precision = 2. * PI / (angle_const + angle_mul * base_r).ceil();
     loop {
-        if a > 2. * PI + 0.0001 {
+        if a - angle_delta > 2. * PI + 0.0001 {
             break;
         }
         let hba_index = (highest_by_angle.len() as f64 * (a / 2. * PI)).round() as usize % highest_by_angle.len();
@@ -118,11 +126,21 @@ fn art(opts: &Opts) -> Vec<Group> {
         }
         else {
             if route.len() > 1 {
+              let mut simplified = Vec::new();
+              simplified.push(route[0]);
               let mut dist = 0.0;
-              for i in 1..route.len() {
+              let l = route.len();
+              for i in 1..l {
                 dist += euclidian_dist(route[i-1], route[i]);
+                if dist > 0.2 {
+                  simplified.push(route[i]);
+                  dist = 0.0;
+                }
               }
-              if dist > 0.5 {
+              if dist > 0.0 {
+                simplified.push(route[l-1]);
+              }
+              if route.len() > 2 {
                 routes.push(route);
               }
             }

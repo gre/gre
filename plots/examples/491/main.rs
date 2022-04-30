@@ -141,7 +141,6 @@ fn art(opts: &Opts) -> Vec<Group> {
     let width = opts.width;
     let height = opts.height;
     let stroke_width = 0.35;
-    let mut rng = rng_from_seed(opts.seed);
     let min_scale = 2.0;
     let max_scale = 60.0;
 
