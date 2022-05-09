@@ -38,6 +38,10 @@ export async function getStaticProps({ params }) {
 export default function Home({ plot, prev, next }) {
   const { content, data, rustFile, sourceURL } = plot;
   const { image, video } = data;
+  const thumbnail =
+    image && image.endsWith(".jpg")
+      ? image.replace(/\.([^.]+)$/, "-thumbnail.$1")
+      : null;
   const title = `Plot #${plot.n} ${data.title ? " – " + data.title : ""}`;
   const description = data.description || "";
 
@@ -63,9 +67,18 @@ export default function Home({ plot, prev, next }) {
         <meta name="twitter:creator" content="@greweb" />
         {image ? (
           <>
-            <meta name="twitter:image" content={`http://greweb.me${image}`} />
-            <link rel="image_src" href={`http://greweb.me${image}`} />
-            <meta property="og:image" content={`http://greweb.me${image}`} />
+            <meta
+              name="twitter:image"
+              content={`http://greweb.me${thumbnail || image}`}
+            />
+            <link
+              rel="image_src"
+              href={`http://greweb.me${thumbnail || image}`}
+            />
+            <meta
+              property="og:image"
+              content={`http://greweb.me${thumbnail || image}`}
+            />
           </>
         ) : null}
 
