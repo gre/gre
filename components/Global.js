@@ -1,8 +1,9 @@
 import React from "react";
+import HttpsRedirect from "react-https-redirect";
 
 export function Global({ children }) {
   return (
-    <>
+    <HttpsRedirect>
       {children}
 
       <style jsx global>{`
@@ -28,7 +29,7 @@ export function Global({ children }) {
           text-decoration: underline;
         }
       `}</style>
-    </>
+    </HttpsRedirect>
   );
 }
 
