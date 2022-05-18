@@ -116,7 +116,7 @@ export const HighlightShader = ({ day }) => {
         }}
       >
         <h2>
-          <a href="/shaderday">Highlighted Shader</a>
+          <a href={`/shaderday/${day.n}`}>Highlighted Shader</a>
         </h2>
         <a href={`/shaderday/${day.n}`}>
           #{day.n} – {day.title}
@@ -267,7 +267,7 @@ export default function Home({ posts, plots }) {
                 <p className="subtitle">
                   <strong>greweb.me</strong> ={" "}
                   <a href="/plots">{plots.length} plots</a>,{" "}
-                  <a href="/shaderday">{days.length} shaders</a>,{" "}
+                  <a href="/shaderday/1">{days.length} shaders</a>,{" "}
                   <a href="/posts">{posts.length} blog posts</a>.
                 </p>
               </>
