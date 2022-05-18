@@ -1,6 +1,9 @@
 #!/bin/bash
 SCRIPTS=`dirname $0`
 
+# example
+# ./scripts/perspective-crop-grid-loop.sh photo.jpg output_folder 8 640 640 4x2 569,1613 3251,1641 5962,1666 8702,1694 11529,1697 513,4303 3219,4347 5917,4390 8636,4434 11408,4478 375,7023 3130,7059 5861,7105 8597,7157 11366,7222
+
 set -x
 set -e
 INPUT=$1
