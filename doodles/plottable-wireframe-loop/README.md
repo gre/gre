@@ -1,5 +1,7 @@
 # Plottable Wireframe (8 frames)
 
+<img src="../../public/images/plots/509.gif" width="320" /><img src="../../public/images/plots/510.gif" width="320" /><img src="../../public/images/plots/511.gif" width="320" /><img src="../../public/images/plots/512.gif" width="320" /><img src="../../public/images/plots/513.gif" width="320" /><img src="../../public/images/plots/514.gif" width="320" /><img src="../../public/images/plots/515.gif" width="320" />
+
 ## License
 
 CC BY-NC-ND 4.0
@@ -11,6 +13,8 @@ CC BY-NC-ND 4.0
 
 ## Release
 
-This generator will be released on Saturday 21th May 2022.
+This generator will be released on Saturday 21th May 2022 as a [FX(hash) generator](https://www.fxhash.xyz/u/greweb) on which people can collect variants of output of the generator as an NFT. That can later be used to request me a physical plot on https://greweb.me/plots/nft.
 
-Source code will be released a bit after that time.
+This will be the first generative plot loop on a generative art marketplace! The concept is that a physical plot of 8 frames on a A4 paper can be animated back into an animation. The digital preview have an interesting ink and paper simulation as in my previous work.
+
+_Source code will be released soon after the release._
