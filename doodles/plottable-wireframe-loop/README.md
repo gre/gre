@@ -1,6 +1,6 @@
 # Plottable Wireframe (8 frames)
 
-<img src="../../public/images/plots/509.gif" width="320" /><img src="../../public/images/plots/510.gif" width="320" /><img src="../../public/images/plots/511.gif" width="320" /><img src="../../public/images/plots/512.gif" width="320" /><img src="../../public/images/plots/513.gif" width="320" /><img src="../../public/images/plots/514.gif" width="320" /><img src="../../public/images/plots/515.gif" width="320" />
+<a href="https://greweb.me/plots/509"><img src="../../public/images/plots/509.gif" width="320" /></a><a href="https://greweb.me/plots/510"><img src="../../public/images/plots/510.gif" width="320" /></a><a href="https://greweb.me/plots/511"><img src="../../public/images/plots/511.gif" width="320" /></a><a href="https://greweb.me/plots/512"><img src="../../public/images/plots/512.gif" width="320" /></a><a href="https://greweb.me/plots/513"><img src="../../public/images/plots/513.gif" width="320" /></a><a href="https://greweb.me/plots/514"><img src="../../public/images/plots/514.gif" width="320" /></a><a href="https://greweb.me/plots/515"><img src="../../public/images/plots/515.gif" width="320" /></a>
 
 ## License
 
