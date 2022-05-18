@@ -3,6 +3,7 @@ title: "Wireframe (Reveal 5 / 7)"
 image: /images/plots/513.gif
 video: /images/plots/513.mp4
 description: "This plot is the fifth of a series of 7 plots that reveal 'Plottable Wireframe (8 frames)' – my next plottable generative art on fxhash"
+sourceFolderURL: https://github.com/gre/gre/tree/master/doodles/plottable-wireframe-loop
 nftGenerator: https://www.fxhash.xyz/u/greweb
 tags:
   - plotloop
