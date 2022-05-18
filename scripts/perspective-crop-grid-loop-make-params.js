@@ -1,5 +1,5 @@
-const width = process.argv[2].split("x").map((o) => parseInt(o));
-const height = process.argv[3].split("x").map((o) => parseInt(o));
+const width = parseInt(process.argv[2]);
+const height = parseInt(process.argv[3]);
 const grid = process.argv[4].split("x").map((o) => parseInt(o));
 
 const expectedlength = 5 + (grid[0] + 1) * (grid[1] + 1);
