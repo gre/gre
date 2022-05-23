@@ -46,8 +46,7 @@ fn art(opts: &Opts) -> Vec<Group> {
     rng.gen_range(0.0, 1.0),
   );
   let mut routes = Vec::new();
-  let mut passage =
-    Passage2DCounter::new(0.3, opts.width, opts.height);
+  let mut passage = Passage2DCounter::new(0.3, opts.width, opts.height);
 
   let amp1pow = rng.gen_range(0.6, 1.8);
   let amp_factor = rng.gen_range(0.0, 1.0);
@@ -68,8 +67,7 @@ fn art(opts: &Opts) -> Vec<Group> {
     // logic
     let perlin = Perlin::new();
     let mut highest_by_angle = vec![0f64; 8000];
-    let mut shape_bound =
-      (opts.width, opts.height, 0.0, 0.0);
+    let mut shape_bound = (opts.width, opts.height, 0.0, 0.0);
 
     let r_increment = 0.5;
     let mut base_r = 0.2;
@@ -79,11 +77,7 @@ fn art(opts: &Opts) -> Vec<Group> {
       }
       let mut route = Vec::new();
       let rotations = 800.0;
-      let angle_delta = rng.gen_range(0, rotations as usize)
-        as f64
-        / rotations
-        * 2.0
-        * PI;
+      let angle_delta = rng.gen_range(0, rotations as usize) as f64 / rotations * 2.0 * PI;
       let mut a = angle_delta;
       // TODO activate to create "snow" + prevent small lines < 0.3mm
       let angle_precision = 2. * PI / rotations;
@@ -104,25 +98,16 @@ fn art(opts: &Opts) -> Vec<Group> {
                 * perlin.get([
                   freq2 * x,
                   opts.seed * 7.7 - 4.,
-                  freq2 * y
-                    + amp3
-                      * perlin.get([
-                        freq3 * x,
-                        opts.seed * 2.7 + 11.,
-                        freq3 * y,
-                      ]),
+                  freq2 * y + amp3 * perlin.get([freq3 * x, opts.seed * 2.7 + 11., freq3 * y]),
                 ]),
             freq1 * x,
             freq1 * y,
           ]);
 
-        let hba_index = (highest_by_angle.len() as f64
-          * ((a) / 2. * PI))
-          as usize
-          % highest_by_angle.len();
+        let hba_index =
+          (highest_by_angle.len() as f64 * ((a) / 2. * PI)) as usize % highest_by_angle.len();
 
-        let should_draw =
-          r > highest_by_angle[hba_index] + safe_h;
+        let should_draw = r > highest_by_angle[hba_index] + safe_h;
 
         let mut x = cx + r * a.cos();
         let mut y = cy + r * a.sin();
@@ -130,13 +115,7 @@ fn art(opts: &Opts) -> Vec<Group> {
         let displacement_angle = 2.
           * PI
           * perlin.get([
-            7.3 * opts.seed
-              + 2.0
-                * perlin.get([
-                  0.005 * x,
-                  0.005 * y,
-                  opts.seed * 3.7,
-                ]),
+            7.3 * opts.seed + 2.0 * perlin.get([0.005 * x, 0.005 * y, opts.seed * 3.7]),
             0.003 * x,
             0.003 * y,
           ]);
@@ -144,12 +123,7 @@ fn art(opts: &Opts) -> Vec<Group> {
           * base_r
           * (base_r / max_r).powf(amp1pow)
           * perlin.get([
-            opts.seed / 3.0
-              + perlin.get([
-                0.005 * x,
-                0.005 * y,
-                -opts.seed,
-              ]),
+            opts.seed / 3.0 + perlin.get([0.005 * x, 0.005 * y, -opts.seed]),
             0.02 * x,
             0.02 * y,
           ]);
@@ -181,8 +155,7 @@ fn art(opts: &Opts) -> Vec<Group> {
             let mut dist = 0.0;
             let l = route.len();
             for i in 1..l {
-              dist +=
-                euclidian_dist(route[i - 1], route[i]);
+              dist += euclidian_dist(route[i - 1], route[i]);
               if dist > 0.5 {
                 simplified.push(route[i]);
                 dist = 0.0;
@@ -247,14 +220,9 @@ fn art(opts: &Opts) -> Vec<Group> {
     .enumerate()
     .map(|(i, color)| {
       let mut data = Data::new();
-      let mut should_draw_line =
-        |a, _b| passage.count(a) < 6;
+      let mut should_draw_line = |a, _b| passage.count(a) < 6;
       for route in routes.clone() {
-        data = render_route_when(
-          data,
-          route,
-          &mut should_draw_line,
-        );
+        data = render_route_when(data, route, &mut should_draw_line);
       }
       let mut l = layer(color);
       l = l.add(base_path(color, 0.35, data));
@@ -266,8 +234,7 @@ fn art(opts: &Opts) -> Vec<Group> {
 fn main() {
   let opts: Opts = Opts::parse();
   let groups = art(&opts);
-  let mut document =
-    base_document("white", opts.width, opts.height);
+  let mut document = base_document("white", opts.width, opts.height);
   for g in groups {
     document = document.add(g);
   }
@@ -285,20 +252,14 @@ impl VCircle {
     VCircle { x, y, r }
   }
   fn dist(self: &Self, c: &VCircle) -> f64 {
-    euclidian_dist((self.x, self.y), (c.x, c.y))
-      - c.r
-      - self.r
+    euclidian_dist((self.x, self.y), (c.x, c.y)) - c.r - self.r
   }
   fn collides(self: &Self, c: &VCircle) -> bool {
     self.dist(c) <= 0.0
   }
 }
 
-fn scaling_search<F: FnMut(f64) -> bool>(
-  mut f: F,
-  min_scale: f64,
-  max_scale: f64,
-) -> Option<f64> {
+fn scaling_search<F: FnMut(f64) -> bool>(mut f: F, min_scale: f64, max_scale: f64) -> Option<f64> {
   let mut from = min_scale;
   let mut to = max_scale;
   loop {
@@ -355,14 +316,11 @@ fn packing(
   for _i in 0..iterations {
     let x: f64 = rng.gen_range(bound.0, bound.2);
     let y: f64 = rng.gen_range(bound.1, bound.3);
-    if let Some(size) = search_circle_radius(
-      bound, &circles, x, y, min_scale, m,
-    ) {
+    if let Some(size) = search_circle_radius(bound, &circles, x, y, min_scale, m) {
       let circle = VCircle::new(x, y, size - pad);
       tries.push(circle);
       if tries.len() > optimize_size {
-        tries
-          .sort_by(|a, b| b.r.partial_cmp(&a.r).unwrap());
+        tries.sort_by(|a, b| b.r.partial_cmp(&a.r).unwrap());
         let c = tries[0];
         circles.push(c.clone());
         m = (m * multiply_max).max(half);

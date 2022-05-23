@@ -10,7 +10,7 @@ tags:
   - field
 ---
 
-**This plot reveals a new generator called "Field"**. Here is one possible field generation, that "round" the angle.
+**This plot reveals a new generator called "Field"**. Here is one possible field generation, that "round" the angle. There is the possibility to have repeatitive patterns like we see here. But it's not always the case! More reveal soon!
 
 The physical is a grid of 4x2 frames that can be used to produce a 8 frames loop video.
 
