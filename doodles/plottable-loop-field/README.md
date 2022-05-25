@@ -1,6 +1,6 @@
 # Plottable Field (8 frames)
 
-<img src="../../public/images/plots/537.gif" width="50%" />
+<img src="../../public/images/plots/537.gif" />
 
 <!-- oond473QFhcZDYvuD8oSy15VENGES3q1vtyw96T3KonusstEmZp -->
 
