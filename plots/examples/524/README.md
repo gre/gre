@@ -10,7 +10,7 @@ tags:
   - field
 ---
 
-**This plot reveals a new generator called "Field"**. The primitive presented here circles packing combined with a strong noise field. More reveals soon!
+**This plot reveals a new generator called "Field"**. The primitive presented here circles packing combined with a strong noise field.
 
 The physical is a grid of 4x2 frames that can be used to produce a 8 frames loop video.
 

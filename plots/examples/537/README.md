@@ -1,7 +1,7 @@
 ---
-title: "Field (Reveal 12)"
-image: /images/plots/527.gif
-video: /images/plots/527.mp4
+title: "Field (Reveal 21)"
+image: /images/plots/537.gif
+video: /images/plots/537.mp4
 description: "Plot reveal for 'Field'"
 sourceFolderURL: https://github.com/gre/gre/tree/master/doodles/plottable-loop-field
 nftGenerator: https://www.fxhash.xyz/u/greweb
@@ -10,7 +10,7 @@ tags:
   - field
 ---
 
-**This plot reveals a new generator called "Field"**. The primitive presented here is the circles filled shape combined with a centered attraction that creates some spiral shapes. We also see noise distortion at stake.
+**This plot reveals a new generator called "Field"**. This is the last plot of the reveal series and it was selected as the cover edition used to present the whole generator.
 
 The physical is a grid of 4x2 frames that can be used to produce a 8 frames loop video.
 

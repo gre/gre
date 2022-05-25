@@ -10,7 +10,7 @@ tags:
   - field
 ---
 
-**This plot reveals a new generator called "Field"**. The primitive presented here is the nesting of squares without rotation but with a strong attraction of lines to the center of the piece. More reveals soon!
+**This plot reveals a new generator called "Field"**. The primitive presented here is the nesting of squares without rotation but with a strong attraction of lines to the center of the piece.
 
 The physical is a grid of 4x2 frames that can be used to produce a 8 frames loop video.
 

@@ -10,7 +10,7 @@ tags:
   - field
 ---
 
-**This plot reveals a new generator called "Field"**. The whole area is used with lines following a strong field formed with repetitives abstract shapes. Some circles are used to color differently the area. More reveals soon!
+**This plot reveals a new generator called "Field"**. The whole area is used with lines following a strong field formed with repetitives abstract shapes. Some circles are used to color differently the area.
 
 The physical is a grid of 4x2 frames that can be used to produce a 8 frames loop video.
 
