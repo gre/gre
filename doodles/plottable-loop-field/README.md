@@ -1,15 +1,15 @@
 # Plottable Field (8 frames)
 
-<img src="../../public/images/plots/537.gif" width="320" />
-
-<!-- oond473QFhcZDYvuD8oSy15VENGES3q1vtyw96T3KonusstEmZp -->
-
 > **Coming soon!** on fxhash.xyz.
 >
 > - reserve will be set for owners of "Plottable Wireframe" (snapshot done on Friday, May 27th). There will be a cap of 100 to not have too much reserve.
 > - minting will open on Saturday, May 28th at 5PM CEST / 11AM EDT.
 > - Supply: 800 editions. Because of the high variety on this collection.
 > - Price: DA (20 minutes) 20 > 18 > 16 > 14 > 12 > 10 > 8 > 6 > 5 > 4 > 3 > 2 tez. I always want my prices to be accessible. It's a mean to get a physical plot and I believe secondary market is interesting for anyone to pick something very interesting.
+
+<img src="../../public/images/plots/537.gif" width="320" />
+
+<!-- oond473QFhcZDYvuD8oSy15VENGES3q1vtyw96T3KonusstEmZp -->
 
 'Field' explores the realm of noise field distortions through many different primitives: 15 unique distributions, 16 possible inks, and many kinds of distortions, color combinations, and animations,...
 
