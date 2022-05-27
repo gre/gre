@@ -1,19 +1,12 @@
 # Plottable Field (8 frames)
 
-> **Coming soon!** on fxhash.xyz.
->
-> - reserve will be set for owners of "Plottable Wireframe" (snapshot done on Friday, May 27th). There will be a cap of 100 to not have too much reserve.
-> - minting will open on Saturday, May 28th at 5PM CEST / 11AM EDT.
-> - Supply: 800 editions. Because of the high variety on this collection.
-> - Price: DA (20 minutes) 20 > 18 > 16 > 14 > 12 > 10 > 8 > 6 > 5 > 4 > 3 > 2 tez. I always want my prices to be accessible. It's a mean to get a physical plot and I believe secondary market is interesting for anyone to pick something very interesting.
+**Collection on https://www.fxhash.xyz/generative/13643**
 
 <img src="../../public/images/plots/537.gif" width="320" />
 
-<!-- oond473QFhcZDYvuD8oSy15VENGES3q1vtyw96T3KonusstEmZp -->
+'Field' explores the realm of noise field distortions through many different primitives: 15 unique distributions, 16 possible inks, and many kinds of distortions, ink combinations, and animations,...
 
-'Field' explores the realm of noise field distortions through many different primitives: 15 unique distributions, 16 possible inks, and many kinds of distortions, color combinations, and animations,...
-
-A SVG file can be exported (right-click save) to plot the 8 frames of this animation on a A4 paper. This is a "plot loop". The physical piece is displayed as an esthetical 4x2 grid of the frames.
+A SVG file can be exported (right-click save) to plot the 8 frames of this animation on a A4 paper. This is a "plot loop". The physical piece is displayed as aesthetics 4x2 grid of the frames.
 
 You can enjoy the digital version that simulates ink effects. But also, thanks to the utility token decoupling, get a physical one: the digital NFT is the recipe to a plottable art piece, owning it confers the right to plot or request a physical plot from @greweb (https://greweb.me/plots/nft). @greweb would use fountain pens but other plotting artists are free to achieve it with their materials and ship to collectors – as long as NFT is owned at request time.
 
