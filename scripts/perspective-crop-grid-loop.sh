@@ -30,7 +30,7 @@ for param in `node $SCRIPTS/perspective-crop-grid-loop-make-params.js $*`; do
     I=$(($I+1))
 done
 
-ffmpeg -y -r 8 -i $OUTPUT_DIR/%d.png -c:v libx264 -vf "fps=$FPS,format=yuv420p" $OUTPUT_DIR/out.mp4
+ffmpeg -y -r $FPS -i $OUTPUT_DIR/%d.png -c:v libx264 -vf "fps=$FPS,format=yuv420p" $OUTPUT_DIR/out.mp4
 palette=$OUTPUT_DIR/palette.png
 filters="fps=$FPS,scale=$WIDTH:$HEIGHT:flags=lanczos"
 ffmpeg -v warning -i $OUTPUT_DIR/out.mp4 -vf "$filters,palettegen" -y $palette

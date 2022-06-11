@@ -10,8 +10,11 @@ if (process.argv.length !== expectedlength) {
   process.exit(1);
 }
 
+let circular = process.env.LOOPMODE === "circle";
+
 for (let y = 0; y < grid[1]; y++) {
-  for (let x = 0; x < grid[0]; x++) {
+  for (let xi = 0; xi < grid[0]; xi++) {
+    let x = circular && y % 2 == 1 ? grid[0] - 1 - xi : xi;
     const topleft = process.argv[5 + x + (grid[0] + 1) * y];
     const topright = process.argv[5 + (x + 1) + (grid[0] + 1) * y];
     const bottomleft = process.argv[5 + x + (grid[0] + 1) * (y + 1)];
