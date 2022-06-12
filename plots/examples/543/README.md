@@ -4,7 +4,7 @@ image: /images/plots/543.gif
 video: /images/plots/543.mp4
 description: "Plot reveal for 'Circleception' plot loop"
 sourceFolderURL: https://github.com/gre/gre/tree/master/doodles/plottable-loop-circleception
-nftGenerator: https://www.fxhash.xyz/u/greweb
+nftGenerator: https://www.fxhash.xyz/generative/14692
 tags:
   - plotloop
   - circleception

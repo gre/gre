@@ -1,9 +1,6 @@
 # Plottable Circleception (8 frames)
 
-<!-- oo6VxWnQKNCagam9X8fdninYxDzcYBHc1UXahbhMTERW4Hi4pDg -->
-<!-- 64 ed. price 80-60-50-40-30-20 10mn -->
-
-**Collection on https://www.fxhash.xyz/u/greweb**
+**Collection on https://www.fxhash.xyz/generative/14692**
 
 'Circleception' explores fractal-like zoom loops (the art infinitely reproduces inside itself), packing circles, filled with various techniques.
 
