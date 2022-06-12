@@ -1,6 +1,8 @@
 # Plottable Circleception (8 frames)
 
-**Collection on https://www.fxhash.xyz/generative/14692**
+<img src="../../public/images/plots/544.gif" width="360" />
+
+**A collection on [fx(hash)](https://www.fxhash.xyz/generative/14692)**
 
 'Circleception' explores fractal-like zoom loops (the art infinitely reproduces inside itself), packing circles, filled with various techniques.
 
@@ -8,7 +10,7 @@ A SVG file can be exported (right-click save) to plot the 8 frames of this anima
 
 You can enjoy the digital version that simulates ink effects. But also, thanks to the utility token decoupling, get a physical one: the digital NFT is the recipe to a plottable art piece, owning it confers the right to plot or request a physical plot from @greweb (https://greweb.me/plots/nft). @greweb would use fountain pens but other plotting artists are free to achieve it with their materials and ship to collectors – as long as NFT is owned at request time.
 
-@greweb – 2022 – tech: WebGL + Rust + WASM – CC BY-SA 4.0 https://creativecommons.org/licenses/by-sa/4.0/
+<img src="../../public/images/plots/543.gif" width="360" />
 
 ---
 
@@ -22,6 +24,8 @@ CC BY-NC-ND 4.0
 - [index.js](./index.js) WASM + WebGL for the frontend rendering. Libraries: React and GL-React.
 
 ## Theorical rarity of features
+
+There are many variety to discover, yet the generator supply is relatively low. The rule of thumb I follow is that at least one property need to have the likelyhood of nearly not being minted – but only the randomness will decide!
 
 ```
 Everything animates
