@@ -119,7 +119,7 @@ const Token = ({ children, url }) => (
         display: inline-block;
         padding: 0.5em;
         font-size: 0.8em;
-        font-weight: bold;
+        font-weight: 400;
         background: #fff;
         border: 2px solid #f0f;
         color: #f0f;
@@ -127,7 +127,9 @@ const Token = ({ children, url }) => (
         text-align: center;
       }
     `}</style>
-    <a href={url}>Greweb Plot Request Token</a>
+    <a href={url}>
+      <strong>1</strong> Greweb Plot Request Token
+    </a>
   </>
 );
 
@@ -239,7 +241,7 @@ const Or = () => {
         fontSize: "1.4em",
         fontWeight: "bold",
         alignItems: "center",
-        margin: "10px 0",
+        margin: "20px 0",
       }}
     >
       <div style={sep}></div>
