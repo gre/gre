@@ -62,24 +62,19 @@ export function PlottingFooter() {
 }
 
 const Row = ({ children }) => (
-  <div style={{ padding: "0.4em 0" }}>{children}</div>
+  <div style={{ padding: "0.5em 0" }}>{children}</div>
 );
 
-const Choice = ({ children, title }) => (
-  <div style={{ padding: "0 20px" }}>
-    <p>
-      <em>{title}</em>
-    </p>
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 8,
-      }}
-    >
-      {children}
-    </div>
+const Choice = ({ children }) => (
+  <div
+    style={{
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 8,
+    }}
+  >
+    {children}
   </div>
 );
 
@@ -103,16 +98,36 @@ const Price = ({ children }) => (
     <style jsx>{`
       .price {
         display: inline-block;
-        padding: 0.6em 0.5em;
+        padding: 0.5em;
         font-size: 1.25em;
-        background: #f0f;
-        color: #fff;
+        background: #fff;
+        border: 2px solid #f0f;
+        color: #f0f;
         font-weight: bold;
         min-width: 120px;
         text-align: center;
       }
     `}</style>
     <span className="price">{children}</span>
+  </>
+);
+
+const Token = ({ children, url }) => (
+  <>
+    <style jsx>{`
+      a {
+        display: inline-block;
+        padding: 0.5em;
+        font-size: 0.8em;
+        font-weight: bold;
+        background: #fff;
+        border: 2px solid #f0f;
+        color: #f0f;
+        max-width: 120px;
+        text-align: center;
+      }
+    `}</style>
+    <a href={url}>Greweb Plot Request Token</a>
   </>
 );
 
@@ -152,13 +167,49 @@ const Address = ({ children, real }) => (
   </>
 );
 
+const choices = [
+  {
+    id: "ethereum",
+    name: "Ethereum",
+    address: "greweb.eth",
+    addressReal: "0x68db7D679969f265b14BA8A495E4028360AD6759",
+    amount: "0.04 ETH",
+    collections: [
+      {
+        url: "https://opensea.io/collection/blockart?search[sortAscending]=true&search[sortBy]=PRICE&search[stringTraits][0][name]=Style&search[stringTraits][0][values][0]=Pattern%2003",
+        description: "Pattern03 via ethblock.art on OpenSea (888 mints)",
+      },
+      {
+        url: "https://opensea.io/collection/plottables",
+        description:
+          "A plottable collection – IF the generator artists allows it",
+      },
+    ],
+  },
+  {
+    id: "tezos",
+    name: "Tezos",
+    address: "greweb.tez",
+    addressReal: "tz1cgQAQfECg5bPASYTMyJ9QJQjSUi8rfL67",
+    amount: "25 tz",
+    tokenNftURL:
+      "https://objkt.com/collection/KT1EhesmoVKQ3qTjG9V2MmYxQn7HVtozk3RP/0",
+    collections: [
+      {
+        url: "https://www.fxhash.xyz/u/greweb",
+        description: "Any Plottable work from fxhash.xyz/u/greweb",
+      },
+    ],
+  },
+];
+
 const CTA = ({ children, ...rest }) => (
   <>
     <style jsx>{`
       .cta {
         display: inline-block;
         padding: 0.4em 0.8em;
-        font-size: 24px;
+        font-size: 1.2em;
         background: #f0f;
         color: #fff;
         cursor: pointer;
@@ -173,8 +224,36 @@ const CTA = ({ children, ...rest }) => (
   </>
 );
 
+const Or = () => {
+  const sep = {
+    width: "100%",
+    height: "2px",
+    background: "#F0F",
+  };
+  return (
+    <div
+      style={{
+        maxWidth: "350px",
+        display: "flex",
+        flexDirection: "row",
+        fontSize: "1.4em",
+        fontWeight: "bold",
+        alignItems: "center",
+        margin: "10px 0",
+      }}
+    >
+      <div style={sep}></div>
+      OR
+      <div style={sep}></div>
+    </div>
+  );
+};
+
 export default function Home({ tag }) {
   const title = `Getting physical plot of a Plottable NFT`;
+
+  const [i, setI] = useState(1);
+  const choice = choices[i];
 
   return (
     <Global>
@@ -242,35 +321,79 @@ export default function Home({ tag }) {
                 <Circle n={1} />
                 <strong>NFT ownership</strong>: Make sure you own the digital
                 NFT
+                <div
+                  style={{
+                    padding: "0.8em 3em",
+                  }}
+                >
+                  <select
+                    style={{
+                      fontSize: "1.2em",
+                      color: "#FFF",
+                      background: "#F0F",
+                      padding: "8px",
+                      borderRadius: "0",
+                      border: "0",
+                    }}
+                    onChange={(e) => setI(e.target.selectedIndex)}
+                    value={i}
+                  >
+                    {choices.map(({ id, name }, i) => (
+                      <option key={id} value={i}>
+                        on {name}
+                      </option>
+                    ))}
+                  </select>
+                  {choice.collections ? (
+                    <div style={{ opacity: 0.6 }}>
+                      <ul
+                        style={{
+                          padding: 0,
+                          margin: "1em 0 0 20px",
+                        }}
+                      >
+                        {choice.collections.map((col) => (
+                          <li key={col.url}>
+                            <a href={col.url}>{col.description}</a>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ) : null}
+                </div>
               </Row>
               <Row>
                 <Circle n={2} />
                 <strong>Physical cost</strong>: Send from the{" "}
                 <span style={{ textDecoration: "underline" }}>
                   same address owning the NFT
-                </span>{" "}
-                this amount:
+                </span>
                 <div
                   style={{
+                    marginTop: "0.8em",
                     fontWeight: 200,
-                    padding: "0 0 1em 0",
+                    padding: "0 0 0 3em",
                     display: "flex",
                     flexDirection: "column",
-                    alignItems: "center",
                   }}
                 >
-                  <Choice title="for Ethereum NFTs">
-                    <Price>0.04 ETH</Price> to{" "}
-                    <Address real="0x68db7D679969f265b14BA8A495E4028360AD6759">
-                      greweb.eth
+                  <Choice>
+                    <Price>{choice.amount}</Price> to{" "}
+                    <Address real={choice.addressReal}>
+                      {choice.address}
                     </Address>
                   </Choice>
-                  <Choice title="for Tezos NFTs">
-                    <Price>25 tez</Price> to{" "}
-                    <Address real="tz1cgQAQfECg5bPASYTMyJ9QJQjSUi8rfL67">
-                      greweb.tez
-                    </Address>
-                  </Choice>
+                  {choice.tokenNftURL ? (
+                    <>
+                      <Or />
+                      <Choice>
+                        <Token url={choice.tokenNftURL} /> to{" "}
+                        <Address real={choice.addressReal}>
+                          {choice.address}
+                        </Address>
+                      </Choice>
+                    </>
+                  ) : null}
                 </div>
               </Row>
               <Row>
@@ -279,7 +402,7 @@ export default function Home({ tag }) {
                 <div style={{ padding: "0em 3em" }}>
                   <p>
                     <CTA href="https://forms.gle/JWUfuAjochGQ9BQu7">
-                      Link to Google Form
+                      Fill this Google Form
                     </CTA>
                   </p>
                 </div>
@@ -319,31 +442,6 @@ export default function Home({ tag }) {
               </p>
             </div>
 
-            <div
-              style={{
-                padding: "10px 0",
-                margin: "40px 0",
-                borderTop: "4px solid #000",
-                borderBottom: "4px solid #000",
-                color: "#000",
-              }}
-            >
-              <h3 style={{ padding: 0, marginTop: 0 }}>
-                Available collections
-              </h3>
-              <ul>
-                <li>
-                  <a href="https://opensea.io/collection/blockart?search[sortAscending]=true&search[sortBy]=PRICE&search[stringTraits][0][name]=Style&search[stringTraits][0][values][0]=Pattern%2003">
-                    (ETH) Pattern03 via ethblock.art on OpenSea (888 mints)
-                  </a>
-                </li>
-                <li>
-                  <a href="https://www.fxhash.xyz/u/greweb">
-                    (Tezos) all collections named "Plottable"
-                  </a>
-                </li>
-              </ul>
-            </div>
             <PlottingSectionVideos />
             <PlottingFooter />
           </Content>
