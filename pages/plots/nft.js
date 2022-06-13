@@ -320,7 +320,7 @@ export default function Home({ tag }) {
               <Row>
                 <Circle n={1} />
                 <strong>NFT ownership</strong>: Make sure you own the digital
-                NFT
+                Plottable NFT
                 <div
                   style={{
                     padding: "0.8em 3em",
@@ -366,7 +366,7 @@ export default function Home({ tag }) {
                 <Circle n={2} />
                 <strong>Physical cost</strong>: Send from the{" "}
                 <span style={{ textDecoration: "underline" }}>
-                  same address owning the NFT
+                  same address owning the Plottable NFT
                 </span>
                 <div
                   style={{
