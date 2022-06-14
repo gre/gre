@@ -127,7 +127,7 @@ const Token = ({ children, url }) => (
         text-align: center;
       }
     `}</style>
-    <a href={url}>
+    <a target="_blank" href={url}>
       <strong>1</strong> Greweb Plot Request Token
     </a>
   </>
