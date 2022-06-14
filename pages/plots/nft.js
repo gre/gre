@@ -195,7 +195,7 @@ const choices = [
     addressReal: "tz1cgQAQfECg5bPASYTMyJ9QJQjSUi8rfL67",
     amount: "25 tz",
     tokenNftURL:
-      "https://objkt.com/collection/KT1EhesmoVKQ3qTjG9V2MmYxQn7HVtozk3RP/0",
+      "https://objkt.com/asset/KT1EhesmoVKQ3qTjG9V2MmYxQn7HVtozk3RP/0",
     collections: [
       {
         url: "https://www.fxhash.xyz/u/greweb",
