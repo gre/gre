@@ -3,7 +3,7 @@ title: "Circleception #4"
 image: /images/plots/545.gif
 video: /images/plots/545.mp4
 sourceFolderURL: https://github.com/gre/gre/tree/master/doodles/plottable-loop-circleception
-nftGenerator: https://objkt.com/asset/KT1AZYsEjt8HFEXWZUjGVfBxtzKPobNo3x1t/6
+nft: https://objkt.com/asset/KT1AZYsEjt8HFEXWZUjGVfBxtzKPobNo3x1t/6
 tags:
   - plotloop
   - circleception
