@@ -40,3 +40,8 @@ HEIGHT=640
 filters="fps=$FPS,scale=$WIDTH:$HEIGHT:flags=lanczos"
 ffmpeg -v warning -i $OUTPUT_DIR/out.mp4 -vf "$filters,palettegen" -y $palette
 ffmpeg -v warning -i $OUTPUT_DIR/out.mp4 -i $palette -lavfi "$filters [x]; [x][1:v] paletteuse" -y $OUTPUT_DIR/out.gif
+WIDTH=480
+HEIGHT=480
+filters="fps=$FPS,scale=$WIDTH:$HEIGHT:flags=lanczos"
+ffmpeg -v warning -i $OUTPUT_DIR/out.mp4 -vf "$filters,palettegen" -y $palette
+ffmpeg -v warning -i $OUTPUT_DIR/out.mp4 -i $palette -lavfi "$filters [x]; [x][1:v] paletteuse" -y $OUTPUT_DIR/out-480.gif
