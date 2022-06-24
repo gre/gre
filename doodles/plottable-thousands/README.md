@@ -12,7 +12,7 @@ You can enjoy the digital version that simulate ink effects and optional, thanks
 
 <a href="https://greweb.me/plots/551"><img src="../../public/images/plots/551.jpg" width="50%" /></a><a href="https://greweb.me/plots/552"><img src="../../public/images/plots/552.jpg" width="50%" /></a>
 
-<img src="../../public/images/plots/551z1.jpg" width="240" /><img src="../../public/images/plots/551z2.jpg" width="240" /><img src="../../public/images/plots/552z1.jpg" width="240" /><img src="../../public/images/plots/552z2.jpg" width="240" /><img src="../../public/images/plots/552z3.jpg" width="240" /><img src="../../public/images/plots/552z4.jpg" width="240" />
+<img src="../../public/images/plots/551z1.jpg" width="33%" /><img src="../../public/images/plots/551z2.jpg" width="33%" /><img src="../../public/images/plots/552z1.jpg" width="33%" /><img src="../../public/images/plots/552z2.jpg" width="33%" /><img src="../../public/images/plots/552z3.jpg" width="33%" /><img src="../../public/images/plots/552z4.jpg" width="33%" />
 
 ## License
 
