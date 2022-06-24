@@ -8,6 +8,12 @@ A SVG file can be exported (right click save) to plot the piece physically.
 
 You can enjoy the digital version that simulate ink effects and optional, thanks to the utility token decoupling, get a physical one: the digital NFT is the recipe to a plottable art piece, owning it confers the right to plot or request a physical plot from @greweb (https://greweb.me/plots/nft). @greweb would use fountain pens but other plotting artists are free to achieve it with their own materials and ship to collectors – as long as NFT is owned at request time.
 
+## Physical protytypes previews
+
+<a href="https://greweb.me/plots/551"><img src="../../public/images/plots/551.jpg" width="50%" /></a><a href="https://greweb.me/plots/552"><img src="../../public/images/plots/552.jpg" width="50%" /></a>
+
+<img src="../../public/images/plots/551z1.jpg" width="240" /><img src="../../public/images/plots/551z2.jpg" width="240" /><img src="../../public/images/plots/552z1.jpg" width="240" /><img src="../../public/images/plots/552z2.jpg" width="240" /><img src="../../public/images/plots/552z3.jpg" width="240" /><img src="../../public/images/plots/552z4.jpg" width="240" />
+
 ## License
 
 CC BY-NC-ND 4.0
