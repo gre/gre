@@ -1,6 +1,6 @@
 # Plottable Thousands
 
-**Collection on https://www.fxhash.xyz/generative/15409**
+**Collection on https://www.fxhash.xyz/generative/15417**
 
 'Thousands' explores the packing of recursive circles and golden angle spirals distributing various particles on a A4 canvas.
 

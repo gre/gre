@@ -3,7 +3,7 @@ title: "Thousands (Prototype 1)"
 image: /images/plots/551.jpg
 description: "Prototype from 'Thousands' generator"
 sourceFolderURL: https://github.com/gre/gre/tree/master/doodles/plottable-thousands
-nftGenerator: https://www.fxhash.xyz/generative/15409
+nftGenerator: https://www.fxhash.xyz/generative/15417
 tags:
   - thousands
 ---
