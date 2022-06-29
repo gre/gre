@@ -420,7 +420,7 @@ export default function Home({ tag }) {
               }}
             >
               @greweb is happy to physically plot art on demand and deliver
-              worldwide to "plottable NFT" digital collectors.
+              signed plots worldwide to "plottable NFT" digital collectors.
             </h3>
 
             <img width="100%" src="/images/plots-promo/letters.jpeg" />

@@ -5,7 +5,6 @@ tweet: https://twitter.com/tijeduppen/status/1540415377431302145
 sourceFolderURL: https://github.com/gre/gre/tree/master/doodles/plottable-mountain-moons
 nft: https://www.fxhash.xyz/gentk/157110
 tags:
-  - plotloop
   - mountain-moons
 ---
 
