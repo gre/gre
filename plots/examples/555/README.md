@@ -1,7 +1,7 @@
 ---
 title: "Mountain Moons #510"
 image: /images/plots/555.jpg
-sourceFolderURL: https://github.com/gre/gre/tree/master/doodles/ricochet
+sourceFolderURL: https://github.com/gre/gre/tree/master/doodles/plottable-mountain-moons
 nft: https://www.fxhash.xyz/gentk/562141
 tags:
   - mountain-moons
