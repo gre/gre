@@ -17,19 +17,16 @@ export function PlottingHeader() {
         textAlign: "center",
         fontStyle: "italic",
         fontSize: "20px",
-        margin: "20px 0",
+        marginTop: -4,
+        marginBottom: "20px",
         padding: "4px 16px",
         background: "#000",
         color: "white",
       }}
     >
       <p>
-        @greweb has been doing generative art for many years, shaders, and more
-        recently fountain pens robot plotting!
-      </p>
-
-      <p>
-        His work is about exploring the beauty of noise through many algorithms.
+        @greweb loves exploring the beauty of noise through many algorithms,
+        notably using shaders and plotters.
       </p>
     </footer>
   );

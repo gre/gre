@@ -20,10 +20,10 @@ let NOISE_AMP = 0.6;
 let MAX_MOUNTAIN_LAYERS = 7;
 let MOUNTAIN_DENSITY = 5;
 let MAX_SUN_RADIUS = 40;
-let SUN_DENSITY = 15;
+let SUN_DENSITY = 14;
 let MAX_GROUP_OF_BIRDS = 3;
 let MAX_BOATS = 10;
-let REFLECTION_PROBABILITY = 0.06;
+let REFLECTION_PROBABILITY = 0.04;
 
 ///////////////////////////////
 
@@ -57,24 +57,24 @@ function art(S) {
   let heights = Array(Math.ceil(WIDTH / x_increment)).fill(HEIGHT - PAD);
 
   // For each mountain layer...
-  let mountains = (1 + rand(MAX_MOUNTAIN_LAYERS) * rand()) | 0; // number of mountains layers
+  let mountains = (1 + rand(MAX_MOUNTAIN_LAYERS)) | 0; // number of mountains layers
   let mountains_delta = 30 + rand(30); // defines the "stops" of each mountains layer
   let ystoppow = 0.9 + rand(1.2);
   for (let i = 0; i < mountains; i++) {
     y_increment *= 1.3; // the distance between lines in mountain will fade away with distance
     // we pick random perlin noise frequencies (f*) and amplitudes (amp*)
     // the different level of noises are composed with domain warping
-    let f1 = 0.003 + rand(0.003);
-    let f2 = 0.005 + rand(0.01);
-    let f3 = 0.05 + rand(0.03);
+    let f1 = 0.002 + rand(0.002);
+    let f2 = 0.004 + rand(0.004);
+    let f3 = 0.03 + rand(0.02);
     let amp1 = NOISE_AMP / f1;
     let amp2 = 0.3 + rand(0.5);
-    let amp3 = 0.6 + rand(0.9);
+    let amp3 = 0.5 + rand(0.4);
     // "s" is for the second perlin noise added to the first
     let sf1 = 0.005 + rand(0.01);
     let sf2 = 0.005 + rand(0.02);
-    let ampnoise2 = rand(0.1);
-    let ampnoise3 = rand(0.05);
+    let ampnoise2 = rand(0.08);
+    let ampnoise3 = rand(0.04);
     let samp2 = NOISE_AMP * (3 + rand(4));
     let ystop =
       0.5 * HEIGHT - Math.pow((i + 1) / mountains, ystoppow) * mountains_delta;
@@ -82,8 +82,8 @@ function art(S) {
     // For each line of the mountain
     for (let ybase = YCENTER; ybase > ystop; ybase -= y_increment) {
       let amp1mul =
-        0.8 * smoothstep(YCENTER - 2, YCENTER - 40, ybase) +
-        0.2 * smoothstep(YCENTER, 0, ybase);
+        0.7 * smoothstep(YCENTER - 2, YCENTER - 12, ybase) +
+        0.3 * smoothstep(YCENTER, 0, ybase);
       let route = [];
       let freqmul = 0.6 - (ybase - YCENTER) / HEIGHT;
       let xi = 0;
@@ -136,14 +136,14 @@ function art(S) {
                 ) -
               ampnoise2 *
                 noise.perlin3(
-                  0.4 * x * freqmul,
-                  0.4 * ybase * freqmul,
+                  0.3 * x * freqmul,
+                  0.6 * ybase * freqmul,
                   perlin_seed / 1.7
                 ) -
               ampnoise3 *
                 noise.perlin3(
-                  0.8 * x * freqmul,
-                  0.8 * ybase * freqmul,
+                  0.6 * x * freqmul,
+                  1.2 * ybase * freqmul,
                   -perlin_seed * 3.3
                 ));
         let h = heights[xi];
@@ -192,44 +192,32 @@ function art(S) {
     ) *
     (0.5 + rand(0.5));
   if (radius > 10) {
-    // make a spiral
-    let min_stroke = 0.2;
-    let r = 0.2;
-    let a = 0;
     let route = [];
     let spins = SUN_DENSITY;
-    let aincr = 0.2 * PRECISION;
-    let rincr = (0.9 * aincr) / spins;
-    let last = [center[0], center[1]];
-    route.push(last);
-    let last_radius_angle = 0;
-    while (last_radius_angle < 2 * Math.PI) {
+    let rbase = radius + 0.5;
+    let a = 0;
+    while (rbase > 0) {
+      let r = Math.min(rbase, radius);
+      let aincr = PRECISION / (r + 1.0);
+      let rincr = (0.9 * aincr) / spins;
       let p = [center[0] + r * Math.cos(a), center[1] + r * Math.sin(a)];
-      if (euclidian_dist(last, p) > min_stroke) {
+      let xi = Math.ceil((p[0] - PAD) / x_increment);
+      let h = heights[xi];
+      if (p[1] < h) {
         route.push(p);
-        last = p;
-
-        let xi = Math.ceil((p[0] - PAD) / x_increment);
-        let h = heights[xi];
-        if (p[1] < h) {
-          route.push(p);
-        } else {
-          if (route.length > 1) {
-            red_routes.push(route);
-          }
-          route = [];
-        }
-      }
-      a += aincr;
-      if (r > radius) {
-        r = radius;
-      } else if (r !== radius) {
-        r += rincr;
       } else {
-        last_radius_angle += aincr;
+        if (route.length > 1) {
+          red_routes.push(route);
+        }
+        route = [];
       }
+      rbase -= rincr;
+      a += aincr;
     }
-    red_routes.push(route);
+
+    if (route.length > 1) {
+      red_routes.push(route);
+    }
   }
 
   // ~~~ STEP ~~~ place birbs <3
@@ -277,7 +265,7 @@ function art(S) {
 
   // ~~~ STEP ~~~ reflect random points of the drawn shapes
   [black_routes, red_routes].forEach((routes, i) => {
-    let probability = REFLECTION_PROBABILITY * (0.5 + 0.5 * i);
+    let probability = REFLECTION_PROBABILITY;
     routes
       .reduce((acc, r) => acc.concat(r), [])
       .forEach(([cx, cy]) => {
@@ -286,7 +274,7 @@ function art(S) {
         let sx = base_stroke / 2 + rand(8) * rand();
         let sy = 0.5 * rand() * (rand(1) - 0.5);
         let x = cx + rand(50) * rand() * (rand() - 0.5);
-        let y = 2 * YCENTER - cy + rand(200) * (rand() - 0.5);
+        let y = 2 * YCENTER - cy + rand(150) * (rand() - 0.5);
         if (y > YCENTER && y < HEIGHT - PAD) {
           let x1 = Math.min(Math.max(PAD, x - sx), WIDTH - PAD);
           let x2 = Math.min(Math.max(PAD, x + sx), WIDTH - PAD);
@@ -351,8 +339,8 @@ function art(S) {
 
 function makeSVG(a) {
   return `<svg style="background:white" viewBox="0 0 210 297" width="210mm" height="297mm" xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape">
-${make_svg_layer("black", a.black_routes)}
-${make_svg_layer("red", a.red_routes)}
+${make_svg_layer("#000", a.black_routes)}
+${make_svg_layer("#F00", a.red_routes)}
 </svg>`;
 }
 

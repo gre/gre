@@ -249,13 +249,8 @@ export default function Home({ tag }) {
               }}
             >
               <p>
-                @greweb has been doing generative art for many years, shaders,
-                and more recently fountain pens robot plotting!
-              </p>
-
-              <p>
-                His work is about exploring the beauty of noise through many
-                algorithms. See also{" "}
+                @greweb loves exploring the beauty of noise through many
+                algorithms, notably using shaders and plotters. See also{" "}
                 <Link href="/plots">
                   <a>https://greweb.me/plots</a>
                 </Link>
