@@ -3,7 +3,7 @@ title: "Era Primitive (Prototype 4)"
 image: /images/plots/573.jpg
 description: "Plot reveal for 'Plottable Era: (I) Primitive'"
 sourceFolderURL: https://github.com/gre/gre/tree/master/doodles/plottable-era-primitive
-nftGenerator: https://www.fxhash.xyz/u/greweb
+nftGenerator: https://www.fxhash.xyz/generative/16313
 tags:
   - era
   - era-primitive

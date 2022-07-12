@@ -1,6 +1,6 @@
 # Plottable Era: (I) Primitive
 
-**Collection on https://www.fxhash.xyz/u/greweb**
+**Collection on https://www.fxhash.xyz/generative/16313**
 
 'Plottable Era: (I) Primitive' is the first generator in the "Era" generators series, highlighting different periods and civilizations. This first series "Primitive" shows the beginning of mankind with people exploring the mountains and traveling on the sea during sunset.
 
