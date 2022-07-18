@@ -1,0 +1,7 @@
+---
+title: "Thousands #185"
+image: /images/plots/583.gif
+video: /images/plots/583.mp4
+sourceFolderURL: https://github.com/gre/gre/tree/master/doodles/plottable-thousands
+nft: https://www.fxhash.xyz/gentk/924763
+---
