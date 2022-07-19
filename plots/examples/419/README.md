@@ -2,6 +2,8 @@
 title: "espoir"
 image: /images/plots/419.jpg
 rootFile: index.js
+tags:
+  - wccchallenge
 ---
 
 Experiment using quickly drawn letters of [/plots/409](/plots/409) to repeat the word "espoir" (Hope in French) many times until it stabilizes on the bottom.

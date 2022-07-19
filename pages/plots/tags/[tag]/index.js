@@ -72,9 +72,6 @@ export default function Home({ tag, plots }) {
           </Header>
 
           <Content>
-            <PlottingSectionVideos />
-            <PlottingHeader />
-
             <PlotGrid>
               {plots.map((plot) => (
                 <Plot plot={plot} key={plot.n} />
