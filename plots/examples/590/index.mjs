@@ -4,7 +4,7 @@ import perlin from "./perlin.mjs";
 // a plottable generator
 //        by @greweb 2022
 //-----------------------
-// entry for @sableraph WCCChallenge 'ASCII'
+// entry for @sableraph wccchallenge 'ASCII'
 
 const WIDTH = 210;
 const HEIGHT = 297;

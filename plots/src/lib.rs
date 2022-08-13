@@ -2,10 +2,10 @@ use byteorder::*;
 use contour::ContourBuilder;
 use geo::*;
 use geojson::Feature;
-use image::AnimationDecoder;
-use image::RgbaImage;
 use image::gif::GifDecoder;
 use image::io::Reader as ImageReader;
+use image::AnimationDecoder;
+use image::RgbaImage;
 use ndarray::Array2;
 use prelude::{BoundingRect, Contains};
 use rand::prelude::*;
@@ -42,7 +42,11 @@ pub fn grayscale((r, g, b): (f64, f64, f64)) -> f64 {
 }
 
 pub fn lerp(a: f64, b: f64, x: f64) -> f64 {
-    if a == b { a } else { (x - a) / (b - a) }
+    if a == b {
+        a
+    } else {
+        (x - a) / (b - a)
+    }
 }
 
 pub fn smoothstep(a: f64, b: f64, x: f64) -> f64 {
@@ -98,7 +102,7 @@ pub fn image_get_color(
 
 pub fn image_gif_get_color(
     path: &str,
-    index: usize
+    index: usize,
 ) -> Result<
     impl Fn((f64, f64)) -> (f64, f64, f64),
     image::ImageError,
@@ -113,13 +117,15 @@ pub fn image_gif_get_color(
 }
 
 pub fn dynamic_image_get_color(
-    img: RgbaImage
+    img: RgbaImage,
 ) -> impl Fn((f64, f64)) -> (f64, f64, f64) {
     let (width, height) = img.dimensions();
     return move |(x, y): (f64, f64)| {
         // quadratic implementation
-        let xi: f64 = x.max(0.0).min(1.0) * ((width - 1) as f64);
-        let yi: f64 = y.max(0.0).min(1.0) * ((height - 1) as f64);
+        let xi: f64 =
+            x.max(0.0).min(1.0) * ((width - 1) as f64);
+        let yi: f64 =
+            y.max(0.0).min(1.0) * ((height - 1) as f64);
         let x1 = xi.floor() as u32;
         let x2 = xi.ceil() as u32;
         let y1 = yi.floor() as u32;
@@ -130,9 +136,21 @@ pub fn dynamic_image_get_color(
         let p4 = img.get_pixel(x1, y2);
         let xp = xi - xi.floor();
         let yp = yi - yi.floor();
-        let r = (mix(mix(p1[0] as f64, p2[0] as f64, xp), mix(p4[0] as f64, p3[0] as f64, xp), yp)) / 255.0;
-        let g = (mix(mix(p1[1] as f64, p2[1] as f64, xp), mix(p4[1] as f64, p3[1] as f64, xp), yp)) / 255.0;
-        let b = (mix(mix(p1[2] as f64, p2[2] as f64, xp), mix(p4[2] as f64, p3[2] as f64, xp), yp)) / 255.0;
+        let r = (mix(
+            mix(p1[0] as f64, p2[0] as f64, xp),
+            mix(p4[0] as f64, p3[0] as f64, xp),
+            yp,
+        )) / 255.0;
+        let g = (mix(
+            mix(p1[1] as f64, p2[1] as f64, xp),
+            mix(p4[1] as f64, p3[1] as f64, xp),
+            yp,
+        )) / 255.0;
+        let b = (mix(
+            mix(p1[2] as f64, p2[2] as f64, xp),
+            mix(p4[2] as f64, p3[2] as f64, xp),
+            yp,
+        )) / 255.0;
         return (r, g, b);
     };
 }
@@ -143,8 +161,11 @@ pub fn layer(id: &str) -> Group {
         .set("inkscape:label", id);
 }
 
-
-pub fn base_document(bg: &str, width: f64, height: f64) -> Document {
+pub fn base_document(
+    bg: &str,
+    width: f64,
+    height: f64,
+) -> Document {
     Document::new()
         .set(
             "xmlns:inkscape",
@@ -172,7 +193,7 @@ pub fn base_a4_square(bg: &str) -> Document {
     base_document(bg, 210., 210.)
 }
 pub fn base_a5_landscape(bg: &str) -> Document {
-    base_document(bg, 210., 297./2.)
+    base_document(bg, 210., 297. / 2.)
 }
 pub fn base_24x30_portrait(bg: &str) -> Document {
     base_document(bg, 240., 300.)
@@ -263,7 +284,7 @@ pub fn render_polygon_stroke(
 ) -> Data {
     let mut first = true;
     let mut d = data;
-    for p in poly.exterior().points_iter() {
+    for p in poly.exterior().points() {
         if first {
             first = false;
             d = d.move_to(p.x_y());
@@ -337,19 +358,19 @@ pub fn render_route_collide(
             d = d.move_to(p);
         } else {
             if let Some(c) = collides(last, p) {
-                if c.0==last.0 && c.1==last.1 || c.0==p.0 && c.1==p.1 {
+                if c.0 == last.0 && c.1 == last.1
+                    || c.0 == p.0 && c.1 == p.1
+                {
                     // nothing to draw
                     up = true;
-                }
-                else {
+                } else {
                     if up {
                         d = d.move_to(last);
                     }
                     d = d.line_to(c);
                     up = true;
                 }
-            }
-            else {
+            } else {
                 if up {
                     up = false;
                     d = d.move_to(last);
@@ -362,11 +383,9 @@ pub fn render_route_collide(
     return d;
 }
 
-
-pub fn render_route_when<F: FnMut(
-    (f64, f64),
-    (f64, f64),
-) -> bool>(
+pub fn render_route_when<
+    F: FnMut((f64, f64), (f64, f64)) -> bool,
+>(
     data: Data,
     route: Vec<(f64, f64)>,
     mut should_draw_line: F,
@@ -428,7 +447,8 @@ pub fn render_polygon_fill_tsp(
     rng: &mut impl Rng,
     duration: Duration,
 ) -> Data {
-    let candidates = samples_polygon(&poly, samples, 32, rng);
+    let candidates =
+        samples_polygon(&poly, samples, 32, rng);
     return render_tsp(data, candidates, duration);
 }
 
@@ -482,7 +502,8 @@ pub fn render_polygon_fill_spiral(
     samples: usize,
     rng: &mut impl Rng,
 ) -> Data {
-    let candidates = samples_polygon(&poly, samples, 32, rng);
+    let candidates =
+        samples_polygon(&poly, samples, 32, rng);
     render_fill_spiral(data, candidates)
 }
 
@@ -1303,9 +1324,9 @@ pub fn crop_route(
     boundaries: (f64, f64, f64, f64),
 ) -> Option<Vec<(f64, f64)>> {
     if route.len() < 2
-        || route
-            .iter()
-            .all(|&p| !strictly_in_boundaries(p, boundaries))
+        || route.iter().all(|&p| {
+            !strictly_in_boundaries(p, boundaries)
+        })
     {
         return None;
     }
@@ -1322,10 +1343,14 @@ pub fn crop_routes(
         .collect();
 }
 
-pub fn sdf_box2 ((x,y): (f64,f64), (w, h): (f64,f64)) -> f64 {
+pub fn sdf_box2(
+    (x, y): (f64, f64),
+    (w, h): (f64, f64),
+) -> f64 {
     let dx = x.abs() - w;
     let dy = y.abs() - h;
-    euclidian_dist((0., 0.), (dx.max(0.), dy.max(0.))) + dx.min(0.).max(dy.min(0.))
+    euclidian_dist((0., 0.), (dx.max(0.), dy.max(0.)))
+        + dx.min(0.).max(dy.min(0.))
 }
 
 pub fn length(l: (f64, f64)) -> f64 {
@@ -1337,12 +1362,20 @@ pub fn f_op_union_round(a: f64, b: f64, r: f64) -> f64 {
         - length(((r - a).max(0.), (r - b).max(0.)))
 }
 
-pub fn f_op_intersection_round(a: f64, b: f64, r: f64) -> f64 {
+pub fn f_op_intersection_round(
+    a: f64,
+    b: f64,
+    r: f64,
+) -> f64 {
     (-r).min(a.max(b))
         + length(((r + a).max(0.), (r + b).max(0.)))
 }
 
-pub fn f_op_difference_round(a: f64, b: f64, r: f64) -> f64 {
+pub fn f_op_difference_round(
+    a: f64,
+    b: f64,
+    r: f64,
+) -> f64 {
     f_op_intersection_round(a, -b, r)
 }
 
@@ -1353,13 +1386,21 @@ pub fn p_r(p: (f64, f64), a: f64) -> (f64, f64) {
     )
 }
 
-pub fn spiral(x: f64, y: f64, radius: f64, dr: f64) -> Vec<(f64, f64)> {
+pub fn spiral(
+    x: f64,
+    y: f64,
+    radius: f64,
+    dr: f64,
+) -> Vec<(f64, f64)> {
     let two_pi = 2.0 * PI;
     let mut route = Vec::new();
     let mut r = radius;
     let mut a = 0f64;
     loop {
-        route.push(round_point(( x + r * a.cos(), y + r * a.sin() ), 0.01));
+        route.push(round_point(
+            (x + r * a.cos(), y + r * a.sin()),
+            0.01,
+        ));
         let da = 1.0 / (r + 8.0); // bigger radius is more we have to do angle iterations
         a = (a + da) % two_pi;
         r -= dr * da / two_pi;
