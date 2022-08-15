@@ -1,6 +1,6 @@
 # Plottable Slimes
 
-**Collection on https://www.fxhash.xyz/generative/15417**
+**Collection on https://www.fxhash.xyz/generative/18109**
 
 Packing of "Slimes" shapes on a A4 canvas. Variety of effects, ink and paper colors.
 
