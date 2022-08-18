@@ -2,19 +2,33 @@
 
 **Collection on https://www.fxhash.xyz/generative/18109**
 
-Packing of "Slimes" shapes on a A4 canvas. Variety of effects, ink and paper colors.
+This work explore very slimy objects, packed on a A4 canvas. The generator suggests different kind of paper and ink for the plotter artist to use: white, black, blue, red,... This is designed to be used with Fountain Pen (for white paper) and gel pens (for colored paper).
 
-A SVG file can be exported (right click save) to plot the piece physically.
+The outcomes of the generator have consistency: there is a main slime in the middle, sometimes being "highlighed" with another color, and other slimes are distributed on the space around it. This makes the piece more organic and distributed.
 
-The digital NFT is the recipe to a plottable art piece, owning it confers the right to plot or request a physical plot from @greweb (https://greweb.me/plots/nft). @greweb would use fountain pens and gel pens but other plotting artists are free to achieve it with their own materials and ship to collectors – as long as NFT is owned at request time.
+Nevertheless, there are many different variations and features to discover, expressed in the "Shape" feature.
 
-More details and Source code: https://github.com/gre/gre/tree/master/doodles/plottable-slimes
+> _Theorical distribution:_
 
-@greweb – 2022 – tech: WebGL + Rust + WASM – CC BY-SA 4.0 https://creativecommons.org/licenses/by-sa/4.0/
+```
+Shape
+                         Slime: 56.2%
+                  Smooth Slime: 24.8%
+                          Snow: 7.7%
+                Low-Poly Slime: 3.0%
+                   Smooth Snow: 2.7%
+                          Wind: 2.6%
+         Smooth Low-Poly Slime: 1.6%
+                   Smooth Wind: 1.4%
+```
+
+This work is the result of months of exploration around this concept of "Polar Mountains" and projections in polar coordinates. I only figured how recently how I wanted the packing to work, thanks to some home cooked algorithm of packing bitmap technique.
 
 ## Physical protytypes previews
 
-COMING SOON...
+Many prototypes were made to reveal the generator as well as stress test its physical results.
+
+<a href="https://greweb.me/plots/621"><img src="../../public/images/plots/621.jpg" width="50%" /></a><a href="https://greweb.me/plots/622"><img src="../../public/images/plots/622.jpg" width="50%" /></a><a href="https://greweb.me/plots/623"><img src="../../public/images/plots/623.jpg" width="50%" /></a><a href="https://greweb.me/plots/624"><img src="../../public/images/plots/624.jpg" width="50%" /></a><a href="https://greweb.me/plots/625"><img src="../../public/images/plots/625.jpg" width="50%" /></a><a href="https://greweb.me/plots/626"><img src="../../public/images/plots/626.jpg" width="50%" /></a><a href="https://greweb.me/plots/627"><img src="../../public/images/plots/627.jpg" width="50%" /></a><a href="https://greweb.me/plots/628"><img src="../../public/images/plots/628.jpg" width="50%" /></a><a href="https://greweb.me/plots/629"><img src="../../public/images/plots/629.jpg" width="50%" /></a><a href="https://greweb.me/plots/630"><img src="../../public/images/plots/630.jpg" width="50%" /></a><a href="https://greweb.me/plots/631"><img src="../../public/images/plots/631.jpg" width="50%" /></a><a href="https://greweb.me/plots/632"><img src="../../public/images/plots/632.jpg" width="50%" /></a><a href="https://greweb.me/plots/633"><img src="../../public/images/plots/633.jpg" width="50%" /></a>
 
 ## License
 
@@ -25,14 +39,20 @@ CC BY-NC-ND 4.0
 - [lib.rs](./rust/src/lib.rs) Rust for the generative art logic and SVG generation. Libraries: svg, noise, rand, bs58, serde, instant, serde_json
 - [index.js](./index.js) WASM + WebGL for the frontend rendering. Libraries: React and GL-React.
 
-## Theorical variety
+## Other theorical distributions
+
+This controls the fact the lines can "go inside" the shapes. It increase the contouring effect, especially powerful with fountain pens.
 
 ```
-
 Curving
                         Strict: 55.1%
                        Contour: 25.7%
                         Inside: 19.2%
+```
+
+These are the Paper and Ink distributions
+
+```
 Inks
              Black + Gel White: 19.7%
                      Gel White: 15.7%
@@ -55,6 +75,16 @@ Inks
 Inks Count
                              2: 54.7%
                              1: 45.3%
+Paper
+                         black: 32.8%
+                         white: 32.3%
+                          blue: 19.9%
+                           red: 15.0%
+```
+
+These are other properties that analyzes the intensity of the shapes, the padding between them, their size, amount of shapes,...
+
+```
 Intensity
                         Medium: 47.7%
                        Intense: 39.3%
@@ -65,20 +95,6 @@ Padding
                        Distant: 38.7%
                          Tight: 16.1%
                      undefined: 6.4%
-Paper
-                         black: 32.8%
-                         white: 32.3%
-                          blue: 19.9%
-                           red: 15.0%
-Shape
-                         Slime: 56.2%
-                  Smooth Slime: 24.8%
-                          Snow: 7.7%
-                Low-Poly Slime: 3.0%
-                   Smooth Snow: 2.7%
-                          Wind: 2.6%
-         Smooth Low-Poly Slime: 1.6%
-                   Smooth Wind: 1.4%
 Size
                         Medium: 58.4%
                            Big: 22.2%
