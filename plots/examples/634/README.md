@@ -1,5 +1,5 @@
 ---
-title: "WCCC: Spiral (1/2)"
+title: "WCCC: Spiral (1/4)"
 image: /images/plots/634.jpg
 tags:
   - wccchallenge

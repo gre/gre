@@ -1,5 +1,5 @@
 ---
-title: "WCCC: Spiral (2/2)"
+title: "WCCC: Spiral (2/4)"
 image: /images/plots/635.jpg
 sourceFolder: 634
 tweet: https://twitter.com/greweb/status/1560939131806662656
