@@ -1,4 +1,5 @@
 ---
+date: "2022-01-28"
 title: "Packing doodle curves"
 image: /images/plots/386.jpg
 description: "Packing doodle curves explore the idea to combine a few classical generative art technique to draw curious curves."

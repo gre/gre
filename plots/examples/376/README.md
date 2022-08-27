@@ -1,4 +1,5 @@
 ---
+date: "2022-01-14"
 title: "Sand"
 image: /images/plots/376.jpg
 description: "This implements the prompt 'Sand' (JAN.15) for the Genuary event"

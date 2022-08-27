@@ -1,4 +1,5 @@
 ---
+date: "2022-04-27"
 title: "Mountain Moons #563"
 image: /images/plots/481.jpg
 sourceFolderURL: https://github.com/gre/gre/tree/master/doodles/plottable-mountain-moons

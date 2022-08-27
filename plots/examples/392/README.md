@@ -1,4 +1,5 @@
 ---
+date: "2022-01-29"
 title: "PI RNG"
 image: /images/plots/392.jpg
 ---

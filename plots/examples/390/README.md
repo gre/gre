@@ -1,4 +1,5 @@
 ---
+date: "2022-01-29"
 title: "Self portrait"
 image: /images/plots/390.jpg
 description: "using curves, spirals and distributing them based on my avatar."

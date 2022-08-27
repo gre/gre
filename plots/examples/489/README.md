@@ -1,4 +1,5 @@
 ---
+date: "2022-04-29"
 title: "Polar Mountains (proto 4)"
 image: /images/plots/489.jpg
 description: "Experimenting the idea of 'Mountains' with its domain warping using a polar projection."

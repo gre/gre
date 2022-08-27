@@ -1,4 +1,5 @@
 ---
+date: "2021-12-27"
 title: "Mountain Moons Blue"
 image: /images/plots/350.jpg
 description: "This plot is a plot done with one of the generator outcome."

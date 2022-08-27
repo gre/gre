@@ -1,4 +1,5 @@
 ---
+date: "2022-01-04"
 title: "Not really the next Fidenza"
 image: /images/plots/366.jpg
 tags:

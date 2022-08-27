@@ -1,4 +1,5 @@
 ---
+date: "2022-01-01"
 title: "10000 various circles (A3)"
 image: /images/plots/363.jpg
 tags:

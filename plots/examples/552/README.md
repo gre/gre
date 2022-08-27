@@ -1,4 +1,5 @@
 ---
+date: "2022-06-24"
 title: "Thousands (Prototype 2)"
 image: /images/plots/552.jpg
 description: "Prototype from 'Thousands' generator"

@@ -1,4 +1,5 @@
 ---
+date: "2021-10-09"
 title: "Erosion02"
 image: /images/plots/271.jpg
 sourceFolderURL: https://github.com/gre/gre/tree/master/doodles/erosion02

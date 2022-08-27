@@ -1,4 +1,5 @@
 ---
+date: "2021-05-21"
 title: "Ink fabrics"
 image: "/images/plots/141.jpg"
 description: "Drop inks on simple robotic motions and let the medium speak."

@@ -1,4 +1,5 @@
 ---
+date: "2022-06-11"
 title: "Plottable Circleception (Prototype)"
 image: /images/plots/543.gif
 video: /images/plots/543.mp4

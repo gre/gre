@@ -1,4 +1,5 @@
 ---
+date: "2021-04-10"
 title: "seasonal roots"
 image: /images/plots/091fall.jpg
 description: "Experimentation of vector fields with a sinusoïdal distribution of lines."

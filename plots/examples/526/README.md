@@ -1,4 +1,5 @@
 ---
+date: "2022-05-23"
 title: "Field (Reveal 11)"
 image: /images/plots/526.gif
 video: /images/plots/526.mp4

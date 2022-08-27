@@ -1,4 +1,5 @@
 ---
+date: "2021-05-13"
 title: "Cross sines"
 image: /images/plots/133.jpg
 description: "A simple experiment with crosses and sine waves. Fountain Pens with Pink and Turquoise ink on Bristol A4."

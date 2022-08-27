@@ -1,4 +1,5 @@
 ---
+date: "2021-06-30"
 title: "squares packing 002"
 image: /images/plots/180.jpg
 description: "Second iteration on packing rotated squares in a square. Black fountain pens on 300g/m paper."

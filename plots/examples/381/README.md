@@ -1,4 +1,5 @@
 ---
+date: "2022-01-26"
 title: "Yellow yarn balls"
 image: /images/plots/381.jpg
 description: "Variation of 'Yarn balls' done for the Genuary entry for 'Single curve only.' (JAN.8)"

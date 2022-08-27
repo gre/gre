@@ -1,4 +1,5 @@
 ---
+date: "2021-08-06"
 title: "Raymarched objects"
 image: /images/plots/218.jpg
 ---

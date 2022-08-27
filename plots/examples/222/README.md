@@ -1,4 +1,5 @@
 ---
+date: "2021-08-11"
 title: "Bitcoin in noisy terrain"
 image: /images/plots/222.jpg
 ---

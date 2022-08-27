@@ -1,4 +1,5 @@
 ---
+date: "2021-12-27"
 title: "Plottable Ricochets"
 image: /images/plots/361.jpg
 description: "Plottable Ricochets explores polygon shapes scaled and rotated inside a parametric curve. The curve you obtain can widely vary."

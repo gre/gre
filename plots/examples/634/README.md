@@ -1,4 +1,5 @@
 ---
+date: "2022-08-20"
 title: "WCCC: Spiral (1/4)"
 image: /images/plots/634.jpg
 tags:

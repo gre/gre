@@ -1,4 +1,5 @@
 ---
+date: "2022-05-10"
 title: "Square storms of fire"
 tags:
   - a3

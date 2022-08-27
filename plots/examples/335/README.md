@@ -1,4 +1,5 @@
 ---
+date: "2021-12-05"
 title: "Plottable Mountain Moons (prototype 5)"
 image: /images/plots/335.jpg
 description: "This plot is an early prototype made during the development of Plottable Mountain Moons generator."

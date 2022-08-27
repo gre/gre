@@ -1,4 +1,5 @@
 ---
+date: "2022-01-28"
 title: "9 inks"
 image: /images/plots/385.jpg
 description: "generative wave using 9 different inks"

@@ -1,4 +1,5 @@
 ---
+date: "2022-04-25"
 title: "Plottable Fibers #81"
 image: /images/plots/484.jpg
 description: "Physical version of #81 mint of Plottable Fibers."

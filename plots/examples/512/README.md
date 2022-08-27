@@ -1,4 +1,5 @@
 ---
+date: "2022-05-18"
 title: "Wireframe (Reveal 4 / 7)"
 image: /images/plots/512.gif
 video: /images/plots/512.mp4

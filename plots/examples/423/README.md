@@ -1,4 +1,5 @@
 ---
+date: "2022-03-13"
 title: "Dunes of hope"
 image: /images/plots/423.jpg
 description: "This is a first plot of its kind, I call this new generator Dunes and the innovation used here is making a low poly perlin noise. Plotted on A3 watercolor paper using fountain pens (Turquoise and Amber). 230 meters of ink. ~180 minutes."

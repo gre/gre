@@ -1,4 +1,5 @@
 ---
+date: "2022-01-28"
 title: "Packing doodle curves – 3 colors"
 image: /images/plots/387.jpg
 description: "Continuation of doodle curves exploration using 3 colors."

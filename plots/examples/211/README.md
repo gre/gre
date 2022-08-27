@@ -1,4 +1,5 @@
 ---
+date: "2021-07-30"
 title: "Crimson & Indigo Squares"
 image: /images/plots/211.jpg
 tags:

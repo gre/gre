@@ -1,4 +1,5 @@
 ---
+date: "2022-03-03"
 title: "Tunnels of hope"
 image: /images/plots/413.jpg
 description: "41047 circles are drawn with fountain pens on A3 watercolor paper. It took about 5 hours for the plotting robot to achieve this result. Inks used are Diamine Amber and Robert Oster Signature Fire and Ice."

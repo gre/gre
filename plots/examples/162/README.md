@@ -1,4 +1,5 @@
 ---
+date: "2021-06-12"
 title: "squares warping"
 image: /images/plots/162.jpg
 description: "Squares warping implements marching squares (contouring algorithm) on square distance and apply domain warping noise displacement onto it. There is a variety of different unique results and i've plotted 4 of them."

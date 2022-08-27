@@ -1,4 +1,5 @@
 ---
+date: "2021-05-20"
 title: "many plus"
 image: "/images/plots/140.jpg"
 description: "Plotter's journey is made of simple plots like these. The robot had one job: plot a lot of plus."

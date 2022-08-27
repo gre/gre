@@ -1,4 +1,5 @@
 ---
+date: "2022-01-29"
 title: "VHS"
 image: /images/plots/388.jpg
 description: "This was implemented for genuary.art VHS of JAN.18. This is making fun of curves to recreate the idea of digital tapes. Using two colors."

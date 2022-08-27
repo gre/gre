@@ -1,4 +1,5 @@
 ---
+date: "2022-03-23"
 title: "Turquoise curves"
 description: "Playing on the hybrid of digital and physical art. The robot applies a very mechanical curve motion on a very analog and organic process with a brush & eye-dropped ink on the canvas. Dimaine Turquoise ink on A4 Arches watercolor paper."
 image: /images/plots/427.jpg

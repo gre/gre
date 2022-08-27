@@ -1,4 +1,5 @@
 ---
+date: "2022-06-30"
 title: "Thousands #140"
 image: /images/plots/562.jpg
 sourceFolderURL: https://github.com/gre/gre/tree/master/doodles/plottable-thousands

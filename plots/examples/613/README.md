@@ -1,4 +1,5 @@
 ---
+date: "2022-08-13"
 title: "Draad #162 by monokai"
 image: /images/plots/613.jpg
 nft: https://www.fxhash.xyz/gentk/917023

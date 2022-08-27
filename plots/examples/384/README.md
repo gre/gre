@@ -1,4 +1,5 @@
 ---
+date: "2022-01-28"
 title: "#2E294E #541388 #F1E9DA #FFD400 #D90368"
 image: /images/plots/384.jpg
 description: "Genuary.art JAN.27 challenge was to use these 5 colors, challenge accepted with fountain pen and actual ink."

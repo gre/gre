@@ -1,4 +1,5 @@
 ---
+date: "2021-07-23"
 title: "triangle noise spiral"
 image: /images/plots/205.jpg
 description: "combination of shape packing, applied to polygon, filled with one of my oldest fill algorithm that works by rotating around randomly sampled points"

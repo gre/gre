@@ -1,4 +1,5 @@
 ---
+date: "2021-05-15"
 title: "topographic warp"
 image: /images/plots/135.jpg
 description: "Domain warping meets marching squares algorithms"

@@ -1,4 +1,5 @@
 ---
+date: "2022-06-29"
 title: "Reisiger #291"
 image: /images/plots/559.jpg
 sourceFolderURL: https://www.fxhash.xyz/gentk/921079

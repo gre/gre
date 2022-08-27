@@ -1,4 +1,5 @@
 ---
+date: "2022-06-15"
 title: "Circleception #20"
 image: /images/plots/550.gif
 video: /images/plots/550.mp4

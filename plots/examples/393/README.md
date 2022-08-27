@@ -1,4 +1,5 @@
 ---
+date: "2022-01-30"
 title: "Airport carpet"
 image: /images/plots/393.jpg
 ---

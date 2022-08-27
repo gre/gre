@@ -1,4 +1,5 @@
 ---
+date: "2022-03-13"
 title: "Volcano of hope"
 image: /images/plots/422.jpg
 description: "This plot explores 4 stripes of Amber and Turquoise inks displaced using domain warping technique of various perlin noises. A volcano shape emerge on the center of the piece."

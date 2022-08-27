@@ -1,4 +1,5 @@
 ---
+date: "2022-04-20"
 title: "Prototype 3 of 'Transhumanism'"
 image: /images/plots/476.jpg
 sourceFolder: 478

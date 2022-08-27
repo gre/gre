@@ -1,4 +1,5 @@
 ---
+date: "2022-06-01"
 title: "TinyFolks fan art"
 image: /images/plots/538.gif
 description: "Pixel Art plotting fan art made for Tinyfolks, a game developed by @pyairvander, released today Jun 1th, 2022."

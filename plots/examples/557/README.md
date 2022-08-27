@@ -1,4 +1,5 @@
 ---
+date: "2022-06-29"
 title: "Thousands #25"
 image: /images/plots/557.jpg
 tweet: https://twitter.com/greweb/status/1540783791949725696

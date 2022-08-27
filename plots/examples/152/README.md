@@ -1,4 +1,5 @@
 ---
+date: "2021-06-01"
 title: "Warp Glitch 01"
 image: /images/plots/152.jpg
 description: "This is a fresh experimentation of noise domain warping with glitches"

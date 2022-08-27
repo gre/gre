@@ -1,4 +1,5 @@
 ---
+date: "2021-07-13"
 title: "Elevation glitch"
 image: /images/plots/194.jpg
 description: "Usage of different harmonies of noise to reveal glitches. Various noise experiments and inks."

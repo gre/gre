@@ -1,4 +1,5 @@
 ---
+date: "2022-08-13"
 title: "Simple Towers 2"
 image: /images/plots/616.jpg
 tags:

@@ -1,4 +1,5 @@
 ---
+date: "2022-06-25"
 title: "Ricochets #22"
 image: /images/plots/554.jpg
 sourceFolderURL: https://github.com/gre/gre/tree/master/doodles/ricochet

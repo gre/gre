@@ -1,4 +1,5 @@
 ---
+date: "2022-01-01"
 title: "Plottable Storm #30"
 image: /images/plots/362.jpg
 description: "Plottable Storm plot"

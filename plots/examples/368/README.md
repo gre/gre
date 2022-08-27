@@ -1,4 +1,5 @@
 ---
+date: "2022-01-05"
 title: "Plottable Letters"
 image: /images/plots/368.jpg
 description: "Plottable Letters plays with letters, digits, and basic shapes. There is a great chance to obtain a 'GM', but also many other letter combination."

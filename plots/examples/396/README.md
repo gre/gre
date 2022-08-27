@@ -1,4 +1,5 @@
 ---
+date: "2022-02-13"
 title: "Packing circles with curves"
 image: /images/plots/396.jpg
 ---

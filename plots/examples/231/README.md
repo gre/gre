@@ -1,4 +1,5 @@
 ---
+date: "2021-08-24"
 title: "Forgotten squares warping"
 image: /images/plots/231.jpg
 ---

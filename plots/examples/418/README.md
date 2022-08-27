@@ -1,4 +1,5 @@
 ---
+date: "2022-03-06"
 title: "Shattered #2"
 image: /images/plots/418.jpg
 sourceFolderURL: https://github.com/gre/gre/tree/master/doodles/plottable-shattered

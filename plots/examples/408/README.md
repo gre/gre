@@ -1,4 +1,5 @@
 ---
+date: "2022-02-28"
 title: "Fibers 7"
 image: /images/plots/408.jpg
 ---

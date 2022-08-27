@@ -1,4 +1,5 @@
 ---
+date: "2022-07-19"
 title: "ASCII noise (4)"
 image: /images/plots/593.jpg
 sourceFolder: 590

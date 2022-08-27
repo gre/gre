@@ -1,4 +1,5 @@
 ---
+date: "2021-06-15"
 title: "Bubbles"
 image: /images/plots/166.jpg
 description: "Marching squares on cosinus 😂"

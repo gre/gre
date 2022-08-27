@@ -1,4 +1,5 @@
 ---
+date: "2021-11-12"
 title: "Pink Satellites"
 image: /images/plots/316.jpg
 description: "Experimenting (again) ink drop and spirals"

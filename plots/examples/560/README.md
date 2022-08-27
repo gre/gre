@@ -1,4 +1,5 @@
 ---
+date: "2022-06-30"
 title: "Wireframe (8 frames) #18"
 image: /images/plots/560.gif
 video: /images/plots/560.mp4

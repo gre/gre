@@ -1,4 +1,5 @@
 ---
+date: "2021-04-25"
 title: "Triangle planet"
 image: /images/plots/116.jpg
 description: "Exploration of perlin noise triangle planets. various fountain pen on A4 bristol."

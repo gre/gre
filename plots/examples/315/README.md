@@ -1,4 +1,5 @@
 ---
+date: "2021-11-11"
 title: "Amethyst Storm"
 image: /images/plots/315.jpg
 description: "For #plotparty #4 'Postcard', I've made a fractioned art into 8 pieces of 10x14cm that will be distributed to other plotter artists all over the world."

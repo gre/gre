@@ -1,4 +1,5 @@
 ---
+date: "2021-07-11"
 title: "Colored mountains 01"
 image: /images/plots/192.jpg
 description: "Continuation of noise elevation. Fountain pens with various inks on watercolour paper (300g/m)."

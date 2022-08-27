@@ -1,4 +1,5 @@
 ---
+date: "2022-02-19"
 title: "Mutating Bug"
 image: /images/plots/404.jpg
 ---

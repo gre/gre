@@ -1,4 +1,5 @@
 ---
+date: "2022-08-01"
 title: "Desert doré"
 image: /images/plots/601.jpg
 sourceFolder: 454

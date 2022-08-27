@@ -1,4 +1,5 @@
 ---
+date: "2022-08-22"
 title: "WCCC: Spiral (4/4)"
 image: /images/plots/637.jpg
 sourceFolder: 634

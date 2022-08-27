@@ -1,4 +1,5 @@
 ---
+date: "2021-12-12"
 title: "Circles (Reveal 2 / 7)"
 image: /images/plots/343.jpg
 description: "This plot is the second of a series of 7 plots that reveal 'Plottable Circles' – my next plottable generative art on fxhash"

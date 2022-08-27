@@ -1,4 +1,5 @@
 ---
+date: "2022-04-23"
 title: "Transhumanist singularity (4 frames)"
 image: /images/plots/478.gif
 video: /images/plots/478.mp4

@@ -1,4 +1,5 @@
 ---
+date: "2022-05-07"
 title: "Fire Ice Morphing Head (8 frames)"
 tags:
   - plotloop

@@ -1,4 +1,5 @@
 ---
+date: "2021-05-16"
 title: "White Protozoa (8 frames)"
 image: "/images/plots/136.gif"
 description: "8 frames plotted making an animated loop. A 1920p video and A4 physical art is available as an NFT."

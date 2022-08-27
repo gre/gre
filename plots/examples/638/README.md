@@ -1,4 +1,5 @@
 ---
+date: "2022-08-22"
 title: "Vitraux (proto 1)"
 image: /images/plots/638.jpg
 tags:

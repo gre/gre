@@ -1,4 +1,5 @@
 ---
+date: "2022-04-29"
 title: "73"
 description: "This artwork is born from a collaboration with @LeLapinMignon. The generative piece is plotted with a fountain pen robot drawing a 73 meter-long curve on a watercolor gradient and then digitally enhanced. Curious exploration of different mediums, from physical to digital."
 tweet: https://twitter.com/Lelapinmignon/status/1519243498226081799

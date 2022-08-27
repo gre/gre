@@ -1,4 +1,5 @@
 ---
+date: "2022-03-06"
 title: "Sunflower inner"
 description: "Packing of golden spiral."
 image: /images/plots/417.jpg

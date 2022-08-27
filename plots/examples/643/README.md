@@ -1,5 +1,6 @@
 ---
 title: "Kandinsky circle study"
+date: "2022-08-22"
 image: /images/plots/643.jpg
 tags:
   - wccchallenge

@@ -1,4 +1,5 @@
 ---
+date: "2021-06-30"
 title: "squares packing 001"
 image: /images/plots/179.jpg
 description: "Packing rotated squares in a square. Black fountain pens on Bristol."

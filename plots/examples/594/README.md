@@ -1,4 +1,5 @@
 ---
+date: "2022-07-25"
 title: "Square Storms of Lilac"
 image: /images/plots/594.jpg
 tags:

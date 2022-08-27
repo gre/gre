@@ -1,4 +1,5 @@
 ---
+date: "2021-10-29"
 title: "Maillage 06"
 image: /images/plots/306.jpg
 description: "Rotation of the same shape 3 times creates an interesting pattern."

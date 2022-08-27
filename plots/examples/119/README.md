@@ -1,4 +1,5 @@
 ---
+date: "2021-04-28"
 title: "Blurry waves"
 description: "Yet another parametric stack, noisy one this time! white uniball on black A4."
 image: /images/plots/119.jpg

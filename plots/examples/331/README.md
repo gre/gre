@@ -1,4 +1,5 @@
 ---
+date: "2021-12-05"
 title: "Plottable Mountain Moons (OG plot)"
 image: /images/plots/331.jpg
 description: "This plot represents the 'Plottable Mountain Moons' generator."

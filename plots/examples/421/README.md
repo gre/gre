@@ -1,4 +1,5 @@
 ---
+date: "2022-03-13"
 title: "Sand of hope"
 image: /images/plots/421.jpg
 description: "This is a continuation of the idea behind the Sand series. Plotted on A3 watercolor paper using fountain pens (Turquoise and Amber). The two ink are blending into different shade of greens. The 100000 small strokes were plotted for 12 hours!"

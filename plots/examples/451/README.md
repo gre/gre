@@ -1,4 +1,5 @@
 ---
+date: "2022-04-11"
 title: "Red polygon packing"
 image: /images/plots/451.jpg
 ---

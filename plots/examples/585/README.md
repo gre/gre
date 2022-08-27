@@ -1,4 +1,5 @@
 ---
+date: "2022-07-12"
 title: "Era Primitive Cover"
 image: /images/plots/585.jpg
 description: "Plot cover for 'Plottable Era: (I) Primitive'"

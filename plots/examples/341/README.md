@@ -1,4 +1,5 @@
 ---
+date: "2021-12-07"
 title: "Plottable Mesh"
 image: /images/plots/341.jpg
 description: "This plot is the 'OG plot' that covers my new Plottable Mesh generator."

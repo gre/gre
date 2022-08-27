@@ -1,4 +1,5 @@
 ---
+date: "2022-08-13"
 title: "Cloud Prototype 1"
 image: /images/plots/614.jpg
 tags:

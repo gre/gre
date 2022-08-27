@@ -1,4 +1,5 @@
 ---
+date: "2021-04-21"
 title: "Growing parametric"
 description: "stacking multiple parametric functions, fountain pen with 'Bloody Brexit' ink which produces an interesting reflection. A4 bristol."
 image: /images/plots/111.jpg

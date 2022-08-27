@@ -1,4 +1,5 @@
 ---
+date: "2021-04-20"
 title: "Gold disc"
 image: /images/plots/110.jpg
 tags:

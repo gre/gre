@@ -1,4 +1,5 @@
 ---
+date: "2021-08-19"
 title: "Pattern 02 plot"
 image: /images/plots/223.jpg
 tags:

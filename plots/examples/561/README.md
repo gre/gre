@@ -1,4 +1,5 @@
 ---
+date: "2022-06-30"
 title: "Circleception (8 frames) #6"
 image: /images/plots/561.gif
 video: /images/plots/561.mp4

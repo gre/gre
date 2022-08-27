@@ -1,4 +1,5 @@
 ---
+date: "2021-05-08"
 title: "Pentaflower"
 image: "/images/plots/128.jpg"
 description: "Parametric flower plotted with two brush pens."

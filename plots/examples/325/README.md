@@ -1,4 +1,5 @@
 ---
+date: "2021-11-14"
 title: "Evolutive Bug 10"
 image: /images/plots/325.jpg
 description: "Plotted for an hour with two fountain pens (Bloody Brexit + Sargasso Sea inks) on A4 watercolor paper."

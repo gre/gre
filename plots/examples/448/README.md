@@ -1,4 +1,5 @@
 ---
+date: "2022-04-09"
 title: "[NFC] Wireframes (8 frames)"
 description: "8 frames were plotted live during NFC Lisbon conference on 10 cm square watercolor paper with fountain pen and Fire and ice ink."
 image: /images/plots/448.gif

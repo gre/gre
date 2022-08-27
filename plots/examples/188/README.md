@@ -1,4 +1,5 @@
 ---
+date: "2021-07-07"
 title: "Rotation (11 frames)"
 image: /images/plots/188.gif
 description: "@greweb's #10 plot loop. That animation is the main digital art. A high-quality video is available in 11 NFT editions, one per frame, for buyers to acquire each physical frame."

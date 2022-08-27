@@ -1,4 +1,5 @@
 ---
+date: "2022-01-29"
 title: "VHS splitted"
 image: /images/plots/389.jpg
 ---

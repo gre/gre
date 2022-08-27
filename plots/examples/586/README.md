@@ -1,4 +1,5 @@
 ---
+date: "2022-07-18"
 title: "Era (1) Primitive #101"
 image: /images/plots/586.jpg
 description: "Plot done for Plottable Era (1) Primitive generator"

@@ -1,4 +1,5 @@
 ---
+date: "2022-04-27"
 title: "Cordons rouges et bleus"
 image: /images/plots/483.jpg
 ---

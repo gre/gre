@@ -1,4 +1,5 @@
 ---
+date: "2021-07-08"
 title: "Layers"
 image: /images/plots/189.jpg
 description: "Packing circles with layered lines inside. exploration made before plot#188."

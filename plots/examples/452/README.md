@@ -1,4 +1,5 @@
 ---
+date: "2022-04-11"
 title: "Purple polygon packing"
 image: /images/plots/452.jpg
 ---

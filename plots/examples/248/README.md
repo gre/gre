@@ -1,4 +1,5 @@
 ---
+date: "2021-09-06"
 title: "Pattern03 #6636"
 image: /images/plots/pattern03/6636/preview.jpg
 description: "one of the plot of 888s 'Pattern 03' mints"

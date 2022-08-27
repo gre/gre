@@ -1,4 +1,5 @@
 ---
+date: "2022-01-13"
 title: "800x80 ratio"
 image: /images/plots/375.jpg
 description: "This implements the prompt '800x80' (JAN.13) for the Genuary event. I interpreted the theme as a 800x80 ratio. I have plotted 5 times a curve patterns with various amplitudes."

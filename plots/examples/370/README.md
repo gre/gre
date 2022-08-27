@@ -1,4 +1,5 @@
 ---
+date: "2022-01-06"
 title: "Circle?"
 image: /images/plots/370.jpg
 description: "Genuary entry for 'Sol LeWitt Wall Drawing.' (JAN.7)"

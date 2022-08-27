@@ -1,4 +1,5 @@
 ---
+date: "2021-09-14"
 title: "Moving average on 1000 digits of π"
 image: /images/plots/270.jpg
 ---

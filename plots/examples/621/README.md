@@ -1,4 +1,5 @@
 ---
+date: "2022-08-18"
 title: "Slimes (Reveal 1)"
 image: /images/plots/621.jpg
 description: "This plot reveals the generator 'Plottable Slimes' – generative art on fxhash"

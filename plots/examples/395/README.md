@@ -1,4 +1,5 @@
 ---
+date: "2022-02-02"
 title: "Negative Storm"
 image: /images/plots/395.jpg
 description: "a variation of /plots/312 with a 'negative' storm in the middle. 3 hours plot on A3 watercolor paper, fountain pen with 'Fire and Ice' Robert Oster ink."

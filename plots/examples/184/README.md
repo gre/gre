@@ -1,4 +1,5 @@
 ---
+date: "2021-07-03"
 title: "packing hexagons in hexagons"
 image: /images/plots/184.jpg
 description: "Packing 3963 filled hexagons in hexagons. 2 hours of plotting with fountain pens on watercolor 300g/m paper."

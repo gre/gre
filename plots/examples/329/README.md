@@ -1,4 +1,5 @@
 ---
+date: "2021-12-05"
 title: "Plottable Storm (prototype 2)"
 image: /images/plots/329.jpg
 description: "Plottable Storm is a flow field simulating fountain pen ink drawing on paper on its digital form. 10 inks, many rarity features varying noise, size and color positionning. Having only one color is rare. The digital NFTs can be used to perform a physical action: @greweb plotting on demand a fountain pen plot for those who also want physical originals."

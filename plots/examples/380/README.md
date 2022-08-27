@@ -1,4 +1,5 @@
 ---
+date: "2022-01-16"
 title: "Ink Matrix"
 image: /images/plots/380.jpg
 ---

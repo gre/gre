@@ -1,4 +1,5 @@
 ---
+date: "2021-07-10"
 title: "Blurry elevation"
 image: /images/plots/191.jpg
 description: "Lines elevation with perlin-noise warping. Fountain pen and 'Bloody Brexit' ink on watercolour paper (300g/m)."

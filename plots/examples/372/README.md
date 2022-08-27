@@ -1,4 +1,5 @@
 ---
+date: "2022-01-09"
 title: "Stacking houses"
 image: /images/plots/372.jpg
 description: "This implements stacking houses with a recursive implementation that builds up houses on top of houses: subdivides the x-axis and climb on the y-axis with various shapes filling in the polygons."

@@ -1,4 +1,5 @@
 ---
+date: "2021-06-14"
 title: "Montagne muable (8 frames)"
 image: /images/plots/164.gif
 description: ""

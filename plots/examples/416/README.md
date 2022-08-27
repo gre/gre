@@ -1,4 +1,5 @@
 ---
+date: "2022-03-06"
 title: "Storm of hope"
 description: 'This is a continuation of "Storm" series. The idea of "two levels" packing were introduced to create "group" of storms which make some area using only one color.'
 image: /images/plots/416.jpg

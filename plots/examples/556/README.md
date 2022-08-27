@@ -1,4 +1,5 @@
 ---
+date: "2022-06-25"
 title: "Mountain Moons #254"
 image: /images/plots/556.jpg
 tweet: https://twitter.com/tijeduppen/status/1540415377431302145

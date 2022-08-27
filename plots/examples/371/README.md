@@ -1,4 +1,5 @@
 ---
+date: "2022-01-07"
 title: "yarn balls"
 image: /images/plots/371.jpg
 description: "Genuary entry for 'Single curve only.' (JAN.8)"

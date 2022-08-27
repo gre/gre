@@ -1,4 +1,5 @@
 ---
+date: "2022-06-11"
 title: "Plottable Circleception (Cover)"
 image: /images/plots/544.gif
 video: /images/plots/544.mp4

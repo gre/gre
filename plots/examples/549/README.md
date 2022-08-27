@@ -1,4 +1,5 @@
 ---
+date: "2022-06-19"
 title: "Rougejaune"
 image: /images/plots/549.jpg
 ---

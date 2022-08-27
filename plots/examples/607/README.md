@@ -1,4 +1,5 @@
 ---
+date: "2022-08-01"
 title: "Memories: Train Station (Prototype 4)"
 image: /images/plots/607.jpg
 description: "This plot is a prototype out of the generator 'Plottable Memories: Train Station' – generative art on fxhash"

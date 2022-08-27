@@ -1,4 +1,5 @@
 ---
+date: "2022-05-08"
 title: "Square storms of flowers"
 image: /images/plots/502.jpg
 tags:

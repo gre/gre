@@ -1,4 +1,5 @@
 ---
+date: "2021-05-20"
 title: "ink drops in square spiral"
 image: "/images/plots/139.jpg"
 description: "I used a dropper to drop some ink on a canvas while the plotter was running."

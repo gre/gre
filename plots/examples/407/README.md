@@ -1,4 +1,5 @@
 ---
+date: "2022-02-24"
 title: "Glitched Parametric"
 image: "/images/plots/407.jpg"
 tags:

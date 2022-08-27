@@ -1,4 +1,5 @@
 ---
+date: "2021-08-22"
 title: "Lémurien"
 image: /images/plots/228.jpg
 description: "Stippling technique made of 30'000 strokes plotted in 4.5 hours with fountain pen and Parker Quink ink on watercolor paper."

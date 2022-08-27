@@ -1,4 +1,5 @@
 ---
+date: "2021-06-27"
 title: "Shell (6 frames)"
 image: /images/plots/178.gif
 tags:

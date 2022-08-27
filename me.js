@@ -1,7 +1,7 @@
 export default {
   title: "greweb.me",
   description:
-    "generative artist. doodling with algorithms (creative coding). shaders & fountain pens robot plotting.",
+    "generative artist who uses code to make art, explores the frontier of abstract art with algorithms pushing forward to more realistic scenery. Explore physical art via 'Plotting', which consist of drawing with fountain pens on robot. I don't do prints, I do plots: Every physical outcome is truly unique!",
   thumbnail: "/logo.svg",
   photo: "/profile.jpg",
   thumbnailDomain: "http://greweb.me",
@@ -33,7 +33,7 @@ export default {
     },
     {
       id: "objkt",
-      url: "https://opensea.io/greweb",
+      url: "https://opensea.io/greweb?tab=created",
       icon: "/icons/eth.svg",
       text: "greweb.eth",
     },

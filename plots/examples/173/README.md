@@ -1,4 +1,5 @@
 ---
+date: "2021-06-25"
 title: "Hack-a-plot avatar hatching 2"
 image: "/images/plots/173.jpg"
 description: "Plots made during an internal Hackathon at Ledger using profile picture, hatching and contouring techniques."

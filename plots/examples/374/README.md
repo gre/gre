@@ -1,4 +1,5 @@
 ---
+date: "2022-01-05"
 title: "Tribute to Waiting Room (prototype 2)"
 image: /images/plots/374.jpg
 description: "Tribute to @maxwellinked's work"

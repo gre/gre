@@ -63,7 +63,7 @@ export const CarouselPlots = ({ plots }) => {
         }}
       >
         <h2>
-          <a href="/plots">Explore plots collection</a>
+          <a href="/plots">Daily plots</a>
         </h2>
         <a href={`/plots/${plot.n}`}>
           #{plot.n} – {plot.data.title}
@@ -265,7 +265,6 @@ export default function Home({ posts, plots }) {
               <>
                 <blockquote>{description}</blockquote>
                 <p className="subtitle">
-                  <strong>greweb.me</strong> ={" "}
                   <a href="/plots">{plots.length} plots</a>,{" "}
                   <a href="/shaderday/1">{days.length} shaders</a>,{" "}
                   <a href="/posts">{posts.length} blog posts</a>.

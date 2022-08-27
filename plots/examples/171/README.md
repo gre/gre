@@ -1,4 +1,5 @@
 ---
+date: "2021-06-21"
 title: "Ring of faces (8 frames)"
 image: "/images/plots/171.gif"
 description: "8 frames plotted making an animated loop. A 1920p video and A4 physical art is available as an NFT."

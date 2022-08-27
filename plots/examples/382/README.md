@@ -1,4 +1,5 @@
 ---
+date: "2022-01-26"
 title: "Mountain Moons #255"
 image: /images/plots/382.jpg
 description: "Mountain Moons #255"

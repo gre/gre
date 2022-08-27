@@ -1,4 +1,5 @@
 ---
+date: "2021-05-30"
 title: "Dancing Planet"
 image: /images/plots/150.gif
 description: "8 frames plotted making an animated loop. A 1920p video and A4 physical art is available as an NFT."

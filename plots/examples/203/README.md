@@ -1,4 +1,5 @@
 ---
+date: "2021-07-22"
 title: "circles recursion & ordered noise"
 image: /images/plots/203.jpg
 description: "I like randomness a lot. Exploring the beauty of noise is also recreating Nature's pattern and trying to put back some order in that randomness."

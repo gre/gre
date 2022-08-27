@@ -1,4 +1,5 @@
 ---
+date: "2021-08-24"
 title: "My king"
 image: /images/plots/236.jpg
 description: "Stippling technique made of 40'000 strokes plotted in 6 hours with fountain pen and Diamine Indigo ink on watercolor paper."

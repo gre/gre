@@ -1,4 +1,5 @@
 ---
+date: "2022-07-12"
 title: "Era Primitive (Prototype 2)"
 image: /images/plots/571.jpg
 description: "Plot reveal for 'Plottable Era: (I) Primitive'"

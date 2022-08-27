@@ -1,4 +1,5 @@
 ---
+date: "2021-04-10"
 title: "Jumping man"
 image: /images/plots/60.jpg
 description: "Photo of a jumping man with TSP."

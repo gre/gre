@@ -1,4 +1,5 @@
 ---
+date: "2022-07-18"
 title: "Tumbling Six #10"
 image: /images/plots/579.jpg
 sourceFolderURL: https://www.fxhash.xyz/gentk/783390

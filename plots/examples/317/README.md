@@ -1,4 +1,5 @@
 ---
+date: "2021-11-13"
 title: "Twin Tube"
 image: /images/plots/317.jpg
 description: "Ink drop on a simple curve shaping two tubes with an overlap creating some moiré effect. 100% cotton A4 watercolor from Arches, Diamine Pink Glitz ink."

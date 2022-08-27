@@ -1,4 +1,5 @@
 ---
+date: "2021-04-27"
 title: "Noisy fibers"
 image: /images/plots/117.jpg
 description: "Exploration of fibers with a centered noise. two color tones."

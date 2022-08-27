@@ -1,4 +1,5 @@
 ---
+date: "2022-01-29"
 title: "Abstract vegetation"
 image: /images/plots/391.jpg
 ---

@@ -1,4 +1,5 @@
 ---
+date: "2021-07-21"
 title: "œil pour œil (4 frames)"
 image: /images/plots/202.gif
 description: "@greweb's #12 plot loop"

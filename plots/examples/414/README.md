@@ -1,4 +1,5 @@
 ---
+date: "2022-03-06"
 title: "Packing of hope"
 image: /images/plots/414.jpg
 description: "The space is distributed using two levels of circle packing and then connected with doodles filling using spirals and connecting them all with one curve."
