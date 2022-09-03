@@ -970,6 +970,7 @@ dependencies = [
  "geo-types",
  "geojson",
  "image",
+ "instant",
  "kiss3d",
  "lyon",
  "ndarray",
