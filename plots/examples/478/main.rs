@@ -1,4 +1,4 @@
-use clap::Clap;
+use clap::*;
 use gre::*;
 use noise::*;
 use rand::Rng;
@@ -12,7 +12,7 @@ TODO
 - ?ref game of life loop
 */
 
-#[derive(Clap)]
+#[derive(Parser)]
 #[clap()]
 struct Opts {
   #[clap(short, long, default_value = "38.0")]
@@ -38,10 +38,7 @@ fn human_circle(
   let count = 64;
   for i in 0..(count + 1) {
     let a = 2. * PI * i as f64 / (count as f64);
-    circle_path.push((
-      pos.0 + radius * a.cos(),
-      pos.1 + radius * a.sin(),
-    ));
+    circle_path.push((pos.0 + radius * a.cos(), pos.1 + radius * a.sin()));
   }
   cordon(circle_path, 2.0, 2.0, 1.0, 5, true, 1.0, phase)
 }
@@ -52,8 +49,7 @@ fn human_square(
   y2: f64,
   phase: f64,
 ) -> Vec<Vec<(f64, f64)>> {
-  let square_path =
-    vec![(x1, y1), (x2, y1), (x2, y2), (x1, y2), (x1, y1)];
+  let square_path = vec![(x1, y1), (x2, y1), (x2, y2), (x1, y2), (x1, y1)];
   cordon(square_path, 2.0, 2.0, 1.0, 5, true, 1.0, phase)
 }
 fn human_path_chaos(
@@ -150,14 +146,7 @@ fn human_body(
     all = vec![
       all,
       cordon(
-        human_path_chaos(
-          s,
-          path1.clone(),
-          pos,
-          radius,
-          freq,
-          phase,
-        ),
+        human_path_chaos(s, path1.clone(), pos, radius, freq, phase),
         w,
         noiseamp,
         corner_pad,
@@ -167,14 +156,7 @@ fn human_body(
         phase,
       ),
       cordon(
-        human_path_chaos(
-          s,
-          path2.clone(),
-          pos,
-          radius,
-          freq,
-          phase,
-        ),
+        human_path_chaos(s, path2.clone(), pos, radius, freq, phase),
         w,
         noiseamp,
         corner_pad,
@@ -184,14 +166,7 @@ fn human_body(
         phase,
       ),
       cordon(
-        human_path_chaos(
-          s,
-          path3.clone(),
-          pos,
-          radius,
-          freq,
-          phase,
-        ),
+        human_path_chaos(s, path3.clone(), pos, radius, freq, phase),
         w,
         noiseamp,
         corner_pad,
@@ -201,14 +176,7 @@ fn human_body(
         phase,
       ),
       cordon(
-        human_path_chaos(
-          s,
-          path4.clone(),
-          pos,
-          radius,
-          freq,
-          phase,
-        ),
+        human_path_chaos(s, path4.clone(), pos, radius, freq, phase),
         w,
         noiseamp,
         corner_pad,
@@ -218,14 +186,7 @@ fn human_body(
         phase,
       ),
       cordon(
-        human_path_chaos(
-          s,
-          path5.clone(),
-          pos,
-          radius,
-          freq,
-          phase,
-        ),
+        human_path_chaos(s, path5.clone(), pos, radius, freq, phase),
         w,
         noiseamp,
         corner_pad,
@@ -290,9 +251,7 @@ fn head(
                 + 3.
                   * perlin.get([
                     // 3rd level
-                    seed
-                      + 0.1 * (i as f64)
-                      + 0.08 * (phase * 2.0 * PI).cos(),
+                    seed + 0.1 * (i as f64) + 0.08 * (phase * 2.0 * PI).cos(),
                     f3 * xabs,
                     f3 * y,
                   ]),
@@ -308,12 +267,8 @@ fn head(
     .collect();
   let res = contour(w, h, f, &thresholds);
   let mut routes = features_to_routes(res, precision);
-  routes = crop_routes(
-    &routes,
-    (1.0, 1.0, 4. * r - 1., 4. * r - 1.),
-  );
-  routes =
-    translate_routes(routes, (cx - 2. * r, cy - 2. * r));
+  routes = crop_routes(&routes, (1.0, 1.0, 4. * r - 1., 4. * r - 1.));
+  routes = translate_routes(routes, (cx - 2. * r, cy - 2. * r));
   routes
 }
 
@@ -329,8 +284,7 @@ fn organ(
   let x = cx;
   let y = cy;
   let r = size;
-  routes = vec![routes, head(10.0, i, x, y, r, 1.0, phase)]
-    .concat();
+  routes = vec![routes, head(10.0, i, x, y, r, 1.0, phase)].concat();
   // apply rotation
   routes
     .iter()
@@ -390,14 +344,12 @@ fn cordon(
       p.0 += r * acos;
       p.1 += r * asin;
       for xi in 0..tracks_count {
-        let variation = ((xi as f64
-          + (tracks_count as f64 * phase))
+        let variation = ((xi as f64 + (tracks_count as f64 * phase))
           % (tracks_count as f64)
           - ((tracks_count - 1) as f64 / 2.0))
           / (tracks_count as f64);
         let mut delta = variation * width;
-        let noisefreq =
-          freq_mul * (0.1 + 0.2 * (0.5 - variation.abs()));
+        let noisefreq = freq_mul * (0.1 + 0.2 * (0.5 - variation.abs()));
         delta += noiseamp
           * perlin.get([
             //
@@ -406,8 +358,7 @@ fn cordon(
             10.0 * xi as f64,
           ]);
         let a2 = a + PI / 2.0;
-        let q =
-          (p.0 + delta * a2.cos(), p.1 + delta * a2.sin());
+        let q = (p.0 + delta * a2.cos(), p.1 + delta * a2.sin());
         tracks[xi].push(q);
       }
       i += r;
@@ -450,18 +401,11 @@ fn art(opts: &Opts) -> Vec<Group> {
   }
   let lookup_game_of_life =
     |x: f64, y: f64, bounds: (f64, f64, f64, f64)| -> f64 {
-      let xi = (w as f64 + 1.0) * (x - bounds.0)
-        / (bounds.2 - bounds.0)
-        + phase
-        - 1.0;
-      let yi = (h as f64 + 1.0) * (y - bounds.1)
-        / (bounds.3 - bounds.1)
-        + phase
-        - 1.0;
-      if xi >= 0.0
-        && yi >= 0.0
-        && gol.alive(xi as usize, yi as usize)
-      {
+      let xi =
+        (w as f64 + 1.0) * (x - bounds.0) / (bounds.2 - bounds.0) + phase - 1.0;
+      let yi =
+        (h as f64 + 1.0) * (y - bounds.1) / (bounds.3 - bounds.1) + phase - 1.0;
+      if xi >= 0.0 && yi >= 0.0 && gol.alive(xi as usize, yi as usize) {
         1.0
       } else {
         0.0
@@ -470,15 +414,12 @@ fn art(opts: &Opts) -> Vec<Group> {
 
   let perlin = Perlin::new();
   let mut rng = rng_from_seed(seed);
-  let mut head_collision =
-    Passage2DCounter::new(0.45, width, height);
-  let mut passage =
-    Passage2DCounter::new(0.45, width, height);
+  let mut head_collision = Passage2DCounter::new(0.45, width, height);
+  let mut passage = Passage2DCounter::new(0.45, width, height);
   let bounds = (pad, pad, width - pad, height - pad);
 
   let main_r = 90.0;
-  let main_circle =
-    VCircle::new(width / 2., height / 2., 0.8 * main_r);
+  let main_circle = VCircle::new(width / 2., height / 2., 0.8 * main_r);
   let mut circles = packing(
     seed,
     1000000,
@@ -500,10 +441,7 @@ fn art(opts: &Opts) -> Vec<Group> {
     .collect();
 
   let tour =
-    travelling_salesman::simulated_annealing::solve(
-      &candidates,
-      duration,
-    );
+    travelling_salesman::simulated_annealing::solve(&candidates, duration);
 
   let layers: Vec<Group> = vec!["#006", "#f60", "#fa0"]
     .iter()
@@ -531,13 +469,7 @@ fn art(opts: &Opts) -> Vec<Group> {
             phase,
           ),
           human_body(seed, cr, main_circle.pos(), phase),
-          human_square(
-            pad,
-            pad,
-            width - pad,
-            height - pad,
-            phase,
-          ),
+          human_square(pad, pad, width - pad, height - pad, phase),
         ]
         .concat();
       }
@@ -564,8 +496,7 @@ fn art(opts: &Opts) -> Vec<Group> {
           .iter()
           .enumerate()
           .map(|(i, &c)| {
-            let angle = angle_div
-              * rng.gen_range(-1.0, 1.0)
+            let angle = angle_div * rng.gen_range(-1.0, 1.0)
               + (c.x - width / 2.).atan2(c.y - height / 2.);
             let (dx, dy) = p_r((0.0, -0.5 * c.r), angle);
             heads.push((c.x + dx, c.y + dy, c.r, angle));
@@ -585,8 +516,7 @@ fn art(opts: &Opts) -> Vec<Group> {
             let mut connected = false;
             if ci == 1 {
               for c in subset.iter() {
-                if c.x == from.x && c.y == from.y
-                  || c.x == to.x && c.y == to.y
+                if c.x == from.x && c.y == from.y || c.x == to.x && c.y == to.y
                 {
                   connected = true;
                   break;
@@ -604,16 +534,7 @@ fn art(opts: &Opts) -> Vec<Group> {
             if connected {
               routes = vec![
                 routes,
-                cordon(
-                  vec![p1, p2],
-                  4.0,
-                  4.0,
-                  0.0,
-                  16,
-                  false,
-                  1.0,
-                  phase,
-                ),
+                cordon(vec![p1, p2], 4.0, 4.0, 0.0, 16, false, 1.0, phase),
               ]
               .concat();
             }
@@ -640,8 +561,7 @@ fn art(opts: &Opts) -> Vec<Group> {
         let samples = sample_2d_candidates_f64(
           &|p| {
             let g = project_in_boundaries(p, bounds);
-            let d_to_center =
-              euclidian_dist(main_circle.pos(), g);
+            let d_to_center = euclidian_dist(main_circle.pos(), g);
             if ci == 0 {
               return smoothstep(
                 main_circle.r,
@@ -650,17 +570,11 @@ fn art(opts: &Opts) -> Vec<Group> {
               );
             }
             let mut d = 99f64;
-            for (_i, circle) in
-              circles.iter().skip(circles_skip).enumerate()
-            {
-              d = d.min(
-                euclidian_dist((circle.x, circle.y), g)
-                  - circle.r,
-              );
+            for (_i, circle) in circles.iter().skip(circles_skip).enumerate() {
+              d = d.min(euclidian_dist((circle.x, circle.y), g) - circle.r);
             }
 
-            let ld =
-              euclidian_dist((lgol.x, lgol.y), g) - lgol.r;
+            let ld = euclidian_dist((lgol.x, lgol.y), g) - lgol.r;
             if ld < 0.0 {
               return 1.
                 - lookup_game_of_life(
@@ -675,11 +589,7 @@ fn art(opts: &Opts) -> Vec<Group> {
                 );
             }
             smoothstep(1.5, 3.0, d).powf(2.0)
-              * smoothstep(
-                -10.0,
-                main_circle.r,
-                d_to_center,
-              )
+              * smoothstep(-10.0, main_circle.r, d_to_center)
           },
           1000,
           particles,
@@ -690,14 +600,9 @@ fn art(opts: &Opts) -> Vec<Group> {
           let mut g = project_in_boundaries(sample, bounds);
           let mut ang = rng.gen_range(0.0, 2. * PI);
 
-          let ld = euclidian_dist((lgol.x, lgol.y), sample)
-            - lgol.r;
+          let ld = euclidian_dist((lgol.x, lgol.y), sample) - lgol.r;
 
-          let it = if ld < 0.0 {
-            iterations / 2
-          } else {
-            iterations
-          };
+          let it = if ld < 0.0 { iterations / 2 } else { iterations };
 
           let mut route = Vec::new();
           for _i in 0..it {
@@ -711,18 +616,15 @@ fn art(opts: &Opts) -> Vec<Group> {
 
             let mut v = (0f64, 0f64);
             for p in circles.iter().skip(1) {
-              let dist =
-                euclidian_dist((p.x, p.y), g) - p.r;
-              let a = (p.y - g.1).atan2(p.x - g.0)
-                + (si as f64 - 0.5) * PI;
+              let dist = euclidian_dist((p.x, p.y), g) - p.r;
+              let a = (p.y - g.1).atan2(p.x - g.0) + (si as f64 - 0.5) * PI;
               let r = smoothstep(40.0, -40.0, dist);
               v.0 += r * a.cos();
               v.1 += r * a.sin();
             }
 
             if v.0 != 0.0 || v.1 != 0.0 {
-              let mut a =
-                (v.1.atan2(v.0) + 2.0 * PI) % (2. * PI);
+              let mut a = (v.1.atan2(v.0) + 2.0 * PI) % (2. * PI);
               if (a - ang).abs() > PI / 2.0 {
                 a += PI;
               }
@@ -737,8 +639,7 @@ fn art(opts: &Opts) -> Vec<Group> {
               + 2.
                 * perlin.get([
                   //
-                  seed
-                    + perlin.get([0.01 * g.0, 0.01 * g.1]),
+                  seed + perlin.get([0.01 * g.0, 0.01 * g.1]),
                   0.008 * g.0,
                   0.008 * g.1,
                 ]);
@@ -782,8 +683,7 @@ fn art(opts: &Opts) -> Vec<Group> {
 fn main() {
   let opts: Opts = Opts::parse();
   let groups = art(&opts);
-  let mut document =
-    base_document("white", opts.width, opts.height);
+  let mut document = base_document("white", opts.width, opts.height);
   for g in groups {
     document = document.add(g);
   }
@@ -797,11 +697,7 @@ pub struct Passage2DCounter {
   counters: Vec<usize>,
 }
 impl Passage2DCounter {
-  pub fn new(
-    granularity: f64,
-    width: f64,
-    height: f64,
-  ) -> Self {
+  pub fn new(granularity: f64, width: f64, height: f64) -> Self {
     let wi = (width / granularity).ceil() as usize;
     let hi = (height / granularity).ceil() as usize;
     let counters = vec![0; wi * hi];
@@ -813,16 +709,10 @@ impl Passage2DCounter {
     }
   }
   fn index(self: &Self, (x, y): (f64, f64)) -> usize {
-    let wi =
-      (self.width / self.granularity).ceil() as usize;
-    let hi =
-      (self.height / self.granularity).ceil() as usize;
-    let xi = ((x / self.granularity).round() as usize)
-      .max(0)
-      .min(wi - 1);
-    let yi = ((y / self.granularity).round() as usize)
-      .max(0)
-      .min(hi - 1);
+    let wi = (self.width / self.granularity).ceil() as usize;
+    let hi = (self.height / self.granularity).ceil() as usize;
+    let xi = ((x / self.granularity).round() as usize).max(0).min(wi - 1);
+    let yi = ((y / self.granularity).round() as usize).max(0).min(hi - 1);
     yi * wi + xi
   }
   pub fn count(self: &mut Self, p: (f64, f64)) -> usize {
@@ -837,10 +727,7 @@ impl Passage2DCounter {
 }
 
 fn p_r(p: (f64, f64), a: f64) -> (f64, f64) {
-  (
-    a.cos() * p.0 + a.sin() * p.1,
-    a.cos() * p.1 - a.sin() * p.0,
-  )
+  (a.cos() * p.0 + a.sin() * p.1, a.cos() * p.1 - a.sin() * p.0)
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -859,18 +746,12 @@ impl VCircle {
   }
 
   fn dist(self: &Self, c: &VCircle) -> f64 {
-    euclidian_dist((self.x, self.y), (c.x, c.y))
-      - c.r
-      - self.r
+    euclidian_dist((self.x, self.y), (c.x, c.y)) - c.r - self.r
   }
   fn collides(self: &Self, c: &VCircle) -> bool {
     self.dist(c) <= 0.0
   }
-  fn proj_polar(
-    self: &Self,
-    angle: f64,
-    factor: f64,
-  ) -> (f64, f64) {
+  fn proj_polar(self: &Self, angle: f64, factor: f64) -> (f64, f64) {
     (
       self.x + self.r * factor * angle.cos(),
       self.y + self.r * factor * angle.sin(),
@@ -969,8 +850,7 @@ fn packing(
       let circle = VCircle::new(x, y, size - pad);
       tries.push(circle);
       if tries.len() > optimize_size {
-        tries
-          .sort_by(|a, b| b.r.partial_cmp(&a.r).unwrap());
+        tries.sort_by(|a, b| b.r.partial_cmp(&a.r).unwrap());
         let c = tries[0];
         circles.push(c.clone());
         seen.push(c.clone());
@@ -984,11 +864,7 @@ fn packing(
   circles
 }
 
-fn lerp_point(
-  a: (f64, f64),
-  b: (f64, f64),
-  m: f64,
-) -> (f64, f64) {
+fn lerp_point(a: (f64, f64), b: (f64, f64), m: f64) -> (f64, f64) {
   (a.0 * (1. - m) + b.0 * m, a.1 * (1. - m) + b.1 * m)
 }
 
@@ -1006,10 +882,7 @@ fn path_curve_it(path: Vec<(f64, f64)>) -> Vec<(f64, f64)> {
   route
 }
 
-fn path_curve(
-  path: Vec<(f64, f64)>,
-  n: usize,
-) -> Vec<(f64, f64)> {
+fn path_curve(path: Vec<(f64, f64)>, n: usize) -> Vec<(f64, f64)> {
   let mut route = path;
   for _i in 0..n {
     route = path_curve_it(route);
@@ -1023,9 +896,7 @@ fn translate_routes(
 ) -> Vec<Vec<(f64, f64)>> {
   routes
     .iter()
-    .map(|route| {
-      route.iter().map(|&(x, y)| (x + tx, y + ty)).collect()
-    })
+    .map(|route| route.iter().map(|&(x, y)| (x + tx, y + ty)).collect())
     .collect()
 }
 

@@ -1,4 +1,4 @@
-use clap::Clap;
+use clap::*;
 use gre::*;
 use noise::*;
 use rand::prelude::*;
@@ -18,8 +18,7 @@ use svg::node::element::*;
 // TODO: test gaussian distrib
 // amplitude with function
 
-
-#[derive(Clap)]
+#[derive(Parser)]
 #[clap()]
 pub struct Opts {
   #[clap(short, long, default_value = "image.svg")]
@@ -59,11 +58,9 @@ fn art(opts: &Opts) -> Vec<Group> {
       let mut data = Data::new();
       let mut points = (0..samples)
         .map(|_i| {
-          let y = height / 2.0 + rng.gen_range(0.0, height / 2.0 - pad) * rng.gen_range(-1.0, 1.0);
-          (
-            rng.gen_range(pad, width - pad),
-            y,
-          )
+          let y = height / 2.0
+            + rng.gen_range(0.0, height / 2.0 - pad) * rng.gen_range(-1.0, 1.0);
+          (rng.gen_range(pad, width - pad), y)
         })
         .collect::<Vec<(f64, f64)>>();
 
@@ -84,14 +81,8 @@ fn art(opts: &Opts) -> Vec<Group> {
 
       let path = path_subdivide_to_curve(points, subdivisions, 0.8);
 
-      let routes = cordon(
-        path,
-         track_count,
-         cordon_w,
-         noise_freq,
-         noiseamp,
-         round
-      );
+      let routes =
+        cordon(path, track_count, cordon_w, noise_freq, noiseamp, round);
 
       /*
       let paths = cordon(
@@ -173,7 +164,8 @@ fn cordon(
       p.0 += r * acos;
       p.1 += r * asin;
       for xi in 0..tracks_count {
-        let variation = ((xi as f64) - ((tracks_count - 1) as f64 / 2.0)) / (tracks_count as f64);
+        let variation = ((xi as f64) - ((tracks_count - 1) as f64 / 2.0))
+          / (tracks_count as f64);
         let mut delta = variation * width;
         delta += noiseamp
           * perlin.get([
@@ -204,7 +196,10 @@ fn lerp_point(a: (f64, f64), b: (f64, f64), m: f64) -> (f64, f64) {
   (a.0 * (1. - m) + b.0 * m, a.1 * (1. - m) + b.1 * m)
 }
 
-fn path_subdivide_to_curve_it(path: Vec<(f64, f64)>, interpolation: f64) -> Vec<(f64, f64)> {
+fn path_subdivide_to_curve_it(
+  path: Vec<(f64, f64)>,
+  interpolation: f64,
+) -> Vec<(f64, f64)> {
   let l = path.len();
   if l < 3 {
     return path;
@@ -234,7 +229,11 @@ fn path_subdivide_to_curve_it(path: Vec<(f64, f64)>, interpolation: f64) -> Vec<
   route
 }
 
-fn path_subdivide_to_curve(path: Vec<(f64, f64)>, n: usize, interpolation: f64) -> Vec<(f64, f64)> {
+fn path_subdivide_to_curve(
+  path: Vec<(f64, f64)>,
+  n: usize,
+  interpolation: f64,
+) -> Vec<(f64, f64)> {
   let mut route = path;
   for _i in 0..n {
     route = path_subdivide_to_curve_it(route, interpolation);

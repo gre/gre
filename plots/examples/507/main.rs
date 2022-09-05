@@ -1,13 +1,13 @@
 use std::f64::consts::PI;
 
-use clap::Clap;
+use clap::*;
 use gre::*;
 use noise::*;
 use rand::Rng;
 use svg::node::element::path::Data;
 use svg::node::element::*;
 
-#[derive(Clap)]
+#[derive(Parser)]
 #[clap()]
 pub struct Opts {
   #[clap(short, long, default_value = "image.svg")]
@@ -45,8 +45,7 @@ fn art(opts: &Opts) -> Vec<Group> {
 
   let max_r = 70.0;
 
-  let mut passage =
-    Passage2DCounter::new(0.3, opts.width, opts.height);
+  let mut passage = Passage2DCounter::new(0.3, opts.width, opts.height);
 
   // logic
   let perlin = Perlin::new();
@@ -63,11 +62,8 @@ fn art(opts: &Opts) -> Vec<Group> {
     }
     let mut route = Vec::new();
     let rotations = 800.0;
-    let angle_delta = rng.gen_range(0, rotations as usize)
-      as f64
-      / rotations
-      * 2.0
-      * PI;
+    let angle_delta =
+      rng.gen_range(0, rotations as usize) as f64 / rotations * 2.0 * PI;
     let mut a = angle_delta;
     // TODO activate to create "snow" + prevent small lines < 0.3mm
     let angle_precision = 2. * PI / rotations;
@@ -90,22 +86,17 @@ fn art(opts: &Opts) -> Vec<Group> {
                 opts.seed * 7.7 - 4.,
                 freq2 * y
                   + amp3
-                    * perlin.get([
-                      freq3 * x,
-                      opts.seed * 2.7 + 11.,
-                      freq3 * y,
-                    ]),
+                    * perlin.get([freq3 * x, opts.seed * 2.7 + 11., freq3 * y]),
               ]),
           freq1 * x,
           freq1 * y,
         ]);
 
-      let hba_index = (highest_by_angle.len() as f64
-        * ((a) / 2. * PI)) as usize
+      let hba_index = (highest_by_angle.len() as f64 * ((a) / 2. * PI))
+        as usize
         % highest_by_angle.len();
 
-      let should_draw =
-        r > highest_by_angle[hba_index] + safe_h;
+      let should_draw = r > highest_by_angle[hba_index] + safe_h;
 
       let mut x = cx + r * a.cos();
       let mut y = cy + r * a.sin();
@@ -114,24 +105,14 @@ fn art(opts: &Opts) -> Vec<Group> {
         * PI
         * perlin.get([
           7.3 * opts.seed
-            + 2.0
-              * perlin.get([
-                0.005 * x,
-                0.005 * y,
-                opts.seed * 3.7,
-              ]),
+            + 2.0 * perlin.get([0.005 * x, 0.005 * y, opts.seed * 3.7]),
           0.003 * x,
           0.003 * y,
         ]);
       let amp = displacement_amp
         * (base_r / max_r).powf(amp1pow)
         * perlin.get([
-          opts.seed / 3.0
-            + perlin.get([
-              0.005 * x,
-              0.005 * y,
-              -opts.seed,
-            ]),
+          opts.seed / 3.0 + perlin.get([0.005 * x, 0.005 * y, -opts.seed]),
           0.02 * x,
           0.02 * y,
         ]);
@@ -211,9 +192,7 @@ fn art(opts: &Opts) -> Vec<Group> {
   let dy = cy - shape_cy;
   routes = routes
     .iter()
-    .map(|route| {
-      route.iter().map(|p| (p.0 + dx, p.1 + dy)).collect()
-    })
+    .map(|route| route.iter().map(|p| (p.0 + dx, p.1 + dy)).collect())
     .collect();
 
   println!("{}", routes.len());
@@ -225,14 +204,9 @@ fn art(opts: &Opts) -> Vec<Group> {
     .enumerate()
     .map(|(i, color)| {
       let mut data = Data::new();
-      let mut should_draw_line =
-        |a, _b| passage.count(a) < 8;
+      let mut should_draw_line = |a, _b| passage.count(a) < 8;
       for route in routes.clone() {
-        data = render_route_when(
-          data,
-          route,
-          &mut should_draw_line,
-        );
+        data = render_route_when(data, route, &mut should_draw_line);
       }
       let mut l = layer(color);
       l = l.add(base_path(color, 0.35, data));
@@ -244,8 +218,7 @@ fn art(opts: &Opts) -> Vec<Group> {
 fn main() {
   let opts: Opts = Opts::parse();
   let groups = art(&opts);
-  let mut document =
-    base_document("white", opts.width, opts.height);
+  let mut document = base_document("white", opts.width, opts.height);
   for g in groups {
     document = document.add(g);
   }

@@ -1,10 +1,10 @@
-use clap::Clap;
+use clap::*;
 use gre::*;
 use noise::*;
 use rand::prelude::*;
 use svg::node::element::{path::Data, Group};
 
-#[derive(Clap)]
+#[derive(Parser)]
 #[clap()]
 struct Opts {
   #[clap(short, long, default_value = "0.0")]
@@ -56,8 +56,10 @@ fn art(opts: &Opts) -> Vec<Group> {
   for l in 0..lines {
     for r in 0..rows {
       let mut p = (
-        boundaries.0 + (boundaries.2 - boundaries.0) * (l as f64) / (lines as f64),
-        boundaries.1 + (boundaries.2 - boundaries.0) * (r as f64) / (rows as f64),
+        boundaries.0
+          + (boundaries.2 - boundaries.0) * (l as f64) / (lines as f64),
+        boundaries.1
+          + (boundaries.2 - boundaries.0) * (r as f64) / (rows as f64),
       );
       let mut route = Vec::new();
       for _i in 0..iterations {
@@ -68,7 +70,11 @@ fn art(opts: &Opts) -> Vec<Group> {
         let angle = field(normalized);
         let (px, py) = p;
         p = (p.0 + precision * angle.cos(), p.1 + precision * angle.sin());
-        if p.0 < boundaries.0 || p.0 > boundaries.2 || p.1 < boundaries.1 || p.1 > boundaries.3 {
+        if p.0 < boundaries.0
+          || p.0 > boundaries.2
+          || p.1 < boundaries.1
+          || p.1 > boundaries.3
+        {
           break;
         }
         let x = px;

@@ -1,6 +1,6 @@
 use std::f64::consts::PI;
 
-use clap::Clap;
+use clap::*;
 use gre::*;
 use kiss3d::camera::*;
 use kiss3d::nalgebra::*;
@@ -9,7 +9,7 @@ use rand::Rng;
 use svg::node::element::path::Data;
 use svg::node::element::Group;
 
-#[derive(Clap)]
+#[derive(Parser)]
 #[clap()]
 struct Opts {
   #[clap(short, long, default_value = "26.0")]
@@ -67,7 +67,10 @@ fn art(opts: &Opts) -> Vec<Group> {
     }
   }
 
-  let camera = FirstPerson::new(Point3::new(-6.0, 10.0, -6.0), Point3::new(10.0, -4.0, 10.0));
+  let camera = FirstPerson::new(
+    Point3::new(-6.0, 10.0, -6.0),
+    Point3::new(10.0, -4.0, 10.0),
+  );
   let dim = Vector2::new((width - 2. * pad) as f32, (height - 2. * pad) as f32);
   let offset = Vector2::new(pad as f32, pad as f32);
   let mut route = Vec::new();

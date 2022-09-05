@@ -1,13 +1,13 @@
 use std::f64::consts::PI;
 
-use clap::Clap;
+use clap::*;
 use gre::*;
 use noise::*;
 use rand::Rng;
 use svg::node::element::path::Data;
 use svg::node::element::*;
 
-#[derive(Clap)]
+#[derive(Parser)]
 #[clap()]
 pub struct Opts {
   #[clap(short, long, default_value = "image.svg")]
@@ -67,11 +67,8 @@ fn art(opts: &Opts) -> Vec<Group> {
     }
     let mut route = Vec::new();
     let rotations = 800.0;
-    let angle_delta = rng.gen_range(0, rotations as usize)
-      as f64
-      / rotations
-      * 2.0
-      * PI;
+    let angle_delta =
+      rng.gen_range(0, rotations as usize) as f64 / rotations * 2.0 * PI;
     let mut a = angle_delta;
     // TODO activate to create "snow" + prevent small lines < 0.3mm
     let angle_precision = 2. * PI / rotations;
@@ -79,8 +76,8 @@ fn art(opts: &Opts) -> Vec<Group> {
       if a - angle_delta > 2. * PI + 0.0001 {
         break;
       }
-      let hba_index = (highest_by_angle.len() as f64
-        * ((a) / 2. * PI)) as usize
+      let hba_index = (highest_by_angle.len() as f64 * ((a) / 2. * PI))
+        as usize
         % highest_by_angle.len();
 
       let mut r = base_r;
@@ -97,11 +94,7 @@ fn art(opts: &Opts) -> Vec<Group> {
                 opts.seed * 7.7 - 4.,
                 freq2 * y
                   + amp3
-                    * perlin.get([
-                      freq3 * x,
-                      opts.seed * 2.7 + 11.,
-                      freq3 * y,
-                    ]),
+                    * perlin.get([freq3 * x, opts.seed * 2.7 + 11., freq3 * y]),
               ]),
           freq1 * x,
           freq1 * y,
@@ -109,8 +102,7 @@ fn art(opts: &Opts) -> Vec<Group> {
 
       // IDEA we could add on top of it another noise
 
-      let should_draw =
-        r > highest_by_angle[hba_index] + safe_h;
+      let should_draw = r > highest_by_angle[hba_index] + safe_h;
 
       let x = cx + r * a.cos();
       let y = cy + r * a.sin();
@@ -154,9 +146,7 @@ fn art(opts: &Opts) -> Vec<Group> {
   let dy = cy - shape_cy;
   routes = routes
     .iter()
-    .map(|route| {
-      route.iter().map(|p| (p.0 + dx, p.1 + dy)).collect()
-    })
+    .map(|route| route.iter().map(|p| (p.0 + dx, p.1 + dy)).collect())
     .collect();
 
   println!("{}", routes.len());
@@ -181,8 +171,7 @@ fn art(opts: &Opts) -> Vec<Group> {
 fn main() {
   let opts: Opts = Opts::parse();
   let groups = art(&opts);
-  let mut document =
-    base_document("white", opts.width, opts.height);
+  let mut document = base_document("white", opts.width, opts.height);
   for g in groups {
     document = document.add(g);
   }

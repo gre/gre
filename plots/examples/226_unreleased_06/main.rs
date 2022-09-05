@@ -1,69 +1,69 @@
 use std::f64::consts::PI;
 
-use clap::Clap;
+use clap::*;
 use gre::*;
 use svg::node::element::path::Data;
 use svg::node::element::*;
 
 fn art(opts: Opts) -> Vec<Group> {
-    let mut rng = rng_from_seed(opts.seed);
-    let get_color = image_get_color("images/ethereum.png").unwrap();
+  let mut rng = rng_from_seed(opts.seed);
+  let get_color = image_get_color("images/ethereum.png").unwrap();
 
-    let colors = vec!["black"];
-    colors
-        .iter()
-        .enumerate()
-        .map(|(ci, color)| {
-            let dim = 2000;
-            let samples = opts.samples;
-            let f = |p| {
-                let rgb = get_color(p);
-                let c = grayscale(rgb);
-                (1. - c).powf(3.0)
-            };
-            let mut samples = sample_2d_candidates_f64(&f, dim, samples, &mut rng);
-            // samples = tsp(samples, time::Duration::seconds(60));
-            let pad = 20.0;
-            let height = 297.0;
-            let width = 210.0;
-            let boundaries = (pad, pad, width - pad, height - pad);
-            let stroke_dist = 1.2;
+  let colors = vec!["black"];
+  colors
+    .iter()
+    .enumerate()
+    .map(|(ci, color)| {
+      let dim = 2000;
+      let samples = opts.samples;
+      let f = |p| {
+        let rgb = get_color(p);
+        let c = grayscale(rgb);
+        (1. - c).powf(3.0)
+      };
+      let mut samples = sample_2d_candidates_f64(&f, dim, samples, &mut rng);
+      // samples = tsp(samples, time::Duration::seconds(60));
+      let pad = 20.0;
+      let height = 297.0;
+      let width = 210.0;
+      let boundaries = (pad, pad, width - pad, height - pad);
+      let stroke_dist = 1.2;
 
-            let mut l = layer(color);
-            let mut data = Data::new();
-            for p in samples {
-                let a = project_in_boundaries(p, boundaries);
-                let b = follow_angle(a, 0.5 * PI + (p.1-0.52).atan2(p.0-0.5), stroke_dist);
-                data = data.move_to(a).line_to(b);
-            }
-            l = l.add(base_path(color, 0.35, data));
-            if ci == colors.len() - 1 {
-                l = l.add(signature(
-                    0.5,
-                    (93.0, 242.0),
-                    color,
-                ));
-            }
-            l
-        })
-        .collect()
+      let mut l = layer(color);
+      let mut data = Data::new();
+      for p in samples {
+        let a = project_in_boundaries(p, boundaries);
+        let b = follow_angle(
+          a,
+          0.5 * PI + (p.1 - 0.52).atan2(p.0 - 0.5),
+          stroke_dist,
+        );
+        data = data.move_to(a).line_to(b);
+      }
+      l = l.add(base_path(color, 0.35, data));
+      if ci == colors.len() - 1 {
+        l = l.add(signature(0.5, (93.0, 242.0), color));
+      }
+      l
+    })
+    .collect()
 }
 
-#[derive(Clap)]
+#[derive(Parser)]
 #[clap()]
 struct Opts {
-    #[clap(short, long, default_value = "0.0")]
-    seed: f64,
-    #[clap(short, long, default_value = "100")]
-    samples: usize,
+  #[clap(short, long, default_value = "0.0")]
+  seed: f64,
+  #[clap(short, long, default_value = "100")]
+  samples: usize,
 }
 
 fn main() {
-    let opts: Opts = Opts::parse();
-    let groups = art(opts);
-    let mut document = base_a4_portrait("white");
-    for g in groups {
-        document = document.add(g);
-    }
-    svg::save("image.svg", &document).unwrap();
+  let opts: Opts = Opts::parse();
+  let groups = art(opts);
+  let mut document = base_a4_portrait("white");
+  for g in groups {
+    document = document.add(g);
+  }
+  svg::save("image.svg", &document).unwrap();
 }

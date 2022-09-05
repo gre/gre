@@ -1,11 +1,11 @@
-use clap::Clap;
+use clap::*;
 use gre::*;
 use rand::*;
 use std::f64::consts::PI;
 use svg::node::element::path::Data;
 use svg::node::element::Group;
 
-#[derive(Clap)]
+#[derive(Parser)]
 #[clap()]
 struct Opts {
   #[clap(short, long, default_value = "0.0")]
@@ -82,7 +82,11 @@ impl TLine {
     ));
     v
   }
-  fn build(self: Self, level: usize, get_config: &dyn Fn(usize) -> TConfig) -> Vec<TLine> {
+  fn build(
+    self: Self,
+    level: usize,
+    get_config: &dyn Fn(usize) -> TConfig,
+  ) -> Vec<TLine> {
     let mut v = Vec::new();
     v.push(self);
     if level <= 0 {

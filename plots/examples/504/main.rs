@@ -1,6 +1,6 @@
 use std::f64::consts::PI;
 
-use clap::Clap;
+use clap::*;
 use gre::*;
 use noise::*;
 use rand::Rng;
@@ -8,7 +8,7 @@ use rayon::prelude::*;
 use svg::node::element::path::Data;
 use svg::node::element::Group;
 
-#[derive(Clap)]
+#[derive(Parser)]
 #[clap()]
 struct Opts {
   #[clap(short, long, default_value = "5.0")]
@@ -39,12 +39,22 @@ impl VCircle {
   fn contains(self: &Self, c: &VCircle) -> bool {
     euclidian_dist((self.x, self.y), (c.x, c.y)) - self.r + c.r < 0.0
   }
-  fn inside_bounds(self: &Self, (x1, y1, x2, y2): (f64, f64, f64, f64)) -> bool {
-    x1 <= self.x - self.r && self.x + self.r <= x2 && y1 <= self.y - self.r && self.y + self.r <= y2
+  fn inside_bounds(
+    self: &Self,
+    (x1, y1, x2, y2): (f64, f64, f64, f64),
+  ) -> bool {
+    x1 <= self.x - self.r
+      && self.x + self.r <= x2
+      && y1 <= self.y - self.r
+      && self.y + self.r <= y2
   }
 }
 
-fn scaling_search<F: FnMut(f64) -> bool>(mut f: F, min_scale: f64, max_scale: f64) -> Option<f64> {
+fn scaling_search<F: FnMut(f64) -> bool>(
+  mut f: F,
+  min_scale: f64,
+  max_scale: f64,
+) -> Option<f64> {
   let mut from = min_scale;
   let mut to = max_scale;
   loop {
@@ -199,7 +209,10 @@ fn art(opts: &Opts) -> Vec<Group> {
           if route.len() >= target_size {
             break;
           }
-          let g = project_in_boundaries(p, (0.0, 0.0, width - 2.0 * pad, height - 2.0 * pad));
+          let g = project_in_boundaries(
+            p,
+            (0.0, 0.0, width - 2.0 * pad, height - 2.0 * pad),
+          );
           route.push(g);
 
           let mut v = (0f64, 0f64);
@@ -218,9 +231,12 @@ fn art(opts: &Opts) -> Vec<Group> {
             }
             ang = a;
           }
-          let xi = (gridw as f64 * (g.0 - bounds.0) / (bounds.2 - bounds.0)) as usize;
-          let yi = (gridh as f64 * (g.1 - bounds.1) / (bounds.3 - bounds.1)) as usize;
-          ang += 0.5 + 1.5 * perlin.get([xi as f64 * 0.1, yi as f64 * 0.8, seed]).abs();
+          let xi =
+            (gridw as f64 * (g.0 - bounds.0) / (bounds.2 - bounds.0)) as usize;
+          let yi =
+            (gridh as f64 * (g.1 - bounds.1) / (bounds.3 - bounds.1)) as usize;
+          ang += 0.5
+            + 1.5 * perlin.get([xi as f64 * 0.1, yi as f64 * 0.8, seed]).abs();
 
           ang += ampang
             * perlin.get([
@@ -231,11 +247,14 @@ fn art(opts: &Opts) -> Vec<Group> {
                   * perlin.get([
                     f2 * 0.04 * g.0,
                     f2 * 0.04 * g.1,
-                    seed + 0.4 * perlin.get([f2 * 0.02 * g.0, f2 * 0.02 * g.1, seed]),
+                    seed
+                      + 0.4
+                        * perlin.get([f2 * 0.02 * g.0, f2 * 0.02 * g.1, seed]),
                   ]),
             ]);
 
-          let front = (p.0 + precision * ang.cos(), p.1 + precision * ang.sin());
+          let front =
+            (p.0 + precision * ang.cos(), p.1 + precision * ang.sin());
           p = front;
         }
         route

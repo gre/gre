@@ -1,29 +1,28 @@
-use std::cmp::Ordering;
-use clap::Clap;
+use clap::*;
 use geo::prelude::EuclideanDistance;
-use gre::*;
 use geo::*;
+use gre::*;
 use rand::Rng;
-use svg::node::element::{Group};
+use std::cmp::Ordering;
 use svg::node::element::path::Data;
+use svg::node::element::Group;
 
-#[derive(Clap)]
+#[derive(Parser)]
 #[clap()]
 struct Opts {
-    #[clap(short, long, default_value = "0.0")]
-    seed: f64,
-    #[clap(short, long, default_value = "100.0")]
-    width: f64,
-    #[clap(short, long, default_value = "100.0")]
-    height: f64,
+  #[clap(short, long, default_value = "0.0")]
+  seed: f64,
+  #[clap(short, long, default_value = "100.0")]
+  width: f64,
+  #[clap(short, long, default_value = "100.0")]
+  height: f64,
 }
 
-
-fn samples_polygon_edge<R: Rng> (
+fn samples_polygon_edge<R: Rng>(
   polygon: Polygon<f64>,
   samples: f64,
   borderdist: f64,
-  rng: &mut R
+  rng: &mut R,
 ) -> (Vec<(f64, f64)>, Vec<usize>) {
   let mut length = 0.;
   let poly: Vec<Point<f64>> = polygon.exterior().points_iter().collect();
@@ -73,12 +72,20 @@ fn samples_polygon_edge<R: Rng> (
   return (points, groups);
 }
 
-fn sort_point (a: &(f64, (f64, f64), usize), b: &(f64, (f64, f64), usize)) -> Ordering {
-  ((if a.2 == b.2 { 8. } else { 1. }) *
-  (b.0 - a.0)).partial_cmp(&(0.0)).unwrap()
+fn sort_point(
+  a: &(f64, (f64, f64), usize),
+  b: &(f64, (f64, f64), usize),
+) -> Ordering {
+  ((if a.2 == b.2 { 8. } else { 1. }) * (b.0 - a.0))
+    .partial_cmp(&(0.0))
+    .unwrap()
 }
 
-fn randomize_across_groups<R: Rng>(points: Vec<(f64, f64)>, groups: Vec<usize>, rng: &mut R) -> Vec<(f64, f64)> {
+fn randomize_across_groups<R: Rng>(
+  points: Vec<(f64, f64)>,
+  groups: Vec<usize>,
+  rng: &mut R,
+) -> Vec<(f64, f64)> {
   let mut pts: Vec<(f64, (f64, f64), usize)> = points
     .iter()
     .enumerate()
@@ -91,7 +98,7 @@ fn randomize_across_groups<R: Rng>(points: Vec<(f64, f64)>, groups: Vec<usize>, 
 fn randomize_points_avoid<F: FnMut((f64, f64), (f64, f64)) -> bool>(
   points: Vec<(f64, f64)>,
   collides: &mut F,
-  retries: usize
+  retries: usize,
 ) -> Vec<(f64, f64)> {
   let mut pts: Vec<(f64, f64)> = points.clone();
   let last = points.len() - 1;
@@ -105,65 +112,88 @@ fn randomize_points_avoid<F: FnMut((f64, f64), (f64, f64)) -> bool>(
   pts
 }
 
-fn rotated_square_as_polygon(x: f64, y: f64, size: f64, angle: f64) -> Polygon<f64> {
+fn rotated_square_as_polygon(
+  x: f64,
+  y: f64,
+  size: f64,
+  angle: f64,
+) -> Polygon<f64> {
   polygon![
-      p_r((x-size, y-size), angle).into(),
-      p_r((x+size, y-size), angle).into(),
-      p_r((x+size, y+size), angle).into(),
-      p_r((x-size, y+size), angle).into(),
+    p_r((x - size, y - size), angle).into(),
+    p_r((x + size, y - size), angle).into(),
+    p_r((x + size, y + size), angle).into(),
+    p_r((x - size, y + size), angle).into(),
   ]
 }
 
 fn art(opts: &Opts) -> Vec<Group> {
-    let color = "#000";
-    let width = opts.width;
-    let height = opts.height;
-    let pad = 8.0;
-    let stroke_width = 0.35;
-    let samples = 1000.0;
-    let avoids_count = 5000;
-    let borderdist = 4.0;
-    let seed = opts.seed;
-    let mut layers = Vec::new();
-    let mut rng = rng_from_seed(seed);
-    let mut routes = Vec::new();
+  let color = "#000";
+  let width = opts.width;
+  let height = opts.height;
+  let pad = 8.0;
+  let stroke_width = 0.35;
+  let samples = 1000.0;
+  let avoids_count = 5000;
+  let borderdist = 4.0;
+  let seed = opts.seed;
+  let mut layers = Vec::new();
+  let mut rng = rng_from_seed(seed);
+  let mut routes = Vec::new();
 
-    let rect = rotated_square_as_polygon(width / 2.0, height / 2.0, width / 2.0 - pad, 0.0);
-    let (points, groups) = samples_polygon_edge(rect, samples, borderdist, &mut rng);
-    let mut route = randomize_across_groups(points, groups, &mut rng);
-    
-    let radius = rng.gen_range(1.0, 8.0) * rng.gen_range(0.0, 1.0) * rng.gen_range(0.0, 1.0);
-    
-    let centers: Vec<(f64, f64)> = (0..rng.gen_range(1, 20)).map(|_i| (
-      mix(pad, width-pad, 0.5 + rng.gen_range(-0.5, 0.5) * rng.gen_range(0.0, 1.0)),
-      mix(pad, height-pad, 0.5 + rng.gen_range(-0.5, 0.5) * rng.gen_range(0.0, 1.0))
-    )).collect();
-    let mut collides = |a: (f64, f64), b: (f64, f64)| -> bool {
-      let line = line_string![a.into(), b.into()];
-      centers.iter().any(|center| 
-        line.euclidean_distance(&Point::new(center.0, center.1)) < radius
+  let rect = rotated_square_as_polygon(
+    width / 2.0,
+    height / 2.0,
+    width / 2.0 - pad,
+    0.0,
+  );
+  let (points, groups) =
+    samples_polygon_edge(rect, samples, borderdist, &mut rng);
+  let mut route = randomize_across_groups(points, groups, &mut rng);
+
+  let radius =
+    rng.gen_range(1.0, 8.0) * rng.gen_range(0.0, 1.0) * rng.gen_range(0.0, 1.0);
+
+  let centers: Vec<(f64, f64)> = (0..rng.gen_range(1, 20))
+    .map(|_i| {
+      (
+        mix(
+          pad,
+          width - pad,
+          0.5 + rng.gen_range(-0.5, 0.5) * rng.gen_range(0.0, 1.0),
+        ),
+        mix(
+          pad,
+          height - pad,
+          0.5 + rng.gen_range(-0.5, 0.5) * rng.gen_range(0.0, 1.0),
+        ),
       )
-    };
-    route = randomize_points_avoid(route, &mut collides, avoids_count);
-    routes.push(route);
+    })
+    .collect();
+  let mut collides = |a: (f64, f64), b: (f64, f64)| -> bool {
+    let line = line_string![a.into(), b.into()];
+    centers.iter().any(|center| {
+      line.euclidean_distance(&Point::new(center.0, center.1)) < radius
+    })
+  };
+  route = randomize_points_avoid(route, &mut collides, avoids_count);
+  routes.push(route);
 
-    let mut l = layer(color);
-    let mut data = Data::new();
-    for r in routes.clone() {
-        data = render_route(data, r);
-    }
-    l = l.add(base_path(color, stroke_width, data));
-    layers.push(l);
-    layers
-    
+  let mut l = layer(color);
+  let mut data = Data::new();
+  for r in routes.clone() {
+    data = render_route(data, r);
+  }
+  l = l.add(base_path(color, stroke_width, data));
+  layers.push(l);
+  layers
 }
 
 fn main() {
-    let opts: Opts = Opts::parse();
-    let groups = art(&opts);
-    let mut document = base_document("white", opts.width, opts.height);
-    for g in groups {
-        document = document.add(g);
-    }
-    svg::save("image.svg", &document).unwrap();
+  let opts: Opts = Opts::parse();
+  let groups = art(&opts);
+  let mut document = base_document("white", opts.width, opts.height);
+  for g in groups {
+    document = document.add(g);
+  }
+  svg::save("image.svg", &document).unwrap();
 }

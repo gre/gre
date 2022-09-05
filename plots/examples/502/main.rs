@@ -1,6 +1,6 @@
 use std::f64::consts::PI;
 
-use clap::Clap;
+use clap::*;
 use gre::*;
 use noise::*;
 use rand::Rng;
@@ -8,7 +8,7 @@ use rayon::prelude::*;
 use svg::node::element::path::Data;
 use svg::node::element::Group;
 
-#[derive(Clap)]
+#[derive(Parser)]
 #[clap()]
 struct Opts {
   #[clap(short, long, default_value = "57.0")]
@@ -31,17 +31,13 @@ impl VCircle {
     VCircle { x, y, r }
   }
   fn dist(self: &Self, c: &VCircle) -> f64 {
-    euclidian_dist((self.x, self.y), (c.x, c.y))
-      - c.r
-      - self.r
+    euclidian_dist((self.x, self.y), (c.x, c.y)) - c.r - self.r
   }
   fn collides(self: &Self, c: &VCircle) -> bool {
     self.dist(c) <= 0.0
   }
   fn contains(self: &Self, c: &VCircle) -> bool {
-    euclidian_dist((self.x, self.y), (c.x, c.y)) - self.r
-      + c.r
-      < 0.0
+    euclidian_dist((self.x, self.y), (c.x, c.y)) - self.r + c.r < 0.0
   }
   fn inside_bounds(
     self: &Self,
@@ -129,8 +125,7 @@ fn packing(
       let circle = VCircle::new(x, y, size - pad);
       tries.push(circle);
       if tries.len() > optimize_size {
-        tries
-          .sort_by(|a, b| b.r.partial_cmp(&a.r).unwrap());
+        tries.sort_by(|a, b| b.r.partial_cmp(&a.r).unwrap());
         let c = tries[0];
         circles.push(c.clone());
         tries = Vec::new();
@@ -155,19 +150,13 @@ fn art(opts: &Opts) -> Vec<Group> {
   let target_size = 36;
   let particles = 12000;
   let mut layers = Vec::new();
-  let mut passage =
-    Passage2DCounter::new(0.5, width, height);
+  let mut passage = Passage2DCounter::new(0.5, width, height);
   let max_passage = 8;
   let mut rng = rng_from_seed(opts.seed);
   let gridw = rng.gen_range(4, 20);
   let gridh = rng.gen_range(3, 16);
   let min_threshold = rng.gen_range(8.0, 20.0);
-  let circle_bounds = (
-    -0.2 * width,
-    -0.2 * height,
-    1.2 * width,
-    1.2 * height,
-  );
+  let circle_bounds = (-0.2 * width, -0.2 * height, 1.2 * width, 1.2 * height);
 
   let mut circles = packing(
     opts.seed,
@@ -196,10 +185,7 @@ fn art(opts: &Opts) -> Vec<Group> {
         let mut d = 99f64;
         for (i, circle) in circles.iter().enumerate() {
           if i % colors.len() == ci {
-            d = d.min(
-              euclidian_dist((circle.x, circle.y), g)
-                - circle.r,
-            );
+            d = d.min(euclidian_dist((circle.x, circle.y), g) - circle.r);
           }
         }
         smoothstep(50.0, -30.0, d)
@@ -226,46 +212,32 @@ fn art(opts: &Opts) -> Vec<Group> {
           }
           let g = project_in_boundaries(
             p,
-            (
-              0.0,
-              0.0,
-              width - 2.0 * pad,
-              height - 2.0 * pad,
-            ),
+            (0.0, 0.0, width - 2.0 * pad, height - 2.0 * pad),
           );
           route.push(g);
 
           let mut v = (0f64, 0f64);
           for p in circles.iter() {
             let dist = euclidian_dist((p.x, p.y), g) - p.r;
-            let a = (p.y - g.1).atan2(p.x - g.0)
-              + (si as f64 - 0.5) * PI;
+            let a = (p.y - g.1).atan2(p.x - g.0) + (si as f64 - 0.5) * PI;
             let r = smoothstep(100.0, -30.0, dist);
             v.0 += r * a.cos();
             v.1 += r * a.sin();
           }
 
           if v.0 != 0.0 || v.1 != 0.0 {
-            let mut a =
-              (v.1.atan2(v.0) + 2.0 * PI) % (2. * PI);
+            let mut a = (v.1.atan2(v.0) + 2.0 * PI) % (2. * PI);
             if (a - ang).abs() > PI / 2.0 {
               a += PI;
             }
             ang = a;
           }
-          let xi = (gridw as f64 * (g.0 - bounds.0)
-            / (bounds.2 - bounds.0))
-            as usize;
-          let yi = (gridh as f64 * (g.1 - bounds.1)
-            / (bounds.3 - bounds.1))
-            as usize;
+          let xi =
+            (gridw as f64 * (g.0 - bounds.0) / (bounds.2 - bounds.0)) as usize;
+          let yi =
+            (gridh as f64 * (g.1 - bounds.1) / (bounds.3 - bounds.1)) as usize;
           ang += (1.0 - 2. * (g.1 / height - 0.5).abs())
-            + 0.5
-              * perlin.get([
-                xi as f64 * 0.1,
-                yi as f64 * 0.1,
-                seed,
-              ]);
+            + 0.5 * perlin.get([xi as f64 * 0.1, yi as f64 * 0.1, seed]);
 
           ang += ampang
             * perlin.get([
@@ -278,18 +250,12 @@ fn art(opts: &Opts) -> Vec<Group> {
                     f2 * 0.04 * g.1,
                     seed
                       + 0.15
-                        * perlin.get([
-                          f3 * 0.06 * g.0,
-                          f3 * 0.06 * g.1,
-                          seed,
-                        ]),
+                        * perlin.get([f3 * 0.06 * g.0, f3 * 0.06 * g.1, seed]),
                   ]),
             ]);
 
-          let front = (
-            p.0 + precision * ang.cos(),
-            p.1 + precision * ang.sin(),
-          );
+          let front =
+            (p.0 + precision * ang.cos(), p.1 + precision * ang.sin());
           p = front;
         }
         route
@@ -304,10 +270,7 @@ fn art(opts: &Opts) -> Vec<Group> {
           && strictly_in_boundaries(to, bounds)
           && passage.count(from) < max_passage
       };
-      let r = route
-        .iter()
-        .map(|&p| (p.0 + pad, p.1 + pad))
-        .collect();
+      let r = route.iter().map(|&p| (p.0 + pad, p.1 + pad)).collect();
       data = render_route_when(data, r, inside);
     }
     l = l.add(base_path(color, stroke_width, data));
@@ -319,8 +282,7 @@ fn art(opts: &Opts) -> Vec<Group> {
 fn main() {
   let opts: Opts = Opts::parse();
   let groups = art(&opts);
-  let mut document =
-    base_document("#fff", opts.width, opts.height);
+  let mut document = base_document("#fff", opts.width, opts.height);
   for g in groups {
     document = document.add(g);
   }

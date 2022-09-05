@@ -1,11 +1,11 @@
-use clap::Clap;
+use clap::*;
 use gre::*;
 use noise::*;
 use rand::Rng;
 use std::f64::consts::PI;
 use svg::node::element::{path::Data, *};
 
-#[derive(Clap)]
+#[derive(Parser)]
 #[clap()]
 struct Opts {
   #[clap(short, long, default_value = "100.0")]
@@ -68,12 +68,8 @@ fn head(
     .collect();
   let res = contour(w, h, f, &thresholds);
   let mut routes = features_to_routes(res, precision);
-  routes = crop_routes(
-    &routes,
-    (1.0, 1.0, 4. * r - 1., 4. * r - 1.),
-  );
-  routes =
-    translate_routes(routes, (cx - 2. * r, cy - 2. * r));
+  routes = crop_routes(&routes, (1.0, 1.0, 4. * r - 1., 4. * r - 1.));
+  routes = translate_routes(routes, (cx - 2. * r, cy - 2. * r));
   routes
 }
 
@@ -91,8 +87,7 @@ fn art(opts: &Opts) -> Vec<Group> {
       let splitw = 4;
       let splith = 2;
       let total_width = width - (splitw as f64 + 1.0) * pad;
-      let total_height =
-        height - (splith as f64 + 1.0) * pad;
+      let total_height = height - (splith as f64 + 1.0) * pad;
       let w = total_width / (splitw as f64);
       let h = total_height / (splith as f64);
       let phaseincr = 1.0 / (splitw * splith) as f64;
@@ -166,8 +161,7 @@ fn art(opts: &Opts) -> Vec<Group> {
 fn main() {
   let opts: Opts = Opts::parse();
   let groups = art(&opts);
-  let mut document =
-    base_document("white", opts.width, opts.height);
+  let mut document = base_document("white", opts.width, opts.height);
   for g in groups {
     document = document.add(g);
   }
@@ -175,10 +169,7 @@ fn main() {
 }
 
 fn p_r(p: (f64, f64), a: f64) -> (f64, f64) {
-  (
-    a.cos() * p.0 + a.sin() * p.1,
-    a.cos() * p.1 - a.sin() * p.0,
-  )
+  (a.cos() * p.0 + a.sin() * p.1, a.cos() * p.1 - a.sin() * p.0)
 }
 
 fn translate_routes(
@@ -187,8 +178,6 @@ fn translate_routes(
 ) -> Vec<Vec<(f64, f64)>> {
   routes
     .iter()
-    .map(|route| {
-      route.iter().map(|&(x, y)| (x + tx, y + ty)).collect()
-    })
+    .map(|route| route.iter().map(|&(x, y)| (x + tx, y + ty)).collect())
     .collect()
 }

@@ -1,4 +1,4 @@
-use clap::Clap;
+use clap::*;
 use gre::*;
 use noise::*;
 use rand::prelude::*;
@@ -6,7 +6,7 @@ use std::f64::consts::PI;
 use svg::node::element::path::Data;
 use svg::node::element::*;
 
-#[derive(Clap)]
+#[derive(Parser)]
 #[clap()]
 struct Opts {
     #[clap(short, long, default_value = "827.0")]

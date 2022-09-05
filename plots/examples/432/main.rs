@@ -1,4 +1,4 @@
-use clap::Clap;
+use clap::*;
 use geo::prelude::*;
 use geo::*;
 use gre::*;
@@ -7,7 +7,7 @@ use std::cmp::Ordering;
 use svg::node::element::path::Data;
 use svg::node::element::Group;
 
-#[derive(Clap)]
+#[derive(Parser)]
 #[clap()]
 struct Opts {
   #[clap(short, long, default_value = "0.0")]
@@ -25,8 +25,7 @@ fn samples_polygon_edge<R: Rng>(
   rng: &mut R,
 ) -> (Vec<(f64, f64)>, Vec<usize>) {
   let mut length = 0.;
-  let poly: Vec<Point<f64>> =
-    polygon.exterior().points_iter().collect();
+  let poly: Vec<Point<f64>> = polygon.exterior().points_iter().collect();
   let l = poly.len() - 1;
   let mut dists = Vec::new();
   let mut cx = 0.;
@@ -107,12 +106,10 @@ fn art(opts: &Opts) -> Vec<Group> {
   let mut layers = Vec::new();
   let mut rng = rng_from_seed(seed);
   let samples_amp = rng.gen_range(3., 5.);
-  let voronoi_size = (rng.gen_range(60., 600.)
-    * rng.gen_range(0.2, 1.0))
-    as usize;
+  let voronoi_size =
+    (rng.gen_range(60., 600.) * rng.gen_range(0.2, 1.0)) as usize;
   let truncate = if rng.gen_bool(0.1) {
-    ((voronoi_size as f64) * rng.gen_range(0.3, 0.6))
-      as usize
+    ((voronoi_size as f64) * rng.gen_range(0.3, 0.6)) as usize
   } else {
     voronoi_size
   };
@@ -128,25 +125,19 @@ fn art(opts: &Opts) -> Vec<Group> {
     voronoi_size,
     &mut rng,
   );
-  let mut polys =
-    sample_square_voronoi_polys(candidates, 0.0);
+  let mut polys = sample_square_voronoi_polys(candidates, 0.0);
 
-  polys.retain(|poly| {
-    poly_bounding_square_edge(poly) > poly_threshold
-  });
+  polys.retain(|poly| poly_bounding_square_edge(poly) > poly_threshold);
   rng.shuffle(&mut polys);
   polys.truncate(truncate);
 
   let routes: Vec<Vec<(f64, f64)>> = polys
     .iter()
     .filter_map(|p| {
-      let out_of_bounds =
-        p.exterior().points_iter().any(|p| {
-          p.x() < 0.0
-            || p.y() < 0.0
-            || p.x() > 1.0
-            || p.y() > 1.0
-        });
+      let out_of_bounds = p
+        .exterior()
+        .points_iter()
+        .any(|p| p.x() < 0.0 || p.y() < 0.0 || p.x() > 1.0 || p.y() > 1.0);
       if out_of_bounds {
         return None;
       }
@@ -156,17 +147,10 @@ fn art(opts: &Opts) -> Vec<Group> {
           pad + c.1 * (height - 2. * pad),
         )
       });
-      let samples =
-        samples_amp * poly.signed_area().powf(0.5);
-      let (points, groups) = samples_polygon_edge(
-        poly.clone(),
-        samples,
-        borderdist,
-        &mut rng,
-      );
-      Some(randomize_across_groups(
-        points, groups, &mut rng,
-      ))
+      let samples = samples_amp * poly.signed_area().powf(0.5);
+      let (points, groups) =
+        samples_polygon_edge(poly.clone(), samples, borderdist, &mut rng);
+      Some(randomize_across_groups(points, groups, &mut rng))
     })
     .collect();
 
@@ -188,8 +172,7 @@ fn art(opts: &Opts) -> Vec<Group> {
 fn main() {
   let opts: Opts = Opts::parse();
   let groups = art(&opts);
-  let mut document =
-    base_document("white", opts.width, opts.height);
+  let mut document = base_document("white", opts.width, opts.height);
   for g in groups {
     document = document.add(g);
   }
