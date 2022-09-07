@@ -1,5 +1,6 @@
 ---
 date: "2022-09-06"
+title: ""
 image: /images/plots/651.jpg
 tags:
   - 70x50cm
