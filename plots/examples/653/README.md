@@ -1,6 +1,6 @@
 ---
 date: "2022-09-07"
-title: "red yarn balls"
+title: "V8 red yarn balls"
 sourceFolder: 652
 image: /images/plots/653.jpg
 tags:

@@ -1,8 +1,9 @@
 ---
 date: "2022-09-07"
-title: "652 meters yarn balls"
+title: "Lime yarn balls"
 image: /images/plots/652.jpg
-description: ""
+nft: https://objkt.com/asset/KT1APMELdEFSBu6ns8GaBh16wreGz3nv8afH/4
+description: "Sharpie green on 70x50cm paper. One line of 652 meters made during ~10 hours of plot. This is a pure hasard that the length of the line is the number of this plot in meters!"
 tags:
   - 70x50cm
 ---
