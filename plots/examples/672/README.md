@@ -39,6 +39,10 @@ Le rendu digital est ainsi seulement théorique car les encres utilisés dans le
 
 <img src="/images/plots/672-digital.jpg" width="50%"/><img src="/images/plots/672.jpg" width="50%"/>
 
+Vidéo résumé:
+
+<iframe width="100%" height="400" src="https://www.youtube.com/embed/FMJcYPXj8-4?rel=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 ## Making of
 
 ### Vendredi: 2 prototypes pour explorer la texture des "Néons"
