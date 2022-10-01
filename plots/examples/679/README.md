@@ -1,6 +1,7 @@
 ---
 date: "2022-10-01"
 title: "Charcoal friction (experiment)"
+description: "some plastic debris (from 3D prints) are put under the paper to alter the charcoal line texture. weight is added on the charcoal, which inevitably made it break at some point in that plot. I wanted to play with friction and fragility of charcoal in this experiment"
 image: /images/plots/679.jpg
 ---
 
