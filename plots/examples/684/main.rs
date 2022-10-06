@@ -49,7 +49,7 @@ fn gargoyle<R: Rng>(
 ) -> Vec<Vec<(f64, f64)>> {
   let xmul = if xreverse { -1.0 } else { 1.0 };
   let mut routes: Vec<Vec<(f64, f64)>> = Vec::new();
-  
+
   let n = rng.gen_range(3, 5);
   let maxj = rng.gen_range(11, 15);
 
@@ -68,13 +68,12 @@ fn gargoyle<R: Rng>(
       let amp = 0.5;
       p.0 += amp * a.cos();
       p.1 += amp * a.sin();
-      a += 0.1 + (j-n) as f64 / 9.0;
+      a += 0.1 + (j - n) as f64 / 9.0;
       route.push(p);
     }
     routes.push(shake(route, 0.1, rng));
     dy -= 0.25 / scale;
   }
-
 
   // scale & translate
   routes
@@ -92,7 +91,7 @@ fn building<R: Rng>(
   baseleft: (f64, f64),
   baseright: (f64, f64),
   max_y: f64,
-  rng: &mut R
+  rng: &mut R,
 ) -> Vec<Vec<(f64, f64)>> {
   let mut creatures = Vec::new();
   let mut routes: Vec<Vec<(f64, f64)>> = Vec::new();
@@ -100,7 +99,8 @@ fn building<R: Rng>(
   let instability = rng.gen_range(0.0, 1.0);
   let randomplacement = rng.gen_range(-10f64, 1.0).max(0.0);
   let mainscale = rng.gen_range(0.5, 2.0);
-  let symmetryfactor = (1.1 - rng.gen_range(0f64, 1.0) * rng.gen_range(0.0, 1.0)).min(0.999);
+  let symmetryfactor =
+    (1.1 - rng.gen_range(0f64, 1.0) * rng.gen_range(0.0, 1.0)).min(0.999);
 
   let mut stages = Vec::new();
   for _i in 0..rng.gen_range(4, 30) {
@@ -111,44 +111,62 @@ fn building<R: Rng>(
   let mut xright = baseright.0;
   let mut left_ybase = baseleft.1;
   let mut right_ybase = baseright.1;
-  
+
   for stage in stages {
-    if xright-xleft < 2.0 || left_ybase < max_y {
+    if xright - xleft < 2.0 || left_ybase < max_y {
       break;
     }
     let mut rx = 0.0;
     loop {
       let x = xleft + rx;
-      let ybottom = left_ybase + (right_ybase-left_ybase)*rx/(xright-xleft);
+      let ybottom =
+        left_ybase + (right_ybase - left_ybase) * rx / (xright - xleft);
       if x > xright {
         break;
       }
-      routes.push(vec![
-        (x, ybottom),
-        (x, ybottom-stage)
-      ]);
+      routes.push(vec![(x, ybottom), (x, ybottom - stage)]);
       rx += rng.gen_range(0.3, 0.6);
     }
     left_ybase -= stage;
     right_ybase -= stage;
-    let dxl: f64 =rng.gen_range(-5.0, 5.0) * rng.gen_range(instability, 1.0) * rng.gen_range(instability, 1.0);
-    let dxr = if rng.gen_bool(symmetryfactor) { -dxl } else {
-      rng.gen_range(-4f64, 4.0) * rng.gen_range(0.0, 1.0) * rng.gen_range(0.0, 1.0) 
+    let dxl: f64 = rng.gen_range(-5.0, 5.0)
+      * rng.gen_range(instability, 1.0)
+      * rng.gen_range(instability, 1.0);
+    let dxr = if rng.gen_bool(symmetryfactor) {
+      -dxl
+    } else {
+      rng.gen_range(-4f64, 4.0)
+        * rng.gen_range(0.0, 1.0)
+        * rng.gen_range(0.0, 1.0)
     };
     let scale = mainscale * rng.gen_range(0.8, 1.3);
     let threshold = 2.0;
     if dxl > threshold || rng.gen_bool(randomplacement) {
-      creatures.push(gargoyle((xleft+dxl.min(threshold), left_ybase), scale, true, rng));
+      creatures.push(gargoyle(
+        (xleft + dxl.min(threshold), left_ybase),
+        scale,
+        true,
+        rng,
+      ));
     }
     if dxr < -threshold || rng.gen_bool(randomplacement) {
-      creatures.push(gargoyle((xright+dxr.max(-threshold), right_ybase), scale, false, rng));
+      creatures.push(gargoyle(
+        (xright + dxr.max(-threshold), right_ybase),
+        scale,
+        false,
+        rng,
+      ));
     }
     xleft += dxl;
     xright += dxr;
-    routes.push(shake(vec![(xleft, left_ybase), (xright, right_ybase)], 0.5, rng));
+    routes.push(shake(
+      vec![(xleft, left_ybase), (xright, right_ybase)],
+      0.5,
+      rng,
+    ));
   }
 
-  vec![creatures.concat(),routes].concat()
+  vec![creatures.concat(), routes].concat()
 }
 
 fn art(opts: &Opts) -> Vec<Group> {
@@ -305,8 +323,6 @@ fn art(opts: &Opts) -> Vec<Group> {
     base_y -= yincr;
   }
 
-  let radius = 6.0;
-
   // moving average
   let smooth = 4;
   let sf = smooth as f64;
@@ -333,7 +349,7 @@ fn art(opts: &Opts) -> Vec<Group> {
     if xlefti == 0 {
       break;
     }
-    let dy = (smooth_heights[xlefti].1-y).abs();
+    let dy = (smooth_heights[xlefti].1 - y).abs();
     if dy > delta_threshold {
       break;
     }
@@ -345,7 +361,7 @@ fn art(opts: &Opts) -> Vec<Group> {
     if xrighti == 0 {
       break;
     }
-    let dy = (smooth_heights[xrighti].1-y).abs();
+    let dy = (smooth_heights[xrighti].1 - y).abs();
     if dy > delta_threshold {
       break;
     }
@@ -426,113 +442,8 @@ impl Passage {
     v
   }
 
-  pub fn count_once(self: &mut Self, p: (f64, f64)) {
-    let i = self.index(p);
-    let v = self.counters[i];
-    if v == 0 {
-      self.counters[i] = 1;
-    }
-  }
-
   pub fn get(self: &Self, p: (f64, f64)) -> usize {
     let i = self.index(p);
     self.counters[i]
   }
-
-  pub fn grow_passage(self: &mut Self, radius: f64) {
-    let precision = self.precision;
-    let width = self.width;
-    let height = self.height;
-    let counters: Vec<usize> = self.counters.iter().cloned().collect();
-    let mut mask = Vec::new();
-    // TODO, in future for even better perf, I will rewrite this
-    // working directly with index integers instead of having to use index() / count_once()
-    let mut x = -radius;
-    loop {
-      if x >= radius {
-        break;
-      }
-      let mut y = -radius;
-      loop {
-        if y >= radius {
-          break;
-        }
-        if x * x + y * y < radius * radius {
-          mask.push((x, y));
-        }
-        y += precision;
-      }
-      x += precision;
-    }
-
-    let mut x = 0.0;
-    loop {
-      if x >= width {
-        break;
-      }
-      let mut y = 0.0;
-      loop {
-        if y >= height {
-          break;
-        }
-        let index = self.index((x, y));
-        if counters[index] > 0 {
-          for &(dx, dy) in mask.iter() {
-            self.count_once((x + dx, y + dy));
-          }
-        }
-        y += precision;
-      }
-      x += precision;
-    }
-  }
-}
-
-fn lerp_point(a: (f64, f64), b: (f64, f64), m: f64) -> (f64, f64) {
-  (a.0 * (1. - m) + b.0 * m, a.1 * (1. - m) + b.1 * m)
-}
-
-fn path_subdivide_to_curve_it(
-  path: Vec<(f64, f64)>,
-  interpolation: f64,
-) -> Vec<(f64, f64)> {
-  let l = path.len();
-  if l < 3 {
-    return path;
-  }
-  let mut route = Vec::new();
-  let mut first = path[0];
-  let mut last = path[l - 1];
-  let looped = euclidian_dist(first, last) < 0.1;
-  if looped {
-    first = lerp_point(path[1], first, interpolation);
-  }
-  route.push(first);
-  for i in 1..(l - 1) {
-    let p = path[i];
-    let p1 = lerp_point(path[i - 1], p, interpolation);
-    let p2 = lerp_point(path[i + 1], p, interpolation);
-    route.push(p1);
-    route.push(p2);
-  }
-  if looped {
-    last = lerp_point(path[l - 2], last, interpolation);
-  }
-  route.push(last);
-  if looped {
-    route.push(first);
-  }
-  route
-}
-
-fn path_subdivide_to_curve(
-  path: Vec<(f64, f64)>,
-  n: usize,
-  interpolation: f64,
-) -> Vec<(f64, f64)> {
-  let mut route = path;
-  for _i in 0..n {
-    route = path_subdivide_to_curve_it(route, interpolation);
-  }
-  route
 }
