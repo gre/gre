@@ -39,11 +39,10 @@ fn art(opts: &Opts) -> Vec<Group> {
   let height = opts.height;
   let width = opts.width;
   let pad = opts.pad;
+
+  // Prepare all the random values
   let mut rng = rng_from_seed(opts.seed);
   let perlin = Perlin::new();
-  let mut passage = Passage::new(0.5, width, height);
-  let passage_threshold = 9;
-
   let min_route = 2;
   let peakfactor = rng.gen_range(-0.001, 0.002)
     * rng.gen_range(0.0, 1.0)
@@ -56,8 +55,13 @@ fn art(opts: &Opts) -> Vec<Group> {
   let precision = 0.2;
   let offsetstrategy = rng.gen_range(0, 5);
 
+  let mut passage = Passage::new(0.5, width, height);
+  let passage_threshold = 9;
+
+  // all the lines to draw are pushed here
   let mut routes = Vec::new();
 
+  // Build the mountains bottom-up, with bunch of perlin noises
   let mut base_y = height * 5.0;
   let mut miny = height;
   let mut height_map: Vec<f64> = Vec::new();
@@ -190,7 +194,7 @@ fn art(opts: &Opts) -> Vec<Group> {
     base_y -= yincr;
   }
 
-  // moving average
+  // calculate a moving average to smooth the stick men positions
   let smooth = 8;
   let sf = smooth as f64;
   let mut sum = 0.0;
@@ -214,49 +218,14 @@ fn art(opts: &Opts) -> Vec<Group> {
     sum += h;
   }
 
-  /*
-  // look left until slope exceeded
-  let delta_threshold = 10.0;
-  let mut xlefti = (miny_x / precision) as usize;
-  let y = smooth_heights[xlefti].1;
-  loop {
-    if xlefti == 0 {
-      break;
-    }
-    let dy = (smooth_heights[xlefti].1 - y).abs();
-    if dy > delta_threshold {
-      break;
-    }
-    xlefti -= 1;
-  }
-  let mut xrighti = (miny_x / precision) as usize;
-  let y = smooth_heights[xrighti].1;
-  loop {
-    if xrighti == 0 {
-      break;
-    }
-    let dy = (smooth_heights[xrighti].1 - y).abs();
-    if dy > delta_threshold {
-      break;
-    }
-    xrighti += 1;
-  }
-
-  let xleft = smooth_heights[xlefti];
-  let xright = smooth_heights[xrighti];
-  let min = xleft.1.min(xright.1);
-  let xleft = (xleft.0, min);
-  let xright = (xright.0, min);
-
-  // routes = vec![routes, building(xleft, xright, pad + 10.0, &mut rng)].concat();
-  */
   let gif_frames = 10;
   let gif_ratio = 420. / 504.;
-
   let size = rng.gen_range(6.0, 10.0);
-
   let count = rng.gen_range(8, 32);
   let p = pad * 2.0;
+
+  // Calculate the "frames" that are all the rectangles to put images frame on
+
   let mut frames = Vec::new();
   for i in 0..count {
     let x = ((i as f64 + 0.5) / (count as f64)) * (width - 2.0 * p) + p;
@@ -275,43 +244,17 @@ fn art(opts: &Opts) -> Vec<Group> {
     });
   }
 
-  /*
-  let mut passage_line = Passage::new(1.5, width, height);
-  for h in 0..3 {
-    let dy = h as f64 * 2.0 + 1.0;
-    let mut route = Vec::new();
-    for &p in smooth_heights.iter() {
-      let d = p_r((0.0, -dy), p.2);
-      let p = (p.0 + d.0, p.1 + d.1);
-      let l = route.len();
-      if p.1 > height - pad || p.0 < pad || p.0 > width - pad {
-        if l > 1 {
-          routes.push(route);
-        }
-        route = Vec::new();
-      } else {
-        if passage_line.count(p) < 2 {
-          route.push(p);
-        }
-      }
-    }
-    if route.len() > 1 {
-      routes.push(route)
-    }
-  }
-  */
-
   for f in frames {
     let get_color =
       image_gif_get_color("images/YoungGrossHoopoe.gif", f.index).unwrap();
 
+    // 4 corners of the image to project
     let x1 = f.pos.0 - f.size / 2.0;
     let x2 = f.pos.0 + f.size / 2.0;
     let y1 = f.pos.1 - 0.9 * f.size / gif_ratio;
     let y2 = f.pos.1 + 0.1 * f.size / gif_ratio;
 
-    // TODO draw lines of the image
-
+    // stroke a lot of lines to plot the image
     let res = (f.size / 0.2) as usize;
     for x in 0..res {
       let mut route = Vec::new();
@@ -335,27 +278,9 @@ fn art(opts: &Opts) -> Vec<Group> {
         routes.push(route);
       }
     }
-
-    /*
-    for route in vec![
-      vec![(x1, y1), (x2, y1), (x2, y2), (x1, y2), (x1, y1)],
-      vec![(x1, y1 + 0.2), (x2, y1 + 0.2)],
-      vec![(x1, y1 + 0.5), (x2, y1 + 0.5)],
-    ] {
-      routes.push(
-        route
-          .iter()
-          .map(|&p| {
-            let q = (p.0 - f.pos.0, p.1 - f.pos.1);
-            let p = p_r(q, f.rot);
-            (p.0 + f.pos.0, p.1 + f.pos.1)
-          })
-          .collect(),
-      );
-    }
-    */
   }
 
+  // External frame to around the whole piece
   for i in 0..10 {
     let d = i as f64 * 0.25;
     routes.push(vec![
@@ -367,6 +292,7 @@ fn art(opts: &Opts) -> Vec<Group> {
     ]);
   }
 
+  // Make the SVG
   let color = "black";
   let mut data = Data::new();
   for route in routes.clone() {
@@ -422,113 +348,8 @@ impl Passage {
     v
   }
 
-  pub fn count_once(self: &mut Self, p: (f64, f64)) {
-    let i = self.index(p);
-    let v = self.counters[i];
-    if v == 0 {
-      self.counters[i] = 1;
-    }
-  }
-
   pub fn get(self: &Self, p: (f64, f64)) -> usize {
     let i = self.index(p);
     self.counters[i]
   }
-
-  pub fn grow_passage(self: &mut Self, radius: f64) {
-    let precision = self.precision;
-    let width = self.width;
-    let height = self.height;
-    let counters: Vec<usize> = self.counters.iter().cloned().collect();
-    let mut mask = Vec::new();
-    // TODO, in future for even better perf, I will rewrite this
-    // working directly with index integers instead of having to use index() / count_once()
-    let mut x = -radius;
-    loop {
-      if x >= radius {
-        break;
-      }
-      let mut y = -radius;
-      loop {
-        if y >= radius {
-          break;
-        }
-        if x * x + y * y < radius * radius {
-          mask.push((x, y));
-        }
-        y += precision;
-      }
-      x += precision;
-    }
-
-    let mut x = 0.0;
-    loop {
-      if x >= width {
-        break;
-      }
-      let mut y = 0.0;
-      loop {
-        if y >= height {
-          break;
-        }
-        let index = self.index((x, y));
-        if counters[index] > 0 {
-          for &(dx, dy) in mask.iter() {
-            self.count_once((x + dx, y + dy));
-          }
-        }
-        y += precision;
-      }
-      x += precision;
-    }
-  }
-}
-
-fn lerp_point(a: (f64, f64), b: (f64, f64), m: f64) -> (f64, f64) {
-  (a.0 * (1. - m) + b.0 * m, a.1 * (1. - m) + b.1 * m)
-}
-
-fn path_subdivide_to_curve_it(
-  path: Vec<(f64, f64)>,
-  interpolation: f64,
-) -> Vec<(f64, f64)> {
-  let l = path.len();
-  if l < 3 {
-    return path;
-  }
-  let mut route = Vec::new();
-  let mut first = path[0];
-  let mut last = path[l - 1];
-  let looped = euclidian_dist(first, last) < 0.1;
-  if looped {
-    first = lerp_point(path[1], first, interpolation);
-  }
-  route.push(first);
-  for i in 1..(l - 1) {
-    let p = path[i];
-    let p1 = lerp_point(path[i - 1], p, interpolation);
-    let p2 = lerp_point(path[i + 1], p, interpolation);
-    route.push(p1);
-    route.push(p2);
-  }
-  if looped {
-    last = lerp_point(path[l - 2], last, interpolation);
-  }
-  route.push(last);
-  if looped {
-    route.push(first);
-  }
-  route
-}
-
-fn path_subdivide_to_curve(
-  path: Vec<(f64, f64)>,
-  n: usize,
-  interpolation: f64,
-) -> Vec<(f64, f64)> {
-  let mut route = path;
-  for _i in 0..n {
-    route = path_subdivide_to_curve_it(route, interpolation);
-  }
-  route
 }
