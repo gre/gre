@@ -6,3 +6,7 @@ tags:
   - A6
   - inktober
 ---
+
+and then watercolored!
+
+<img src="/images/plots/693watercolor.jpg" width="100%" />
