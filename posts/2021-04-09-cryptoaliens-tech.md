@@ -39,7 +39,7 @@ More precisely, it is implemented with [`gl-react`](https://github.com/gre/gl-re
 
 **here is the big picture of the pipeline:**
 
-![](/images/posts/cryptoaliens/graph.gif)
+<video src="/images/posts/cryptoaliens/graph.mp4" width="100%" controls autoplay muted loop></video>
 
 There are 2 main shaders: Mandelglitch (for skin texturing) and Scene (the main raymarching shader). Each of them take a bunch of parameters. `mod1..4` are values from the creator. The rest are inferred from the Block information, they are split into multiple parameters for convenience.
 
