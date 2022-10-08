@@ -20,12 +20,12 @@ Here is "Shell" my 9th ["plot loop" (see article)](https://greweb.me/2021/05/plo
 
 I've rebooted one of my plot code (one from 100th's celebration) and animated it by rotating the center gravity. One of the usual challenge I had to face is the fact many strokes were placed at the same area and had risk to dig into the paper. I've used my usual 'grid counter' technique but this time pushed it to extreme in that it started making "dots" a bit like in the stippling technique. Dots are aligned to the grid that is used by the algorithm.
 
-<img src="/images/plots/178plotting0.gif" width="100%">
+<video src="/images/plots/178plotting0.mp4" width="100%" controls autoplay muted loop></video>
 
 I then met one of the biggest difficulty of my plot: the fact the paper will start waving a bit with the humidity of the ink. It creates two problem: imprecision and unplanned strokes (lines when the robot move it).
 
 I countered this problem by reversing my plot and starting from the center:
 
-<img src="/images/plots/178plotting1.gif" width="100%">
+<video src="/images/plots/178plotting1.mp4" width="100%" controls autoplay muted loop></video>
 
 Some of the plots have small remaining imperfection that I judged being part of the art.

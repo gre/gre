@@ -15,7 +15,7 @@ Here is "Rainbow Roots", my 4th [**plot loop** (see article)](https://greweb.me/
 
 There are 8 plots available for sale and there will be no other editions of these plot loop frames. You can chose which frame you buy as the NFT editions are segmented into different prices. 20.1 tez for the first frame, 20.2 for the second and so on up to 20.8.
 
-<img src="/images/plots/143-plots.jpg" width="100%">
+<video src="/images/plots/143-plots.mp4" width="100%" controls autoplay muted loop></video>
 
 This is a reboot of [plot#091](/plots/091) with more lines and better noise technique using domain warping.
 

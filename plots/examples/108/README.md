@@ -11,7 +11,7 @@ tags:
   - mountains
 ---
 
-<img width="100%" src="/images/plots/108.gif" />
+<video src="/images/plots/108.mp4" width="100%" controls autoplay muted loop></video>
 
 It took me 107 previous days of plotting to come up with an elegant idea: searching the best plot among many different variants can easily be done by working instead on a video of that plot! Then you can chose a frame to plot, it is both practical as well as you get a nice animation for free!
 

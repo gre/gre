@@ -29,4 +29,4 @@ The plot looks like this:
 
 To make it convenient, I've developed my own script and my own tooling to easily make these plot loop for the future!
 
-<img src="/images/plots/509-ui.gif" width="100%"/>
+<video src="/images/plots/509-ui.mp4" width="100%" controls autoplay muted loop></video>

@@ -17,7 +17,7 @@ The eye is mirrored with a different offset to make this duality. The title refe
 
 I took a video of my wife eye and use this GIF as an input to my generator =)
 
-<img src="/images/plots/202-input.gif" width="400">
+<video src="/images/plots/202-input.mp4" width="100%" controls autoplay muted loop></video>
 
 The way to mix the two eyes is using a simple technique, using my own tool set:
 

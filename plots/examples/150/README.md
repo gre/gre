@@ -25,7 +25,7 @@ This is a reboot of [plot#148](/plots/148) but with a big rework of the noise te
 
 It is plotted with two phases, a first pass without a lot of noise and a second pass with more noise divergence:
 
-<img src="/images/plots/150-phases.gif" width="100%">
+<video src="/images/plots/150-phases.mp4" width="100%" controls autoplay muted loop></video>
 
 <img src="/images/plots/150-zoom1.jpg" width="100%">
 <img src="/images/plots/150-zoom2.jpg" width="100%">

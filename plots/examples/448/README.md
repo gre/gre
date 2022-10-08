@@ -14,7 +14,7 @@ tags:
 
 8 frames were plotted live during NFC Lisbon conference on 10 cm square watercolor paper with fountain pen and Fire and ice ink.
 
-<img width="100%" src="/images/plots/448timelapse.gif"/>
+<video src="/images/plots/448timelapse.mp4" width="100%" controls autoplay muted loop></video>
 
 Each frames are photographed back and animated to produce a stop motion loop. This is the concept of [Plot Loop](https://greweb.me/2021/05/plot-loops).
 

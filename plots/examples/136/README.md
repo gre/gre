@@ -19,7 +19,7 @@ like in [plot#135](/plots/135), this is an exploration of domain warping and mar
 
 The ending of #1 being plotted, speed x5:
 
-<img width="100%" src="/images/plots/136plot.gif" />
+<video src="/images/plots/136plot.mp4" width="100%" controls autoplay muted loop></video>
 
 If you like bonus, I had considered many different animations, and they are viewable as GIF (digital black on white) on https://github.com/gre/gre/tree/master/plots/examples/136
 

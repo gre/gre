@@ -22,9 +22,9 @@ It is getting sold by **achetezdelart** on OpenSea. Detail is in the description
 
 ## Plotting highlights
 
-<img width="100%" src="/images/plots/188plot1.gif">
-<img width="100%" src="/images/plots/188plot2.gif">
-<img width="100%" src="/images/plots/188plot3.gif">
+<video src="/images/plots/188plot1.mp4" width="100%" controls autoplay muted loop></video>
+<video src="/images/plots/188plot2.mp4" width="100%" controls autoplay muted loop></video>
+<video src="/images/plots/188plot3.mp4" width="100%" controls autoplay muted loop></video>
 
 ## Making-of and technical notes
 

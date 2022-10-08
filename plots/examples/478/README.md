@@ -10,7 +10,7 @@ tags:
   - a3
 ---
 
-<img src="/images/plots/478-frames.gif" width="100%" />
+<video src="/images/plots/478-frames.mp4" width="100%" controls autoplay muted loop></video>
 
 > _NB: This article is in French because it was made in context of a French contest. I deeply explain (in French) all the concepts at stake._
 
@@ -22,7 +22,7 @@ J'ai voulu explorer l'idée que le transhumanisme, bien que souvent présenté c
 
 _zooms animés sur le centre:_
 
-<img src="/images/plots/478-z3.gif" width="100%" />
+<video src="/images/plots/478-z3.mp4" width="100%" controls autoplay muted loop></video>
 
 ---
 
@@ -44,7 +44,7 @@ en dessinant 4 frames proches les unes des autres, nous pouvons recréer un dess
 
 C'est la technique que j'appelle "plot loop", explorée l'an dernier – autres créations de ce type: https://greweb.me/plots/tags/plotloop – le format A3 est néanmoins une première.
 
-<img src="/images/plots/478-artist.gif" width="50%"/><img src="/images/plots/478-z4.gif" width="50%" />
+<video src="/images/plots/478-artist.mp4" width="50%" controls autoplay muted loop></video><video src="/images/plots/478-z4.mp4" width="100%" controls autoplay muted loop></video>
 
 ### Quelques statistiques
 
@@ -187,4 +187,4 @@ C'était si intéressant pour moi de partager sur Twitch des techniques méconnu
 
 J'y fus!
 
-<img src="/images/plots/478-z1.jpg" width="100%"/><img src="/images/plots/478-z1.gif" width="50%" /><img src="/images/plots/478-z2.gif" width="50%" />
+<img src="/images/plots/478-z1.jpg" width="100%"/><video src="/images/plots/478-z1.mp4" width="100%" controls autoplay muted loop></video><video src="/images/plots/478-z2.mp4" width="100%" controls autoplay muted loop></video>

@@ -4,6 +4,6 @@ title: "Moving average on 1000 digits of π"
 image: /images/plots/270.jpg
 ---
 
-![](/images/plots/270b.gif)
+<video src="/images/plots/270b.mp4" width="100%" controls autoplay muted loop></video>
 
-![](/images/plots/270a.gif)
+<video src="/images/plots/270a.mp4" width="100%" controls autoplay muted loop></video>
