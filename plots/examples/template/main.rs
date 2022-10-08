@@ -1,6 +1,5 @@
 use clap::*;
 use gre::*;
-use noise::*;
 use svg::node::element::path::Data;
 use svg::node::element::*;
 
@@ -9,28 +8,40 @@ use svg::node::element::*;
 pub struct Opts {
   #[clap(short, long, default_value = "image.svg")]
   file: String,
+  #[clap(short, long, default_value = "420.0")]
+  pub height: f64,
   #[clap(short, long, default_value = "297.0")]
   pub width: f64,
-  #[clap(short, long, default_value = "210.0")]
-  pub height: f64,
+  #[clap(short, long, default_value = "20.0")]
+  pub pad: f64,
   #[clap(short, long, default_value = "0.0")]
   pub seed: f64,
-  #[clap(short, long, default_value = "0.0")]
-  pub seed1: f64,
-  #[clap(short, long, default_value = "0.0")]
-  pub seed2: f64,
-  #[clap(short, long, default_value = "0.0")]
-  pub seed3: f64,
 }
 
 fn art(opts: &Opts) -> Vec<Group> {
-  let colors = vec!["black"];
-  colors
+  let width = opts.width;
+  let height = opts.height;
+  let pad = opts.pad;
+
+  let mut routes = Vec::new();
+
+  routes.push(vec![
+    (pad, pad),
+    (width - pad, pad),
+    (width - pad, height - pad),
+    (pad, height - pad),
+    (pad, pad),
+  ]);
+
+  vec![(routes, "black")]
     .iter()
     .enumerate()
-    .map(|(i, color)| {
+    .map(|(i, (routes, color))| {
       let mut data = Data::new();
-      let mut l = layer(color);
+      for route in routes.clone() {
+        data = render_route(data, route);
+      }
+      let mut l = layer(format!("{} {}", i, String::from(*color)).as_str());
       l = l.add(base_path(color, 0.35, data));
       l
     })
