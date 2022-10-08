@@ -44,7 +44,7 @@ Checkout the following `gl-react` demos running with the **same codebase across 
 
 ## [**AdvancedEffects**](http://projectseptemberinc.github.io/gl-react-dom/Examples/AdvancedEffects/)
 
-<img src="/images/2016/03/advanced-effects.gif" style="width:100%" />
+<video src="/images/2016/03/advanced-effects.mp4" width="100%" controls autoplay muted loop></video>
 
 ## [**github.com/gre/gl-react-image-effects**](https://github.com/gre/gl-react-image-effects)
 
