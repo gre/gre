@@ -48,7 +48,7 @@ Checkout the following `gl-react` demos running with the **same codebase across 
 
 ## [**github.com/gre/gl-react-image-effects**](https://github.com/gre/gl-react-image-effects)
 
-<a href="http://greweb.me/gl-react-image-effects/" style="text-align:center"><img src="/images/2016/03/image-effects-ios.gif" style="width: 33%;" /><img src="/images/2016/03/image-effects-web.png" style="width: 33%;" /><img src="/images/2016/03/image-effects-android.png" style="width: 33%" /></a>
+<a href="http://greweb.me/gl-react-image-effects/" style="text-align:center"><video loop autoplay controls src="/images/2016/03/image-effects-ios.mp4" width="33%"></video><img src="/images/2016/03/image-effects-web.png" style="width: 33%;" /><img src="/images/2016/03/image-effects-android.png" style="width: 33%" /></a>
 
 ## Adopting React paradigm
 

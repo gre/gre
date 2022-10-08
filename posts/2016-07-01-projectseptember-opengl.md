@@ -1,5 +1,5 @@
 ---
-title:  🎉 There are some OpenGL in the Project September fashion app!
+title: 🎉 There are some OpenGL in the Project September fashion app!
 author: Gaetan
 layout: post
 tags:
@@ -10,18 +10,18 @@ tags:
 
 [twitter]: https://twitter.com/ProjSeptEng
 [website]: https://projectseptember.com
-[RN]: http://facebook.github.io/react-native/
+[rn]: http://facebook.github.io/react-native/
 [graphql]: http://graphql.org/
 [scala]: http://scala-lang.org/
 [glreactconf]: /2016/06/glreactconf
 [glreact]: https://github.com/ProjectSeptemberInc/gl-react
 [glreactdom]: https://github.com/ProjectSeptemberInc/gl-react-dom
 [glreactnative]: https://github.com/ProjectSeptemberInc/gl-react-native
-[RNAnimation]: https://facebook.github.io/react-native/docs/animations.html
+[rnanimation]: https://facebook.github.io/react-native/docs/animations.html
 
- 🎉 Hooray! [We][twitter] recently released an iOS app called [Project September][website].
+🎉 Hooray! [We][twitter] recently released an iOS app called [Project September][website].
 
-This application is built with nice tech stack including [React Native][RN] and [GraphQL][graphql]. The backend is powered by [Scala][scala], a robust functional language, and we use many other [cool techs][twitter].
+This application is built with nice tech stack including [React Native][rn] and [GraphQL][graphql]. The backend is powered by [Scala][scala], a robust functional language, and we use many other [cool techs][twitter].
 
 This fashion app needed some fancy features: one was demo-ed at last [React.js conference][glreactconf] with the ability to do localized blur on text over images.
 
@@ -41,14 +41,13 @@ Let's first see 2 demos of OpenGL usage in our app, and then we'll write a bit a
 
 <img src="/images/2016/07/initial.png" />
 
-**+** ***(layer)***
+**+** **_(layer)_**
 
 <img src="/images/2016/07/layer.png" />
 
 **=**
 
 <img src="/images/2016/07/result.png" />
-
 
 ### Under the hood
 
@@ -57,9 +56,7 @@ Let's first see 2 demos of OpenGL usage in our app, and then we'll write a bit a
 
 Here is more detail on how the shadow is generated:
 
-
 <img src="/images/2016/07/under-1.png" />
-
 
 **\* (multiply alpha)**
 
@@ -110,17 +107,15 @@ void main () {
 ### Integration
 
 ```html
-<GL.Node shader={shaders.textOverImage}>
-  <GL.Uniform name="img">
-    {img}
-  </GL.Uniform>
+<GL.Node shader="{shaders.textOverImage}">
+  <GL.Uniform name="img"> {img} </GL.Uniform>
   <GL.Uniform name="imgBlurred">
-    <Blur factor={20} passes={6} width={width} height={height}>
+    <Blur factor="{20}" passes="{6}" width="{width}" height="{height}">
       {img}
     </Blur>
   </GL.Uniform>
   <GL.Uniform name="txt">
-    <Text style={titleStyle}>{title}</Text>
+    <Text style="{titleStyle}">{title}</Text>
   </GL.Uniform>
 </GL.Node>
 ```
@@ -129,9 +124,9 @@ void main () {
 
 This is a video record of our app:
 
-![](/images/2016/07/upload.gif)
+<video controls autoplay muted loop width="100%" src="/images/2016/07/upload.mp4"></video>
 
-The uploading spinner effect is implemented with an OpenGL shader. This was not easy to avoid all the blinks we used to have. We have different components to render each step (uploading animation / uploaded final image) and the uploaded image needs to be downloaded again to not render as white. One solution could be to use a monolithic "thumbnail" component that do everything. We wanted to  keep independent components.
+The uploading spinner effect is implemented with an OpenGL shader. This was not easy to avoid all the blinks we used to have. We have different components to render each step (uploading animation / uploaded final image) and the uploaded image needs to be downloaded again to not render as white. One solution could be to use a monolithic "thumbnail" component that do everything. We wanted to keep independent components.
 Hopefully, everything now works seamlessly with some "double buffering"/swapping mechanism we will explained at the end of this article.
 
 ## Animate all the things
@@ -139,9 +134,9 @@ Hopefully, everything now works seamlessly with some "double buffering"/swapping
 ### Designing animations
 
 > Fluid, meaningful animations are essential to the mobile user experience.
-**[— React Native Animations documentation][RNAnimation]**
+> **[— React Native Animations documentation][rnanimation]**
 
-It's not easy to design how an application should animate, to define transitions between all the different possible single state and edge-cases of your app. Designing animations, as part of UX design, is a time consuming work but it tends to be underestimated while being essential for moving from a *good app* to a *very good app*. That tends to be the last 20% remaining missing parts of your app that are the hardest but that makes the 80% of a great UX.
+It's not easy to design how an application should animate, to define transitions between all the different possible single state and edge-cases of your app. Designing animations, as part of UX design, is a time consuming work but it tends to be underestimated while being essential for moving from a _good app_ to a _very good app_. That tends to be the last 20% remaining missing parts of your app that are the hardest but that makes the 80% of a great UX.
 
 ### Implementing animations
 
@@ -149,7 +144,7 @@ Not only it's hard to have figured out the animations (to find the optimal UX) b
 
 #### in React Native
 
-React Native [Animations API][RNAnimation] makes it easier: you just have to switch to one of the `Animated.*` component. In `gl-react` we even support Animated values to flow into the shaders uniforms so it's very convenient to animate a GL effect.
+React Native [Animations API][rnanimation] makes it easier: you just have to switch to one of the `Animated.*` component. In `gl-react` we even support Animated values to flow into the shaders uniforms so it's very convenient to animate a GL effect.
 
 That said, React Native Animations is not the ultimate silver bullet. There are things Animations won't solve for you. React Native Animated is still a low level API, it's also imperative and not opinionated on how you should turn it into descriptive paradigm.
 
@@ -163,7 +158,7 @@ We have built our own abstraction to solve this problem: a Component decorator m
 
 > What the decoration solves: when moving from A to B, you want B to be ready (e.g. images are loaded), you also want A to have finish its (animated) work.
 
-**A component can express it needs some time to mount *(e.g. an image to load!)* OR that it needs some time to unmount *(e.g. an "animating out")*. This will basically hold the rendering to happen:**
+**A component can express it needs some time to mount _(e.g. an image to load!)_ OR that it needs some time to unmount _(e.g. an "animating out")_. This will basically hold the rendering to happen:**
 
 The decoration can implement "double buffering" on a Component: `render()` function keeps rendering Component with the previous "stable props" but will also render in background another instance of Component with the next props. When that next props Component is ready and loaded, we can successful swap it to be the new "stable props".
 

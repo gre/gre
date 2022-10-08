@@ -13,7 +13,7 @@ This quick experiment was written in Rust in ~1 hour as an entry for the "Brutal
 
 Here is a preview of the 140 first generations:
 
-<img src="/images/plots/615-preview.gif" width="100%" />
+<video loop autoplay controls src="/images/plots/615-preview.mp4" width="100%"></video>
 
 The plotting phase was a live performance streamed on Instagram (@greweb) and using different plotting techniques to trace either with brush or gel pens on different papers.
 

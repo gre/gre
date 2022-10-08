@@ -17,17 +17,15 @@ tags:
 >
 > The plots are designed to be plotted with fountain pens and on A4 paper, but the plotter artist is free to do any interpretation they want, chose different colors, different paper techniques, the possibilities are endless! Depending on your configuration, the plot can take between 15 minutes to a few hours to execute.
 >
-> @greweb can ship plotted editions to NFT owners with a small extra cost via https://greweb.me/plots/nft 
+> @greweb can ship plotted editions to NFT owners with a small extra cost via https://greweb.me/plots/nft
 
 <!--
-More information can be found on the release article https://greweb.me/2022/02/shattered 
+More information can be found on the release article https://greweb.me/2022/02/shattered
 -->
-
 
 ## Physically plottable?
 
-<img width="100%" src="/images/2022/shattered/video.gif">
-
+<video loop autoplay controls src="/images/2022/shattered/video.mp4" width="100%"></video>
 
 Like in [my previous article](https://greweb.me/2021/11/plottable-storm), the generator produces "Plottable NFTs".
 
@@ -56,10 +54,10 @@ These prototypes helped to adjust the density and tweak the algorithms over the 
 <img width="50%" src="/images/2022/shattered/prototype2.jpg"><img width="50%" src="/images/2022/shattered/prototype5.jpg">
 <img width="100%" src="/images/2022/shattered/prototype4.jpg">
 
-
 ## How does the generator work
 
 The generator works in a few steps:
+
 - Step 1 implements **the shattering** and outputs polygons.
 - Step 2 implements **the filling**: the polygons are filled with various techniques and colors.
 - Step 3 implements **post-processing effects**. Not only a SVG is generated, but it is also used in a WebGL shaders texture to simulate ink and paper effects.
@@ -82,10 +80,9 @@ This feature categorizes the number of polygon parts that result from the shatte
 
 <img width="100%" src="/images/2022/shattered/examples/variety3.jpg">
 
-
 ### 'Pushback' feature
 
-This feature expresses how intense the Pushback is for a given piece – effect that shifts parts away from each other. 
+This feature expresses how intense the Pushback is for a given piece – effect that shifts parts away from each other.
 
 <img width="100%" src="/images/2022/shattered/examples/pushback-high.jpg">
 
@@ -157,15 +154,13 @@ There is a first, rare filling technique that consists of NOT filling! but simpl
 
 <img width="100%" src="/images/2022/shattered/examples/fill-empty.jpg">
 
-
 ### Fill = Spiral
 
 Spiral is the most complex algorithm of the generator and can take up to a few seconds to run in JavaScript. It works by connecting randomly sampled dots by rotating the lines, each iteration scans for a point making the smallest angle turn, this creates a spiral that statistically converge to the center.
 
 <img width="50%" src="/images/2022/shattered/examples/fill-spiral.jpg"><img width="50%" src="/images/2022/shattered/examples/fill-spiral-3.jpg">
 
-Due to the complexity of the algorithm, I have chosen to bail out some cases to fallback to "Web" filling technique which is why you most likely never get a "Spiral only" filling (it can still happen ~0.4%). 
-
+Due to the complexity of the algorithm, I have chosen to bail out some cases to fallback to "Web" filling technique which is why you most likely never get a "Spiral only" filling (it can still happen ~0.4%).
 
 ### Fill = Web
 
@@ -185,13 +180,11 @@ Ping Pong filling is the idea to throw a ray that bounces on the polygon edge.
 
 <img width="100%" src="/images/2022/shattered/examples/fill-pingpong.jpg">
 
-
-The basic idea is to sample points along the polygon perimeter and then to do a permutation of indexes that can for instance looks like this: **0, 100, 200, 1, 101, 201, 2, 102, 202,...***.
+The basic idea is to sample points along the polygon perimeter and then to do a permutation of indexes that can for instance looks like this: **0, 100, 200, 1, 101, 201, 2, 102, 202,...\***.
 
 Many optimizations were done on this to make the plot viable. Each line is traced by counting how much lines traversed at a given position and will stop as soon as it's too "crowded".
 
 We can notice the algorithm at work on the previous example as we see some "gaps" near the intersection of some lines, but in practice, a plot will be generally fine as the ink will "bleed" a bit and fill these gaps.
-
 
 ### Fill = Hatch
 
@@ -199,13 +192,11 @@ the hatching technique traces parallel lines with a varying distance to produces
 
 <img width="50%" src="/images/2022/shattered/examples/fill-hatch.jpg"><img width="50%" src="/images/2022/shattered/examples/fill-hatching-3.jpg">
 
-
 ### Fill = Stippling
 
 the stippling technique is implemented with many samples points from which a small line stroke is done. The line stroke segment, which is one millimeter long, is oriented following a simple field determined with the center of the polygon: `atan2(cx - p[0], cy - p[1])`
 
 <img width="50%" src="/images/2022/shattered/examples/fill-stippling.jpg"><img width="50%" src="/images/2022/shattered/examples/fill-stippling-2.jpg">
-
 
 ### Fill = Scratches
 
@@ -224,6 +215,7 @@ Zigzag has a similar idea as in Scratches except it only traces line on one axis
 To give more life to the digital shape, I have added some paper grain effects as well as a lighting effect that grows from the center.
 
 It is important to note that I actually generate 2 SVGs:
+
 - one dedicated for the WebGL shaders where I use #0FF, #F0F, #FF0 colors and addition mode to be able to tell what even ink there is at a position. It allows me to implement some sort of ink simulation (those which remains minimal, but using opacity to express the saturation of an ink and each color defines 2 colors on each it derives too – for instance the yellow of Diamine Amber is diverging to orange tones)
 - a second SVG is the downloadable SVG that tries to approach as much as possible the ink color and have layers ready for the plotter. Note that you can directly drag&drop (or right-click) from the digital canvas itself (thanks to a hidden `<img>` in the DOM)
 
@@ -249,7 +241,6 @@ The most common case is to obtain a plot that will only have one ink chosen, but
 
 <img width="50%" src="/images/2022/shattered/examples/colors-2.jpg"><img width="50%" src="/images/2022/shattered/examples/colors-3.jpg">
 
-
 ## Artistic challenges and choices
 
 To wrap up, it took me quite a lot of iterations to reach decision on many aspects and tweak what would be my final pieces. In generative art and especially when you reach a high variety of results it is really hard to guarantee one given output is satisfying. This is especially true in my case that involve many level of recursion which makes it very hard to control the outcome. The wider your generation is, more likely you will get non interesting results or edge cases you do not prefer to happen. The boundaries of the generation have to be well controlled in order to avoid the "bad cases".
@@ -258,12 +249,10 @@ To wrap up, it took me quite a lot of iterations to reach decision on many aspec
 
 **curating away the bad cases**. The way I generally approached the curation in my generator is to curate away the cases I didn't want rather than explicitly curating the cases I want! Typically, one algorithm will control the quality of the output and will be retrying the result until it satisfies the criterias. One example is I have to exclude any "empty result" to happen. I also explicitely wanted to bail out a result containing only one cut (2 polygons).
 
-
 **Brace for impact**. embracing collisions and allowing some shapes to intersect was part of the "glitch" I wanted to keep. It can be interesting to have a mix of inks that occur on these intersections. This is a rare effect.
 
 **recursion depth**. It took me quite a lot of shattering iteration to decide on the maximum number of recursion I would do as well as it's rarity. At the end, I've chose to make the "low number of parts" rarer than having a very exploded shattered case, because it emphasis on what the piece is about. Pieces that are intacted or only cut in a few parts are still very interesting to have and should actually be quite scarced.
 
 **shapes rarity & filling consistency**. The way the shape are filled are not always decided randomly and many logic bail out from cases I didn't want.
-
 
 <img width="100%" src="/images/2022/shattered/thumbnail.jpg">
