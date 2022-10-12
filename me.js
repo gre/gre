@@ -32,7 +32,7 @@ export default {
       text: "gre",
     },
     {
-      id: "objkt",
+      id: "opensea",
       url: "https://opensea.io/greweb?tab=created",
       icon: "/icons/eth.svg",
       text: "greweb.eth",
