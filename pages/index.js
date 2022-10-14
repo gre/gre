@@ -204,9 +204,6 @@ export default function Home({ posts, plots }) {
   const siteURL = me.thumbnailDomain;
   const { title, description, thumbnail } = me;
 
-  const minimal =
-    typeof location !== "undefined" && location.search === "?minimal";
-
   return (
     <Global>
       <Container>
@@ -228,7 +225,10 @@ export default function Home({ posts, plots }) {
         <Main>
           <style jsx>{`
             h1 {
-              font-size: 3em;
+              font-size: 4em;
+              font-weight: normal;
+              padding: 32px 0;
+              margin: 0;
             }
             blockquote {
               max-width: 900px;
@@ -271,27 +271,6 @@ export default function Home({ posts, plots }) {
               font-weight: 400;
               text-decoration: underline;
             }
-            .minimalfoot strong {
-              display: block;
-              font-size: 1.2em;
-              margin-bottom: 1em;
-            }
-            .minimalfoot blockquote {
-              padding: 0;
-              margin: 0;
-            }
-            .minimal .social {
-              width: 340px;
-              margin-bottom: 0;
-            }
-            .minimal .social ul {
-              margin: 0;
-              padding: 0;
-            }
-            .minimal .social li {
-              display: inline-block;
-              font-size: 1.2em;
-            }
           `}</style>
 
           <Header>
@@ -299,77 +278,59 @@ export default function Home({ posts, plots }) {
               <div className="avatarbox">
                 <img width="230" src={thumbnail} />
               </div>
-              <div className={minimal ? "minimal" : ""}>
-                {minimal ? (
-                  <div className="minimalfoot">
-                    <strong>greweb.me</strong>
-                    <blockquote>{description}</blockquote>
-                  </div>
-                ) : (
-                  <h1>@greweb</h1>
-                )}
+              <div>
+                <h1>@greweb</h1>
                 <div className="socials">
-                  {me.social.map(({ id, url, icon, text, extra }) =>
-                    minimal && extra ? null : (
-                      <a key={id} href={url} title={text}>
-                        <img
-                          alt={text}
-                          src={icon}
-                          height={minimal ? "20" : "20"}
-                        />
-                      </a>
-                    )
-                  )}
+                  {me.social.map(({ id, url, icon, text, extra }) => (
+                    <a key={id} href={url} title={text}>
+                      <img alt={text} src={icon} height="28" />
+                    </a>
+                  ))}
                 </div>
               </div>
             </div>
-            {minimal ? null : (
-              <>
-                <blockquote>{description}</blockquote>
-                <p className="subtitle">
-                  I released... <a href="/plots">{plots.length} plots</a>,{" "}
-                  <a href="/shaderday/1">{days.length} shaders</a>,{" "}
-                  <a href="/posts">{posts.length} blog posts</a>.
-                </p>
-              </>
-            )}
+            <blockquote>{description}</blockquote>
+            <p className="subtitle">
+              I released... <a href="/plots">{plots.length} plots</a>,{" "}
+              <a href="/shaderday/1">{days.length} shaders</a>,{" "}
+              <a href="/posts">{posts.length} blog posts</a>.
+            </p>
           </Header>
-          {minimal ? null : (
-            <div className="content">
-              <section>
-                <PortfolioPlots plots={plots} />
-              </section>
-              <section>
-                <CarouselPlots plots={plots} />
-              </section>
-              <section>
-                <HighlightShader day={days.find((d) => d.n === 102)} />
-              </section>
-              <section>
-                <h2>
-                  <Link href="/posts">
-                    <a>Recent blog posts</a>
-                  </Link>
-                </h2>
+          <div className="content">
+            <section>
+              <PortfolioPlots plots={plots} />
+            </section>
+            <section>
+              <CarouselPlots plots={plots} />
+            </section>
+            <section>
+              <HighlightShader day={days.find((d) => d.n === 102)} />
+            </section>
+            <section>
+              <h2>
+                <Link href="/posts">
+                  <a>Recent blog posts</a>
+                </Link>
+              </h2>
 
-                {posts.slice(0, 12).map((p, i) => (
-                  <Link key={i} href={`/${p.year}/${p.month}/${p.slug}`}>
-                    <a>
-                      <img
-                        src={p.data.thumbnail}
-                        alt=""
-                        style={{
-                          width: "33%",
-                          height: "33%",
-                          objectFit: "cover",
-                        }}
-                      />
-                    </a>
-                  </Link>
-                ))}
-              </section>
-              {
-                null /*
+              {posts.slice(0, 12).map((p, i) => (
+                <Link key={i} href={`/${p.year}/${p.month}/${p.slug}`}>
+                  <a>
+                    <img
+                      src={p.data.thumbnail}
+                      alt=""
+                      style={{
+                        width: "33%",
+                        height: "33%",
+                        objectFit: "cover",
+                      }}
+                    />
+                  </a>
+                </Link>
+              ))}
+            </section>
+            {
+              null /*
             <section>
               <h2>2022 projects</h2>
               <HighlightProjects projects={projects2021} />
@@ -379,9 +340,8 @@ export default function Home({ posts, plots }) {
               <HighlightProjects projects={projects2021} />
             </section>
               */
-              }
-            </div>
-          )}
+            }
+          </div>
         </Main>
       </Container>
     </Global>
