@@ -288,6 +288,13 @@ export default function Home({ posts, plots }) {
               font-weight: 400;
               text-decoration: underline;
             }
+            footer .subtitle a {
+              font-size: 16px;
+            }
+            footer .subtitle span:not(:last-child):after {
+              content: ", ";
+              text-decoration: none;
+            }
           `}</style>
 
           <Header>
@@ -326,6 +333,7 @@ export default function Home({ posts, plots }) {
             <section>
               <HighlightShader day={days.find((d) => d.n === 102)} />
             </section>
+            {/*
             <section>
               <h2>
                 <Link href="/posts">
@@ -349,6 +357,7 @@ export default function Home({ posts, plots }) {
                 </Link>
               ))}
             </section>
+                    */}
             {
               null /*
             <section>
@@ -361,6 +370,15 @@ export default function Home({ posts, plots }) {
             </section>
               */
             }
+            <footer>
+              <p className="subtitle">
+                {me.social.map(({ id, url, icon, text, extra }) => (
+                  <span key={id}>
+                    <a href={url}>{id}</a>
+                  </span>
+                ))}
+              </p>
+            </footer>
           </div>
         </Main>
       </Container>
