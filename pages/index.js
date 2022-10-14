@@ -188,7 +188,7 @@ export const HighlightShader = ({ day }) => {
         }}
       >
         <h2>
-          <a href={`/shaderday/${day.n}`}>I also love writing shaders...</a>
+          <a href={`/shaderday/${day.n}`}>I also love shaders...</a>
         </h2>
         <a href={`/shaderday/${day.n}`}>
           #{day.n} – {day.title}
@@ -208,7 +208,7 @@ export const HighlightShader = ({ day }) => {
       >
         <Visual
           width={Math.min(bodyDimensions?.width - 20, width)}
-          height={300}
+          height={250}
           Day={day}
         />
       </a>
@@ -329,7 +329,7 @@ export default function Home({ posts, plots }) {
             <section>
               <h2>
                 <Link href="/posts">
-                  <a>Recent blog posts</a>
+                  <a>I sometimes write articles...</a>
                 </Link>
               </h2>
 
