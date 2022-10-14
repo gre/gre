@@ -112,8 +112,8 @@ export const CarouselPlots = ({ plots }) => {
       <div
         style={{
           background: "#000",
-          height: 1,
-          margin: "4px 0px 0px 0px",
+          height: 2,
+          margin: "10px 0px 0px 0px",
           boxSizing: "border-box",
           width: (prog * 100).toFixed(2) + "%",
         }}
@@ -125,7 +125,7 @@ export const CarouselPlots = ({ plots }) => {
             width: "100%",
             height: 440,
             objectFit: "contain",
-            border: "4px #000 solid",
+            border: "10px #000 solid",
             background: "black",
           }}
         />
