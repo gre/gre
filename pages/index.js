@@ -138,6 +138,26 @@ export const CarouselPlots = ({ plots }) => {
   );
 };
 
+export const StreamIntro = () => {
+  return (
+    <>
+      <h2>
+        <a href="https://twitch.tv/greweb">
+          I stream, every week... on twitch.tv/greweb
+        </a>
+      </h2>
+      <video
+        muted
+        loop
+        autoplay
+        controls
+        src="/images/plots/643-twitch.mp4"
+        width="100%"
+      ></video>
+    </>
+  );
+};
+
 export const HighlightProjects = ({ projects }) => {
   return null;
 };
@@ -299,6 +319,9 @@ export default function Home({ posts, plots }) {
             </section>
             <section>
               <CarouselPlots plots={plots} />
+            </section>
+            <section>
+              <StreamIntro />
             </section>
             <section>
               <HighlightShader day={days.find((d) => d.n === 102)} />
