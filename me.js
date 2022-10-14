@@ -1,7 +1,7 @@
 export default {
   title: "greweb.me",
   description:
-    "generative artist who uses code to make art, explores the frontier of abstract art with algorithms pushing forward to more realistic scenery. Explore physical art via 'Plotting', which consist of drawing with fountain pens on robot. I don't do prints, I do plots: Every physical outcome is truly unique!",
+    "generative plotter artist, I make art with code (creative coding), draw with fountain pens on robots (plotting), explore the frontier of abstract art with algorithms in the constant search of more realistic scenery. I don't do prints, I do plots: Every physical outcome is truly unique!",
   thumbnail: "/logo.svg",
   photo: "/profile.jpg",
   thumbnailDomain: "http://greweb.me",
@@ -37,12 +37,14 @@ export default {
       icon: "/icons/eth.svg",
       text: "greweb.eth",
     },
+    /*
     {
       id: "objkt",
       url: "https://objkt.com/profile/tz1cgQAQfECg5bPASYTMyJ9QJQjSUi8rfL67",
       icon: "/icons/tz.svg",
       text: "greweb.tez",
     },
+    */
     {
       id: "fxhash",
       url: "https://fxhash.xyz/u/greweb",

@@ -12,8 +12,7 @@ import { getDays } from "../shaderdays";
 import { getAllPosts } from "../posts";
 import { getPlots } from "../plots";
 import me from "../me";
-
-const projects2021 = [];
+import useDimensions from "react-cool-dimensions";
 
 export async function getStaticProps() {
   const posts = await getAllPosts();
@@ -22,6 +21,47 @@ export async function getStaticProps() {
     props: { posts, plots },
   };
 }
+
+const highlightedPlotsIds = [
+  "560",
+  "544",
+  "527",
+  "577",
+  "367",
+  "318",
+  "468",
+  "331",
+  "486",
+];
+
+export const PortfolioPlots = ({ plots }) => {
+  return (
+    <div
+      style={{
+        display: "grid",
+        width: "100%",
+        gridTemplateColumns: "1fr 1fr 1fr",
+      }}
+    >
+      {plots
+        .filter((p) => highlightedPlotsIds.includes(p.n))
+        .map((plot) => (
+          <a href={`/plots/${plot.n}`} key={plot.n} style={{ lineHeight: 0 }}>
+            <img
+              src={plot.data.image}
+              style={{
+                flex: 1,
+                width: "100%",
+                height: "min(25vw, 25vh)",
+                aspectRatio: 1,
+                objectFit: "cover",
+              }}
+            />
+          </a>
+        ))}
+    </div>
+  );
+};
 
 export const CarouselPlots = ({ plots }) => {
   const [plot, setPlot] = useState(plots[0]);
@@ -63,7 +103,7 @@ export const CarouselPlots = ({ plots }) => {
         }}
       >
         <h2>
-          <a href="/plots">Daily plots</a>
+          <a href="/plots">I plot every day...</a>
         </h2>
         <a href={`/plots/${plot.n}`}>
           #{plot.n} – {plot.data.title}
@@ -83,9 +123,10 @@ export const CarouselPlots = ({ plots }) => {
           src={plot.data.image}
           style={{
             width: "100%",
-            height: 600,
-            objectFit: "cover",
+            height: 440,
+            objectFit: "contain",
             border: "4px #000 solid",
+            background: "black",
           }}
         />
       </a>
@@ -98,6 +139,13 @@ export const HighlightProjects = ({ projects }) => {
 };
 
 export const HighlightShader = ({ day }) => {
+  const bodyDimensions = useDimensions({});
+  const { width, observe } = useDimensions({});
+
+  useEffect(() => {
+    bodyDimensions.observe(document.body);
+  }, []);
+
   return (
     <>
       <style jsx>{`
@@ -116,21 +164,29 @@ export const HighlightShader = ({ day }) => {
         }}
       >
         <h2>
-          <a href={`/shaderday/${day.n}`}>Highlighted Shader</a>
+          <a href={`/shaderday/${day.n}`}>I also love writing shaders...</a>
         </h2>
         <a href={`/shaderday/${day.n}`}>
           #{day.n} – {day.title}
         </a>
       </div>
       <a
+        ref={observe}
         href={`/shaderday/${day.n}`}
         style={{
           border: "4px solid black",
           boxSizing: "border-box",
+          width: "100%",
+          position: "relative",
           display: "flex",
+          flex: 1,
         }}
       >
-        <Visual width={592} height={300} Day={day} />
+        <Visual
+          width={Math.min(bodyDimensions?.width - 20, width)}
+          height={300}
+          Day={day}
+        />
       </a>
     </>
   );
@@ -167,21 +223,24 @@ export default function Home({ posts, plots }) {
         <Leva hidden />
         <Main>
           <style jsx>{`
+            h1 {
+              font-size: 3em;
+            }
             blockquote {
-              max-width: 440px;
+              max-width: 900px;
               font-weight: 300;
               opacity: 0.5;
             }
-            .social {
+            .socials {
               padding: 0px;
               list-style: none;
             }
-            .social img {
-              vertical-align: middle;
+            .socials a {
+              padding: 4px 8px;
+              display: inline-block;
             }
-            .social li {
-              padding: 5px 0;
-              margin-right: 16px;
+            .socials img {
+              vertical-align: middle;
             }
             .header-top {
               display: flex;
@@ -192,10 +251,10 @@ export default function Home({ posts, plots }) {
               padding-right: 20px;
             }
             .content {
-              max-width: 600px;
+              max-width: 900px;
             }
             section {
-              margin: 50px 0;
+              margin-bottom: 50px;
             }
             .subtitle {
               font-size: 24px;
@@ -242,23 +301,22 @@ export default function Home({ posts, plots }) {
                     <strong>greweb.me</strong>
                     <blockquote>{description}</blockquote>
                   </div>
-                ) : null}
-                <ul className="social">
+                ) : (
+                  <h1>@greweb</h1>
+                )}
+                <div className="socials">
                   {me.social.map(({ id, url, icon, text, extra }) =>
                     minimal && extra ? null : (
-                      <li key={id}>
-                        <a href={url}>
-                          <img
-                            alt=""
-                            src={icon}
-                            height={minimal ? "20" : "16"}
-                          />{" "}
-                          {text}
-                        </a>
-                      </li>
+                      <a key={id} href={url} title={text}>
+                        <img
+                          alt={text}
+                          src={icon}
+                          height={minimal ? "20" : "20"}
+                        />
+                      </a>
                     )
                   )}
-                </ul>
+                </div>
               </div>
             </div>
             {minimal ? null : (
@@ -274,6 +332,9 @@ export default function Home({ posts, plots }) {
           </Header>
           {minimal ? null : (
             <div className="content">
+              <section>
+                <PortfolioPlots plots={plots} />
+              </section>
               <section>
                 <CarouselPlots plots={plots} />
               </section>
@@ -293,7 +354,11 @@ export default function Home({ posts, plots }) {
                       <img
                         src={p.data.thumbnail}
                         alt=""
-                        style={{ width: 200, height: 200, objectFit: "cover" }}
+                        style={{
+                          width: "33%",
+                          height: "33%",
+                          objectFit: "cover",
+                        }}
                       />
                     </a>
                   </Link>
