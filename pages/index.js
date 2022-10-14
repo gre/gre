@@ -288,7 +288,10 @@ export default function Home({ posts, plots }) {
               font-weight: 400;
               text-decoration: underline;
             }
-            footer .subtitle a {
+            footer {
+              text-align: center;
+            }
+            footer .subtitle {
               font-size: 16px;
             }
             footer .subtitle span:not(:last-child):after {
@@ -372,6 +375,7 @@ export default function Home({ posts, plots }) {
             }
             <footer>
               <p className="subtitle">
+                {"@greweb – "}
                 {me.social.map(({ id, url, icon, text, extra }) => (
                   <span key={id}>
                     <a href={url}>{id}</a>
