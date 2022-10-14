@@ -323,7 +323,7 @@ export default function Home({ posts, plots }) {
               <>
                 <blockquote>{description}</blockquote>
                 <p className="subtitle">
-                  <a href="/plots">{plots.length} plots</a>,{" "}
+                  I released... <a href="/plots">{plots.length} plots</a>,{" "}
                   <a href="/shaderday/1">{days.length} shaders</a>,{" "}
                   <a href="/posts">{posts.length} blog posts</a>.
                 </p>
