@@ -23,15 +23,15 @@ export async function getStaticProps() {
 }
 
 const highlightedPlotsIds = [
-  "560",
+  "367",
+  "577",
+  "486",
+  "318",
+  "331",
+  "398",
   "544",
   "527",
-  "577",
-  "367",
-  "318",
-  "468",
-  "331",
-  "486",
+  "560",
 ];
 
 export const PortfolioPlots = ({ plots }) => {
@@ -45,6 +45,10 @@ export const PortfolioPlots = ({ plots }) => {
     >
       {plots
         .filter((p) => highlightedPlotsIds.includes(p.n))
+        .sort(
+          (a, b) =>
+            highlightedPlotsIds.indexOf(a.n) - highlightedPlotsIds.indexOf(b.n)
+        )
         .map((plot) => (
           <a href={`/plots/${plot.n}`} key={plot.n} style={{ lineHeight: 0 }}>
             <img
