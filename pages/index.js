@@ -251,9 +251,6 @@ export default function Home({ posts, plots }) {
               flex-direction: row;
               align-items: center;
             }
-            .avatarbox {
-              padding-right: 20px;
-            }
             .content {
               max-width: 900px;
             }
