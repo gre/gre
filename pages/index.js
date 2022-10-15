@@ -52,7 +52,11 @@ export const PortfolioPlots = ({ plots }) => {
         .map((plot) => (
           <a href={`/plots/${plot.n}`} key={plot.n} style={{ lineHeight: 0 }}>
             <img
-              src={plot.data.image}
+              src={
+                plot.data.image && plot.data.image.endsWith(".jpg")
+                  ? plot.data.image.replace(/\.([^.]+)$/, "-thumbnail.$1")
+                  : plot.data.image
+              }
               style={{
                 flex: 1,
                 width: "100%",
