@@ -236,6 +236,10 @@ export default function Home({ posts, plots }) {
           <meta name="og:title" content={title} />
           <meta name="twitter:description" content={description} />
           <meta name="twitter:creator" content="@greweb" />
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+          />
           <meta name="og:image" content={`${siteURL}/${thumbnail}`} />
           <meta name="twitter:image" content={`${siteURL}/${thumbnail}`} />
           <link rel="image_src" href={`${siteURL}/${thumbnail}`} />
@@ -254,17 +258,25 @@ export default function Home({ posts, plots }) {
               max-width: 900px;
               font-weight: 300;
               opacity: 0.5;
+              margin: 3em 1em;
             }
             .socials {
               padding: 0px;
               list-style: none;
             }
             .socials a {
-              padding: 4px 8px;
+              padding: 8px;
               display: inline-block;
+              opacity: 0.9;
             }
-            .socials img {
+            .socials a:hover {
+              opacity: 1;
+            }
+            .socials .icon {
               vertical-align: middle;
+              height: 28px;
+              width: 28px;
+              display: inline-block;
             }
             .header-top {
               display: flex;
@@ -278,7 +290,7 @@ export default function Home({ posts, plots }) {
               margin-bottom: 50px;
             }
             .subtitle {
-              font-size: 24px;
+              font-size: 1.6em;
               font-weight: 300;
             }
             .subtitle strong {
@@ -298,19 +310,40 @@ export default function Home({ posts, plots }) {
               content: ", ";
               text-decoration: none;
             }
+
+            .avatarbox img {
+              width: 230px;
+            }
+
+            @media only screen and (max-width: 600px) {
+              .avatarbox img {
+                width: 160px;
+              }
+              h1 {
+                font-size: 2em;
+              }
+              .socials {
+                padding-right: 20px;
+              }
+              .socials img {
+              }
+              .subtitle {
+                font-size: 1em;
+              }
+            }
           `}</style>
 
           <Header>
             <div className="header-top">
               <div className="avatarbox">
-                <img width="230" src={thumbnail} />
+                <img src={thumbnail} />
               </div>
               <div>
                 <h1>@greweb</h1>
                 <div className="socials">
                   {me.social.map(({ id, url, icon, text, extra }) => (
                     <a key={id} href={url} title={text}>
-                      <img alt={text} src={icon} height="28" />
+                      <img className="icon" alt={text} src={icon} />
                     </a>
                   ))}
                 </div>

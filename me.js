@@ -12,30 +12,35 @@ export default {
       url: "https://twitter.com/greweb",
       icon: "/icons/twitter.svg",
       text: "@greweb",
+      color: "#1DA1F2",
     },
     {
       id: "instagram",
       url: "https://instagram.com/greweb",
       icon: "/icons/instagram.svg",
       text: "greweb",
+      color: "#e55255",
     },
     {
       id: "twitch",
       url: "https://twitch.tv/greweb",
       icon: "/icons/twitch.svg",
       text: "greweb",
+      color: "#6441a5",
     },
     {
       id: "github",
       url: "https://github.com/gre",
       icon: "/icons/github.svg",
       text: "gre",
+      color: "#000",
     },
     {
       id: "opensea",
       url: "https://opensea.io/greweb?tab=created",
       icon: "/icons/eth.svg",
       text: "greweb.eth",
+      color: "#2181e2",
     },
     /*
     {
@@ -51,6 +56,7 @@ export default {
       icon: "/icons/tz.svg",
       text: "fxhash.xyz/u/greweb",
       extra: true,
+      color: "#1e51e7",
     },
     {
       id: "itch.io",
@@ -58,6 +64,7 @@ export default {
       icon: "/icons/iconmonstr-gamepad-3.svg",
       text: "greweb.itch.io",
       extra: true,
+      color: "#f35a59",
     },
   ],
 };
