@@ -11,16 +11,31 @@ if (process.argv.length !== expectedlength) {
 }
 
 let circular = process.env.LOOPMODE === "circle";
+let isvertical = (process.env.ORIENTATION || "horizontal") === "vertical";
 
-for (let y = 0; y < grid[1]; y++) {
+let ymul = grid[0] + 1;
+let xmul = 1;
+function iter(xi, y) {
+  let x = circular && y % 2 == 1 ? grid[0] - 1 - xi : xi;
+  const topleft = process.argv[5 + xmul * x + ymul * y];
+  const topright = process.argv[5 + xmul * (x + 1) + ymul * y];
+  const bottomleft = process.argv[5 + xmul * x + ymul * (y + 1)];
+  const bottomright = process.argv[5 + xmul * (x + 1) + ymul * (y + 1)];
+  console.log(
+    `${topleft} 0,0 ${bottomleft} 0,${height} ${bottomright} ${width},${height} ${topright} ${width},0`
+  );
+}
+
+if (isvertical) {
   for (let xi = 0; xi < grid[0]; xi++) {
-    let x = circular && y % 2 == 1 ? grid[0] - 1 - xi : xi;
-    const topleft = process.argv[5 + x + (grid[0] + 1) * y];
-    const topright = process.argv[5 + (x + 1) + (grid[0] + 1) * y];
-    const bottomleft = process.argv[5 + x + (grid[0] + 1) * (y + 1)];
-    const bottomright = process.argv[5 + (x + 1) + (grid[0] + 1) * (y + 1)];
-    console.log(
-      `${topleft} 0,0 ${bottomleft} 0,${height} ${bottomright} ${width},${height} ${topright} ${width},0`
-    );
+    for (let y = 0; y < grid[1]; y++) {
+      iter(xi, y);
+    }
+  }
+} else {
+  for (let y = 0; y < grid[1]; y++) {
+    for (let xi = 0; xi < grid[0]; xi++) {
+      iter(xi, y);
+    }
   }
 }

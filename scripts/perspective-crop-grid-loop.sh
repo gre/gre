@@ -12,8 +12,8 @@ OUTPUT_DIR=$1
 shift
 FPS=$1
 shift
-WIDTH=1280
-HEIGHT=1280
+WIDTH=${WIDTH:-1280}
+HEIGHT=${HEIGHT:-1280}
 
 if [ -z "$INPUT" ] || [ -z "$OUTPUT_DIR" ] || [ -z "$FPS" ]; then
   echo "Usage: $0 input outputdir fps width height 4x2 ...list_of_pixel_positions..."
@@ -30,18 +30,21 @@ for param in `node $SCRIPTS/perspective-crop-grid-loop-make-params.js $WIDTH $HE
     I=$(($I+1))
 done
 
+w=$WIDTH
+h=$HEIGHT
+
 ffmpeg -y -r $FPS -i $OUTPUT_DIR/%d.png -c:v libx264 -vf "fps=$FPS,format=yuv420p" $OUTPUT_DIR/out.mp4
 palette=$OUTPUT_DIR/palette.png
 filters="fps=$FPS,scale=$WIDTH:$HEIGHT:flags=lanczos"
 ffmpeg -v warning -i $OUTPUT_DIR/out.mp4 -vf "$filters,palettegen" -y $palette
 ffmpeg -v warning -i $OUTPUT_DIR/out.mp4 -i $palette -lavfi "$filters [x]; [x][1:v] paletteuse" -y $OUTPUT_DIR/out-full.gif
 WIDTH=640
-HEIGHT=640
+HEIGHT=$(($WIDTH*$h/$w))
 filters="fps=$FPS,scale=$WIDTH:$HEIGHT:flags=lanczos"
 ffmpeg -v warning -i $OUTPUT_DIR/out.mp4 -vf "$filters,palettegen" -y $palette
-ffmpeg -v warning -i $OUTPUT_DIR/out.mp4 -i $palette -lavfi "$filters [x]; [x][1:v] paletteuse" -y $OUTPUT_DIR/out.gif
-WIDTH=480
-HEIGHT=480
+ffmpeg -v warning -i $OUTPUT_DIR/out.mp4 -i $palette -lavfi "$filters [x]; [x][1:v] paletteuse" -y $OUTPUT_DIR/out-640.gif
+WIDTH=320
+HEIGHT=$(($WIDTH*$h/$w))
 filters="fps=$FPS,scale=$WIDTH:$HEIGHT:flags=lanczos"
 ffmpeg -v warning -i $OUTPUT_DIR/out.mp4 -vf "$filters,palettegen" -y $palette
-ffmpeg -v warning -i $OUTPUT_DIR/out.mp4 -i $palette -lavfi "$filters [x]; [x][1:v] paletteuse" -y $OUTPUT_DIR/out-480.gif
+ffmpeg -v warning -i $OUTPUT_DIR/out.mp4 -i $palette -lavfi "$filters [x]; [x][1:v] paletteuse" -y $OUTPUT_DIR/out-320.gif
