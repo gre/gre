@@ -2,7 +2,7 @@
 date: "2022-10-21"
 title: "Scrape (3/7)"
 sourceFolder: 752
-image: /images/plots/752.jpg
+image: /images/plots/754.jpg
 tags:
   - inktober
   - A6
