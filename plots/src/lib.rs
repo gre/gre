@@ -1257,7 +1257,7 @@ pub fn spiral_optimized(
     let da = 1.0 / (r + 8.0); // bigger radius is more we have to do angle iterations
     a = (a + da) % two_pi;
     r -= dr * da / two_pi;
-    if r < 0.1 {
+    if r < 0.05 {
       break;
     }
   }
