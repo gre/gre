@@ -9,6 +9,8 @@ tags:
 
 Cette création est une participation au challenge "Shape" #2 de [@encremecanique](https://twitch.tv/encremecanique) qui consiste à révéler le dessin d'une silhouette.
 
+<iframe width="100%" height="400" src="https://www.youtube.com/embed/KeIgQHQgZuE" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 C'est une création physique, réalisé au robot traceur. Plus de photos à la fin de cette page. Notez le reflet de l'encre!
 
 <video src="/images/plots/772.mp4" width="100%" controls autoplay muted loop></video>
