@@ -51,18 +51,8 @@ export function PlotGrid({ children }) {
       {children}
       <style jsx>{`
         .content {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-        }
-        @media (max-width: 860px) {
-          .content {
-            grid-template-columns: repeat(2, 1fr);
-          }
-        }
-        @media (max-width: 540px) {
-          .content {
-            grid-template-columns: repeat(1, 1fr);
-          }
+          display: flex;
+          flex-wrap: wrap;
         }
       `}</style>
     </div>
@@ -84,20 +74,27 @@ export function Plot({ plot }) {
       <style jsx>{`
         .plot {
           position: relative;
-          min-height: 100px;
+          height: 200px;
           padding: 2px;
+          flex-grow: 1;
+        }
+        .plot:hover .title {
+          opacity: 1;
+          transition: opacity 200ms;
         }
         .plot .title {
+          opacity: 0;
           position: absolute;
           left: 0;
-          top: 0;
+          bottom: 0;
+          display: inline-block;
+          background: white;
           padding: 4px;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
           width: 100%;
           font-size: 12px;
-          background: #fff;
         }
         .plot img {
           object-fit: cover;
@@ -158,14 +155,16 @@ export default function Home({ plots }) {
           </Header>
 
           <Content>
-            <PlottingSectionVideos />
-            <PlottingHeader />
 
             <PlotGrid>
               {plots.map((plot) => (
                 <Plot plot={plot} key={plot.n} />
               ))}
             </PlotGrid>
+
+            <PlottingHeader />
+            <PlottingSectionVideos />
+
 
             <footer>
               <MeBlock />
