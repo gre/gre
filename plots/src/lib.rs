@@ -23,6 +23,10 @@ pub fn mix(a: f64, b: f64, x: f64) -> f64 {
   (1. - x) * a + x * b
 }
 
+pub fn mix_point(a: (f64, f64), b: (f64, f64), x: f64) -> (f64, f64) {
+  (mix(a.0, b.0, x), mix(a.1, b.1, x))
+}
+
 // usual scale is 1.0 for A4
 pub fn signature(scale: f64, translation: (f64, f64), color: &str) -> Group {
   return layer("signature").add(Path::new().
