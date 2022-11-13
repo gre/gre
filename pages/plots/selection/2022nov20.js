@@ -48,10 +48,11 @@ export function Plot({ plot }) {
           width: 100vw;
           padding: 10vh 0;
           flex-grow: 1;
+          font-size: min(2vw, 3vh);
         }
         .plot .title {
           position: absolute;
-          top: 2vh;
+          top: 3vh;
           left: 0;
           width: 100%;
           text-align: center;
@@ -61,14 +62,32 @@ export function Plot({ plot }) {
           overflow: hidden;
           text-overflow: ellipsis;
           width: 100%;
-          font-size: min(2vw, 3vh);
+        }
+        .plot .foot {
+          position: absolute;
+          bottom: 5vh;
+          left: 0;
+          width: 100%;
+          text-align: center;
+          background: white;
+          padding: 4px;
+          width: 100%;
         }
         .plot img {
           object-fit: contain;
         }
         .plot em {
-          font-size: 0.6em;
+          font-weight: 100;
         }
+        .plot .tags {
+          margin-top: 10px;
+          font-size: 0.8em;
+          opacity: 0.4;
+        }
+        .plot .tags > * {
+          padding: 0 0.2em;
+        }
+
       `}</style>
 
       <Link href={url}>
@@ -77,6 +96,13 @@ export function Plot({ plot }) {
             Plot #{plot.n} {data.title ? <>{" "}<strong>{data.title}</strong></> : ""} {data.date ? <em> ({data.date})</em> : ""}
             </span>
           <img width="100%" height="100%" src={image} />
+          <span className="foot">
+            {" "}{data.tags ? <div className="tags">{data.tags.map(t => <span key={t}>
+              <a target="_blank" href={`/plots/tags/${t}`}>
+                #{t}
+              </a>
+            </span>)}</div> : ""}
+            </span>
         </a>
       </Link>
     </div>
