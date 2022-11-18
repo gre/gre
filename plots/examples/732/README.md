@@ -7,4 +7,4 @@ tags:
   - inktober
 ---
 
-Plotted with fountain pen on A6 paper for the 13th day of Inktober 2022.
+Plotted with White gel pen on A6 black paper for the 13th day of Inktober 2022.
