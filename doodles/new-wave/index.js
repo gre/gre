@@ -10,6 +10,9 @@ import generateVariables, { getPerf } from "./variables";
 
 const Main = ({ width, height, random }) => {
   const variables = useVariables({ random });
+  useEffect(() => {
+    window.$fxhashFeatures = generateVariables.inferProps(variables);
+  }, [variables]);
   return (
     <Surface width={width} height={height}>
       <LinearCopy>
