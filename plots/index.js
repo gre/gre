@@ -6,6 +6,7 @@ export async function getPlots() {
   const plots = [];
   for (const key of context.keys()) {
     const folder = key.slice(2, key.length - 10);
+    console.log(folder)
     const m = folder.match(/^([0-9]+)$/);
     const content = await import(`./examples/${folder}/README.md`);
     const meta = matter(content.default);
