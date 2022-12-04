@@ -1,7 +1,7 @@
 export default {
   title: "greweb.me",
   description:
-    "generative plotter artist, I make art with code (creative coding), draw with fountain pens on robots (plotting), explore the frontier of abstract art with algorithms in the constant search of more realistic scenery. I don't do prints, I do plots: Every physical outcome is truly unique!",
+    "As a generative plotter artist, I use code to create art (creative coding), draw with fountain pens on robots (plotting), and explore the boundaries of abstract art using algorithms in pursuit of increasingly realistic imagery. I do not produce prints; instead, I create unique 'plots' - physical works of art that are truly one-of-a-kind.",
   thumbnail: "/logo.svg",
   photo: "/profile.jpg",
   thumbnailDomain: "http://greweb.me",
