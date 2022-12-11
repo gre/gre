@@ -5,6 +5,7 @@ export async function getPlots() {
   const context = require.context("./examples", true, /\/([0-9]+)\/README.md$/);
   const plots = [];
   for (const key of context.keys()) {
+    console.log(key)
     const folder = key.slice(2, key.length - 10);
     const m = folder.match(/^([0-9]+)$/);
     const content = await import(`./examples/${folder}/README.md`);
