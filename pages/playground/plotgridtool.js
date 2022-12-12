@@ -25,8 +25,8 @@ const viewportStyle = {
 export default function Main() {
   const dpr1 = 2;
   let zoomMultiply = 1;
-  const zoomW = 200;
-  const zoomH = 200;
+  const zoomW = 400;
+  const zoomH = 400;
 
   const { image: imageSrc } = useControls("Select an Image", {
     image: { image: "" },
