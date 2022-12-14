@@ -3,6 +3,7 @@ date: "2022-12-13"
 title: "L'Homme et la machine (80 frames)"
 image: /images/plots/848.jpg
 video: /images/plots/848.mp4
+nft: https://objkt.com/asset/KT1AZYsEjt8HFEXWZUjGVfBxtzKPobNo3x1t/13
 tags:
   - plotloop
 ---
