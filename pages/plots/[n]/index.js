@@ -202,12 +202,13 @@ export default function Home({ plot, prev, next }) {
                 ))}
               </dl>
             ) : null}
+            {rustFile ? 
             <dl>
               <dt>Sourcecode</dt>
               <dd>
                 <a href={sourceURL}>{rustFile}</a>
               </dd>
-            </dl>
+            </dl> : null}
             {data.tags ? (
               <dl>
                 <dt>Tags</dt>
