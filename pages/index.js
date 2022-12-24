@@ -153,7 +153,7 @@ export const StreamIntro = () => {
       <video
         muted
         loop
-        autoplay
+        autoPlay
         controls
         src="/images/plots/643-twitch.mp4"
         width="100%"
