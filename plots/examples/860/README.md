@@ -1,7 +1,7 @@
 ---
-date: "2022-12-21"
-title: "Low Poly Mountains 7 (livedraw)"
-image: /images/plots/859.jpg
+date: "2022-12-23"
+title: "Low Poly Mountains 8 (livedraw)"
+image: /images/plots/860.jpg
 noSource: true
 tweet: https://twitter.com/greweb/status/1605845558354124801
 tags:
