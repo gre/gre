@@ -1,0 +1,114 @@
+{
+  "title": "Low Poly Mountains by @greweb (A6 postcard)",
+  "giveawayMessage": "type !giveaway to participate and get the chance to obtain a physical plot shipped to you – offered and signed by @greweb",
+  "layout": [
+    ["amp", "dy", "mountain"],
+    ["top", "layers", "rad", "noise", "sky"]
+  ],
+  "style": {},
+  "predictive": "light",
+  "berserkBoost": 10,
+  "inputs": {
+    "mountain": {
+      "description": "shapes the curve of the mountains with 26 letters",
+      "letters": "aqwzsxedcrfvtgbyhnujikolpm",
+      "type": "KeyboardCurve",
+      "label": "mountain curve",
+      "spread": 0.5,
+      "threshold": 1,
+      "resolution": 4,
+      "saturateUp": 1,
+      "msgOffset": 3,
+      "msgAmp": 12,
+      "envelope": {
+        "attack": 3,
+        "decay": 8,
+        "sustain": 0.5,
+        "release": 30
+      }
+    },
+    "sky": {
+      "type": "Poll",
+      "description": "define what will we draw in the sky.",
+      "question": "sky shape?",
+      "choices": {
+        "noise": "Noise",
+        "circles": "circles",
+        "squares": "squares"
+      }
+    },
+    "color": {
+      "type": "Poll",
+      "description": "define what color to use",
+      "question": "color?",
+      "choices": {
+        "pink": "pink",
+        "red": "red",
+        "silver": "silver",
+        "blue": "blue",
+        "bronze": "bronze"
+      }
+    },
+    "noise": {
+      "description": "frequency of the sky in noise field case (inversely proportional)",
+      "type": "Range",
+      "display": "vslider",
+      "decay": 0.1,
+      "min": 10,
+      "max": 100,
+      "initialValue": 40,
+      "magnitude": 0
+    },
+    "layers": {
+      "description": "number of packing layers in the sky",
+      "type": "Range",
+      "display": "vslider",
+      "decay": 0.05,
+      "min": 1,
+      "max": 5,
+      "initialValue": 1,
+      "magnitude": 0
+    },
+    "amp": {
+      "description": "amplitude to draw the mountain curve with",
+      "type": "Range",
+      "display": "vslider",
+      "decay": 0.02,
+      "min": 0,
+      "max": 30,
+      "initialValue": 8,
+      "magnitude": 1
+    },
+    "dy": {
+      "description": "distance between the mountains lines (increment in mm)",
+      "type": "Range",
+      "display": "vslider",
+      "decay": 0.03,
+      "min": 0.4,
+      "max": 3,
+      "initialValue": 0.8,
+      "magnitude": 2
+    },
+    "top": {
+      "description": "top position of the mountain before the sky is drawn (in %)",
+      "type": "Range",
+      "display": "vslider",
+      "decay": 0.05,
+      "min": 0.3,
+      "max": 1,
+      "initialValue": 0.7,
+      "magnitude": 0,
+      "format": "percentage"
+    },
+    "rad": {
+      "description": "max radius of objects in the sky",
+      "type": "Range",
+      "display": "vslider",
+      "decay": 0.05,
+      "min": 0.01,
+      "max": 10,
+      "initialValue": 2,
+      "magnitude": 1
+    }
+  }
+}

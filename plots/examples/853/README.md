@@ -2,7 +2,6 @@
 date: "2022-12-21"
 title: "Low Poly Mountains 1 (livedraw)"
 image: /images/plots/853.jpg
-noSource: true
 tweet: https://twitter.com/greweb/status/1605637308320972817
 tags:
 - livedraw
