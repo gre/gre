@@ -1,0 +1,47 @@
+{
+  "title": "Triangles by @greweb",
+  "layout": [
+    ["mv", "speed", "scale", "rotate"],
+  ],
+  "style": {},
+  "predictive": "darkblue",
+  "berserkBoost": 8,
+  "inputs": {
+    "rotate": {
+      "type": "Range",
+      "description": "rotation.",
+      "display": "hslider",
+      "decay": 0.01,
+      "min": 0,
+      "max": 10,
+      "initialValue": 0,
+      "magnitude": 2
+    },
+    "mv": {
+      "type": "XY",
+      "description": "position to move",
+      "initialValue": [0,0],
+      "decay": 0.1
+    },
+    "scale": {
+      "type": "Range",
+      "description": "scale",
+      "display": "vslider",
+      "decay": 0.02,
+      "min": 1,
+      "max": 40,
+      "initialValue": 5,
+      "magnitude": 0
+    },
+    "speed": {
+      "type": "Range",
+      "description": "scale",
+      "display": "vslider",
+      "decay": 0.1,
+      "min": 0,
+      "max": 20,
+      "initialValue": 2,
+      "magnitude": 0
+    }
+  }
+}
