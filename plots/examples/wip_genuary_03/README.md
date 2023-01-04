@@ -1,11 +1,8 @@
 ---
-date: "2022-12-21"
-title: "Low Poly Mountains 1 (livedraw)"
-image: /images/plots/853.jpg
-tweet: https://twitter.com/greweb/status/1605637308320972817
+date: "2023-01-04"
+title: "You wouldn't glitch Mona Lisa"
+image: /images/plots/.jpg
 tags:
 - livedraw
 - A6
 ---
-
-This physical plot was co-created by ~ 8 viewers on Twitch in a new real time interactive experiment. Users had various ways to interact with inputs that was impacting the art, line by line.

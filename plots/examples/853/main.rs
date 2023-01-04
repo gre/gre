@@ -21,7 +21,7 @@ struct Args {
   height: f64,
   #[clap(long, default_value_t = 5.0)]
   padding: f64,
-  #[clap(long, default_value_t = false)]
+  #[clap(long)]
   simulation: bool,
 }
 

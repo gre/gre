@@ -1,46 +1,82 @@
 {
-  "title": "Triangles by @greweb",
+  "title": "Intersecting Spirals (A4) – @greweb",
   "layout": [
-    ["mv", "speed", "scale", "rotate"],
+    [ "pos", "radius", "density", "dashed", "dashlength"],
+    ["more","spirals"]
   ],
-  "style": {},
+  "style": {
+    "spacing": "space-around",
+    "colorMain": "#33eeff"
+  },
   "predictive": "darkblue",
   "berserkBoost": 8,
   "inputs": {
-    "rotate": {
-      "type": "Range",
-      "description": "rotation.",
-      "display": "hslider",
-      "decay": 0.01,
-      "min": 0,
-      "max": 10,
-      "initialValue": 0,
-      "magnitude": 2
+    "more": {
+      "type": "Poll",
+      "question": "Should we do yet another color after this ink?",
+      "description": "inks decision",
+      "choices": {
+        "yes": "Yes",
+        "no": "No"
+      }
     },
-    "mv": {
+    "pos": {
       "type": "XY",
       "description": "position to move",
-      "initialValue": [0,0],
+      "range": [0, 1],
+      "initialValue": [0.5,0.5],
       "decay": 0.1
     },
-    "scale": {
+    "spirals": {
+      "type": "Range",
+      "description": "how much spiral before next ink",
+      "display": "hslider",
+      "decay": 0.1,
+      "min": 1,
+      "max": 40,
+      "initialValue": 20,
+      "magnitude": 0
+    },
+    "radius": {
+      "type": "Range",
+      "description": "rafius of the spiral",
+      "display": "vslider",
+      "decay": 0.05,
+      "min": 10,
+      "max": 80,
+      "initialValue": 20,
+      "magnitude": 0
+    },
+    "density": {
       "type": "Range",
       "description": "scale",
       "display": "vslider",
-      "decay": 0.02,
-      "min": 1,
-      "max": 40,
-      "initialValue": 5,
-      "magnitude": 0
+      "decay": 0.05,
+      "min": 0,
+      "max": 1,
+      "initialValue": 0.5,
+      "magnitude": 0,
+      format: "percentage"
     },
-    "speed": {
+    "dashed": {
       "type": "Range",
       "description": "scale",
       "display": "vslider",
       "decay": 0.1,
       "min": 0,
-      "max": 20,
-      "initialValue": 2,
+      "max": 1,
+      "initialValue": 0,
+      "magnitude": 0,
+      format: "percentage"
+    },
+    "dashlength": {
+      "type": "Range",
+      "description": "scale",
+      "display": "vslider",
+      "decay": 0.1,
+      "min": 5,
+      "max": 40,
+      "initialValue": 10,
       "magnitude": 0
     }
   }

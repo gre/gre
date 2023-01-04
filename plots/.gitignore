@@ -1,5 +1,6 @@
 .DS_Store
 /image.svg
 /target
+__pycache__
 
 examples/*/files/

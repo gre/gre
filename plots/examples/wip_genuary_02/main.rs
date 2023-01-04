@@ -16,9 +16,9 @@ use svg::node::element::path::Data;
 struct Args {
   #[clap(long, default_value_t = 0.0)]
   seed: f64,
-  #[clap(long, default_value_t = 210.0)]
+  #[clap(long, default_value_t = 105.0)]
   width: f64,
-  #[clap(long, default_value_t = 297.0)]
+  #[clap(long, default_value_t = 148.5)]
   height: f64,
   #[clap(long, default_value_t = 5.0)]
   padding: f64,
@@ -32,13 +32,7 @@ struct RangeValue {
 }
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
-struct XYValue {
-  value: (f64, f64),
-}
-
-#[derive(Debug, Deserialize, Serialize, Clone)]
 struct ArtInput {
-  mv: XYValue,
   speed: RangeValue,
   scale: RangeValue,
   rotate: RangeValue,
@@ -49,6 +43,7 @@ struct Art {
   args: Args,
   start_time: Instant,
   pos: (f64, f64),
+  ang: f64,
 }
 
 impl Art {
@@ -56,14 +51,15 @@ impl Art {
     Art {
       args,
       start_time: Instant::now(),
-      pos: (args.width / 2.0, args.height / 2.0),
+      pos: (args.width / 2.0, args.height / 3.0),
+      ang: PI / 2.0,
     }
   }
 }
 
 impl LivedrawArt for Art {
   fn delay_between_increments(&self) -> Duration {
-    Duration::from_secs(5)
+    Duration::from_secs(1)
   }
 
   fn get_dimension(&self) -> (f64, f64) {
@@ -78,7 +74,7 @@ impl LivedrawArt for Art {
     if i == 0 {
       return vec![ArtAction::Pause(
         String::from("Get ready for 10 minutes!"),
-        10.0,
+        60.0,
       )];
     }
     return vec![];
@@ -94,22 +90,22 @@ impl LivedrawArt for Art {
     let r = input.scale.value;
     let p = r + self.args.padding;
 
-    let center = (
+    self.ang += input.rotate.value;
+
+    self.pos = (
       repeat_between(
         p,
         self.args.width - p,
-        self.pos.0 + input.scale.value * input.mv.value.0,
+        self.pos.0 + input.speed.value * self.ang.cos(),
       ),
       repeat_between(
         p,
         self.args.height - p,
-        self.pos.1 + input.scale.value * input.mv.value.1,
+        self.pos.1 + input.speed.value * self.ang.sin(),
       ),
     );
 
-    self.pos = center;
-
-    let routes = vec![circle_route(center, r, 3, input.rotate.value)];
+    let routes = vec![circle_route(self.pos, r, 3, self.ang)];
     if routes.len() == 0 {
       return ArtIncrement::Continue;
     }
@@ -126,9 +122,6 @@ impl LivedrawArtSimulation for Art {
   fn simulate_input(&mut self, _index: usize) -> Value {
     let mut rng = rand::thread_rng();
     return json!(ArtInput {
-      mv: XYValue {
-        value: (rng.gen_range(-1.0, 1.0), rng.gen_range(-1.0, 1.0))
-      },
       speed: RangeValue {
         value: rng.gen_range(0.0, 20.0)
       },
@@ -136,7 +129,7 @@ impl LivedrawArtSimulation for Art {
         value: rng.gen_range(1.0, 20.0)
       },
       rotate: RangeValue {
-        value: rng.gen_range(0.0, 10.0)
+        value: rng.gen_range(-1.0, 1.0)
       },
     });
   }
@@ -171,6 +164,9 @@ fn circle_route(
 
 fn repeat_between(min: f64, max: f64, value: f64) -> f64 {
   let range = max - min;
+  if range <= 0.0 {
+    return value;
+  }
   let mut result = value;
   while result < min {
     result += range;

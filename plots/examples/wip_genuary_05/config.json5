@@ -1,0 +1,55 @@
+{
+  "title": "Mountains by @greweb (A6 postcard)",
+  "layout": [
+    [
+      "amp",
+      "dy",
+      "mountain"
+    ],
+  ],
+  "style": {
+    "spacing": "space-around"
+  },
+  "predictive": "light",
+  "berserkBoost": 10,
+  "inputs": {
+    "mountain": {
+      "description": "shapes the curve of the mountains with 26 letters",
+      "letters": "aqwzsxedcrfvtgbyhnujikolpm",
+      "type": "KeyboardCurve",
+      "label": "mountain curve",
+      "spread": 2,
+      "threshold": 0.5,
+      "resolution": 4,
+      "saturateUp": 1.1,
+      "msgOffset": 3,
+      "msgAmp": 15,
+      "envelope": {
+        "attack": 10,
+        "decay": 10,
+        "sustain": 0.5,
+        "release": 120
+      }
+    },
+    "amp": {
+      "description": "amplitude to draw the mountain curve with",
+      "type": "Range",
+      "display": "vslider",
+      "decay": 0.02,
+      "min": 0,
+      "max": 30,
+      "initialValue": 8,
+      "magnitude": 1
+    },
+    "dy": {
+      "description": "distance between the mountains lines (increment in mm)",
+      "type": "Range",
+      "display": "vslider",
+      "decay": 0.03,
+      "min": 0.4,
+      "max": 3,
+      "initialValue": 0.8,
+      "magnitude": 2
+    }
+  }
+}

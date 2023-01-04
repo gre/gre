@@ -1505,9 +1505,9 @@ checksum = "0717cef1bc8b636c6e1c1bbdefc09e6322da8a9321966e8928ef80d20f7f770f"
 
 [[package]]
 name = "livedraw"
-version = "0.1.0"
+version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9b6daf7133f6e0e7a71e38df2f6777a40ee95bd50ff947aaefb34d459491e596"
+checksum = "1968f025375832411dbb18c9715cbd81acfb989acb1877eef138feecc5e9cde7"
 dependencies = [
  "isahc",
  "serde",

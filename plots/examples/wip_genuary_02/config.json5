@@ -1,46 +1,50 @@
 {
-  "title": "Triangles by @greweb",
+  "title": "10 minutes of Triangles – @greweb",
   "layout": [
-    ["mv", "speed", "scale", "rotate"],
+    ["speed", "rotate", "scale"],
   ],
-  "style": {},
-  "predictive": "darkblue",
-  "berserkBoost": 8,
+  "style": {
+    "spacing": "space-around",
+    "inputsScale": 2,
+    /*
+    "colorMain": "#ff55bb",
+    "colorLive": "#aa0055",
+    "bg": "radial-gradient(circle, #430926, #1c0c15)",
+    dustColor: "#ff68c0",
+    disabledColor: "#8a4377",
+    */
+  },
+  "predictive": "light",
+  "berserkBoost": 20,
   "inputs": {
     "rotate": {
       "type": "Range",
       "description": "rotation.",
       "display": "hslider",
-      "decay": 0.01,
-      "min": 0,
-      "max": 10,
+      "decay": 0.04,
+      "min": -0.2,
+      "max": 0.2,
       "initialValue": 0,
       "magnitude": 2
-    },
-    "mv": {
-      "type": "XY",
-      "description": "position to move",
-      "initialValue": [0,0],
-      "decay": 0.1
     },
     "scale": {
       "type": "Range",
       "description": "scale",
       "display": "vslider",
-      "decay": 0.02,
-      "min": 1,
-      "max": 40,
-      "initialValue": 5,
+      "decay": 0.04,
+      "min": 5,
+      "max": 25,
+      "initialValue": 12,
       "magnitude": 0
     },
     "speed": {
       "type": "Range",
       "description": "scale",
       "display": "vslider",
-      "decay": 0.1,
-      "min": 0,
-      "max": 20,
-      "initialValue": 2,
+      "decay": 0.02,
+      "min": 0.1,
+      "max": 10,
+      "initialValue": 1,
       "magnitude": 0
     }
   }

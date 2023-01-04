@@ -1,8 +1,6 @@
 ---
-date: "2023-01-04"
+date: "2022-09-10"
 title: ""
 image: /images/plots/.jpg
-tags:
-- livedraw
-- A4
+description: ""
 ---
