@@ -1,0 +1,56 @@
+{
+  "title": "Kandinsky circle study – @greweb (A6 postcard)",
+  "layout": [
+    ["change"],
+    [
+      "size",
+      "density",
+      "dist",
+    ],
+  ],
+  "style": {
+    "spacing": "space-around"
+  },
+  "predictive": "light",
+  "berserkBoost": 10,
+  "inputs": {
+    "size": {
+      "description": "size of the shape (%)",
+      "type": "Range",
+      "display": "vslider",
+      "decay": 0.02,
+      "min": 0,
+      "max": 1,
+      "initialValue": 0.5,
+      "magnitude": 0,
+      "format": "percentage"
+    },
+    "density": {
+      "description": "how much compressed lines need to be (%)",
+      "type": "Range",
+      "display": "vslider",
+      "decay": 0.02,
+      "min": 0,
+      "max": 1,
+      "initialValue": 0.5,
+      "magnitude": 0,
+      "format": "percentage"
+    },
+    "dist": {
+      "description": "distance between successive shapes (%)",
+      "type": "Range",
+      "display": "vslider",
+      "decay": 0.03,
+      "min": 0,
+      "max": 1,
+      "initialValue": 0.5,
+      "magnitude": 0,
+      "format": "percentage"
+    },
+    "change": {
+      "description": "trigger a change of shape action",
+      "type": "CounterBtn",
+      scale: 2
+    }
+  }
+}
