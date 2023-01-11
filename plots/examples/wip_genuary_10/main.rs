@@ -21,15 +21,15 @@ pub struct Opts {
   pub width: f64,
   #[clap(short, long, default_value = "20.0")]
   pub pad: f64,
-  #[clap(short, long, default_value = "2.0")]
+  #[clap(short, long, default_value = "1.5")]
   pub dy: f64,
-  #[clap(short, long, default_value = "20.0")]
+  #[clap(short, long, default_value = "24.0")]
   pub amp: f64,
-  #[clap(short, long, default_value = "8.0")]
+  #[clap(short, long, default_value = "4.0")]
   pub gravity: f32,
-  #[clap(short, long, default_value = "0.1")]
+  #[clap(short, long, default_value = "0.6")]
   pub volume: f32,
-  #[clap(short, long, default_value = "1024")]
+  #[clap(short, long, default_value = "2048")]
   pub fft_resolution: usize,
   #[clap(short, long, default_value = "0")]
   pub freq_from: usize,
