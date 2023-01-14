@@ -1106,12 +1106,34 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b684179d4c034f9e6718692601a7ec77e4a3b654dbc09b5e4fd342f0e48f2ba1"
 dependencies = [
  "float_next_after",
- "geo-types",
+ "geo-types 0.7.7",
  "geographiclib-rs",
  "log 0.4.17",
  "num-traits 0.2.15",
- "robust",
+ "robust 0.2.3",
  "rstar",
+]
+
+[[package]]
+name = "geo-booleanop"
+version = "0.3.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d4b68ff17c819296610e9eee41bdf5eb37f71b09870a95f0086e07d8fcc1f45b"
+dependencies = [
+ "float_next_after",
+ "geo-types 0.6.2",
+ "num-traits 0.2.15",
+ "robust 0.1.2",
+]
+
+[[package]]
+name = "geo-types"
+version = "0.6.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7583925a1fdb2b450c461fe0878ba6e99a8f1332b2bc72fb1383fd25b2f13bf2"
+dependencies = [
+ "approx 0.3.2",
+ "num-traits 0.2.15",
 ]
 
 [[package]]
@@ -1291,7 +1313,8 @@ dependencies = [
  "clap",
  "contour",
  "geo",
- "geo-types",
+ "geo-booleanop",
+ "geo-types 0.7.7",
  "geojson",
  "image",
  "instant",
@@ -3111,6 +3134,12 @@ dependencies = [
  "num",
  "rand 0.5.6",
 ]
+
+[[package]]
+name = "robust"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "222155e5550abd9100afdcdefbd08aa1b856d226b60e327044ec21b1ece2f78e"
 
 [[package]]
 name = "robust"

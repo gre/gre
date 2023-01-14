@@ -4,7 +4,6 @@ title: "Ghouls"
 image: /images/plots/880.jpg
 tags:
 - genuary
-- livedraw
 - A4
 ---
 
