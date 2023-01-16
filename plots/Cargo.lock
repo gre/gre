@@ -1318,6 +1318,7 @@ dependencies = [
  "geojson",
  "image",
  "instant",
+ "isosurface",
  "kiss3d",
  "livedraw",
  "lyon",
@@ -1572,6 +1573,12 @@ dependencies = [
  "url",
  "waker-fn",
 ]
+
+[[package]]
+name = "isosurface"
+version = "0.0.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a4caf4535490ed52ef057093edbd2e30440c997ae5e65b95691c694e0321dc54"
 
 [[package]]
 name = "itertools"
