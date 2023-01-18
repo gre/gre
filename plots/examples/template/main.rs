@@ -8,10 +8,10 @@ use svg::node::element::*;
 pub struct Opts {
   #[clap(short, long, default_value = "image.svg")]
   file: String,
-  #[clap(short, long, default_value = "420.0")]
-  pub height: f64,
-  #[clap(short, long, default_value = "297.0")]
+  #[clap(short, long, default_value = "210.0")]
   pub width: f64,
+  #[clap(short, long, default_value = "297.0")]
+  pub height: f64,
   #[clap(short, long, default_value = "20.0")]
   pub pad: f64,
   #[clap(short, long, default_value = "0.0")]

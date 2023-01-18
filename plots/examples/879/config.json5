@@ -28,7 +28,7 @@
         "attack": 10,
         "decay": 10,
         "sustain": 0.5,
-        "release": 120
+        "release": 60
       }
     },
     "amp": {
