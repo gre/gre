@@ -16,6 +16,7 @@
     "build-blockstyle-dev": "webpack --mode development --config blockstyle.webpack.config.js",
     "serve-dist": "http-server dist",
     "build-rust-doodle": "./scripts/build-rust-doodle.sh",
+    "build-rust-doodle-debug": "./scripts/build-rust-doodle-debug.sh",
     "build-doodle-dev": "./scripts/build-webpack-doodle-dev.sh"
   },
   "dependencies": {

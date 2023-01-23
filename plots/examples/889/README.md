@@ -1,5 +1,5 @@
 ---
-date: "2022-09-10"
+date: "2023-01-15"
 title: "3D sine waves"
 image: /images/plots/889.jpg
 tweet: https://twitter.com/greweb/status/1614873537084362753

@@ -198,6 +198,19 @@ const choices = [
       },
     ],
   },
+  {
+    id: "cosmos",
+    name: "Cosmos",
+    address: "cosmos15rce70qlpcztvvekjwpv4fx3s5k2ujjed3vfce",
+    addressReal: "cosmos15rce70qlpcztvvekjwpv4fx3s5k2ujjed3vfce",
+    amount: "2 atom",
+    collections: [
+      {
+        url: "https://publicworks.art",
+        description: "Any Plottable work from https://publicworks.art",
+      },
+    ],
+  },
 ];
 
 const CTA = ({ children, ...rest }) => (

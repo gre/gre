@@ -1,0 +1,57 @@
+{
+  "title": "Circles – @greweb",
+  "layout": [
+    ["newtrail"],
+    ["speed", "rotate", "scale"],
+  ],
+  "style": {
+    "spacing": "space-around",
+    "alignment": "center",
+    "inputsScale": 2,
+    /*
+    "colorMain": "#ff55bb",
+    "colorLive": "#aa0055",
+    "bg": "radial-gradient(circle, #430926, #1c0c15)",
+    dustColor: "#ff68c0",
+    disabledColor: "#8a4377",
+    */
+  },
+  "predictive": "darkblue",
+  "berserkBoost": 20,
+  "inputs": {
+    "rotate": {
+      "type": "Range",
+      "description": "angular speed of the circle in radians per iteration",
+      "display": "hslider",
+      "decay": 0.02,
+      "min": -0.2,
+      "max": 0.2,
+      "initialValue": 0,
+      "magnitude": 2
+    },
+    "scale": {
+      "type": "Range",
+      "description": "radius of the circle to draw in millimeters",
+      "display": "vslider",
+      "decay": 0.02,
+      "min": 4,
+      "max": 20,
+      "initialValue": 12,
+      "magnitude": 2
+    },
+    "speed": {
+      "type": "Range",
+      "description": "amplitude of motion in millimeters per iteration",
+      "display": "vslider",
+      "decay": 0.02,
+      "min": 1,
+      "max": 10,
+      "initialValue": 3,
+      "magnitude": 2
+    },
+    "newtrail": {
+      "type": "CounterBtn",
+      "description": "start a new trail somewhere else",
+    },
+  }
+}
