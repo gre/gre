@@ -9,14 +9,7 @@ import React, {
   useState,
   useCallback,
 } from "react";
-import {
-  Object3D,
-  Vector3,
-  Texture,
-  CanvasTexture,
-  RepeatWrapping,
-  NearestFilter,
-} from "three";
+import { Object3D, Vector3 } from "three";
 import { STLLoader } from "three/examples/jsm/loaders/STLLoader";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
@@ -27,11 +20,6 @@ import wasm from "base64-inline-loader!../rust/pkg/main_bg.wasm";
 Object3D.DefaultUp = new Vector3(0, 0, 1);
 
 extend({ OrbitControls });
-
-const keyCodeByLetters = {
-  d: 68,
-  s: 83,
-};
 
 function decode(dataURI) {
   const binaryString = atob(dataURI.split(",")[1]);
@@ -46,6 +34,13 @@ const promiseOfLoad = init(decode(wasm)).then(() => {
   wasmLoaded = true;
 });
 
+// CONSTANTS
+
+const keyCodeByLetters = {
+  d: 68,
+  s: 83,
+};
+
 const fromOffset = -40;
 const toOffset = 30;
 const offsetPhase1 = 2.8;
@@ -54,10 +49,14 @@ const spreadInitial = 70;
 const spreadEnd = 20;
 const spreadDurationTransition = 131 * 1000;
 const gradients = {
-  BlackRedYellow: [
+  TemperatureBlackRedYellow: [
     [80, 66, 74],
     [231, 98, 59],
     [240, 225, 110],
+  ],
+  TemperatureBluePink: [
+    [80, 20, 230],
+    [255, 50, 245],
   ],
   SilkBlueGreen: [
     //[50, 120, 240],
@@ -67,10 +66,27 @@ const gradients = {
   ],
 };
 const doesAnimateMap = {
-  BlackRedYellow: true,
+  TemperatureBlackRedYellow: true,
+  TemperatureBluePink: true,
 };
 const onlyOnXAxisMap = {
   SilkBlueGreen: true,
+};
+const colorMap = {
+  Gold: "#fc5",
+  Silver: "#eee",
+  default: "#fff",
+};
+const roughnessMap = {
+  SilkGreenBlue: 0.1,
+  Gold: 0.25,
+  default: 0.4,
+};
+
+const metalnessMap = {
+  Gold: 0.05,
+  Silver: 0.1,
+  default: 0.0,
 };
 
 function onChangeOffsetSpread(doesAnimate, onChange) {
@@ -152,10 +168,9 @@ function useColors(geometry, colorsBufferAttributeRef, style) {
     });
   }, [colors, geometry, style]);
 
-  const color = style === "Gold" ? "#fc5" : "#fff";
-  const roughness =
-    style === "SilkGreenBlue" ? 0.1 : style === "Gold" ? 0.25 : 0.4;
-  const metalness = style === "Gold" ? 0.05 : 0.0;
+  const color = colorMap[style] || colorMap.default;
+  const roughness = roughnessMap[style] || roughnessMap.default;
+  const metalness = metalnessMap[style] || metalnessMap.default;
 
   return { colors, color, roughness, metalness };
 }
@@ -195,7 +210,7 @@ function useDarkMode() {
 function useFxhashScreenshot(shouldScreenshot, delay) {
   useEffect(() => {
     if (!shouldScreenshot) return;
-    const t = setTimeout(fxpreview, delay);
+    const t = setTimeout(window.fxpreview, delay);
     return () => clearTimeout(t);
   }, [shouldScreenshot, delay]);
 }
@@ -405,18 +420,10 @@ function Controls() {
 }
 
 function useVariables({ random }) {
-  return useMemo(
-    () =>
-      generateVariables(
-        random,
-        window.fxhash,
-        new URLSearchParams(window.location.search).get("debug") === "1"
-      ),
-    []
-  );
+  return useMemo(() => generateVariables(random, window.fxhash), []);
 }
 
-function generateVariables(random, hash, debug = false) {
+function generateVariables(random, hash) {
   const opts = {
     hash,
     scale: 60,

@@ -443,12 +443,16 @@ impl Art {
     })
     .to_string();
 
-    let style = (if rng.gen_bool(0.02) {
+    let style = (if rng.gen_bool(0.01) {
+      "TemperatureBluePink"
+    } else if rng.gen_bool(0.02) {
       "Gold"
-    } else if rng.gen_bool(0.05) {
-      "SilkBlueGreen"
-    } else {
-      "BlackRedYellow"
+    }else if rng.gen_bool(0.03) {
+      "Silver"
+    } else if rng.gen_bool(0.04) {
+     "SilkBlueGreen"
+   }  else {
+      "TemperatureBlackRedYellow"
     })
     .to_string();
 
