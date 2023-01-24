@@ -53,13 +53,27 @@ const transitionDuration = 54 * 1000;
 const spreadInitial = 70;
 const spreadEnd = 20;
 const spreadDurationTransition = 131 * 1000;
-const gradient = [
-  [80, 66, 74],
-  [231, 98, 59],
-  [240, 225, 110],
-];
+const gradients = {
+  BlackRedYellow: [
+    [80, 66, 74],
+    [231, 98, 59],
+    [240, 225, 110],
+  ],
+  SilkBlueGreen: [
+    //[50, 120, 240],
+    //[50, 200, 100],
+    [50, 180, 240],
+    [70, 190, 120],
+  ],
+};
+const doesAnimateMap = {
+  BlackRedYellow: true,
+};
+const onlyOnXAxisMap = {
+  SilkBlueGreen: true,
+};
 
-function onChangeOffsetSpread(onChange) {
+function onChangeOffsetSpread(doesAnimate, onChange) {
   const t = Date.now();
   function f() {
     const dt = Date.now() - t;
@@ -71,15 +85,19 @@ function onChangeOffsetSpread(onChange) {
     onChange({ offset, spread });
   }
   f();
-  const interval = setInterval(f, 200);
-  return () => clearInterval(interval);
+  if (doesAnimate) {
+    const interval = setInterval(f, 200);
+    return () => clearInterval(interval);
+  }
 }
 
-function calculateColors(geometry, colors, offset, spread) {
+function calculateColors(style, geometry, colors, offset, spread) {
+  const gradient = gradients[style];
+  const onlyOnXAxis = onlyOnXAxisMap[style];
   const gradientColorAt = (percent) => {
     const last = gradient.length - 1;
     if (percent >= 1) return gradient[last];
-    const v = percent * last;
+    const v = Math.max(0, percent * last);
     const index = Math.floor(v);
     const [r1, g1, b1] = gradient[index];
     const [r2, g2, b2] = gradient[index + 1];
@@ -92,13 +110,19 @@ function calculateColors(geometry, colors, offset, spread) {
   };
 
   for (let i = 0; i < colors.length; i += 3) {
-    const z = geometry.attributes.position.array[i + 2];
-    const nz = geometry.attributes.normal.array[i + 2];
-    const normalPointingDownFactor = isNaN(nz) ? 0 : 0.3 * Math.max(0, -nz);
-    let percent = Math.max(
-      0,
-      Math.min(1, (offset - z) / spread + normalPointingDownFactor)
-    );
+    let percent = 0;
+    if (onlyOnXAxis) {
+      const n = geometry.attributes.normal.array[i];
+      percent = isNaN(n) ? 0 : (1 + n) / 2;
+    } else {
+      const z = geometry.attributes.position.array[i + 2];
+      const nz = geometry.attributes.normal.array[i + 2];
+      const normalPointingDownFactor = isNaN(nz) ? 0 : 0.3 * Math.max(0, -nz);
+      percent = Math.max(
+        0,
+        Math.min(1, (offset - z) / spread + normalPointingDownFactor)
+      );
+    }
     let clr = gradientColorAt(percent);
     colors[i] = clr[0] / 255;
     colors[i + 1] = clr[1] / 255;
@@ -106,28 +130,34 @@ function calculateColors(geometry, colors, offset, spread) {
   }
 }
 
-function useColors(geometry, colorsBufferAttributeRef) {
+function useColors(geometry, colorsBufferAttributeRef, style) {
   const colors = useMemo(() => {
-    if (!geometry) return [];
+    if (!geometry || !gradients[style]) return null;
     const colors =
       (colorsBufferAttributeRef.current &&
         colorsBufferAttributeRef.current.array) ||
       new Float32Array(geometry.attributes.position.count * 3);
     return colors;
-  }, [geometry]);
+  }, [geometry, style]);
 
   useEffect(() => {
     if (!colors) return;
-    return onChangeOffsetSpread(({ offset, spread }) => {
-      calculateColors(geometry, colors, offset, spread);
+    const doesAnimate = doesAnimateMap[style];
+    return onChangeOffsetSpread(doesAnimate, ({ offset, spread }) => {
+      calculateColors(style, geometry, colors, offset, spread);
       if (colorsBufferAttributeRef.current) {
         colorsBufferAttributeRef.current.array = colors;
         colorsBufferAttributeRef.current.needsUpdate = true;
       }
     });
-  }, [colors, geometry]);
+  }, [colors, geometry, style]);
 
-  return colors;
+  const color = style === "Gold" ? "#fc5" : "#fff";
+  const roughness =
+    style === "SilkGreenBlue" ? 0.1 : style === "Gold" ? 0.25 : 0.4;
+  const metalness = style === "Gold" ? 0.05 : 0.0;
+
+  return { colors, color, roughness, metalness };
 }
 
 function useRustRender(variables) {
@@ -205,7 +235,11 @@ function Scene({ variables, isDark }) {
 
   const { geometry, stl, features } = useRustRender(variables);
   const colorsBufferAttributeRef = useRef();
-  const colors = useColors(geometry, colorsBufferAttributeRef);
+  const { colors, color, metalness, roughness } = useColors(
+    geometry,
+    colorsBufferAttributeRef,
+    features.style
+  );
   useFxhashFeatures(features);
   useFxhashScreenshot(!!stl, 1000);
 
@@ -216,15 +250,22 @@ function Scene({ variables, isDark }) {
       {geometry ? (
         <mesh receiveShadow castShadow>
           <primitive object={geometry} attach="geometry">
-            <bufferAttribute
-              attach="attributes-color"
-              array={colors}
-              itemSize={3}
-              count={colors.length / 3}
-              ref={colorsBufferAttributeRef}
-            />
+            {colors ? (
+              <bufferAttribute
+                attach="attributes-color"
+                array={colors}
+                itemSize={3}
+                count={colors.length / 3}
+                ref={colorsBufferAttributeRef}
+              />
+            ) : null}
           </primitive>
-          <meshStandardMaterial vertexColors roughness={0.4} />
+          <meshStandardMaterial
+            vertexColors={!!colors}
+            roughness={roughness}
+            color={color}
+            metalness={metalness}
+          />
         </mesh>
       ) : null}
 

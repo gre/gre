@@ -42,6 +42,7 @@ fn main() {
   let mut resolution_style_counter = HashMap::new();
   let mut complexity_counter = HashMap::new();
   let mut crystal_counter = HashMap::new();
+  let mut style_counter = HashMap::new();
 
   let l = all.len();
 
@@ -57,6 +58,8 @@ fn main() {
     let crystal_count =
       crystal_counter.entry(feature.crystal.clone()).or_insert(0);
     *crystal_count += 1;
+    let style_count = style_counter.entry(feature.style.clone()).or_insert(0);
+    *style_count += 1;
   }
 
   println!("Resolution style distribution:");
@@ -69,6 +72,10 @@ fn main() {
   }
   println!("Crystal distribution:");
   for (k, v) in crystal_counter.into_iter() {
+    println!("{:<30} : {}%", k, (100 * v) / l);
+  }
+  println!("Style:");
+  for (k, v) in style_counter.into_iter() {
     println!("{:<30} : {}%", k, (100 * v) / l);
   }
 }

@@ -23,6 +23,7 @@ pub struct Features {
   pub resolution_style: String,
   pub complexity: String,
   pub crystal: String,
+  pub style: String,
 }
 
 #[wasm_bindgen]
@@ -442,10 +443,20 @@ impl Art {
     })
     .to_string();
 
+    let style = (if rng.gen_bool(0.02) {
+      "Gold"
+    } else if rng.gen_bool(0.05) {
+      "SilkBlueGreen"
+    } else {
+      "BlackRedYellow"
+    })
+    .to_string();
+
     let features = Features {
       resolution_style,
       complexity,
       crystal,
+      style,
     };
 
     Art {
