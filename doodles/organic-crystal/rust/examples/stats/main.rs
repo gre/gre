@@ -33,7 +33,7 @@ fn main() {
       .map(|_i| alphabet[rng.gen_range(0, alphabet.len())])
       .collect();
     let hash = format!("oo{}", chars);
-    let f = File::create(format!("results/{}.stl", i)).unwrap();
+    let f = File::create(format!("results/{}.stl", hash)).unwrap();
     let mut bw = BufWriter::new(f);
     let features = art(&Opts { hash, scale: 60.0 }, &mut bw);
     all.push(features);

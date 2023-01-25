@@ -1,23 +1,4 @@
-<!--
 
-Price: 60->30->20->15 / 20mn
-Supply: 128
-Tags: printable, 3D, 3dmodel, 3dprint, stl, rust, wasm, physical
-Flags: Interactive
-
-
-Introducing 'Organic Crystal', a captivating collection of generative 3D objects that blur the lines between digital and physical art. This fxhash generator yield a great variety of abstract 3D shapes, from minimalistic statues, complex creatures to canyon sceneries.
-
-Designed to be printed on a 3D printer, these organic shapes and forms will mesmerize you. The digital version mimic what can be obtained with Thermochromic PLA filament that changes color on different temperature. It adds an extra layer of depth to the pieces as the color of the filament changes from black to orange to yellow. Some other rare biomes may appear as well.
-
-These NFT are digital first. Owning this NFT allows you to derive physical pieces. @greweb does not plan to print / ship physical pieces but is open to special requests via Twitter DM.
-
-- Press 'S' to download a printable .STL, sized to a 6cm statuette. Usage of support is recommended.
-- Press 'D' to switch between dark and light modes.
-
-The source code for this piece is available on GitHub at https://github.com/gre/gre/tree/master/doodles/organic-crystal, and is licensed under CC BY-SA 4.0.
-
--->
 
 ## Organic Crystal
 

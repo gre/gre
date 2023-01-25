@@ -61,8 +61,8 @@ const gradients = {
   SilkBlueGreen: [
     //[50, 120, 240],
     //[50, 200, 100],
-    [50, 180, 240],
-    [70, 190, 120],
+    [0, 170, 250],
+    [50, 220, 120],
   ],
 };
 const doesAnimateMap = {
@@ -78,7 +78,7 @@ const colorMap = {
   default: "#fff",
 };
 const roughnessMap = {
-  SilkGreenBlue: 0.1,
+  SilkBlueGreen: 0.3,
   Gold: 0.25,
   default: 0.4,
 };
