@@ -17,7 +17,7 @@ pub struct Opts {
   pub height: f64,
   #[clap(short, long, default_value = "20.0")]
   pub pad: f64,
-  #[clap(short, long, default_value = "0.0")]
+  #[clap(short, long, default_value = "42.0")]
   pub seed: f64,
 }
 
@@ -124,12 +124,12 @@ fn art(opts: &Opts) -> Vec<Group> {
   let w = (width as f64 / precision) as u32;
   let h = (height as f64 / precision) as u32;
 
-  let offset = rng.gen_range(0.0, 0.1);
-  let length = rng.gen_range(4.0, 10.0);
+  let offset = rng.gen_range(0.0, 0.1) * rng.gen_range(0.0, 1.0);
+  let length = rng.gen_range(4.0, 7.0);
   let samples = (rng.gen_range(100.0, 300.0) / length) as usize;
   let pattern = (
-    rng.gen_range(3.0f64, 8.0).round(),
-    rng.gen_range(-5.0f64, 10.0).round().max(0.0),
+    rng.gen_range(4.0f64, 7.0).round(),
+    rng.gen_range(2.0f64, 6.0).round().max(0.0),
   );
 
   let thresholds: Vec<f64> = (0..samples)
@@ -139,18 +139,24 @@ fn art(opts: &Opts) -> Vec<Group> {
     })
     .collect();
 
+  let ratio = width / height;
   let xpos = 0.3;
   let hpos = 0.25;
   let f = |p: (f64, f64)| {
-    //let x = x.min(1.0 - x);
-    //6.0 * (y - 1.0 / 2.0).abs().min(2.0 * (x - xpos).abs())
-
-    // sd_segment((x, y), (0.2, 0.2), (0.8, 0.8))
+    let p = (p.0, p.1 / ratio);
     // make a H shape with sd_segment union
     length
-      * (sd_segment(p, (xpos, hpos), (xpos, 1.0 - hpos))
-        .min(sd_segment(p, (xpos, 0.5), (1.0 - xpos, 0.5)))
-        .min(sd_segment(p, (1.0 - xpos, hpos), (1.0 - xpos, 1.0 - hpos)))
+      * (sd_segment(p, (xpos, hpos / ratio), (xpos, (1.0 - hpos) / ratio))
+        .min(sd_segment(
+          p,
+          (xpos, 0.5 / ratio),
+          (1.0 - xpos, 0.5 / ratio),
+        ))
+        .min(sd_segment(
+          p,
+          (1.0 - xpos, hpos / ratio),
+          (1.0 - xpos, (1.0 - hpos) / ratio),
+        ))
         - offset)
   };
 
@@ -161,41 +167,45 @@ fn art(opts: &Opts) -> Vec<Group> {
   let mut routes: Vec<(usize, Vec<(f64, f64)>)> =
     routes.iter().map(|r| (0, r.clone())).collect();
 
-  /*
-  let mut p = rng.gen_range(30.0, 60.0);
-  let min = rng.gen_range(-100f64, 30.0).max(0.1);
-  let mut i = 0;
-  let border_count = rng.gen_range(5, 30);
-  let splitincr = rng.gen_range(1.0, 20.0);
-  loop {
-    let x2 = width - p;
-    let y2 = height - p;
-    if x2 - min < p || y2 - min < p {
-      break;
-    }
-    routes.push((0, vec![(p, p), (x2, p), (x2, y2), (p, y2), (p, p)]));
-    p += 0.5;
-    i += 1;
-    if i % border_count == 0 {
-      p += splitincr;
-    }
-  }
-  */
+  let count = rng.gen_range(1, 10);
+  let mut prev_a = PI / 2.0;
+  let rotations = (0..count)
+    .map(|i| {
+      let a = if i == 0 {
+        prev_a
+      } else if rng.gen_bool(0.5) {
+        prev_a + PI / 2.0
+      } else if rng.gen_bool(0.3) {
+        prev_a + PI / 4.0
+      } else {
+        rng.gen_range(-PI, PI)
+      };
+      prev_a = a;
+      a
+    })
+    .collect::<Vec<f64>>();
 
-  let count = rng.gen_range(4, 32);
-  let split = rng.gen_range(-0.5, 0.5);
-  let max_slide = rng.gen_range(1.0, 20.0);
-  for _i in 0..count {
-    let x = width * rng.gen_range(0.4, 0.6);
+  let count = rng.gen_range(1, 20);
+  let split = rng.gen_range(0.3, 0.7);
+  let max_slide = rng.gen_range(0.0, 20.0) * rng.gen_range(0.5, 1.0);
+  for i in 0..count {
+    let x = if i == 0 {
+      width / 2.0
+    } else {
+      width * rng.gen_range(0.2, 0.8)
+    };
     let y = height * rng.gen_range(0.3, 0.7);
-    let a = rng.gen_range(-PI, PI);
+    let a = rotations[(rng.gen_range(0., rotations.len() as f64)
+      * rng.gen_range(0.0, 1.0)) as usize];
     let dx = a.cos();
     let dy = a.sin();
     let amp = 200.0;
     let left = (x - amp * dx, y - amp * dy);
     let right = (x + amp * dx, y + amp * dy);
     let slice = slice_routes(routes.clone(), left, right);
-    let slide = rng.gen_range(0.0, max_slide) * rng.gen_range(0.0, 1.0);
+    let slide = rng.gen_range(0.0, max_slide)
+      * rng.gen_range(0.0, 1.0)
+      * rng.gen_range(0.5, 1.0);
     let l = euclidian_dist(slice.a, slice.b);
     let v = ((slice.b.0 - slice.a.0) / l, (slice.b.1 - slice.a.1) / l);
     let n = (v.1, -v.0);
