@@ -24,12 +24,12 @@ fn art(opts: &Opts) -> Vec<Group> {
   let height = opts.height;
   let pad = opts.pad;
   let bounds = (pad, pad, width - pad, height - pad);
-  let mut blackRoutes = vec![];
-  let mut redRoutes = vec![];
-  let mut blueRoutes = vec![];
-  let mut yellowRoutes = vec![];
-  let mut amberRoutes = vec![];
-  let mut greyRoutes = vec![];
+  let mut black_routes = vec![];
+  let mut red_routes = vec![];
+  let mut blue_routes = vec![];
+  let mut yellow_routes = vec![];
+  let mut amber_routes = vec![];
+  let mut grey_routes = vec![];
 
   let precision = 0.1;
 
@@ -64,34 +64,34 @@ fn art(opts: &Opts) -> Vec<Group> {
         &|p| point_is_in_polygon(p, &equilateral_triangle),
         &mut cutted,
       );
-      blackRoutes.extend(routes.clone());
+      black_routes.extend(routes.clone());
       if imod == 0 {
-        redRoutes.push(cutted.clone());
+        red_routes.push(cutted.clone());
       } else if imod == 2 {
-        amberRoutes.push(cutted.clone());
+        amber_routes.push(cutted.clone());
       }
 
       let routes = mirrorx(cx, &routes);
       let cutted = mirrorx_route(cx, &cutted);
-      blackRoutes.push(cutted.clone());
+      black_routes.push(cutted.clone());
 
       if imod == 0 {
-        redRoutes.extend(routes.clone());
+        red_routes.extend(routes.clone());
       } else if imod == 2 {
-        amberRoutes.extend(routes.clone());
+        amber_routes.extend(routes.clone());
       }
     } else if ri == 1 {
-      blackRoutes.push(left_arc.clone());
+      black_routes.push(left_arc.clone());
       if imod == 0 {
-        yellowRoutes.push(right_arc.clone());
+        yellow_routes.push(right_arc.clone());
       } else if imod == 2 {
-        amberRoutes.push(right_arc.clone());
+        amber_routes.push(right_arc.clone());
       }
     } else {
       if imod == 0 {
-        greyRoutes.push(full_circle.clone());
+        grey_routes.push(full_circle.clone());
       } else if imod != 1 {
-        blueRoutes.push(right_arc.clone());
+        blue_routes.push(right_arc.clone());
       }
     }
 
@@ -105,7 +105,7 @@ fn art(opts: &Opts) -> Vec<Group> {
   let clip = |p| !strictly_in_boundaries(p, bounds);
 
   let mut cutted = vec![];
-  redRoutes.extend(crop_routes_with_predicate(
+  red_routes.extend(crop_routes_with_predicate(
     &vec![extern_spiral],
     &clip,
     &mut cutted,
@@ -113,7 +113,7 @@ fn art(opts: &Opts) -> Vec<Group> {
 
   for i in 0..3 {
     let p = pad + i as f64 * 0.3;
-    redRoutes.push(vec![
+    red_routes.push(vec![
       (p, p),
       (width - p, p),
       (width - p, height - p),
@@ -123,12 +123,12 @@ fn art(opts: &Opts) -> Vec<Group> {
   }
 
   vec![
-    (redRoutes.clone(), "#d20"),
-    (blackRoutes.clone(), "#000"),
-    (blueRoutes.clone(), "#39f"),
-    (yellowRoutes.clone(), "#ff3"),
-    (amberRoutes.clone(), "#d60"),
-    (greyRoutes.clone(), "#888"),
+    (red_routes.clone(), "#d20"),
+    (black_routes.clone(), "#000"),
+    (blue_routes.clone(), "#39f"),
+    (yellow_routes.clone(), "#ff3"),
+    (amber_routes.clone(), "#d60"),
+    (grey_routes.clone(), "#888"),
   ]
   .iter()
   .enumerate()
