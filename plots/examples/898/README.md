@@ -1,9 +1,9 @@
 ---
 date: "2023-01-26"
-title: "In the style of Hilma Af Klint"
+title: "Black dots on Yellow"
 image: /images/plots/898.jpg
 ---
 
-Made for Genuary 2023 #27 "In the style of Hilma Af Klint".
+Made for Genuary 2023 #25 "Yayoi Kusama".
 
 <img src="/images/plots/898z.jpg" width="100%"/>
