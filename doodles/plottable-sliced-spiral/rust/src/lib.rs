@@ -1,40 +1,51 @@
-use clap::*;
-use gre::*;
-use kiss3d::nalgebra::*;
-use rand::Rng;
-use serde::Serialize;
+/**
+ * LICENSE CC BY-NC-ND 4.0
+ * Author: greweb – 2023 – Sliced Spiral
+ */
+mod utils;
+use rand::rngs::StdRng;
+use rand::{Rng, SeedableRng};
+use serde::{Deserialize, Serialize};
 use std::f64::consts::PI;
 use svg::node::element::path::Data;
-use svg::Document;
+use svg::node::element::{Group, Path};
+use wasm_bindgen::prelude::*;
 
-#[derive(Parser)]
-#[clap()]
+// Function called from JS to get the SVG document
+#[wasm_bindgen]
+pub fn render(val: &JsValue) -> String {
+  let opts = val.into_serde().unwrap();
+  let (doc, _) = art(&opts, true);
+  let str = doc.to_string();
+  return str;
+}
+
+// Input to the art function
+#[derive(Deserialize)]
 pub struct Opts {
-  #[clap(short, long, default_value = "image.svg")]
-  file: String,
-  #[clap(short, long, default_value = "297.0")]
+  pub hash: String,
   pub width: f64,
-  #[clap(short, long, default_value = "210.0")]
   pub height: f64,
-  #[clap(short, long, default_value = "10.0")]
   pub pad: f64,
-  #[clap(short, long, default_value = "0.0")]
-  pub seed: f64,
 }
 
-fn main() {
-  let opts: Opts = Opts::parse();
-  let document = art(&opts);
-  svg::save(opts.file, &document).unwrap();
-}
-
+// Feature tells caracteristics of a given art variant
+// It is returned in the .SVG file
 #[derive(Clone, Serialize)]
 pub struct Feature {
+  // how much times the spiral is sliced into parts
   pub splits: String,
-  pub turns: String,
-  pub alignments: String,
+  // how much times the spiral is turned
+  pub spins: String,
+  // how much axes are used to slice the parts
+  pub axes: String,
+  // how much sliding is applied on the slices
   pub sliding: String,
+  // which inks are used
   pub inks: String,
+  // how much inks are used
+  pub inks_count: usize,
+  // which paper is used
   pub paper: String,
 }
 
@@ -43,6 +54,7 @@ pub struct Color(&'static str, &'static str, &'static str);
 #[derive(Clone, Copy, Serialize)]
 pub struct Paper(&'static str, &'static str, bool);
 
+// This is also returned in the SVG to have more metadata for the JS side to render a digital version
 #[derive(Clone, Serialize)]
 pub struct Palette {
   pub primary: Color,
@@ -50,49 +62,54 @@ pub struct Palette {
   pub paper: Paper,
 }
 
-fn art(opts: &Opts) -> Document {
-  let width = opts.width;
+// This is the main art function that will render the generative art piece
+pub fn art(opts: &Opts, mask_mode: bool) -> (svg::Document, Feature) {
   let height = opts.height;
+  let width = opts.width;
   let pad = opts.pad;
 
-  let mut rng = rng_from_seed(opts.seed);
+  // Prepare all the random values
+  let mut rng = rng_from_fxhash(&opts.hash);
 
-  let seibokublue = Color("Sailor Sei-boku", "#1060a3", "1060a3");
-  let inaho = Color("iroshizuku ina-ho", "#ad9c6a", "ad9c6a");
+  let seibokublue = Color("Sailor Sei-boku", "#1060a3", "#153a5d");
+  let inaho = Color("iroshizuku ina-ho", "#ba6", "#7f6a33");
+  let black = Color("Black", "rgb(20%,20%,20%)", "rgb(0%,0%,0%)");
+  let amber = Color("Amber", "rgb(100%,78%,28%)", "rgb(100%,50%,0%)");
+  let pink = Color("Hope Pink", "rgb(100%, 40%, 75%)", "rgb(90%,20%,60%)");
   let gold_gel = Color("Gold Gel", "rgb(85%,70%,25%)", "rgb(100%,90%,55%)");
   let white_gel = Color("White Gel", "rgb(90%,90%,90%)", "rgb(100%,100%,100%)");
-  let black = Color("Black", "rgb(20%,20%,20%)", "rgb(0%,0%,0%)");
-  let grey = Color("Grey", "#808080", "#aaa");
-  let amber = Color("Amber", "rgb(100%,78%,28%)", "rgb(100%,50%,0%)");
-  let red = Color("Brillant Red", "#ee3300", "#f50");
-  let blue_gel = Color("Blue Gel", "rgb(20%,55%,100%)", "rgb(30%,55%,100%)");
+  let blue_gel = Color("Blue Gel", "#06B2FB", "#2CF");
 
-  let white_paper = Paper("White", "#ffffff", false);
-  let red_paper = Paper("Red", "#cc0000", true);
+  let white_paper = Paper("White", "#eee", false);
+  let red_paper = Paper("Red", "#aa0000", true);
   let darkblue_paper = Paper("Dark Blue", "#202040", true);
-  let black_paper = Paper("Dark Blue", "#202020", true);
+  let black_paper = Paper("Black", "#202020", true);
 
-  let (mut colors, paper) = if rng.gen_bool(0.25) {
+  let (mut colors, paper) = if rng.gen_bool(0.18) {
     (vec![seibokublue, inaho], white_paper)
-  } else if rng.gen_bool(0.25) {
+  } else if rng.gen_bool(0.18) {
     (vec![white_gel, blue_gel], black_paper)
-  } else if rng.gen_bool(0.25) {
-    (vec![white_gel, gold_gel], black_paper)
-  } else if rng.gen_bool(0.2) {
-    (vec![black, grey], white_paper)
+  } else if rng.gen_bool(0.13) {
+    (vec![amber, pink], white_paper)
   } else if rng.gen_bool(0.15) {
-    (vec![red, amber], white_paper)
-  } else if rng.gen_bool(0.25) {
+    (vec![white_gel, gold_gel], black_paper)
+  } else if rng.gen_bool(0.1) {
+    (vec![black, amber], white_paper)
+  } else if rng.gen_bool(0.7) {
     (vec![white_gel, gold_gel], darkblue_paper)
   } else {
-    (vec![white_gel], red_paper)
+    (vec![white_gel, gold_gel], red_paper)
   };
 
   if rng.gen_bool(0.2) {
     colors.reverse();
   }
 
-  let colors_count = colors.len().min(rng.gen_range(1, 3));
+  if rng.gen_bool(0.2) {
+    colors = vec![colors[0]];
+  }
+
+  let colors_count = colors.len();
 
   // global random values that drives the variation
   let a_delta = rng.gen_range(-PI, PI);
@@ -158,7 +175,7 @@ fn art(opts: &Opts) -> Document {
     let right = (x + amp * dx, y + amp * dy);
     let slice = slice_routes(routes.clone(), left, right);
     let slide = rng.gen_range(0.0, max_slide)
-      * rng.gen_range(0.0, 1.0)
+      * rng.gen_range(shake, 1.0)
       * rng.gen_range(shake, 1.0);
     let l = euclidian_dist(slice.a, slice.b);
 
@@ -195,8 +212,8 @@ fn art(opts: &Opts) -> Document {
 
   let mut min_x = width;
   let mut min_y = height;
-  let mut max_x = 0.0;
-  let mut max_y = 0.0;
+  let mut max_x = 0.0f64;
+  let mut max_y = 0.0f64;
   for (_, route) in routes.iter() {
     for &(x, y) in route.iter() {
       min_x = min_x.min(x);
@@ -229,24 +246,24 @@ fn art(opts: &Opts) -> Document {
           // rotate 90°
           p = (p.1, -p.0);
         }
-        p = round_point(
-          (scale * p.0 + width / 2., scale * p.1 + height / 2.),
-          0.01,
-        );
+        p = (scale * p.0 + width / 2., scale * p.1 + height / 2.);
         p
       });
       Some((*ci, route.collect()))
     })
     .collect();
 
-  // Infer from the generated pieces the main features
+  // Infer the features from the generated pieces
 
   let mut inks = vec![];
   for (i, &present) in color_presence.iter().enumerate() {
     if present {
-      inks.push(colors[i].1);
+      inks.push(colors[i].0);
     }
   }
+  inks.sort();
+  let inks_length = inks.len();
+
   let feature = Feature {
     splits: (match count {
       0..=5 => "Low",
@@ -254,13 +271,13 @@ fn art(opts: &Opts) -> Document {
       _ => "High",
     })
     .to_string(),
-    turns: (match (r / dr).ceil() as usize {
+    spins: (match (r / dr).ceil() as usize {
       0..=7 => "Low",
       8..=15 => "Medium",
       _ => "High",
     })
     .to_string(),
-    alignments: (match dedup_rot.len() {
+    axes: (match dedup_rot.len() {
       0 => "None",
       1 => "One",
       2 => "Two",
@@ -279,6 +296,7 @@ fn art(opts: &Opts) -> Document {
     })
     .to_string(),
     inks: inks.join(", "),
+    inks_count: inks_length,
     paper: paper.0.to_string(),
   };
 
@@ -290,25 +308,149 @@ fn art(opts: &Opts) -> Document {
   })
   .unwrap();
 
-  // Generate the SVG
+  let mask_colors = vec!["#0FF", "#F0F", "#FF0"];
 
-  let mut document = base_document(paper.1, opts.width, opts.height)
+  let layers = make_layers(
+    colors
+      .iter()
+      .enumerate()
+      .map(|(i, c)| {
+        (
+          if mask_mode { mask_colors[i] } else { c.1 },
+          c.0.to_string(),
+          routes
+            .iter()
+            .filter_map(
+              |(ci, routes)| {
+                if *ci == i {
+                  Some(routes.clone())
+                } else {
+                  None
+                }
+              },
+            )
+            .collect(),
+        )
+      })
+      .collect(),
+  );
+
+  let mut document = svg::Document::new()
+    .set(
+      "data-credits",
+      "@greweb - 2023 - Plottable Sliced Spiral".to_string(),
+    )
+    .set("data-hash", opts.hash.to_string())
     .set("data-traits", feature_json)
-    .set("data-palette", palette_json);
-  for (i, &Color(name, color, _highlight)) in colors.iter().enumerate() {
-    let mut data = Data::new();
-    let mut l = layer(name);
-
-    for (ci, route) in routes.iter() {
-      if *ci == i {
-        data = render_route(data, route.clone());
-      }
-    }
-
-    l = l.add(base_path(color, 0.35, data));
+    .set("data-palette", palette_json)
+    .set("viewBox", (0, 0, width, height))
+    .set("width", format!("{}mm", width))
+    .set("height", format!("{}mm", height))
+    .set(
+      "style",
+      if mask_mode {
+        "background:white".to_string()
+      } else {
+        format!("background:{}", paper.1)
+      },
+    )
+    .set(
+      "xmlns:inkscape",
+      "http://www.inkscape.org/namespaces/inkscape",
+    )
+    .set("xmlns", "http://www.w3.org/2000/svg");
+  for l in layers {
     document = document.add(l);
   }
-  document
+
+  (document, feature)
+}
+
+// The slime primitive =>
+
+// Generic helper to simplify and clean up a path
+
+// render helper
+
+#[inline]
+fn significant_str(f: f64) -> f64 {
+  (f * 100.0).floor() / 100.0
+}
+fn render_route(data: Data, route: Vec<(f64, f64)>) -> Data {
+  if route.len() == 0 {
+    return data;
+  }
+  let first_p = route[0];
+  let mut d =
+    data.move_to((significant_str(first_p.0), significant_str(first_p.1)));
+  for p in route {
+    d = d.line_to((significant_str(p.0), significant_str(p.1)));
+  }
+  return d;
+}
+
+fn rng_from_fxhash(hash: &String) -> impl Rng {
+  let mut bs = [0; 32];
+  bs58::decode(hash.chars().skip(2).take(43).collect::<String>())
+    .into(&mut bs)
+    .unwrap();
+  let rng = StdRng::from_seed(bs);
+  return rng;
+}
+
+fn make_layers(data: Vec<(&str, String, Vec<Vec<(f64, f64)>>)>) -> Vec<Group> {
+  let layers: Vec<Group> = data
+    .iter()
+    .filter(|(_color, _label, routes)| routes.len() > 0)
+    .map(|(color, label, routes)| {
+      let mut l = Group::new()
+        .set("inkscape:groupmode", "layer")
+        .set("inkscape:label", label.clone())
+        .set("fill", "none")
+        .set("stroke", color.clone())
+        .set("stroke-linecap", "round")
+        .set("stroke-width", 0.35);
+      let opacity: f64 = 0.6;
+      let opdiff = 0.15 / (routes.len() as f64);
+      let mut trace = 0f64;
+      for route in routes.clone() {
+        trace += 1f64;
+        let data = render_route(Data::new(), route);
+        l = l.add(
+          Path::new()
+            .set(
+              "opacity",
+              (1000. * (opacity - trace * opdiff)).floor() / 1000.0,
+            )
+            .set("d", data),
+        );
+      }
+      l
+    })
+    .collect();
+  layers
+}
+
+fn lerp_point(a: (f64, f64), b: (f64, f64), m: f64) -> (f64, f64) {
+  (a.0 * (1. - m) + b.0 * m, a.1 * (1. - m) + b.1 * m)
+}
+
+#[inline]
+fn euclidian_dist((x1, y1): (f64, f64), (x2, y2): (f64, f64)) -> f64 {
+  let dx = x1 - x2;
+  let dy = y1 - y2;
+  return (dx * dx + dy * dy).sqrt();
+}
+
+#[inline]
+pub fn strictly_in_boundaries(
+  p: (f64, f64),
+  boundaries: (f64, f64, f64, f64),
+) -> bool {
+  p.0 > boundaries.0
+    && p.0 < boundaries.2
+    && p.1 > boundaries.1
+    && p.1 < boundaries.3
 }
 
 fn spiral(
@@ -403,10 +545,6 @@ fn slice_routes(
   }
 }
 
-fn lerp_point(a: (f64, f64), b: (f64, f64), m: f64) -> (f64, f64) {
-  (a.0 * (1. - m) + b.0 * m, a.1 * (1. - m) + b.1 * m)
-}
-
 fn is_left(a: (f64, f64), b: (f64, f64), c: (f64, f64)) -> bool {
   ((b.0 - a.0) * (c.1 - a.1) - (b.1 - a.1) * (c.0 - a.0)) > 0.0
 }
@@ -421,4 +559,36 @@ fn translate_routes(
       (*i, route.iter().map(|&(x, y)| (x + tx, y + ty)).collect())
     })
     .collect()
+}
+
+// collides segments (p0,p1) with (p2,p3)
+fn collides_segment(
+  p0: (f64, f64),
+  p1: (f64, f64),
+  p2: (f64, f64),
+  p3: (f64, f64),
+) -> Option<(f64, f64)> {
+  let s10_x = p1.0 - p0.0;
+  let s10_y = p1.1 - p0.1;
+  let s32_x = p3.0 - p2.0;
+  let s32_y = p3.1 - p2.1;
+  let d = s10_x * s32_y - s32_x * s10_y;
+  if d.abs() < 0.000001 {
+    return None;
+  }
+  let s02_x = p0.0 - p2.0;
+  let s02_y = p0.1 - p2.1;
+  let s_numer = s10_x * s02_y - s10_y * s02_x;
+  if (s_numer < 0.) == (d > 0.) {
+    return None;
+  }
+  let t_numer = s32_x * s02_y - s32_y * s02_x;
+  if (t_numer < 0.) == (d > 0.) {
+    return None;
+  }
+  if (s_numer > d) == (d > 0.) || (t_numer > d) == (d > 0.) {
+    return None;
+  }
+  let t = t_numer / d;
+  return Some((p0.0 + t * s10_x, p0.1 + t * s10_y));
 }

@@ -33,6 +33,7 @@
     "babel-loader": "^8.2.2",
     "base64-inline-loader": "^1.1.1",
     "circlepacker": "^1.1.4",
+    "color": "^4.2.3",
     "gifenc": "^1.0.3",
     "gl-mat3": "^2.0.0",
     "gl-react": "^5.0.0",

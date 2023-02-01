@@ -8,12 +8,12 @@ Allowlist to <insertaddress> to be able to mint 60 NFT during the "pre-mint" pha
 
 # Plottable Golden Train
 
-Introducing Plottable Golden Train - a generator of plottable art piece, intended to be plotted on A6-sized paper. Golden Train features a sleek train with multiple carriages, a bridge, various elements like cactus, eagles,...
+Introducing Plottable Golden Train by @greweb - a generator of plottable art piece, intended to be plotted on A6-sized paper. Golden Train features a sleek train with multiple carriages, a bridge, various elements like cactus, eagles,...
 
 The NFT is the recipe to a physically plottable art piece, it exports a SVG that you can plot with pens. owning it confers the right to plot or request a physical plot from the artist (extra cost for the physical derivatives) using this link: https://greweb.me/plots/nft
- – The artist would use fountain pens and gel pens to achieve the final product, but other plotting artists are free to use their own materials and ship to collectors as long as the NFT is owned at the time of the request.
+ – The artist would use fountain pens and gel pens to achieve the final plot, but other plotting artists are free to use their own materials and ship to collectors as long as the NFT is owned at the time of the request. Simply drag&drop (or right-click-save) in a folder to get the .SVG.
 
-For those interested in the technical details, this work was created using WebGL + Rust + WASM and is licensed under CC BY-SA 4.0. Additional information and the source code for this piece can be found at this link: https://github.com/gre/gre/tree/master/doodles/plottable-golden-train
+For those interested in the technical details, this work was created using WebGL + Rust + WASM and is licensed under CC BY-SA 4.0. Additional information and the source code for this piece can be found at this link: https://github.com/gre/gre/tree/master/doodles/plottable-golden-train –
 
 Part of this collection was pre-minted in context of a collaboration with [Astroquirks](https://astroquirks.com/) validator.
 
