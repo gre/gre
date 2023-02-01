@@ -125,7 +125,13 @@ const Main = ({ width, height, random }) => {
             background: "white",
           }}
         >
-          <Surface width={W} height={H}>
+          <Surface
+            width={W}
+            height={H}
+            webglContextAttributes={{
+              preserveDrawingBuffer: true,
+            }}
+          >
             <LinearCopy>
               <Post
                 ready={!!svg}

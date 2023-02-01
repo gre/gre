@@ -23,6 +23,9 @@ I've been releasing work in the past on Ethereum and Tezos. This time, I chose t
 
 My work will be released on https://publicworks.art/ which itself will allow to mint on https://www.stargaze.zone/
 
+## Inspiration
+
+This work is based on my own work, notably the Inktober exploration of last year: https://greweb.me/plots/707
 
 ## Physical protytypes previews
 
@@ -42,127 +45,71 @@ https://youtu.be/FHd7OF-QVSY
 
 ```
 Bridge
-                Regular Bridge: 38.9%
-       Regular Reversed Bridge: 15.8%
-          Regular Small Bridge: 15.2%
-                 Double Bridge: 7.2%
- Regular Reversed Small Bridge: 6.1%
-                Complex Bridge: 3.6%
-        Double Reversed Bridge: 3.0%
-           Double Small Bridge: 2.6%
-            Regular Big Bridge: 1.7%
-       Complex Reversed Bridge: 1.6%
+                Regular Bridge: 39.0%
+       Regular Reversed Bridge: 16.2%
+          Regular Small Bridge: 15.3%
+                 Double Bridge: 6.5%
+ Regular Reversed Small Bridge: 6.4%
+                Complex Bridge: 3.5%
+        Double Reversed Bridge: 2.9%
+           Double Small Bridge: 2.5%
+            Regular Big Bridge: 2.0%
+       Complex Reversed Bridge: 1.5%
+  Double Reversed Small Bridge: 1.2%
           Complex Small Bridge: 1.2%
-  Double Reversed Small Bridge: 1.1%
+   Regular Reversed Big Bridge: 0.6%
  Complex Reversed Small Bridge: 0.6%
-   Regular Reversed Big Bridge: 0.4%
-             Double Big Bridge: 0.4%
+             Double Big Bridge: 0.5%
             Complex Big Bridge: 0.2%
     Double Reversed Big Bridge: 0.1%
    Complex Reversed Big Bridge: 0.1%
 Cactus Density
-                     undefined: 66.5%
-                           Low: 31.8%
-                          High: 1.6%
+                     undefined: 66.3%
+                           Low: 31.9%
+                          High: 1.7%
                        Extreme: 0.1%
 Cloud Density
-                           Low: 51.8%
-                        Medium: 26.1%
-                          High: 22.1%
+                           Low: 50.8%
+                        Medium: 25.1%
+                          High: 24.1%
                      undefined: 0.0%
 Eagle Density
-                           Low: 84.4%
-                          High: 14.5%
+                           Low: 83.7%
+                          High: 15.2%
                        Extreme: 1.1%
 Gold Border
-                     undefined: 93.0%
-                           Yes: 7.0%
+                     undefined: 92.7%
+                           Yes: 7.3%
 Inks
-                  Black + Gold: 55.1%
-                  Gold + White: 38.6%
-                         Black: 2.7%
-                          Gold: 1.8%
-                         White: 1.7%
+                  Black + Gold: 53.9%
+                  Gold + White: 39.0%
+                         Black: 3.0%
+                         White: 2.0%
+                          Gold: 2.0%
 Inks Count
-                             2: 93.8%
-                             1: 6.2%
+                             2: 92.9%
+                             1: 7.1%
+Mountain Kind
+                             1: 20.5%
+                             3: 20.2%
+                     undefined: 20.1%
+                             4: 19.7%
+                             2: 19.5%
 Paper
-                         White: 54.6%
-                         Black: 32.0%
-                     Dark Blue: 7.0%
-                          Grey: 6.3%
+                         White: 53.8%
+                         Black: 32.8%
+                     Dark Blue: 7.2%
+                          Grey: 6.1%
 Precipice
-                       Regular: 46.2%
-                      Moderate: 28.5%
-                          Deep: 21.4%
-                     Very Deep: 3.9%
-Total Cactus
-                     undefined: 66.5%
-                             1: 20.9%
-                             2: 7.0%
-                             3: 2.4%
-                             4: 1.4%
-                             5: 0.7%
-                             6: 0.5%
-                             8: 0.2%
-                             7: 0.2%
-                             9: 0.1%
-                            10: 0.1%
-                            13: 0.0%
-                            11: 0.0%
-                            12: 0.0%
-                            14: 0.0%
-Total Carriages
-                             3: 21.4%
-                             2: 20.1%
-                             1: 17.5%
-                             4: 14.0%
-                     undefined: 8.7%
-                             5: 7.6%
-                             6: 5.0%
-                             7: 3.1%
-                             8: 1.6%
-                             9: 0.6%
-                            10: 0.3%
-                            11: 0.1%
-Total Eagles
-                             1: 53.9%
-                             2: 15.6%
-                             3: 8.8%
-                             4: 6.1%
-                             5: 3.7%
-                             6: 2.9%
-                             7: 2.0%
-                             8: 1.7%
-                             9: 1.2%
-                            10: 1.0%
-                            11: 0.7%
-                            12: 0.7%
-                            13: 0.3%
-                            14: 0.3%
-                            15: 0.3%
-                            16: 0.2%
-                            17: 0.1%
-                            18: 0.1%
-                            19: 0.1%
-                            21: 0.1%
-                            20: 0.1%
-                            22: 0.1%
-                            23: 0.1%
-                            24: 0.0%
-                            25: 0.0%
-                            27: 0.0%
-                            28: 0.0%
-                            30: 0.0%
+                       Regular: 45.6%
+                      Moderate: 27.7%
+                          Deep: 23.0%
+                     Very Deep: 3.6%
 Train Slope
                           Flat: 44.2%
-                        Gentle: 33.0%
-                      Moderate: 17.5%
-                         Steep: 5.2%
-Warping Effect
-                           Low: 60.5%
-                          High: 20.2%
-                        Medium: 19.3%
+                        Gentle: 32.7%
+                      Moderate: 17.8%
+                         Steep: 5.4%
 ```
 
 ## License

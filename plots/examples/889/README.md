@@ -3,6 +3,9 @@ date: "2023-01-15"
 title: "3D sine waves"
 image: /images/plots/889.jpg
 tweet: https://twitter.com/greweb/status/1614873537084362753
+tags:
+- genuary
+- 3dprint
 ---
 
 Made for Genuary 2023 #15 "Sine Waves".
