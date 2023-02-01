@@ -366,12 +366,6 @@ pub fn art(opts: &Opts, mask_mode: bool) -> (svg::Document, Feature) {
   (document, feature)
 }
 
-// The slime primitive =>
-
-// Generic helper to simplify and clean up a path
-
-// render helper
-
 #[inline]
 fn significant_str(f: f64) -> f64 {
   (f * 100.0).floor() / 100.0

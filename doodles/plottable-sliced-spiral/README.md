@@ -1,5 +1,7 @@
 ## Plottable Sliced Spiral
 
+**=> https://www.fxhash.xyz/generative/24533 <=**
+
 Celebrating Genuary 2023 with this collection of only 32 items. As part of Genuary #31, I revisited spiral strokes exploration (https://greweb.me/plots/636) and mixed it with another slicing study (https://greweb.me/plots/823). Can't wait to see what unique pieces will emerge among the 32. From minimalistic to destructed spiral, various spins and rare color cases.
 
 🌀
@@ -56,3 +58,13 @@ Paper distribution:
     Black                          : 22%
     Red                            : 14%
 ```
+
+
+## License
+
+CC BY-NC-ND 4.0
+
+## Technical stack
+
+- [lib.rs](./rust/src/lib.rs) Rust for the generative art logic and SVG generation. Libraries: svg, noise, rand, bs58, serde, instant, serde_json
+- [index.js](./index.js) WASM + WebGL for the frontend rendering. Libraries: React and GL-React.
