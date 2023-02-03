@@ -459,9 +459,9 @@ pub fn art(opts: &Opts) -> Document {
   .collect();
 
   let mut document = svg::Document::new()
-    .set("viewBox", (0, 0, 210, 297))
-    .set("width", "210mm")
-    .set("height", "297mm")
+    .set("viewBox", (0, 0, opts.width, opts.height))
+    .set("width", format!("{}mm", opts.width))
+    .set("height", format!("{}mm", opts.height))
     .set("style", "background:white")
     .set(
       "xmlns:inkscape",
