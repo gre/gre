@@ -203,6 +203,24 @@ const choices = [
     ],
   },
   {
+    id: "stargaze",
+    name: "Stargaze",
+    address: "stars15rce70qlpcztvvekjwpv4fx3s5k2ujjeedm5ng",
+    addressReal: "stars15rce70qlpcztvvekjwpv4fx3s5k2ujjeedm5ng",
+    amount: "1000 STARS",
+    collections: [
+      {
+        url: "https://stargaze.zone",
+        description: "Any Plottable work collected on https://stargaze.zone",
+      },
+      {
+        url: "https://publicworks.art",
+        description: "Any Plottable work from on https://publicworks.art",
+      },
+    ],
+  },
+  /*
+  {
     id: "cosmos",
     name: "Cosmos",
     address: "cosmos15rce70qlpcztvvekjwpv4fx3s5k2ujjed3vfce",
@@ -215,6 +233,7 @@ const choices = [
       },
     ],
   },
+  */
 ];
 
 const CTA = ({ children, ...rest }) => (
