@@ -285,7 +285,19 @@ const Or = () => {
 export default function Home({ tag }) {
   const title = `Getting physical plot of a Plottable NFT`;
 
-  const [i, setI] = useState(1);
+  const [i, setI] = useState(() => {
+    if (typeof window === "undefined") {
+      return 1;
+    }
+    const search = window.location.search;
+    if (search) {
+      let i = choices.findIndex((c) => search.includes(c.id));
+      if (i !== -1) {
+        return i;
+      }
+    }
+    return 1;
+  });
   const choice = choices[i];
 
   return (
