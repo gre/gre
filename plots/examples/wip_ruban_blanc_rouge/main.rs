@@ -1,0 +1,289 @@
+use clap::*;
+use gre::*;
+use rand::Rng;
+use rayon::prelude::*;
+use svg::node::element::path::Data;
+use svg::node::element::*;
+
+#[derive(Parser)]
+#[clap()]
+pub struct Opts {
+  #[clap(short, long, default_value = "image.svg")]
+  file: String,
+  #[clap(short, long, default_value = "148.0")]
+  pub height: f64,
+  #[clap(short, long, default_value = "210.0")]
+  pub width: f64,
+  #[clap(short, long, default_value = "5.0")]
+  pub pad: f64,
+  #[clap(short, long, default_value = "0.0")]
+  pub seed: f64,
+  #[clap(short, long, default_value = "30")]
+  pub seconds: i64,
+  #[clap(short, long, default_value = "1.0")]
+  pub p1: f64,
+  #[clap(short, long, default_value = "3.0")]
+  pub p2: f64,
+  #[clap(short, long, default_value = "4")]
+  pub count: usize,
+}
+
+fn art(opts: &Opts) -> Vec<Group> {
+  let routes = vec![(true, left(opts)), (false, right(opts))];
+
+  // Make the SVG
+  let colors = vec!["#fff", "#fb2"];
+  colors
+    .iter()
+    .enumerate()
+    .map(|(ci, color)| {
+      let mut l = layer(color);
+      for (use_curve, routes) in routes.clone() {
+        let mut data = Data::new();
+        for (c, route) in routes.clone() {
+          if c == ci {
+            if use_curve {
+              data = render_route_curve(data, route);
+            } else {
+              data = render_route(data, route);
+            }
+          }
+        }
+        l = l.add(base_path(color, 0.35, data));
+      }
+      l
+    })
+    .collect()
+}
+
+fn main() {
+  let opts: Opts = Opts::parse();
+  let groups = art(&opts);
+  let mut document = base_document("#c00", opts.width, opts.height);
+  for g in groups {
+    document = document.add(g);
+  }
+  svg::save(opts.file, &document).unwrap();
+}
+
+#[derive(Clone, Copy, Debug)]
+struct VCircle {
+  x: f64,
+  y: f64,
+  r: f64,
+}
+impl VCircle {
+  fn new(x: f64, y: f64, r: f64) -> Self {
+    VCircle { x, y, r }
+  }
+  fn dist(self: &Self, c: &VCircle) -> f64 {
+    euclidian_dist((self.x, self.y), (c.x, c.y)) - c.r - self.r
+  }
+  fn collides(self: &Self, c: &VCircle) -> bool {
+    self.dist(c) <= 0.0
+  }
+}
+
+fn scaling_search<F: FnMut(f64) -> bool>(
+  mut f: F,
+  min_scale: f64,
+  max_scale: f64,
+) -> Option<f64> {
+  let mut from = min_scale;
+  let mut to = max_scale;
+  loop {
+    if !f(from) {
+      return None;
+    }
+    if to - from < 0.1 {
+      return Some(from);
+    }
+    let middle = (to + from) / 2.0;
+    if !f(middle) {
+      to = middle;
+    } else {
+      from = middle;
+    }
+  }
+}
+
+fn search_circle_radius(
+  bound: (f64, f64, f64, f64),
+  circles: &Vec<VCircle>,
+  x: f64,
+  y: f64,
+  min_scale: f64,
+  max_scale: f64,
+) -> Option<f64> {
+  let overlaps = |size| {
+    let c = VCircle::new(x, y, size);
+    bound.0 < c.x - c.r
+      && c.x + c.r < bound.2
+      && bound.1 < c.y - c.r
+      && c.y + c.r < bound.3
+      && !circles.iter().any(|other| c.collides(other))
+  };
+  scaling_search(overlaps, min_scale, max_scale)
+}
+
+fn packing(
+  seed: f64,
+  iterations: usize,
+  desired_count: usize,
+  optimize_size: usize,
+  pad: f64,
+  bound: (f64, f64, f64, f64),
+  min_scale: f64,
+  max_scale: f64,
+) -> Vec<VCircle> {
+  let mut circles = Vec::new();
+  let mut tries = Vec::new();
+  let mut rng = rng_from_seed(seed);
+  for _i in 0..iterations {
+    let x: f64 = rng.gen_range(bound.0, bound.2);
+    let y: f64 = rng.gen_range(bound.1, bound.3);
+    if let Some(size) =
+      search_circle_radius(bound, &circles, x, y, min_scale, max_scale)
+    {
+      let circle = VCircle::new(x, y, size - pad);
+      tries.push(circle);
+      if tries.len() > optimize_size {
+        tries.sort_by(|a, b| b.r.partial_cmp(&a.r).unwrap());
+        let c = tries[0];
+        circles.push(c.clone());
+        tries = Vec::new();
+      }
+    }
+    if circles.len() > desired_count {
+      break;
+    }
+  }
+  circles
+}
+
+fn left(opts: &Opts) -> Vec<(usize, Vec<(f64, f64)>)> {
+  let height = opts.height;
+  let width = opts.width / 2.0;
+  let pad = opts.pad;
+  let mut rng = rng_from_seed(opts.seed);
+  let max_scale = 20.0;
+
+  let mut circles = packing(
+    3.3 * opts.seed,
+    1000000,
+    1000,
+    rng.gen_range(1, 4),
+    0.0,
+    (pad, pad, width - pad, height - pad),
+    2.0,
+    max_scale,
+  );
+  rng.shuffle(&mut circles);
+
+  let half = circles.len() / 2;
+  let circles1 = circles[0..half].to_vec();
+  let circles2 = circles[half..].to_vec();
+
+  vec![circles1, circles2]
+    .par_iter()
+    .enumerate()
+    .map(|(i, circles)| {
+      let points: Vec<(f64, f64)> =
+        circles.iter().map(|c| (c.x, c.y)).collect();
+
+      let tour = travelling_salesman::simulated_annealing::solve(
+        &points,
+        time::Duration::seconds(opts.seconds),
+      );
+
+      let circles: Vec<VCircle> =
+        tour.route.iter().map(|&i| circles[i]).collect();
+
+      let route: Vec<(f64, f64)> = circles
+        .par_iter()
+        .flat_map(|circle| {
+          let s = opts.seed + circle.x * 3.1 + circle.y / 9.8;
+          let mut rng = rng_from_seed(s);
+          shape_strokes_random(&mut rng, circle, &opts)
+        })
+        .collect();
+
+      (i, route)
+    })
+    .collect()
+
+  //let color = "#eee";
+  //let data = render_route_curve(Data::new(), route);
+  //vec![layer(color).add(base_path(color, stroke_width, data))]
+}
+
+fn shape_strokes_random<R: Rng>(
+  rng: &mut R,
+  c: &VCircle,
+  _opts: &Opts,
+) -> Vec<(f64, f64)> {
+  let pow = rng.gen_range(1.3, 1.6);
+  let samples = sample_2d_candidates_f64(
+    &|p| {
+      let dx = p.0 - 0.5;
+      let dy = p.1 - 0.5;
+      let d2 = dx * dx + dy * dy;
+      if d2 > 0.25 {
+        0.0
+      } else {
+        d2
+      }
+    },
+    (6. * c.r) as usize,
+    (10. + c.r.powf(pow)) as usize,
+    rng,
+  );
+  samples
+    .iter()
+    .map(|(x, y)| (2.0 * c.r * (x - 0.5) + c.x, 2.0 * c.r * (y - 0.5) + c.y))
+    .collect()
+}
+
+fn right(opts: &Opts) -> Vec<(usize, Vec<(f64, f64)>)> {
+  let height = opts.height;
+  let width = opts.width / 2.0;
+  let pad = opts.pad;
+  let p1 = opts.p1;
+  let p2 = opts.p2;
+  let count = opts.count;
+
+  let mut clr = 0;
+  let mut routes = Vec::new();
+
+  let mut i = 0;
+  let mut p = pad;
+
+  let xoffset = width;
+  let limit = width / 2.0 - 0.2;
+  loop {
+    if p > limit {
+      break;
+    }
+    // rectangle, with xoffset
+    let route = vec![
+      (p + xoffset, p),
+      (width - p + xoffset, p),
+      (width - p + xoffset, height - p),
+      (p + xoffset, height - p),
+      (p + xoffset, p),
+    ];
+
+    routes.push((clr, route));
+
+    if i >= count {
+      i = 0;
+      p += p2;
+      clr = (clr + 1) % 2;
+    } else {
+      p += p1;
+      i += 1;
+    }
+  }
+
+  routes
+}

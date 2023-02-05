@@ -8,7 +8,7 @@ import { Surface } from "gl-react-dom";
 import { GLSL, LinearCopy, Node, Shaders, Uniform } from "gl-react";
 import init, { render } from "./rust/pkg/main";
 import wasm from "base64-inline-loader!./rust/pkg/main_bg.wasm";
-import generateVariables, { getPerf } from "./variables";
+import generateVariables from "./variables";
 
 function decode(dataURI) {
   const binaryString = atob(dataURI.split(",")[1]);
@@ -89,10 +89,6 @@ const Main = ({ width, height, random }) => {
     if (console && console.table) {
       console.table(properties);
       console.table(traits);
-      const p = getPerf(result);
-      if (p) {
-        console.table(p.per_label);
-      }
     }
     setTimeout(() => setPreviewReady(), 5000);
     return result;
@@ -189,6 +185,12 @@ function Downloadable({ svg, primary, secondary }) {
           "rgb(" +
             secondary.main.map((n) => Math.round(n * 255)).join(",") +
             ")"
+        )
+        .replace(
+          /#FF0/g,
+          "rgb(" +
+            secondary.main.map((n) => Math.round(n * 255)).join(",") +
+            ")"
         );
 
       setURI("data:image/svg+xml;base64," + btoa(svgOut));
@@ -272,8 +274,24 @@ const Post = ({
 };
 
 const gainShader = `
-float gain = smoothstep(0.5, 1.0, abs(cos(${Math.PI}*(p.x+time))));
+float gain = smoothstep(0.5, 1.0, abs(cos(${0.5 * Math.PI}*(p.x+time))));
 `;
+
+const sharedVariables = `
+vec4 g = texture2D(paper, p);
+float grain = g.r;
+vec4 v = texture2D(t, p);
+float motion = .002*sin(-${
+  0.5 * Math.PI
+}*(time+p.x-3.*p.y+4.*cos(3.*p.x-10.*p.y)));
+${/* float phase = cos(5.*p.x+time+cos(p.x-6.*p.y));*/ ""}
+vec4 v2 = texture2D(t, p+vec2(motion,0.));
+vec3 c1 = pal(v.r, primary, primaryHighlight);
+vec3 c2 = pal(min(v.g, v2.b), secondary, secondaryHighlight);
+`;
+
+const clrmask = `v.r * v.g * v2.b`;
+// mix(v2.b,1.0,smoothstep(0.45,0.51,abs(phase)))
 
 const shaders = Shaders.create({
   paper: {
@@ -361,11 +379,7 @@ void main () {
     void main() {
       vec2 p = uv;
       ${gainShader}
-      vec4 g = texture2D(paper, p);
-      float grain = g.r;
-      vec4 v = texture2D(t, p);
-      vec3 c1 = pal(v.r, primary, primaryHighlight);
-      vec3 c2 = pal(v.g, secondary, secondaryHighlight);
+      ${sharedVariables}
       vec3 c =
         min(vec3(1.), c1 * c2 * (1. + lighting * gain)) +
         grainAmp * /*developed by @greweb*/
@@ -395,16 +409,12 @@ void main () {
     void main() {
       vec2 p = uv;
       ${gainShader}
-      vec4 g = texture2D(paper, p);
-      float grain = g.r;
-      vec4 v = texture2D(t, p);
-      vec3 c1 = pal(v.r, primary, primaryHighlight);
-      vec3 c2 = pal(v.g, secondary, secondaryHighlight);
+      ${sharedVariables}
       vec3 c =
       (c1 + c2) * (1. + lighting * gain) +
         grainAmp * grain +/*developed by @greweb*/
         baseColor +
-        background * smoothstep(0.5, 1.0, v.r * v.g);
+        background * smoothstep(0.5, 1.0, ${clrmask});
       gl_FragColor = vec4(c, 1.0);
     }
   `,

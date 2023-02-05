@@ -148,9 +148,3 @@ module.exports.inferProps = function inferProps(variables, svg) {
   }
   return props;
 };
-
-module.exports.getPerf = function getPerf(svg) {
-  const m = svg.match("data-perf='([^']+)'");
-  if (!m) return;
-  return JSON.parse(m[1]);
-};

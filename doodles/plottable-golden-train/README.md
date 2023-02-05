@@ -8,7 +8,7 @@ Allowlist to <insertaddress> to be able to mint 60 NFT during the "pre-mint" pha
 
 # Plottable Golden Train
 
-Introducing Plottable Golden Train by @greweb - a generator of plottable art piece, intended to be plotted on A6-sized paper. Golden Train features a sleek train with multiple carriages, a bridge, various elements like cactus, eagles,...
+Each mint is uniquely created with code, generating a random digital variant of this golden train traveling in far west mountains. Art have many variations (bridges, cactus, clouds, eagles, colors,...). This artwork is also optionally physically plottable (pen plotter) as a A6-size postcard. Check the link if you also want a physical.
 
 The NFT is the recipe to a physically plottable art piece, it exports a SVG that you can plot with pens. owning it confers the right to plot or request a physical plot from the artist (extra cost for the physical derivatives) using this link: https://greweb.me/plots/nft?stargaze
  – The artist would use fountain pens and gel pens to achieve the final plot, but other plotting artists are free to use their own materials and ship to collectors as long as the NFT is owned at the time of the request. Simply drag&drop (or right-click-save) in a folder to get the .SVG.

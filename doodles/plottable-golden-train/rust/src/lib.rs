@@ -42,6 +42,7 @@ pub fn art(opts: &Opts) -> svg::Document {
   // all the lines to draw are pushed here
   let mut primary = vec![];
   let mut secondary = vec![];
+  let mut highlightedpart = vec![];
   let mut train_found = false;
   let mut total_cactus = 0;
   let mut total_eagles = 0;
@@ -60,6 +61,7 @@ pub fn art(opts: &Opts) -> svg::Document {
     total_carriages = 0;
     primary = vec![];
     secondary = vec![];
+    highlightedpart = vec![];
     ///////////////////////////////
 
     let seed = rng.gen_range(0.0, 100000.0);
@@ -672,12 +674,12 @@ pub fn art(opts: &Opts) -> svg::Document {
             if route.len() > 1 && rng.gen_bool(0.5) {
               if rng.gen_bool(0.7 - 0.6 * i as f64 / (count as f64)) {
                 // randomly drop
-                secondary.push(route);
+                highlightedpart.push(route);
               }
               route = Vec::new();
             }
           }
-          secondary.push(route);
+          highlightedpart.push(route);
         }
 
         train_found = true;
@@ -913,6 +915,7 @@ pub fn art(opts: &Opts) -> svg::Document {
   let (layers, inks) = make_layers(vec![
     ("#0FF", opts.primary_name.clone(), primary),
     ("#F0F", opts.secondary_name.clone(), secondary),
+    ("#FF0", opts.secondary_name.clone(), highlightedpart),
   ]);
 
   let mut traits = Map::new();
@@ -1187,6 +1190,7 @@ fn make_layers(
     .collect();
   // remove inks that have no paths at all
   inks.sort();
+  inks.dedup();
   if inks.len() == 2 && inks[0].eq(&inks[1]) {
     inks.remove(1);
   }

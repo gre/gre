@@ -78,14 +78,20 @@ if (!isNaN(argv2)) {
           .replace(
             /#0FF/g,
             "rgb(" +
-              r.primary.main.map((n) => Math.round(n * 255)).join(",") +
-              ")"
+            r.primary.main.map((n) => Math.round(n * 255)).join(",") +
+            ")"
           )
           .replace(
             /#F0F/g,
             "rgb(" +
-              r.secondary.main.map((n) => Math.round(n * 255)).join(",") +
-              ")"
+            r.secondary.main.map((n) => Math.round(n * 255)).join(",") +
+            ")"
+          )
+          .replace(
+            /#FF0/g,
+            "rgb(" +
+            r.secondary.main.map((n) => Math.round(n * 255)).join(",") +
+            ")"
           );
         const props = generateVariables.inferProps(r, svg);
         for (let k in props) {
@@ -112,17 +118,17 @@ if (!isNaN(argv2)) {
         }
         console.log(
           k +
-            "\n" +
-            Object.entries(counters)
-              .sort((a, b) => b[1] - a[1])
-              .map(
-                ([k, v]) =>
-                  k.padStart(30) +
-                  ": " +
-                  ((100 * v) / all.length).toFixed(1) +
-                  "%"
-              )
-              .join("\n")
+          "\n" +
+          Object.entries(counters)
+            .sort((a, b) => b[1] - a[1])
+            .map(
+              ([k, v]) =>
+                k.padStart(30) +
+                ": " +
+                ((100 * v) / all.length).toFixed(1) +
+                "%"
+            )
+            .join("\n")
         );
         // fs.writeFileSync("study.json", JSON.stringify(all), "utf-8");
       });
