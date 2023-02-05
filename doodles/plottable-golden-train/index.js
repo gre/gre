@@ -70,10 +70,10 @@ const Main = ({ width, height, random }) => {
     const result = render(variables.opts);
     console.log(
       "svg calc time = " +
-        (Date.now() - prev) +
-        "ms – " +
-        (result.length / (1024 * 1024)).toFixed(3) +
-        " Mb"
+      (Date.now() - prev) +
+      "ms – " +
+      (result.length / (1024 * 1024)).toFixed(3) +
+      " Mb"
     );
     const props = generateVariables.inferProps(variables, result);
     const properties = {};
@@ -118,7 +118,7 @@ const Main = ({ width, height, random }) => {
             zIndex: 1,
             position: "relative",
             pointerEvents: "none",
-            background: "white",
+            lineHeight: 0
           }}
         >
           <Surface
@@ -165,12 +165,11 @@ function Downloadable({ svg, primary, secondary }) {
       let svgOut = svg
         .replace(
           "background:white",
-          `background:${
-            primary.bg
-              ? "rgb(" +
-                primary.bg.map((c) => Math.floor(c * 255)).join(",") +
-                ")"
-              : "white"
+          `background:${primary.bg
+            ? "rgb(" +
+            primary.bg.map((c) => Math.floor(c * 255)).join(",") +
+            ")"
+            : "white"
           }`
         )
         .replace(/opacity="[^"]*"/g, 'style="mix-blend-mode: multiply"');
@@ -183,14 +182,14 @@ function Downloadable({ svg, primary, secondary }) {
         .replace(
           /#F0F/g,
           "rgb(" +
-            secondary.main.map((n) => Math.round(n * 255)).join(",") +
-            ")"
+          secondary.main.map((n) => Math.round(n * 255)).join(",") +
+          ")"
         )
         .replace(
           /#FF0/g,
           "rgb(" +
-            secondary.main.map((n) => Math.round(n * 255)).join(",") +
-            ")"
+          secondary.main.map((n) => Math.round(n * 255)).join(",") +
+          ")"
         );
 
       setURI("data:image/svg+xml;base64," + btoa(svgOut));
@@ -281,9 +280,8 @@ const sharedVariables = `
 vec4 g = texture2D(paper, p);
 float grain = g.r;
 vec4 v = texture2D(t, p);
-float motion = .002*sin(-${
-  0.5 * Math.PI
-}*(time+p.x-3.*p.y+4.*cos(3.*p.x-10.*p.y)));
+float motion = .002*sin(-${0.5 * Math.PI
+  }*(time+p.x-3.*p.y+4.*cos(3.*p.x-10.*p.y)));
 ${/* float phase = cos(5.*p.x+time+cos(p.x-6.*p.y));*/ ""}
 vec4 v2 = texture2D(t, p+vec2(motion,0.));
 vec3 c1 = pal(v.r, primary, primaryHighlight);
