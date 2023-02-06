@@ -52,6 +52,7 @@ pub fn art(opts: &Opts) -> svg::Document {
   let mut train_slope = 0.0;
   let mut lowbridgey = 0.0;
   let mut bridge = String::from("");
+  let mut chimney_pos = (0.0, 0.0);
 
   let offsetstrategy = rng.gen_range(0, 5);
   while !train_found {
@@ -636,6 +637,8 @@ pub fn art(opts: &Opts) -> svg::Document {
 
         // smoke
 
+        chimney_pos = (chimneyx, chimneyytop);
+
         for _j in 0..8 {
           let mut ang = -PI / 2.0;
           let incr = 0.5;
@@ -1007,6 +1010,10 @@ pub fn art(opts: &Opts) -> svg::Document {
     .set("data-credits", "@greweb - 2023 - Golden Train".to_string())
     .set("data-hash", opts.hash.to_string())
     .set("data-traits", Value::Object(traits).to_string())
+    .set(
+      "data-chimney-position",
+      format!("{},{}", chimney_pos.0 / width, chimney_pos.1 / height),
+    )
     .set("viewBox", (0, 0, width, height))
     .set("width", format!("{}mm", width))
     .set("height", format!("{}mm", height))

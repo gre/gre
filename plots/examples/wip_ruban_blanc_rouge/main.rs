@@ -10,7 +10,7 @@ use svg::node::element::*;
 pub struct Opts {
   #[clap(short, long, default_value = "image.svg")]
   file: String,
-  #[clap(short, long, default_value = "148.0")]
+  #[clap(short, long, default_value = "148.5")]
   pub height: f64,
   #[clap(short, long, default_value = "210.0")]
   pub width: f64,
@@ -29,7 +29,17 @@ pub struct Opts {
 }
 
 fn art(opts: &Opts) -> Vec<Group> {
-  let routes = vec![(true, left(opts)), (false, right(opts))];
+  let routes = vec![0.0, opts.height]
+    .iter()
+    .enumerate()
+    .flat_map(|(i, &dy)| {
+      let mut rng = rng_from_seed(opts.seed + i as f64 / 0.03);
+      vec![
+        (true, translate_routes(left(opts, &mut rng), (0.0, dy))),
+        (false, translate_routes(right(opts, &mut rng), (0.0, dy))),
+      ]
+    })
+    .collect::<Vec<_>>();
 
   // Make the SVG
   let colors = vec!["#fff", "#fb2"];
@@ -59,7 +69,7 @@ fn art(opts: &Opts) -> Vec<Group> {
 fn main() {
   let opts: Opts = Opts::parse();
   let groups = art(&opts);
-  let mut document = base_document("#c00", opts.width, opts.height);
+  let mut document = base_document("#c00", opts.width, opts.height * 2.0);
   for g in groups {
     document = document.add(g);
   }
@@ -161,15 +171,14 @@ fn packing(
   circles
 }
 
-fn left(opts: &Opts) -> Vec<(usize, Vec<(f64, f64)>)> {
+fn left<R: Rng>(opts: &Opts, rng: &mut R) -> Vec<(usize, Vec<(f64, f64)>)> {
   let height = opts.height;
   let width = opts.width / 2.0;
   let pad = opts.pad;
-  let mut rng = rng_from_seed(opts.seed);
   let max_scale = 20.0;
 
   let mut circles = packing(
-    3.3 * opts.seed,
+    rng.gen_range(-1000.0, 1000.0),
     1000000,
     1000,
     rng.gen_range(1, 4),
@@ -244,7 +253,7 @@ fn shape_strokes_random<R: Rng>(
     .collect()
 }
 
-fn right(opts: &Opts) -> Vec<(usize, Vec<(f64, f64)>)> {
+fn right<R: Rng>(opts: &Opts, rng: &mut R) -> Vec<(usize, Vec<(f64, f64)>)> {
   let height = opts.height;
   let width = opts.width / 2.0;
   let pad = opts.pad;
@@ -286,4 +295,20 @@ fn right(opts: &Opts) -> Vec<(usize, Vec<(f64, f64)>)> {
   }
 
   routes
+}
+
+fn translate_routes(
+  routes: Vec<(usize, Vec<(f64, f64)>)>,
+  offset: (f64, f64),
+) -> Vec<(usize, Vec<(f64, f64)>)> {
+  routes
+    .into_iter()
+    .map(|(clr, route)| {
+      let route: Vec<(f64, f64)> = route
+        .into_iter()
+        .map(|(x, y)| (x + offset.0, y + offset.1))
+        .collect();
+      (clr, route)
+    })
+    .collect()
 }
