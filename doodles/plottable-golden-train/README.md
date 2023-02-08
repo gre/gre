@@ -8,10 +8,9 @@ Allowlist to <insertaddress> to be able to mint 60 NFT during the "pre-mint" pha
 
 # Plottable Golden Train
 
-Each mint is uniquely created with code, generating a random digital variant of this golden train traveling in far west mountains. Art have many variations (bridges, cactus, clouds, eagles, colors,...). This artwork is also optionally physically plottable (pen plotter) as a A6-size postcard. Check the link if you also want a physical.
+Each mint is uniquely created with code, generating a random digital variant of this golden train traveling in far west mountains. Art have many variations (bridges, cactus, clouds, eagles, colors,...). This artwork is also optionally physically plottable (pen plotter) as a A6-size postcard. Check the link if you also want a physical. https://greweb.me/plots/nft?stargaze
 
-The NFT is the recipe to a physically plottable art piece, it exports a SVG that you can plot with pens. owning it confers the right to plot or request a physical plot from the artist (extra cost for the physical derivatives) using this link: https://greweb.me/plots/nft?stargaze
- – The artist would use fountain pens and gel pens to achieve the final plot, but other plotting artists are free to use their own materials and ship to collectors as long as the NFT is owned at the time of the request. Simply drag&drop (or right-click-save) in a folder to get the .SVG.
+The NFT is the recipe to a physically plottable art piece, it exports a SVG that you can plot with pens. owning it confers the right to plot it – The artist would use isograph pens and gel pens to achieve the final plot, but other plotter artists are free to use their own materials and ship to collectors as long as the NFT is owned at the time of the request. Simply drag&drop (or right-click-save) in a folder to get the .SVG.
 
 For those interested in the technical details, this work was created using WebGL + Rust + WASM and is licensed under CC BY-SA 4.0. Additional information and the source code for this piece can be found at this link: https://github.com/gre/gre/tree/master/doodles/plottable-golden-train –
 

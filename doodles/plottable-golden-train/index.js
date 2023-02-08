@@ -284,20 +284,20 @@ const Post = ({
 };
 
 const gainShader = `
-float gain = smoothstep(0.5, 1.0, abs(cos(${0.5 * Math.PI}*(p.x+time))));
+float gain = smoothstep(.5,1.,abs(cos(${0.5 * Math.PI}*(p.x+time))));
 `;
 
 const sharedVariables = `
 vec4 g = texture2D(paper, p);
 float grain = g.r;
 vec4 v = texture2D(t, p);
-float motion = .003*smoothstep(0.0,0.05, length(p-chimneyPosition))*sin(-${
+float motion = .003*smoothstep(0.,.05,length(p-chimneyPosition))*sin(-${
   0.5 * Math.PI
 }*(time+p.x-3.*p.y+4.*cos(3.*p.x-10.*p.y)));
 ${/* float phase = cos(5.*p.x+time+cos(p.x-6.*p.y));*/ ""}
 vec4 v2 = texture2D(t, p+vec2(motion,0.));
-vec3 c1 = pal(v.r, primary, primaryHighlight);
-vec3 c2 = pal(min(v.g, v2.b), secondary, secondaryHighlight);
+vec3 c1 = pal(v.r,primary, primaryHighlight);
+vec3 c2 = pal(min(v.g,v2.b), secondary, secondaryHighlight);
 `;
 
 const clrmask = `v.r * v.g * v2.b`;
