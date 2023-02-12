@@ -11,6 +11,8 @@ tags:
 
 This physical plot was made with gold and silver gel pens on A4 Fabriano Black Black paper.
 
+It was live streamed on [Instagram](https://instagram.com/greweb) this morning (replay available)
+
 Squares are organized with their centers aligned on a grid but with size, color and filling that varies based on Perlin noise. This 1:1 was created during &SableRaph's WCC challenge with "Noise" prompt.
 
 Clipping is used to cut lines that are hidden by a square already (only strokes are done as it's a plot, can't cheat with filling black).
