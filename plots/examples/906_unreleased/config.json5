@@ -1,12 +1,10 @@
 {
-  "title": "Circles – @greweb",
+  "title": "20 minutes of Squares – @greweb",
   "layout": [
-    ["newtrail"],
     ["speed", "rotate", "scale"],
   ],
   "style": {
     "spacing": "space-around",
-    "alignment": "center",
     "inputsScale": 2,
     /*
     "colorMain": "#ff55bb",
@@ -16,14 +14,14 @@
     disabledColor: "#8a4377",
     */
   },
-  "predictive": "darkblue",
+  "predictive": "light",
   "berserkBoost": 20,
   "inputs": {
     "rotate": {
       "type": "Range",
-      "description": "angular speed of the circle in radians per iteration",
+      "description": "rotation to apply on the shape.",
       "display": "hslider",
-      "decay": 0.02,
+      "decay": 0.04,
       "min": -0.2,
       "max": 0.2,
       "initialValue": 0,
@@ -31,27 +29,23 @@
     },
     "scale": {
       "type": "Range",
-      "description": "radius of the circle to draw in millimeters",
+      "description": "size of the shape (in mm)",
       "display": "vslider",
-      "decay": 0.02,
-      "min": 3,
-      "max": 20,
+      "decay": 0.04,
+      "min": 5,
+      "max": 25,
       "initialValue": 12,
-      "magnitude": 2
+      "magnitude": 0
     },
     "speed": {
       "type": "Range",
-      "description": "amplitude of motion in millimeters per iteration",
+      "description": "speed of the shape (in mm/iteration)",
       "display": "vslider",
       "decay": 0.02,
-      "min": 1,
+      "min": 0.1,
       "max": 10,
-      "initialValue": 3,
-      "magnitude": 2
-    },
-    "newtrail": {
-      "type": "CounterBtn",
-      "description": "start a new trail somewhere else",
-    },
+      "initialValue": 1,
+      "magnitude": 0
+    }
   }
 }

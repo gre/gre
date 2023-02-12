@@ -1765,10 +1765,11 @@ checksum = "0717cef1bc8b636c6e1c1bbdefc09e6322da8a9321966e8928ef80d20f7f770f"
 
 [[package]]
 name = "livedraw"
-version = "0.1.2"
+version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "423fa3d87fe600d1f6d8c417fba60d37ef3095f9e7bc830339de2de0d3fbda6d"
+checksum = "2f0ae82763a3a4d7b7521e1718fcfa61dc1317c1819e7544ab60dbc834ffda2d"
 dependencies = [
+ "dirs",
  "isahc",
  "serde",
  "serde_json",
@@ -3548,9 +3549,9 @@ checksum = "73473c0e59e6d5812c5dfe2a064a6444949f089e20eec9a2e5506596494e4623"
 
 [[package]]
 name = "svg"
-version = "0.12.1"
+version = "0.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a6e6ff893392e6a1eb94a210562432c6380cebf09d30962a012a655f7dde2ff8"
+checksum = "e715e0c3fc987f4c435dc7189641fd9caa6919a74675ace605c38e201d278001"
 
 [[package]]
 name = "syn"

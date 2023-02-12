@@ -1,14 +1,11 @@
 {
   "title": "Mountains by @greweb (A6 postcard)",
   "layout": [
-    [
-      "amp",
-      "dy",
-      "mountain"
-    ],
+      ["mountain"],
+      [ "amp", "dy"  ],
   ],
   "style": {
-    "spacing": "space-around"
+    "spacing": "space-around",
   },
   "predictive": "light",
   "berserkBoost": 10,
@@ -28,7 +25,7 @@
         "attack": 10,
         "decay": 10,
         "sustain": 0.5,
-        "release": 60
+        "release": 40
       }
     },
     "amp": {
