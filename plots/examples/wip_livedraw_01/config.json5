@@ -1,0 +1,113 @@
+{
+  "title": "Koop Mountains – @greweb",
+  "layout": [
+    ["speed", "rotate", "scale"],
+    ["sky", "polygon"],
+    ["mountain", "amp", "dy"],
+  ],
+  "style": {
+    "spacing": "space-around",
+    "inputsScale": 2,
+    /*
+    "colorMain": "#ff55bb",
+    "colorLive": "#aa0055",
+    "bg": "radial-gradient(circle, #430926, #1c0c15)",
+    dustColor: "#ff68c0",
+    disabledColor: "#8a4377",
+    */
+  },
+  "predictive": "light",
+  "berserkBoost": 20,
+  "inputs": {
+    "rotate": {
+      "type": "Range",
+      "description": "rotation to apply on the shape.",
+      "display": "hslider",
+      "decay": 0.04,
+      "min": -0.2,
+      "max": 0.2,
+      "initialValue": 0,
+      "magnitude": 2
+    },
+    "scale": {
+      "type": "Range",
+      "description": "size of the shape (in mm)",
+      "display": "vslider",
+      "decay": 0.04,
+      "min": 5,
+      "max": 25,
+      "initialValue": 12,
+      "magnitude": 0
+    },
+    "speed": {
+      "type": "Range",
+      "description": "speed of the shape (in mm/iteration)",
+      "display": "vslider",
+      "decay": 0.02,
+      "min": 0.1,
+      "max": 10,
+      "initialValue": 1,
+      "magnitude": 0
+    },
+    "mountain": {
+      "description": "shapes the curve of the mountains with 26 letters",
+      "letters": "aqwzsxedcrfvtgbyhnujikolpm",
+      "type": "KeyboardCurve",
+      "label": "mountain curve",
+      "spread": 2,
+      "threshold": 0.5,
+      "resolution": 1,
+      "saturateUp": 1.1,
+      "msgOffset": 3,
+      "msgAmp": 15,
+      "envelope": {
+        "attack": 10,
+        "decay": 10,
+        "sustain": 0.5,
+        "release": 40
+      }
+    },
+    "amp": {
+      "description": "amplitude to draw the mountain curve with",
+      "type": "Range",
+      "display": "vslider",
+      "decay": 0.02,
+      "min": 0,
+      "max": 30,
+      "initialValue": 8,
+      "magnitude": 1
+    },
+    "dy": {
+      "description": "distance between the mountains lines (increment in mm)",
+      "type": "Range",
+      "display": "vslider",
+      "decay": 0.03,
+      "min": 0.4,
+      "max": 3,
+      "initialValue": 0.8,
+      "magnitude": 2
+    },
+    "sky": {
+      "description": "how close to the top should the mountains stop?",
+      "type": "Range",
+      "display": "vslider",
+      "decay": 0.01,
+      "min": 0.1,
+      "max": 0.7,
+      "initialValue": 0.4,
+      "magnitude": 2
+    },
+    "polygon": {
+      "type": "Poll",
+      "description": "define what will we draw in the sky.",
+      "question": "sky shape?",
+      "choices": {
+        "circle": "Circle",
+        "triangle": "triangle",
+        "square": "square",
+        "pentagon": "pentagon",
+        "hexagon": "hexagon",
+      }
+    },
+  }
+}
