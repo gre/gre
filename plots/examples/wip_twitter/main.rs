@@ -7,6 +7,9 @@ use svg::node::element::*;
 use svg::parser::Event;
 use svg::Document;
 
+// TODO o, v, w => try to make it work with the ending raising and eating on the next letter a bit?
+// TODO i, j => try to make a pen up in between to do the ° logically in plot order
+
 #[derive(Parser)]
 #[clap()]
 pub struct Opts {
@@ -22,9 +25,12 @@ pub struct Opts {
   pub seed: f64,
   #[clap(short, long, default_value = "2.8")]
   pub size: f64,
-  // TODO letter precision config
-  #[clap(short, long, default_value = "0.5")]
+  #[clap(short, long, default_value = "0.1")]
+  pub letter_precision: f64,
+  #[clap(short, long, default_value = "0.45")]
   pub vertical_chance: f64,
+  #[clap(short, long, default_value = "1.0")]
+  pub non_attached_pad: f64,
   #[clap(short, long, default_value = "500000")]
   pub max_iterations: usize,
   #[clap(short, long, default_value = "40")]
@@ -33,6 +39,8 @@ pub struct Opts {
   list_file: String,
   #[clap(short, long, default_value = "images/letters.svg")]
   letters_file: String,
+  #[clap(short, long, default_value = "images/twitter5k.png")]
+  image_layer: String,
   #[clap(short, long)]
   debug: bool,
 }
@@ -99,7 +107,7 @@ struct LetterSvgReferential {
 }
 
 impl LetterSvgReferential {
-  fn new(svg_file: String) -> LetterSvgReferential {
+  fn new(svg_file: String, letter_precision: f64, non_attached_pad: f64) -> LetterSvgReferential {
     let mut content = String::new();
 
     let mut height = 0.0;
@@ -131,7 +139,8 @@ impl LetterSvgReferential {
 
     let mut letters = HashMap::new();
     for (c, svg) in documents_per_char.iter() {
-      let polylines = svg2polylines::parse(svg.as_str(), 0.1, true).unwrap();
+      let polylines = svg2polylines::parse(svg.as_str(), letter_precision, true).unwrap();
+      let can_attach = !"1234567890".contains(c);
 
       let mut minx = std::f64::INFINITY;
       let mut maxx = -std::f64::INFINITY;
@@ -145,14 +154,20 @@ impl LetterSvgReferential {
           }
         }
       }
-      let width = maxx - minx;
+
+      let mut width = maxx - minx;
+
+      let mut dx = minx;
+      if !can_attach {
+        dx -= non_attached_pad;
+        width += 2.0 * non_attached_pad;
+      }
 
       let routes = polylines
         .iter()
-        .map(|l| l.iter().map(|p| (p.x - minx, p.y)).collect())
+        .map(|l| l.iter().map(|p| (p.x - dx, p.y)).collect())
         .collect();
 
-      let can_attach = !"1234567890".contains(c);
       letters.insert(c.clone(), Letter::new(routes, width, height, can_attach));
     }
 
@@ -363,7 +378,7 @@ fn art(
 
   let mut rng = rng_from_seed(opts.seed);
 
-  let get_color = image_get_color("images/twitter.png").unwrap();
+  let get_color = image_get_color(opts.image_layer.as_str()).unwrap();
 
   let mut last_point = (width * 0.5, height * 0.5);
 
@@ -407,36 +422,9 @@ fn art(
       println!("no location found for {} at index {}", item, i);
       break;
     }
-
-    // HACK
-    /*
-    if i == 100 {
-      break;
-    }
-    */
   }
 
-  /*
-  routes_outer = letters_ref
-    .letters
-    .values()
-    .cloned()
-    .collect::<Vec<_>>()
-    .concat();
-  */
-  /*
-  routes_outer = vec![];
-  let mut x = 10.0;
-  let mut y = 10.0;
-  for l in letters_ref.letters.values() {
-    let (routes, (dx, dy)) = l.render((x, y), 10.0, false);
-    x += dx;
-    y += dy;
-    routes_outer.extend(routes);
-  }
-  */
-
-  vec![(routes_inner, "#888"), (routes_outer, "#000")]
+  vec![(routes_inner, "#000"), (routes_outer, "#f0f")]
     .iter()
     .enumerate()
     .map(|(i, (routes, color))| {
@@ -490,7 +478,7 @@ fn main() {
     }
   };
 
-  let letters_ref = LetterSvgReferential::new(opts.letters_file.clone());
+  let letters_ref = LetterSvgReferential::new(opts.letters_file.clone(), opts.letter_precision, opts.non_attached_pad);
 
   let list = file_content.split_ascii_whitespace().collect::<Vec<_>>();
   let groups = art(&opts, list, &letters_ref);

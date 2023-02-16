@@ -86,7 +86,7 @@ impl Source for Shape {
     let mut s = 999.;
     let mut rng = rng_from_seed(self.seed);
     let count =
-    rng.gen_range(5, 80);
+    rng.gen_range(5, 40);
     let max_size = 0.2;
     let v = rng.gen_range(0.1, 0.9);
     for _i in 0..count {
@@ -106,7 +106,7 @@ impl Source for Shape {
       };
       s = s.smooth_union(
         rng.gen_range(0.0, 0.1),
-        sd_capsule(p, a, b, max_size * rng.gen_range(0.2, 1.0)),
+        sd_capsule(p, a, b, max_size * rng.gen_range(0.5, 1.0)),
       );
     }
     s
@@ -432,7 +432,7 @@ fn spiral_optimized_in_triangle(
   if d < 3.0 * dr {
     return vec![];
   }
-  let radius = 0.9 * d;
+  let radius = d;
   let (x,y) = center;  
   spiral_optimized(x, y, radius, dr)
 }
