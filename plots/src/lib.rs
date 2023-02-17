@@ -17,6 +17,7 @@ use svg::node::element::{Circle, Group, Path};
 use svg::Document;
 use time::Duration;
 
+pub mod letters;
 pub mod line_intersection;
 pub mod pi;
 
@@ -1242,7 +1243,11 @@ pub fn spiral(x: f64, y: f64, radius: f64, dr: f64) -> Vec<(f64, f64)> {
   route
 }
 
-pub fn circle_route(center: (f64, f64), r: f64, count: usize) -> Vec<(f64, f64)> {
+pub fn circle_route(
+  center: (f64, f64),
+  r: f64,
+  count: usize,
+) -> Vec<(f64, f64)> {
   let mut route = Vec::new();
   for i in 0..(count + 1) {
     let a = 2. * PI * i as f64 / (count as f64);
