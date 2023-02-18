@@ -1,12 +1,12 @@
 ---
-date: "2023-01-25"
+date: "2023-02-18"
 title: "H"
-image: /images/plots/.jpg
+image: /images/plots/920.jpg
 ---
 
 This artwork is created with code, using the distance function to the "H" letter with a 5 lines pattern along the distance field. The generator was able to yield a lot of variations and I had to chose one.
 
-<img src="/images/plots/h-choices.jpg" width="100%"/>
+<img src="/images/plots/920-choices.jpg" width="100%"/>
 
 Chosing one outcome among all possibilities that a generator can yield may be one of the hardest choice a generative artist have to do. There were tons of possibilities that my generator was offering but I chose to stay in minimalism.
 
