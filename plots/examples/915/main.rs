@@ -58,6 +58,7 @@ struct Art {
   index: usize,
   remaining_mountains: usize,
   sky_limit: usize,
+  sky_should_enable_next_time: bool,
 }
 
 impl Art {
@@ -72,6 +73,7 @@ impl Art {
       index: 0,
       remaining_mountains: 0,
       sky_limit: 200,
+      sky_should_enable_next_time: false,
     }
   }
 }
@@ -90,6 +92,12 @@ impl LivedrawArt for Art {
       return vec![ArtAction::Pause(
         String::from("Get ready to build mountains!"),
         30.0,
+      )];
+    }
+    if self.sky_should_enable_next_time {
+      return vec![ArtAction::Pause(
+        String::from("Get ready to plot the sky!"),
+        40.0,
       )];
     }
     return vec![];
@@ -116,7 +124,7 @@ impl LivedrawArt for Art {
     self.remaining_mountains =
       ((limit - y) / input.dy.value).ceil().max(0.0) as usize;
 
-    if self.sky.is_none() && y < limit {
+    if self.sky_should_enable_next_time {
       let bound = (
         self.args.padding,
         self.args.padding,
@@ -176,6 +184,8 @@ impl LivedrawArt for Art {
         input.dy.value,
       ));
     }
+
+    self.sky_should_enable_next_time = self.sky.is_none() && y < limit;
 
     if routes.len() == 0 {
       return ArtIncrement::Continue;
@@ -623,7 +633,7 @@ impl ClippedShapeBuilder {
 
     let mut routes = vec![route.clone()];
 
-    let uses_spiral = true;
+    let uses_spiral = false; // uses_circle; // TODO this should be a param?
 
     if uses_spiral {
       let dr = 1.0;

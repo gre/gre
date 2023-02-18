@@ -1,7 +1,7 @@
 ---
-date: "2022-09-10"
-title: "single hue"
-image: /images/plots/.jpg
+date: "2023-02-18"
+title: "Single hue"
+image: /images/plots/919.jpg
 tags:
   - wccchallenge
 ---

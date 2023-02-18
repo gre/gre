@@ -1,13 +1,12 @@
 {
   "title": "Koop Mountains – @greweb",
   "layout": [
-    ["speed", "rotate", "scale"],
-    ["sky", "polygon"],
-    ["mountain", "amp", "dy"],
+    ["amp", "dy", "mountain"],
+    ["sky", "speed", "rotate", "scale", "polygon"],
+    // ["sky"],
   ],
   "style": {
     "spacing": "space-around",
-    "inputsScale": 2,
     /*
     "colorMain": "#ff55bb",
     "colorLive": "#aa0055",
@@ -34,9 +33,9 @@
       "description": "size of the shape (in mm)",
       "display": "vslider",
       "decay": 0.04,
-      "min": 5,
-      "max": 25,
-      "initialValue": 12,
+      "min": 1,
+      "max": 20,
+      "initialValue": 3,
       "magnitude": 0
     },
     "speed": {
@@ -46,7 +45,7 @@
       "decay": 0.02,
       "min": 0.1,
       "max": 10,
-      "initialValue": 1,
+      "initialValue": 2,
       "magnitude": 0
     },
     "mountain": {
@@ -56,15 +55,15 @@
       "label": "mountain curve",
       "spread": 2,
       "threshold": 0.5,
-      "resolution": 1,
+      "resolution": 4,
       "saturateUp": 1.1,
       "msgOffset": 3,
-      "msgAmp": 15,
+      "msgAmp": 20,
       "envelope": {
-        "attack": 10,
-        "decay": 10,
+        "attack": 5,
+        "decay": 5,
         "sustain": 0.5,
-        "release": 40
+        "release": 30
       }
     },
     "amp": {
@@ -92,9 +91,9 @@
       "type": "Range",
       "display": "vslider",
       "decay": 0.01,
-      "min": 0.1,
-      "max": 0.7,
-      "initialValue": 0.4,
+      "min": 0,
+      "max": 1,
+      "initialValue": 1,
       "magnitude": 2
     },
     "polygon": {
