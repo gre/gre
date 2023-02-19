@@ -1181,6 +1181,9 @@ fn make_layers(
       let opdiff = 0.15 / (routes.len() as f64);
       let mut trace = 0f64;
       for route in routes.clone() {
+        if route.len() < 2 {
+          continue;
+        }
         trace += 1f64;
         let data = render_route(Data::new(), route);
         l = l.add(
