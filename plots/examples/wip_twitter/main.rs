@@ -73,7 +73,7 @@ fn art(
     if i % 100 == 0 {
       println!("{} / {}", i, list.len());
     }
-    let mut word = Word::new(
+    let mut word = TextRendering::new(
       item.to_string().to_lowercase(),
       size,
       rng.gen_bool(opts.vertical_chance),
@@ -175,4 +175,191 @@ fn main() {
     document = document.add(g);
   }
   svg::save(opts.file, &document).unwrap();
+}
+
+pub struct TextRendering {
+  text: String,
+  x: f64,
+  y: f64,
+  size: f64,
+  vertical: bool,
+  calculated_width: f64,
+  debug: bool,
+}
+
+pub fn collide_aabb(
+  bound1: (f64, f64, f64, f64),
+  bound2: (f64, f64, f64, f64),
+) -> bool {
+  let (x1, y1, x2, y2) = bound1;
+  let (x3, y3, x4, y4) = bound2;
+  x1 < x4 && x2 > x3 && y1 < y4 && y2 > y3
+}
+
+impl TextRendering {
+  pub fn new(
+    text: String,
+    size: f64,
+    vertical: bool,
+    letter_ref: &LetterSvgReferential,
+    debug: bool,
+  ) -> TextRendering {
+    let mut calculated_width = 0.0;
+    for c in text.chars() {
+      if let Some(letter) = letter_ref.get_letter(&c.to_string()) {
+        let w = letter.width_for_size(size);
+        calculated_width += w;
+      }
+    }
+    TextRendering {
+      text,
+      x: 0.,
+      y: 0.,
+      size,
+      vertical,
+      calculated_width,
+      debug,
+    }
+  }
+  pub fn set_pos(&mut self, x: f64, y: f64) {
+    self.x += x;
+    self.y += y;
+  }
+  pub fn get_pos_end_word(&self) -> (f64, f64) {
+    let (w, h) = self.size();
+    if self.vertical {
+      (self.x + w / 2.0, self.y + h)
+    } else {
+      (self.x + w, self.y + h / 2.0)
+    }
+  }
+  pub fn size(&self) -> (f64, f64) {
+    let w = self.calculated_width;
+    let h = self.size;
+    if self.vertical {
+      (h, w)
+    } else {
+      (w, h)
+    }
+  }
+  pub fn bounds(&self) -> (f64, f64, f64, f64) {
+    let (w, h) = self.size();
+    (self.x, self.y, self.x + w, self.y + h)
+  }
+
+  pub fn find_location<R: Rng>(
+    &self,
+    rng: &mut R,
+    words: &Vec<TextRendering>,
+    max: usize,
+    width: f64,
+    height: f64,
+    pad: f64,
+    optimized_closed_to: (f64, f64),
+    optimized_count: usize,
+  ) -> Option<(f64, f64)> {
+    let mut x = rng.gen_range(0.0, width);
+    let mut y = rng.gen_range(0.0, height);
+    let mut i = 0;
+    let mut candidates = Vec::new();
+    let (w, h) = self.size();
+    while i < max {
+      if x < pad {
+        x = pad;
+      }
+      if x > width - pad - w {
+        x = width - pad - w;
+      }
+      if y < pad {
+        y = pad;
+      }
+      if y > height - pad - h {
+        y = height - pad - h;
+      }
+
+      let mut found = true;
+      for word in words {
+        let bound = (x, y, x + w, y + h);
+        if collide_aabb(bound, word.bounds()) {
+          found = false;
+          break;
+        }
+      }
+      if found {
+        candidates.push((x, y));
+        // return Some((x, y));
+      }
+      if candidates.len() > optimized_count {
+        break;
+      }
+      x = rng.gen_range(0.0, width);
+      y = rng.gen_range(0.0, height);
+      i += 1;
+    }
+    if candidates.len() > 0 {
+      // sort candidates by distance to optimized_closed_to
+      candidates.sort_by(|a, b| {
+        let d1 = (a.0 - optimized_closed_to.0).powi(2)
+          + (a.1 - optimized_closed_to.1).powi(2);
+        let d2 = (b.0 - optimized_closed_to.0).powi(2)
+          + (b.1 - optimized_closed_to.1).powi(2);
+        d1.partial_cmp(&d2).unwrap()
+      });
+      return Some(candidates[0]);
+    }
+    None
+  }
+
+  pub fn draw(
+    &self,
+    letter_ref: &LetterSvgReferential,
+  ) -> Vec<Vec<(f64, f64)>> {
+    let mut routes = Vec::new();
+
+    if self.debug {
+      let (w, h) = self.size();
+      let x = self.x;
+      let y = self.y;
+      let mut route = Vec::new();
+      route.push((x, y));
+      route.push((x + w, y));
+      route.push((x + w, y + h));
+      route.push((x, y + h));
+      route.push((x, y));
+      routes.push(route);
+    }
+
+    let mut x = self.x;
+    let mut y = self.y;
+    let mut can_attach = true;
+    let mut last: Vec<(f64, f64)> = vec![];
+    for c in self.text.chars() {
+      if let Some(letter) = letter_ref.get_letter(&c.to_string()) {
+        let (rts, (dx, dy)) = letter.render((x, y), self.size, self.vertical);
+        if letter.can_attach && can_attach {
+          // convention: last path attached
+          let mut rts = rts.clone();
+          let add = rts.pop().unwrap();
+          last.extend(add);
+          routes.extend(rts);
+        } else {
+          if last.len() > 0 {
+            routes.push(last);
+            last = vec![];
+          }
+          routes.extend(rts);
+        }
+        can_attach = letter.can_attach;
+        x += dx;
+        y += dy;
+      } else {
+        println!("letter not found: {}", c);
+      }
+    }
+    if last.len() > 0 {
+      routes.push(last);
+    }
+
+    routes
+  }
 }
