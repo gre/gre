@@ -1,0 +1,45 @@
+{
+  "title": "Chat – @greweb",
+  "layout": [
+    ["fontsize", "lineheight"]
+  ],
+  "style": {
+    "spacing": "space-around",
+    /*
+    "colorMain": "#ff55bb",
+    "colorLive": "#aa0055",
+    "bg": "radial-gradient(circle, #430926, #1c0c15)",
+    dustColor: "#ff68c0",
+    disabledColor: "#8a4377",
+    */
+  },
+  "predictive": "light",
+  "berserkBoost": 20,
+  "inputs": {
+    "text": {
+      "type": "LastChatMessage",
+      "description": "",
+      maxLetters: 30
+    },
+    "fontsize": {
+      "description": "font size",
+      "type": "Range",
+      "display": "vslider",
+      "decay": 0.02,
+      "min": 1,
+      "max": 10,
+      "initialValue": 3,
+      "magnitude": 1
+    },
+    "lineheight": {
+      "description": "distance between each line",
+      "type": "Range",
+      "display": "vslider",
+      "decay": 0.02,
+      "min": 0,
+      "max": 10,
+      "initialValue": 3,
+      "magnitude": 1
+    },
+  }
+}

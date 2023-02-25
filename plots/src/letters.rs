@@ -3,6 +3,7 @@ use svg::node::element::*;
 use svg::parser::Event;
 use svg::Document;
 
+#[derive(Clone)]
 pub struct Letter {
   pub routes: Vec<Vec<(f64, f64)>>,
   pub width: f64,
@@ -61,6 +62,7 @@ impl Letter {
   }
 }
 
+#[derive(Clone)]
 pub struct LetterSvgReferential {
   letters: HashMap<String, Letter>,
 }
