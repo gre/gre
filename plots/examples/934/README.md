@@ -3,6 +3,7 @@ date: "2023-02-26"
 title: "5k followers of @greweb Twitter"
 image: /images/plots/934.jpg
 tweet: https://twitter.com/greweb/status/1629866413249757191
+nft: https://objkt.com/asset/KT1FxuHijMyjUiHbAd9b3faaRUvo95oDnjM5/3
 tags:
   - twitter
   - 70x50cm
