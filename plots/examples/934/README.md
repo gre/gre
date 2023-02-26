@@ -10,7 +10,7 @@ tags:
 ---
 
 
-I just reached 5000 followers on Twitter and this is a physical celebration of this milestone. All Twitter handles were drawn on paper, with a pen plotter robot for 4 hours 18 minutes. a V8 black pen on light 70x50cm paper. There are about 55000 letters and this is approximatively 200 meters of ink.
+I just reached 5000 followers on Twitter and this is a physical celebration of this milestone. All Twitter handles were drawn on paper, with a pen plotter robot for 4 hours 18 minutes. a V5 black pen on light 70x50cm paper. There are about 55000 letters and this is approximatively 200 meters of ink.
 
 **If you follow me on Twitter, you are very likely in this, will you spot yourself? Let me know on twitter. Good luck =)**
 
