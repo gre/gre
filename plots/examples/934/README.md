@@ -45,4 +45,4 @@ To summarize this:
 - We iterate on these segments to make words following them, we equilibrate an equal padding between words for the general density. We also use a collision mask to bail out any word that would be too close to another one.
 
 
-<a href="/images/plots/934-z-1.jpg" target="_blank"><img src="/images/plots/934-z-1.jpg" width="100%"/></a><a href="/images/plots/934-z-1.jpg" target="_blank"><img src="/images/plots/934-z-2.jpg" width="100%"/></a><a href="/images/plots/934-z-1.jpg" target="_blank"><img src="/images/plots/934-z-3.jpg" width="100%"/></a><a href="/images/plots/934-z-1.jpg" target="_blank"><img src="/images/plots/934-z-4.jpg" width="100%"/></a>
+<a href="/images/plots/934-z-1.jpg" target="_blank"><img src="/images/plots/934-z-1.jpg" width="100%"/></a><a href="/images/plots/934-z-2.jpg" target="_blank"><img src="/images/plots/934-z-2.jpg" width="100%"/></a><a href="/images/plots/934-z-3.jpg" target="_blank"><img src="/images/plots/934-z-3.jpg" width="100%"/></a><a href="/images/plots/934-z-4.jpg" target="_blank"><img src="/images/plots/934-z-4.jpg" width="100%"/></a>
