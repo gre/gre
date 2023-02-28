@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import useDimensions from "react-cool-dimensions";
 import Head from "next/head";
 import Link from "next/link";
 import { Global } from "../../components/Global";
@@ -300,6 +301,18 @@ export default function Home({ tag }) {
   });
   const choice = choices[i];
 
+  const { observe, currentBreakpoint } = useDimensions({
+    breakpoints: { small: 0, large: 480 },
+    updateOnBreakpointChange: true,
+    onResize: ({ currentBreakpoint }) => {
+
+    },
+  });
+
+
+
+  const padding = currentBreakpoint === "small" ? "5px" : "3em"
+
   return (
     <Global>
       <Head>
@@ -350,6 +363,7 @@ export default function Home({ tag }) {
 
           <Content>
             <div
+              ref={observe}
               style={{
                 padding: "10px 0",
                 margin: "40px 0",
@@ -368,7 +382,7 @@ export default function Home({ tag }) {
                 Plottable NFT
                 <div
                   style={{
-                    padding: "0.8em 3em",
+                    padding: "0.8em " + padding,
                   }}
                 >
                   <select
@@ -417,7 +431,7 @@ export default function Home({ tag }) {
                   style={{
                     marginTop: "0.8em",
                     fontWeight: 200,
-                    padding: "0 0 0 3em",
+                    padding: "0 0 0 " + padding,
                     display: "flex",
                     flexDirection: "column",
                   }}
@@ -440,15 +454,21 @@ export default function Home({ tag }) {
                     </>
                   ) : null}
                 </div>
+                <p style={{ opacity: 0.5 }}>
+                  <em>(international shipping included, no VAT or customs fees)</em>
+                </p>
               </Row>
               <Row>
                 <Circle n={3} />
                 Provide the shipping address and proof of transaction:
-                <div style={{ padding: "0em 3em" }}>
+                <div style={{ padding: "0em " + padding }}>
                   <p>
                     <CTA href="https://forms.gle/JWUfuAjochGQ9BQu7">
                       Fill this Google Form
                     </CTA>
+                  </p>
+                  <p>
+                    Feel free to get in touch:{" "}<strong>greweb (at) protonmail.com</strong> / <a href="https://twitter.com/greweb">@greweb</a>.
                   </p>
                 </div>
               </Row>
@@ -462,7 +482,7 @@ export default function Home({ tag }) {
                 paddingTop: 10,
               }}
             >
-              @greweb is happy to physically plot art on demand and deliver
+              @greweb physically plot on demand and deliver
               signed plots worldwide to "plottable NFT" digital collectors.
             </h3>
 
