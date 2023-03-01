@@ -1,0 +1,73 @@
+{
+  "title": "Mountain of text – @greweb",
+  "layout": [
+    ["fontsize", "lineheight", "amp", "mountain"]
+  ],
+  "style": {
+    "spacing": "space-around",
+    /*
+    "colorMain": "#ff55bb",
+    "colorLive": "#aa0055",
+    "bg": "radial-gradient(circle, #430926, #1c0c15)",
+    dustColor: "#ff68c0",
+    disabledColor: "#8a4377",
+    */
+  },
+  "predictive": "light",
+  "berserkBoost": 20,
+  "inputs": {
+    "text": {
+      "type": "LastChatMessage",
+      "description": "",
+      maxLetters: 30
+    },
+    "fontsize": {
+      "description": "font size",
+      "type": "Range",
+      "display": "vslider",
+      "decay": 0.02,
+      "min": 2,
+      "max": 6,
+      "initialValue": 3,
+      "magnitude": 1
+    },
+    "lineheight": {
+      "description": "distance between each line",
+      "type": "Range",
+      "display": "vslider",
+      "decay": 0.02,
+      "min": 0,
+      "max": 10,
+      "initialValue": 3,
+      "magnitude": 1
+    },
+    "mountain": {
+      "description": "shapes the curve of the mountains with digits",
+      "letters": "1234567890",
+      "type": "KeyboardCurve",
+      "label": "mountain curve",
+      "spread": 1,
+      "threshold": 0.5,
+      "resolution": 1,
+      "saturateUp": 1.1,
+      "msgOffset": 3,
+      "msgAmp": 20,
+      "envelope": {
+        "attack": 5,
+        "decay": 5,
+        "sustain": 0.5,
+        "release": 30
+      }
+    },
+    "amp": {
+      "description": "amplitude to draw the mountain curve with",
+      "type": "Range",
+      "display": "vslider",
+      "decay": 0.02,
+      "min": 0,
+      "max": 10,
+      "initialValue": 8,
+      "magnitude": 1
+    },
+  }
+}

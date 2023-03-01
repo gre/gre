@@ -1,0 +1,59 @@
+{
+  "title": "Polar shapes – @greweb",
+  "layout": [
+    ["dist", "amp", "curve"]
+  ],
+  "style": {
+    "spacing": "space-around",
+    /*
+    "colorMain": "#ff55bb",
+    "colorLive": "#aa0055",
+    "bg": "radial-gradient(circle, #430926, #1c0c15)",
+    dustColor: "#ff68c0",
+    disabledColor: "#8a4377",
+    */
+  },
+  "predictive": "light",
+  "berserkBoost": 20,
+  "inputs": {
+    "dist": {
+      "description": "distance between each line",
+      "type": "Range",
+      "display": "vslider",
+      "decay": 0.02,
+      "min": 0,
+      "max": 10,
+      "initialValue": 3,
+      "magnitude": 1
+    },
+    "curve": {
+      "description": "shapes the curve",
+      "letters": "aqwzsxedcrfvtgbyhnujikolpm",
+      "type": "KeyboardCurve",
+      "label": "mountain curve",
+      "projection": "polar",
+      "spread": 4,
+      "threshold": 0.5,
+      "resolution": 1,
+      "saturateUp": 1.1,
+      "msgOffset": 3,
+      "msgAmp": 20,
+      "envelope": {
+        "attack": 10,
+        "decay": 20,
+        "sustain": 0.5,
+        "release": 60
+      }
+    },
+    "amp": {
+      "description": "amplitude to draw the mountain curve with",
+      "type": "Range",
+      "display": "vslider",
+      "decay": 0.02,
+      "min": 0,
+      "max": 10,
+      "initialValue": 8,
+      "magnitude": 1
+    },
+  }
+}
