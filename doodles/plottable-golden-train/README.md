@@ -6,6 +6,10 @@ whitelist premint 50%
 Allowlist to <insertaddress> to be able to mint 60 NFT during the "pre-mint" phase, before it is "public".
 -->
 
+- **Article: https://publicworks.art/blog/plottable-golden-train-by-greweb**
+- **Link of the generator on publicworks.art: https://publicworks.art/work/plottable-golden-train**
+- **Link of the generator on Stargaze: https://www.stargaze.zone/launchpad/stars19hmnq0sw42pvsy79vl7adgpc8hy30lltjuhr4rje4sghz9cl96wqec3g9f**
+
 # Plottable Golden Train
 
 Plottable Golden Train includes many variations (bridges, cactus, clouds, eagles, colors,...) entirely generated with code at mint (generative art). Made only with strokes, this NFT can optionally be physically pen plotted, into a A6-size postcard. https://greweb.me/plots/nft?stargaze
