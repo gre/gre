@@ -345,9 +345,10 @@ export default function Home({ posts, plots }) {
               <div>
                 <h1>@greweb</h1>
                 <div className="socials">
-                  {me.social.map(({ id, url, icon, text, extra }) => (
-                    <a key={id} href={url} title={text}>
+                  {me.social.map(({ id, url, icon, text, color, highlighted }) => (
+                    <a key={id} href={url} title={text} style={{ color }}>
                       <img className="icon" alt={text} src={icon} />
+                      {highlighted ? <strong>{" "}{text}</strong> : null}
                     </a>
                   ))}
                 </div>

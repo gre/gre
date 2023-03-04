@@ -1,7 +1,18 @@
 {
+  "debug": true,
   "title": "Polar shapes – @greweb",
   "layout": [
-    ["dist", "amp", "curve"]
+    
+    [
+      { children: [
+        "dist",
+        "amp",
+      ], style: {alignItems:"center"}},
+      {children:"curve", style: {width: 440}},
+    ],
+    
+
+      // "polygon", [ "speed",  "rotate", "scale" ],
   ],
   "style": {
     "spacing": "space-around",
@@ -13,16 +24,15 @@
     disabledColor: "#8a4377",
     */
   },
-  "predictive": "light",
   "berserkBoost": 20,
   "inputs": {
     "dist": {
       "description": "distance between each line",
       "type": "Range",
-      "display": "vslider",
+      "display": "hslider",
       "decay": 0.02,
-      "min": 0,
-      "max": 10,
+      "min": 0.1,
+      "max": 5,
       "initialValue": 3,
       "magnitude": 1
     },
@@ -48,12 +58,55 @@
     "amp": {
       "description": "amplitude to draw the mountain curve with",
       "type": "Range",
-      "display": "vslider",
+      "display": "hslider",
       "decay": 0.02,
       "min": 0,
       "max": 10,
       "initialValue": 8,
       "magnitude": 1
+    },
+
+    "polygon": {
+      "type": "Poll",
+      "description": "define what will we draw in the sky.",
+      "question": "sky shape?",
+      "choices": {
+        "circle": "Circle",
+        "triangle": "triangle",
+        "square": "square",
+        "pentagon": "pentagon",
+        "hexagon": "hexagon",
+      }
+    },
+    "rotate": {
+      "type": "Range",
+      "description": "rotation to apply on the shape.",
+      "display": "hslider",
+      "decay": 0.04,
+      "min": -0.2,
+      "max": 0.2,
+      "initialValue": 0,
+      "magnitude": 2
+    },
+    "scale": {
+      "type": "Range",
+      "description": "size of the shape (in mm)",
+      "display": "hslider",
+      "decay": 0.04,
+      "min": 1,
+      "max": 20,
+      "initialValue": 3,
+      "magnitude": 0
+    },
+    "speed": {
+      "type": "Range",
+      "description": "speed of the shape (in mm/iteration)",
+      "display": "hslider",
+      "decay": 0.02,
+      "min": 0.1,
+      "max": 8,
+      "initialValue": 2,
+      "magnitude": 0
     },
   }
 }

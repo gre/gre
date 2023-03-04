@@ -208,6 +208,10 @@ const choices = [
     name: "Stargaze",
     address: "stars15rce70qlpcztvvekjwpv4fx3s5k2ujjeedm5ng",
     addressReal: "stars15rce70qlpcztvvekjwpv4fx3s5k2ujjeedm5ng",
+    discordLimitedOffer: {
+      maxItems: 30,
+      expiration: "2023-04-04T00:00:00.000Z",
+    },
     amount: "1000 STARS",
     collections: [
       {
@@ -436,6 +440,25 @@ export default function Home({ tag }) {
                     flexDirection: "column",
                   }}
                 >
+
+                  {
+                    choice.discordLimitedOffer ? (
+                      <>
+                        <Choice>
+                          <p style={{ padding: "0.8em 1.2em", background: "#F0F", color: "white", fontWeight: 400 }}>
+                            {"🎁 Special offer: send a very small amount instead (for verification). FREE physical edition (1/wallet). "}
+                            {
+                              choice.discordLimitedOffer.expiration
+                                ? <>ends in <Countdown date={choice.discordLimitedOffer.expiration} /></> : null}
+                            {
+                              choice.discordLimitedOffer.maxItems
+                                ? " – limited to the first " + choice.discordLimitedOffer.maxItems + " requests." : null}
+                          </p>
+                        </Choice>
+                        <Or />
+                      </>) : null
+                  }
+
                   <Choice>
                     <Price>{choice.amount}</Price> to{" "}
                     <Address real={choice.addressReal}>
@@ -514,4 +537,37 @@ export default function Home({ tag }) {
       </Container>
     </Global>
   );
+}
+
+
+function formatDistanceToNow(diff, options) {
+  const minutes = Math.floor(diff / 60000);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+  const months = Math.floor(days / 30);
+  const years = Math.floor(months / 12);
+  if (years > 0) {
+    return years + " year" + (years > 1 ? "s" : "");
+  }
+  if (months > 0) {
+    return months + " month" + (months > 1 ? "s" : "");
+  }
+  if (days > 0) {
+    return days + " day" + (days > 1 ? "s" : "");
+  }
+  if (hours > 0) {
+    return hours + " hour" + (hours > 1 ? "s" : "");
+  }
+  return "ends soon!"
+}
+
+function Countdown({ date }) {
+  const [time, setTime] = useState(() => new Date(date).getTime() - Date.now());
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTime(new Date(date).getTime() - Date.now());
+    }, 60000);
+    return () => clearInterval(interval);
+  }, [date]);
+  return <>{formatDistanceToNow(time, { addSuffix: true })}</>;
 }

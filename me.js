@@ -8,6 +8,14 @@ export default {
   siteDomain: "https://greweb.me",
   social: [
     {
+      id: "discord",
+      url: "https://discord.gg/DQBajxzn",
+      icon: "/icons/discord.svg",
+      text: "DISCORD",
+      color: "#757ff8",
+      highlighted: true,
+    },
+    {
       id: "twitter",
       url: "https://twitter.com/greweb",
       icon: "/icons/twitter.svg",

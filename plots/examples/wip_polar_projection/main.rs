@@ -81,6 +81,7 @@ impl LivedrawArt for Art {
   }
 
   fn estimate_total_increments(&self) -> usize {
+    // calculate
     self.index + self.remaining_mountains + self.sky_limit
   }
 
@@ -182,10 +183,17 @@ impl LivedrawArt for Art {
     if routes.len() == 0 {
       return ArtIncrement::Continue;
     }
-    let data = routes.iter().fold(Data::new(), livedraw::render_route);
 
-    let layers =
-      vec![svg_layer("black").add(svg_base_path("black", 0.35, data))];
+    let color = if self.sky.is_some() { "#0FF" } else { "#F0F" };
+    let mut layer = svg_layer(color);
+    let data = routes.iter().fold(Data::new(), livedraw::render_route);
+    layer = layer.add(
+      svg_base_path(color, 0.35, data)
+        .set("style", "")
+        .set("opacity", 0.6),
+    );
+
+    let layers = vec![layer];
 
     return ArtIncrement::SVG(layers);
   }
@@ -196,7 +204,7 @@ impl LivedrawArtSimulation for Art {
     let mut rng = rand::thread_rng();
     return json!(ArtInput {
       speed: RangeValue {
-        value: rng.gen_range(2.0, 3.0)
+        value: rng.gen_range(0.0, 3.0)
       },
       scale: RangeValue {
         value: rng.gen_range(1.0, 10.0)
@@ -208,13 +216,17 @@ impl LivedrawArtSimulation for Art {
         value: rng.gen_range(0.0, 20.0)
       },
       dist: RangeValue {
-        value: rng.gen_range(1.0, 5.0)
+        value: rng.gen_range(0.1, 5.0) * rng.gen_range(0.0, 1.0)
       },
       polygon: PollValue {
         winner: vec!["triangle", "circle", "hexagon"][rng.gen_range(0, 3)]
           .to_string()
       },
-      curve: (0..26).map(|_| rng.gen_range(0.0, 1.0)).collect()
+      curve: (0..26)
+        .map(|_| rng.gen_range(0.0, 1.0)
+          * rng.gen_range(0.0, 1.0)
+          * rng.gen_range(0.0, 1.0))
+        .collect()
     });
   }
 }
