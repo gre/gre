@@ -5028,7 +5028,6 @@ function calc() {
   if (user) {
     const [, xmm, ymm] = user;
     const rect = img.getBoundingClientRect();
-    console.log(rect)
     const x = rect.left + window.scrollX + (0.04 + 0.92 * xmm / 500) * rect.width;
     const y = rect.top + window.scrollY + (0.03 + 0.94 * ymm / 700) * rect.height;
     indicator.style.transform = `translate(${x}px, ${y}px)`
