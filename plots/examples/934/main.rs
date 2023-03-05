@@ -298,7 +298,21 @@ fn art(
       // we only use the word if it was not colliding
       if !collides {
         word_count += 1;
-        routes.extend(res.0);
+        routes.extend(res.0.clone());
+
+        let mut sumx = 0.0;
+        let mut sumy = 0.0;
+        let mut count = 0;
+        for r in res.0.clone() {
+          for p in r.clone() {
+            sumx += p.0;
+            sumy += p.1;
+            count += 1;
+          }
+        }
+        let center = (sumx / count as f64, sumy / count as f64);
+        println!("{} {} {}", text, center.0.round(), center.1.round());
+
         if word_count % 100 == 0 {
           let name = format!("words {}", word_count);
           data.push((name, routes.clone()));

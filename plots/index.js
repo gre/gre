@@ -10,10 +10,10 @@ export async function getPlots() {
     const m = folder.match(/^([0-9]+)$/);
     const content = await import(`./examples/${folder}/README.md`);
     const meta = matter(content.default);
-    const rustFile = meta.data.noSource ? null:
-    meta.data.sourceFolderURL
-      ? "link"
-      : (meta.data.sourceFolder || folder) +
+    const rustFile = meta.data.noSource ? null :
+      meta.data.sourceFolderURL
+        ? "link"
+        : (meta.data.sourceFolder || folder) +
         "/" +
         (meta.data.rootFile || "main.rs");
 

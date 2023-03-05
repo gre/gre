@@ -202,13 +202,13 @@ export default function Home({ plot, prev, next }) {
                 ))}
               </dl>
             ) : null}
-            {rustFile ? 
-            <dl>
-              <dt>Sourcecode</dt>
-              <dd>
-                <a href={sourceURL}>{rustFile}</a>
-              </dd>
-            </dl> : null}
+            {rustFile ?
+              <dl>
+                <dt>Sourcecode</dt>
+                <dd>
+                  <a href={sourceURL}>{rustFile}</a>
+                </dd>
+              </dl> : null}
             {data.tags ? (
               <dl>
                 <dt>Tags</dt>
@@ -250,7 +250,10 @@ export default function Home({ plot, prev, next }) {
       <script
         async
         src="https://platform.twitter.com/widgets.js"
-        charSet="utf-8"
+      ></script>
+      <script
+        async
+        src={`/plot-scripts/${plot.n}.js`}
       ></script>
     </Global>
   );
