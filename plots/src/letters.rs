@@ -106,7 +106,7 @@ impl LetterSvgReferential {
     for (c, svg) in documents_per_char.iter() {
       let polylines =
         svg2polylines::parse(svg.as_str(), letter_precision, true).unwrap();
-      let can_attach = !"1234567890".contains(c);
+      let can_attach = "abcdefghijklmnopqrstuvwxyz_".contains(c);
 
       let mut minx = std::f64::INFINITY;
       let mut maxx = -std::f64::INFINITY;
