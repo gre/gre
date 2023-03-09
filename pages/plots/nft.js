@@ -208,10 +208,6 @@ const choices = [
     name: "Stargaze",
     address: "stars15rce70qlpcztvvekjwpv4fx3s5k2ujjeedm5ng",
     addressReal: "stars15rce70qlpcztvvekjwpv4fx3s5k2ujjeedm5ng",
-    discordLimitedOffer: {
-      maxItems: 30,
-      expiration: "2023-04-04T00:00:00.000Z",
-    },
     amount: "1000 STARS",
     collections: [
       {
