@@ -1146,7 +1146,7 @@ pub fn features_to_routes(
 ) -> Vec<Vec<(f64, f64)>> {
   let mut routes = Vec::new();
   for f in features {
-    for g in f.geometry {
+    if let Some(g) = f.geometry {
       let value = g.value;
       match value {
         geojson::Value::MultiPolygon(all) => {

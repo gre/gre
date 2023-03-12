@@ -83,12 +83,12 @@ impl LivedrawArt for Art {
   }
 
   fn estimate_total_increments(&self) -> usize {
-    100
+    1000
   }
 
   fn actions_before_increment(&self, i: usize) -> Vec<ArtAction> {
     if i == 0 {
-      return vec![ArtAction::Pause(String::from("Get ready to chat!"), 30.0)];
+      return vec![ArtAction::Pause(String::from("Get ready to chat!"), 10.0)];
     }
     return vec![];
   }
@@ -136,7 +136,8 @@ impl LivedrawArt for Art {
 
       let (routes, len) = draw_text(
         &self.letter_ref,
-        text.clone(),
+        text.clone().to_lowercase()
+          + (if text.contains(" ") { " " } else { "" }),
         input.fontsize.value,
         self.xstart,
         yoffset,
@@ -144,7 +145,7 @@ impl LivedrawArt for Art {
       );
 
       // no more space?
-      if routes.len() == 0 {
+      if routes.len() == 0 && len > 0.1 {
         // new line
         self.xstart = 0.0;
         self.yline += input.lineheight.value;

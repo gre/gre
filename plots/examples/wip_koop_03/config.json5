@@ -5,10 +5,10 @@
   ],
   "style": {
     "spacing": "space-around",
-    /*
-    "colorMain": "#ff55bb",
     "colorLive": "#aa0055",
+    "colorMain": "#ff55bb",
     "bg": "radial-gradient(circle, #430926, #1c0c15)",
+    /*
     dustColor: "#ff68c0",
     disabledColor: "#8a4377",
     */
@@ -19,7 +19,8 @@
     "text": {
       "type": "LastChatMessage",
       "description": "",
-      maxLetters: 30
+      maxLetters: 30,
+      requiredMatchRegexp: "[a-zA-Z]"
     },
     "fontsize": {
       "description": "font size",
@@ -53,10 +54,10 @@
       "msgOffset": 3,
       "msgAmp": 20,
       "envelope": {
-        "attack": 5,
-        "decay": 5,
+        "attack": 10,
+        "decay": 20,
         "sustain": 0.5,
-        "release": 30
+        "release": 90
       }
     },
     "amp": {

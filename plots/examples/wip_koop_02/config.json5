@@ -1,18 +1,11 @@
 {
-  "debug": true,
   "title": "Polar shapes – @greweb",
   "layout": [
     
-    [
-      { children: [
-        "dist",
-        "amp",
-      ], style: {alignItems:"center"}},
-      {children:"curve", style: {width: 440}},
-    ],
+    [ { children: [  "dist", "amp", "limit" ], style: {alignItems:"center"}},  {children:"curve", style: {width: 440}},  ],
     
+    //[ "speed",  "rotate", "scale" ], "polygon", 
 
-      // "polygon", [ "speed",  "rotate", "scale" ],
   ],
   "style": {
     "spacing": "space-around",
@@ -30,29 +23,32 @@
       "description": "distance between each line",
       "type": "Range",
       "display": "hslider",
-      "decay": 0.02,
+      "decay": 0.05,
       "min": 0.1,
-      "max": 5,
-      "initialValue": 3,
+      "max": 4,
+      "initialValue": 0.5,
       "magnitude": 1
     },
     "curve": {
       "description": "shapes the curve",
       "letters": "aqwzsxedcrfvtgbyhnujikolpm",
+      //"letters": "aqwzsxeujikolpm",
+      //"letters": "aeyuio",
       "type": "KeyboardCurve",
       "label": "mountain curve",
       "projection": "polar",
       "spread": 4,
+      resolution: 3,
       "threshold": 0.5,
-      "resolution": 1,
       "saturateUp": 1.1,
       "msgOffset": 3,
       "msgAmp": 20,
+      "reverse": false,
       "envelope": {
         "attack": 10,
         "decay": 20,
         "sustain": 0.5,
-        "release": 60
+        "release": 50
       }
     },
     "amp": {
@@ -61,8 +57,18 @@
       "display": "hslider",
       "decay": 0.02,
       "min": 0,
-      "max": 10,
-      "initialValue": 8,
+      "max": 20,
+      "initialValue": 10,
+      "magnitude": 1
+    },
+    "limit": {
+      "description": "define the limit of the curve before moving to the 'sky'",
+      "type": "Range",
+      "display": "hslider",
+      "decay": 0.02,
+      "min": 0,
+      "max": 1,
+      "initialValue": 0.9,
       "magnitude": 1
     },
 
@@ -72,8 +78,8 @@
       "question": "sky shape?",
       "choices": {
         "circle": "Circle",
-        "triangle": "triangle",
         "square": "square",
+        "triangle": "triangle",
         "pentagon": "pentagon",
         "hexagon": "hexagon",
       }
@@ -95,7 +101,7 @@
       "decay": 0.04,
       "min": 1,
       "max": 20,
-      "initialValue": 3,
+      "initialValue": 12,
       "magnitude": 0
     },
     "speed": {
@@ -105,8 +111,8 @@
       "decay": 0.02,
       "min": 0.1,
       "max": 8,
-      "initialValue": 2,
-      "magnitude": 0
+      "initialValue": 3,
+      "magnitude": 0,
     },
   }
 }

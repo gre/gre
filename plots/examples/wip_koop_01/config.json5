@@ -1,0 +1,63 @@
+{
+  "title": "200 shapes – @greweb",
+  "layout": [
+    ["speed", "rotate", "scale"],
+    "polygon"
+  ],
+  "style": {
+    "spacing": "space-around",
+    /*
+    "colorMain": "#ff55bb",
+    "colorLive": "#aa0055",
+    "bg": "radial-gradient(circle, #430926, #1c0c15)",
+    dustColor: "#ff68c0",
+    disabledColor: "#8a4377",
+    */
+  },
+  "predictive": "light",
+  "berserkBoost": 20,
+  "inputs": {
+    "rotate": {
+      "type": "Range",
+      "description": "rotation to apply on the shape.",
+      "display": "hslider",
+      "decay": 0.04,
+      "min": -0.2,
+      "max": 0.2,
+      "initialValue": 0,
+      "magnitude": 2
+    },
+    "scale": {
+      "type": "Range",
+      "description": "size of the shape (in mm)",
+      "display": "hslider",
+      "decay": 0.04,
+      "min": 5,
+      "max": 25,
+      "initialValue": 12,
+      "magnitude": 0
+    },
+    "speed": {
+      "type": "Range",
+      "description": "speed of the shape (in mm/iteration)",
+      "display": "hslider",
+      "decay": 0.02,
+      "min": 0.1,
+      "max": 10,
+      "initialValue": 2,
+      "magnitude": 0
+    },
+    "polygon": {
+      "type": "Poll",
+      "description": "define what will we draw.",
+      "question": "shape?",
+      "choices": {
+        "triangle": "triangle",
+        "circle": "Circle",
+        "square": "square",
+        "pentagon": "pentagon",
+        "hexagon": "hexagon",
+      }
+    },
+  }
+}

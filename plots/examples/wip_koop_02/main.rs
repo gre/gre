@@ -42,6 +42,7 @@ struct ArtInput {
 
   amp: RangeValue,
   dist: RangeValue,
+  limit: RangeValue,
   curve: MountainValue,
 }
 
@@ -60,7 +61,8 @@ struct Art {
 
 impl Art {
   fn new(args: Args) -> Self {
-    let mountains = Mountains::new(args.width, args.height, args.padding, 1.0);
+    let mountains =
+      Mountains::new(args.width, args.height, args.padding, -20.0);
     Art {
       args,
       mountains,
@@ -138,7 +140,8 @@ impl LivedrawArt for Art {
 
     let mut routes = vec![];
 
-    if index == 0 {
+    // border
+    if self.sky_should_enable_next_time {
       let padding = self.args.padding;
       let width = self.args.width;
       let height = self.args.height;
@@ -159,9 +162,12 @@ impl LivedrawArt for Art {
         polygonsize,
       );
       if r.len() == 0 {
-        if let Some(p) =
-          sky.find_new_location(&mut rng, input.scale.value, 10000, polygonsize)
-        {
+        if let Some(p) = sky.find_new_location(
+          &mut rng,
+          input.scale.value * 0.2,
+          10000,
+          polygonsize,
+        ) {
           sky.set_location(p);
         } else {
           return ArtIncrement::End;
@@ -173,6 +179,7 @@ impl LivedrawArt for Art {
         input.curve,
         input.amp.value,
         input.dist.value,
+        input.limit.value,
         &mut self.collision,
       ));
     }
@@ -218,6 +225,7 @@ impl LivedrawArtSimulation for Art {
       dist: RangeValue {
         value: rng.gen_range(0.1, 5.0) * rng.gen_range(0.0, 1.0)
       },
+      limit: RangeValue { value: 0.9 },
       polygon: PollValue {
         winner: vec!["triangle", "circle", "hexagon"][rng.gen_range(0, 3)]
           .to_string()
@@ -437,15 +445,19 @@ impl Mountains {
     curve_values: Vec<f64>,
     amp: f64,
     dr: f64,
+    limit: f64,
     collision: &mut ShapeCollision,
   ) -> Vec<Vec<(f64, f64)>> {
     let mut routes = vec![];
 
+    let padx = self.canvas_padding + (1.0 - limit) * 0.5 * self.canvas_width;
+    let pady = self.canvas_padding + (1.0 - limit) * 0.5 * self.canvas_height;
+
     let bound = (
-      self.canvas_padding,
-      self.canvas_padding,
-      self.canvas_width - self.canvas_padding,
-      self.canvas_height - self.canvas_padding,
+      padx,
+      pady,
+      self.canvas_width - padx,
+      self.canvas_height - pady,
     );
 
     let cx = self.canvas_width / 2.0;
@@ -459,7 +471,7 @@ impl Mountains {
       .enumerate()
       .map(|(i, &v)| {
         let angle = (i as f64) * 2.0 * PI / (curve_values.len() as f64);
-        let r = rbase + v * amp;
+        let r = (rbase + v * amp).max(0.0);
         let x = cx + r * angle.cos();
         let y = cy + r * angle.sin();
         let p = (x, y);
