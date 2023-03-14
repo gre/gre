@@ -28,9 +28,9 @@ export default function Home({ posts }) {
             <img width="200" src="/profile.jpg" />
             <Title text="greweb.me" />
             <p className="social">
-              <a href="https//twitter.com/greweb">Twitter</a>
+              <a href="https://twitter.com/greweb">Twitter</a>
               {" – "}
-              <a href="https//github.com/gre">Github</a>
+              <a href="https://github.com/gre">Github</a>
             </p>
           </Header>
           <h2>Blog Posts</h2>
