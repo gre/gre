@@ -3,6 +3,8 @@ date: "2022-12-04"
 title: "The Tree Sprite"
 image: /images/plots/843.jpg
 tweet: https://twitter.com/greweb/status/1599657616027791360
+tags:
+- AI
 ---
 
 Step 1. We asked ChatGPT to generate imaginary creatures.

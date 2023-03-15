@@ -7,6 +7,7 @@ nft: https://objkt.com/asset/KT1FxuHijMyjUiHbAd9b3faaRUvo95oDnjM5/3
 tags:
   - twitter
   - 70x50cm
+  - letters
 ---
 
 

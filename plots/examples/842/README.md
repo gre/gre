@@ -3,6 +3,8 @@ date: "2022-12-04"
 title: "The Flutterbee"
 image: /images/plots/842.jpg
 tweet: https://twitter.com/greweb/status/1599455933465186306
+tags:
+- AI
 ---
 
 Step 1. We asked ChatGPT to generate imaginary creatures.

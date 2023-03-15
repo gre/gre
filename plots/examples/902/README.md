@@ -5,6 +5,7 @@ image: /images/plots/902.jpg
 tags:
 - genuary
 - A4
+- letters
 ---
 
 Made for Genuary 2023 #28 "Generative poetry".
