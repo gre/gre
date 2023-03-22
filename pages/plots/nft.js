@@ -187,6 +187,8 @@ const choices = [
   {
     id: "tezos",
     name: "Tezos",
+    allEditions: true,
+    /*
     address: "greweb.tez",
     addressReal: "tz1cgQAQfECg5bPASYTMyJ9QJQjSUi8rfL67",
     amount: "25 tz",
@@ -202,6 +204,7 @@ const choices = [
         description: "Any Plottable work from fxhash.xyz/u/greweb",
       },
     ],
+    */
   },
   {
     id: "stargaze",
@@ -421,76 +424,87 @@ export default function Home({ tag }) {
                   ) : null}
                 </div>
               </Row>
-              <Row>
-                <Circle n={2} />
-                <strong>Physical cost</strong>: Send from the{" "}
-                <span style={{ textDecoration: "underline" }}>
-                  same address owning the Plottable NFT
-                </span>
-                <div
-                  style={{
-                    marginTop: "0.8em",
-                    fontWeight: 200,
-                    padding: "0 0 0 " + padding,
-                    display: "flex",
-                    flexDirection: "column",
-                  }}
-                >
 
-                  {
-                    choice.discordLimitedOffer ? (
-                      <>
-                        <Choice>
-                          <p style={{ padding: "0.8em 1.2em", background: "#F0F", color: "white", fontWeight: 400 }}>
-                            {"🎁 Special offer: send a very small amount instead (for verification). FREE physical edition (1/wallet). "}
-                            {
-                              choice.discordLimitedOffer.expiration
-                                ? <>ends in <Countdown date={choice.discordLimitedOffer.expiration} /></> : null}
-                            {
-                              choice.discordLimitedOffer.maxItems
-                                ? " – limited to the first " + choice.discordLimitedOffer.maxItems + " requests." : null}
-                          </p>
-                        </Choice>
-                        <Or />
-                      </>) : null
-                  }
+              {choice.allEditions ?
 
-                  <Choice>
-                    <Price>{choice.amount}</Price> to{" "}
-                    <Address real={choice.addressReal}>
-                      {choice.address}
-                    </Address>
-                  </Choice>
-                  {choice.tokenNftURL ? (
-                    <>
-                      <Or />
+                <Row>
+                  <Circle n={2} />
+                  <CTA href="https://alleditions.art/artist/greweb">
+                    🛒 Order it on alleditions.art
+                  </CTA>
+                </Row> :
+                <>
+                  <Row>
+                    <Circle n={2} />
+                    <strong>Physical cost</strong>: Send from the{" "}
+                    <span style={{ textDecoration: "underline" }}>
+                      same address owning the Plottable NFT
+                    </span>
+                    <div
+                      style={{
+                        marginTop: "0.8em",
+                        fontWeight: 200,
+                        padding: "0 0 0 " + padding,
+                        display: "flex",
+                        flexDirection: "column",
+                      }}
+                    >
+
+                      {
+                        choice.discordLimitedOffer ? (
+                          <>
+                            <Choice>
+                              <p style={{ padding: "0.8em 1.2em", background: "#F0F", color: "white", fontWeight: 400 }}>
+                                {"🎁 Special offer: send a very small amount instead (for verification). FREE physical edition (1/wallet). "}
+                                {
+                                  choice.discordLimitedOffer.expiration
+                                    ? <>ends in <Countdown date={choice.discordLimitedOffer.expiration} /></> : null}
+                                {
+                                  choice.discordLimitedOffer.maxItems
+                                    ? " – limited to the first " + choice.discordLimitedOffer.maxItems + " requests." : null}
+                              </p>
+                            </Choice>
+                            <Or />
+                          </>) : null
+                      }
+
                       <Choice>
-                        <Token url={choice.tokenNftURL} /> to{" "}
+                        <Price>{choice.amount}</Price> to{" "}
                         <Address real={choice.addressReal}>
                           {choice.address}
                         </Address>
                       </Choice>
-                    </>
-                  ) : null}
-                </div>
-                <p style={{ opacity: 0.5 }}>
-                  <em>(international shipping included, no VAT or customs fees)</em>
-                </p>
-              </Row>
-              <Row>
-                <Circle n={3} />
-                Provide the shipping address and proof of transaction:
-                <div style={{ padding: "0em " + padding }}>
-                  <p>
-                    <CTA href="https://forms.gle/JWUfuAjochGQ9BQu7">
-                      Fill this Google Form
-                    </CTA>
-                  </p>
-                  <p>
-                    Feel free to get in touch:{" "}<strong>greweb (at) protonmail.com</strong> / <a href="https://twitter.com/greweb">@greweb</a>.
-                  </p>
-                </div>
-              </Row>
+                      {choice.tokenNftURL ? (
+                        <>
+                          <Or />
+                          <Choice>
+                            <Token url={choice.tokenNftURL} /> to{" "}
+                            <Address real={choice.addressReal}>
+                              {choice.address}
+                            </Address>
+                          </Choice>
+                        </>
+                      ) : null}
+                    </div>
+                    <p style={{ opacity: 0.5 }}>
+                      <em>(international shipping included, no VAT or customs fees)</em>
+                    </p>
+                  </Row>
+                  <Row>
+                    <Circle n={3} />
+                    Provide the shipping address and proof of transaction:
+                    <div style={{ padding: "0em " + padding }}>
+                      <p>
+                        <CTA href="https://forms.gle/JWUfuAjochGQ9BQu7">
+                          Fill this Google Form
+                        </CTA>
+                      </p>
+                      <p>
+                        Feel free to get in touch:{" "}<strong>greweb (at) protonmail.com</strong> / <a href="https://twitter.com/greweb">@greweb</a>.
+                      </p>
+                    </div>
+                  </Row>
+                </>}
             </div>
 
             <h3
