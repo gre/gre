@@ -10,18 +10,12 @@ use svg::node::element::path::Data;
 pub struct Opts {
   #[clap(short, long, default_value = "image.svg")]
   file: String,
-  #[clap(short, long, default_value = "/Users/gre/Downloads/kids.jpg")]
-  pub photo: String,
   #[clap(short, long, default_value = "297.0")]
-  pub height: f64,
-  #[clap(short, long, default_value = "210.0")]
   pub width: f64,
+  #[clap(short, long, default_value = "210.0")]
+  pub height: f64,
   #[clap(short, long, default_value = "15.0")]
   pub pad: f64,
-  #[clap(short, long, default_value = "1.0")]
-  pub density: f64,
-  #[clap(short, long, default_value = "0.4")]
-  pub precision: f64,
   #[clap(short, long, default_value = "0.0")]
   pub seed: f64,
 }
@@ -35,68 +29,100 @@ fn art(opts: &Opts) -> svg::Document {
   // possible colors
 
   let black = Ink("Black", "#1A1A1A", "#000000", 0.35);
-  let _gold_gel = Ink("Gold Gel", "#D8B240", "#FFE38C", 0.6);
-  let _silver_gel = Ink("Silver Gel", "#CCCCCC", "#FFFFFF", 0.6);
-  let _white_gel = Ink("White Gel", "#E5E5E5", "#FFFFFF", 0.35);
-  let _seibokublue = Ink("Sailor Sei-boku", "#1060a3", "#153a5d", 0.35);
-  let _inaho = Ink("iroshizuku ina-ho", "#ba6", "#7f6a33", 0.35);
-  let _imperial_purple = Ink("Imperial Purple", "#4D0066", "#260F33", 0.35);
-  let _sherwood_green = Ink("Sherwood Green", "#337239", "#194D19", 0.35);
-  let _evergreen = Ink("Evergreen", "#4D6633", "#263319", 0.35);
-  let _soft_mint = Ink("Soft Mint", "#33E0CC", "#19B299", 0.35);
-  let _turquoise = Ink("Turquoise", "#00B4E6", "#005A8C", 0.35);
-  let misty_blue = Ink("Misty Blue", "#0CF", "#0AD", 0.35);
-  let _sargasso_sea = Ink("Sargasso Sea", "#162695", "#111962", 0.35);
-  let _indigo = Ink("Indigo", "#667599", "#334D66", 0.35);
-  let _aurora_borealis = Ink("Aurora Borealis", "#009999", "#004D66", 0.35);
-  let _pumpkin = Ink("Pumpkin", "#FF8033", "#E54D00", 0.35);
+  let gold_gel = Ink("Gold Gel", "#D8B240", "#FFE38C", 0.6);
+  let silver_gel = Ink("Silver Gel", "#CCCCCC", "#FFFFFF", 0.6);
+  let white_gel = Ink("White Gel", "#E5E5E5", "#FFFFFF", 0.35);
+  let seibokublue = Ink("Sailor Sei-boku", "#1060a3", "#153a5d", 0.35);
+  let inaho = Ink("iroshizuku ina-ho", "#ba6", "#7f6a33", 0.35);
+  let imperial_purple = Ink("Imperial Purple", "#4D0066", "#260F33", 0.35);
+  let sherwood_green = Ink("Sherwood Green", "#337239", "#194D19", 0.35);
+  let evergreen = Ink("Evergreen", "#4D6633", "#263319", 0.35);
+  let soft_mint = Ink("Soft Mint", "#33E0CC", "#19B299", 0.35);
+  let turquoise = Ink("Turquoise Ink", "#00B4E6", "#005A8C", 0.35);
+  let sargasso_sea = Ink("Sargasso Sea", "#162695", "#111962", 0.35);
+  let indigo = Ink("Indigo", "#667599", "#334D66", 0.35);
+  let aurora_borealis = Ink("Aurora Borealis", "#009999", "#004D66", 0.35);
+  let pumpkin = Ink("Pumpkin", "#FF8033", "#E54D00", 0.35);
   let pink = Ink("Pink", "#fd728e", "#E5604D", 0.35);
-  let _hope_pink = Ink("Hope Pink", "#fc839b", "#E53399", 0.35);
+  let hope_pink = Ink("Hope Pink", "#fc839b", "#E53399", 0.35);
   let amber = Ink("Amber", "#FFC745", "#FF8000", 0.35);
-  let _poppy_red = Ink("Poppy Red", "#E51A1A", "#80001A", 0.35);
-  let _red_dragon = Ink("Red Dragon", "#9e061a", "#5b0a14", 0.35);
-  let _fire_and_ice = Ink("Fire And Ice", "#00BEDE", "#006478", 0.35);
-  let _bloody_brexit = Ink("Bloody Brexit", "#05206B", "#2E0033", 0.35);
+  let poppy_red = Ink("Poppy Red", "#E51A1A", "#80001A", 0.35);
+  let red_dragon = Ink("Red Dragon", "#9e061a", "#5b0a14", 0.35);
+  let fire_and_ice = Ink("Fire And Ice", "#00BEDE", "#006478", 0.35);
+  let bloody_brexit = Ink("Bloody Brexit", "#05206B", "#2E0033", 0.35);
 
   let white_paper = Paper("White", "#fff", false);
-  let _red_paper = Paper("Red", "#aa0000", true);
-  let _darkblue_paper = Paper("Dark Blue", "#202040", true);
-  let _black_paper = Paper("Black", "#202020", true);
-  let _grey_paper = Paper("Grey", "#959fa8", true);
+
+  let red_paper = Paper("Red", "#aa0000", true);
+  let darkblue_paper = Paper("Dark Blue", "#202040", true);
+  let black_paper = Paper("Black", "#202020", true);
+  let grey_paper = Paper("Grey", "#959fa8", true);
 
   let paper = white_paper;
-  let inks = vec![misty_blue, pink, amber, black];
+  let inks = vec![black];
 
   let perlin = Perlin::new();
-
-  let image_path = opts.photo.as_str();
-
-  let img = image_get_color(image_path).unwrap();
 
   let mut routes = Vec::new();
 
   for (ink_i, _ink) in inks.iter().enumerate() {
-    let density = opts.density * if ink_i == 3 { 2.0 } else { 4.0 };
-    let mut map = WeightMap::new(width, height, opts.precision);
+    let density = 8.0;
+    let mut map = WeightMap::new(width, height, 0.35);
 
-    map.fill_fn(|(x, y)| {
+    let f1 = rng.gen_range(1.0, 4.0);
+    let amp1 = 1.0;
+    let f2 = f1 * 2.0;
+    let amp2 = rng.gen_range(0.0, 4.0);
+    let f3 = f2 * 2.0;
+    let amp3 = rng.gen_range(0.0, 2.0) * rng.gen_range(0.0, 1.0);
+
+    // let mut rng = rng_from_seed(opts.seed + ink_i as f64);
+
+    map.fill_fn(&mut |(x, y)| {
+      // let blur = ((x - width / 2.0).abs() / (width / 2.0)).powf(2.0);
+      // let x = x + blur * rng.gen_range(-1.0, 1.0);
+      // let y = y + blur * rng.gen_range(-1.0, 1.0);
       if x < pad || x > width - pad || y < pad || y > height - pad {
         return 0.0;
       }
 
-      let p = (x / width, y / height);
-      let c = img(p);
-      let cmyk = rgb_to_cmyk_vec(c);
-      let value = cmyk[ink_i];
+      let value1 = amp1
+        * perlin.get([
+          f1 * x / height as f64,
+          f1 * y / height as f64,
+          opts.seed
+            + amp2
+              * perlin.get([
+                f2 * x / height as f64,
+                f2 * y / height as f64,
+                66.6
+                  + 5.555 * opts.seed
+                  + amp3
+                    * perlin.get([
+                      f3 * x / height as f64,
+                      f3 * y / height as f64,
+                      777. + opts.seed / 0.177,
+                    ]),
+              ]),
+        ]);
+
+      let dx = (x - width / 2.0).abs();
+      let dy = (y - height / 2.0).abs();
+
+      let r = 16.0;
+      let value2 = ((dx + dy) / r) % 1.0;
+
+      let value = 1.5 * value1 + value2;
+
       value * density
     });
 
     let rot = PI / rng.gen_range(1.0, 3.0);
-    let step = 0.5;
-    let straight = rng.gen_range(-0.1, 0.1);
-    let count = 20000;
-    let min_l = 4;
-    let max_l = rng.gen_range(16, 64);
+    let step = 0.6;
+    let straight = 0.1;
+    let count = 14000;
+    let min_l = 5;
+    let max_l = 40;
     let decrease_value = 1.0;
     let search_max = 500;
     let min_weight = 1.0;
@@ -192,7 +218,7 @@ impl WeightMap {
       precision,
     }
   }
-  fn fill_fn(&mut self, f: impl Fn((f64, f64)) -> f64) {
+  fn fill_fn(&mut self, f: &mut impl Fn((f64, f64)) -> f64) {
     for y in 0..self.h {
       for x in 0..self.w {
         let p = (x as f64 * self.precision, y as f64 * self.precision);
