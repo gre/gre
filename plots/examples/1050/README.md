@@ -7,7 +7,7 @@ sourceFolder: plottable-mandelglitch
 nft: https://www.fxhash.xyz/gentk/FX1-977
 tags:
   - mandelglitch
-  - A6
+  - A4
 ---
 
 This is only one ink involved in this plot, isn't it fantastic? Diamine Amber ink can varies from yellow to orange with ink accumulation.
