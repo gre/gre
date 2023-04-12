@@ -2,10 +2,8 @@ use clap::*;
 use gre::*;
 use image::io::Reader as ImageReader;
 use image::RgbaImage;
-use noise::*;
 use rand::prelude::*;
 use std::f64::consts::PI;
-use std::fs;
 use svg::node::element::path::Data;
 
 #[derive(Parser)]
@@ -13,15 +11,13 @@ use svg::node::element::path::Data;
 pub struct Opts {
   #[clap(short, long, default_value = "image.svg")]
   file: String,
-  #[clap(short, long, default_value = "/Users/gre/Downloads/PHOTOS")]
-  pub photos_folder: String,
   #[clap(short, long, default_value = "210.0")]
   pub width: f64,
-  #[clap(short, long, default_value = "210.0")]
+  #[clap(short, long, default_value = "297.0")]
   pub height: f64,
-  #[clap(short, long, default_value = "15.0")]
+  #[clap(short, long, default_value = "5.0")]
   pub pad: f64,
-  #[clap(short, long, default_value = "6.0")]
+  #[clap(short, long, default_value = "0.0")]
   pub seed: f64,
 }
 
@@ -34,150 +30,136 @@ fn art(opts: &Opts) -> svg::Document {
   // possible colors
 
   let black = Ink("Black", "#1A1A1A", "#000000", 0.35);
-
-  let gold_gel = Ink("Gold Gel", "#D8B240", "#FFE38C", 0.6);
-  let silver_gel = Ink("Silver Gel", "#CCCCCC", "#FFFFFF", 0.6);
-  let white_gel = Ink("White Gel", "#E5E5E5", "#FFFFFF", 0.35);
   let seibokublue = Ink("Sailor Sei-boku", "#1060a3", "#153a5d", 0.35);
   let inaho = Ink("iroshizuku ina-ho", "#ba6", "#7f6a33", 0.35);
   let imperial_purple = Ink("Imperial Purple", "#4D0066", "#260F33", 0.35);
+  let amazing_amethyst = Ink("Amazing Amethyst", "#8b008b", "#550055", 0.35);
+  let claret = Ink("Claret", "#808", "#606", 0.35);
+  let teal = Ink("Teal", "#274e13", "#060f02", 0.35);
   let sherwood_green = Ink("Sherwood Green", "#337239", "#194D19", 0.35);
   let evergreen = Ink("Evergreen", "#4D6633", "#263319", 0.35);
   let soft_mint = Ink("Soft Mint", "#33E0CC", "#19B299", 0.35);
-  let turquoise = Ink("Turquoise Ink", "#00B4E6", "#005A8C", 0.35);
+  let turquoise = Ink("Turquoise", "#00B4E6", "#005A8C", 0.35);
+  let beau_blue = Ink("Beau Blue", "#0AD", "#058", 0.35);
   let sargasso_sea = Ink("Sargasso Sea", "#162695", "#111962", 0.35);
+  let misty_blue = Ink("Misty Blue", "#1e59ad", "#0d3772", 0.35); // TODO unclear hex
   let aurora_borealis = Ink("Aurora Borealis", "#009999", "#004D66", 0.35);
   let pumpkin = Ink("Pumpkin", "#FF8033", "#E54D00", 0.35);
   let hope_pink = Ink("Hope Pink", "#fc839b", "#E53399", 0.35);
+  let sepia = Ink("Sepia", "#ce7e00", "#986719", 0.35);
   let amber = Ink("Amber", "#FFC745", "#FF8000", 0.35);
+  let yellow = Ink("Yellow", "#FF0", "#FF0", 0.35);
+  let brillant_red = Ink("Brillant Red", "#F22", "#912", 0.35);
   let poppy_red = Ink("Poppy Red", "#E51A1A", "#80001A", 0.35);
   let red_dragon = Ink("Red Dragon", "#9e061a", "#5b0a14", 0.35);
+  let writers_blood = Ink("Writer's Blood", "#890f0f", "#572807", 0.35);
   let fire_and_ice = Ink("Fire And Ice", "#00BEDE", "#006478", 0.35);
   let bloody_brexit = Ink("Bloody Brexit", "#05206B", "#2E0033", 0.35);
-
+  let skulls_and_roses = Ink("Skulls and Roses", "#05206B", "#2E0033", 0.35);
+  let violet = Ink("Violet", "#c3f", "#92c", 0.35);
+  let moonstone = Ink("Moonstone", "#bbb", "#ddd", 0.35);
+  let spring_green = Ink("Spring Green", "#7d9900", "#6c6b00", 0.35);
   let indigo = Ink("Indigo", "#667599", "#334D66", 0.35);
+  let midnight_sapphire = Ink("Midnight Sapphire", "#6c80b8", "#39394d", 0.35);
+  let prussian_blue = Ink("Prussian Blue", "#2f5a98", "#294061", 0.35);
   let pink = Ink("Pink", "#fd728e", "#E5604D", 0.35);
+  let flamingo_pink = Ink("Flamingo Pink", "#f78", "#E64", 0.35);
 
   let white_paper = Paper("White", "#fff", false);
+  let paper = white_paper;
 
-  let red_paper = Paper("Red", "#aa0000", true);
-  let darkblue_paper = Paper("Dark Blue", "#202040", true);
-  let black_paper = Paper("Black", "#202020", true);
-  let grey_paper = Paper("Grey", "#959fa8", true);
+  let inks = vec![
+    teal,
+    sherwood_green,
+    evergreen,
+    spring_green,
+    inaho,
+    yellow,
+    amber,
+    sepia,
+    pumpkin,
+    brillant_red,
+    poppy_red,
+    red_dragon,
+    writers_blood,
+    pink,
+    hope_pink,
+    flamingo_pink,
+    violet,
+    amazing_amethyst,
+    claret,
+    imperial_purple,
+    misty_blue,
+    sargasso_sea,
+    seibokublue,
+    aurora_borealis,
+    soft_mint,
+    beau_blue,
+    turquoise,
+    fire_and_ice,
+    moonstone,
+    indigo,
+    midnight_sapphire,
+    prussian_blue,
+    skulls_and_roses,
+    bloody_brexit,
+    black,
+  ];
 
-  let white_on_paper = false;
-
-  let paper = if white_on_paper {
-    black_paper
-  } else {
-    white_paper
-  };
-  let inks = if white_on_paper {
-    vec![white_gel]
-  } else {
-    //vec![black, indigo, pink]
-    vec![black, poppy_red, amber]
-  };
-
-  let perlin = Perlin::new();
-
-  let images = find_images(opts.photos_folder.as_str());
+  let palettes = vec![
+    vec![black, poppy_red, amber],
+    vec![black, pumpkin, yellow],
+    vec![writers_blood, sepia, amber],
+    vec![aurora_borealis, hope_pink, amber],
+    vec![black, amazing_amethyst, violet],
+    vec![imperial_purple, violet, hope_pink],
+    vec![black, red_dragon, pumpkin],
+    vec![black, prussian_blue, pink],
+    vec![teal, soft_mint, flamingo_pink],
+    vec![black, aurora_borealis, brillant_red],
+    vec![bloody_brexit, claret, midnight_sapphire],
+    vec![black, poppy_red, beau_blue],
+    vec![bloody_brexit, fire_and_ice],
+    vec![black, misty_blue, turquoise],
+    vec![sherwood_green, aurora_borealis, spring_green],
+    vec![black, sherwood_green, soft_mint],
+    vec![teal, evergreen, inaho],
+    vec![seibokublue, inaho, moonstone],
+    vec![skulls_and_roses, indigo, moonstone],
+    vec![bloody_brexit, sargasso_sea],
+    vec![black],
+  ];
 
   let mut map = WeightMap::new(width, height, 0.4);
 
-  let count_imgs =
-    (1.0 + rng.gen_range(0f64, 2.0) * rng.gen_range(0.0, 1.0)).round() as usize;
-  let paths = pick_random_images(&images, count_imgs, &mut rng);
+  let max_density = 10.0;
 
-  println!("paths: {:?}", paths);
-
-  let images: Vec<ImageTexture> = paths
-    .iter()
-    .map(|src| ImageTexture::from_file(src).unwrap())
-    .collect();
-
-  /*
-  let collages = (0..(count_imgs
-    + (rng.gen_range(0.0, 6.0) * rng.gen_range(0.0, 1.0)) as usize))
-    .map(|i| {
-      (
-        i % images.len(),
-        // translate
-        // TODO calculate proper translation to respect the ratio projection
-        (0.0, 0.0), //(rng.gen_range(0.0, 1.0), rng.gen_range(0.0, 1.0)),
-        // scale
-        1.0
-          + rng.gen_range(0.0, 1.0)
-            * rng.gen_range(0.0, 1.0)
-            * rng.gen_range(0.0, 1.0)
-          - rng.gen_range(0.0, 1.0) * rng.gen_range(0.0, 1.0),
-        // rotate
-        rng.gen_range(-PI, PI)
-          * rng.gen_range(0.0, 1.0)
-          * rng.gen_range(0.0, 1.0)
-          * rng.gen_range(0.0, 1.0)
-          * rng.gen_range(0.0, 1.0),
-        true,
-        5.0,
-      )
-    })
-    .collect::<Vec<_>>();
-  */
-
-  let max_density = 8.0;
-
-  let collages = vec![(0, (0.0, 0.15), 0.68, 0.0, true, max_density)];
+  let ww = width * 0.7;
+  let pp = 1.0;
 
   map.fill_fn(|(x, y)| {
-    if x < pad || x > width - pad || y < pad || y > height - pad {
+    if x <= pad || x >= width - pad || y <= pad + 0.1 || y >= height - pad - 0.1
+    {
       return 0.0;
     }
-
-    let mut sum: f64 = 0.0;
-
-    for (index, v, s, r, repeat, multiplier) in collages.clone() {
-      let img = &images[index];
-      let p = (x / opts.width, y / opts.height);
-
-      let ratio = img.width as f64 / img.height as f64;
-
-      let p = rotate(p, r);
-      let p = (p.0 / ratio, p.1); // preserve ratio
-      let p = scale(p, s);
-
-      let p = translate(p, v);
-
-      // modulus
-      // TODO can be not repeating, depending on strategy
-      let p = if repeat { mod_point(p) } else { p };
-
-      if p.0 < 0.0 || p.0 > 1.0 || p.1 < 0.0 || p.1 > 1.0 {
-        continue;
-      }
-
-      let c = img.get_color(p);
-      let mut value = grayscale(c);
-      if !white_on_paper {
-        value = 1.0 - value;
-        //value = value.powf(2.0);
-        value = value * 1.2 - 0.1;
-      } else {
-        value = value.powf(2.0);
-      }
-      //let value = value.powf(1.5);
-      let value = multiplier * value;
-      sum += value;
+    if x >= ww - pp {
+      return 0.0;
     }
-
-    sum.min(max_density)
+    let yf = palettes.len() as f64 * (y - pad) / (height - 2.0 * pad);
+    let yp = yf % 1.0;
+    if yp > 0.9 {
+      return 0.0;
+    }
+    let v = mix(0.66, 1.0, ((yp - 0.45).abs() / 0.45).powf(0.5));
+    return max_density * v * (x - pad) / (ww - pad - pp);
   });
 
   let rot = PI / rng.gen_range(1.0, 4.0);
-  let step = 0.5;
+  let step = 0.8;
   let straight = 0.1;
-  let count = 20000;
+  let count = 50000;
   let min_l = 5;
-  let max_l = 40;
+  let max_l = 30;
   let decrease_value = 1.0;
   let search_max = 500;
   let min_weight = 1.0;
@@ -194,11 +176,7 @@ fn art(opts: &Opts) -> svg::Document {
       }
     }
     if let Some(o) = top {
-      let angle = perlin.get([
-        2. * o.0 / height as f64,
-        2. * o.1 / height as f64,
-        opts.seed,
-      ]);
+      let angle = rng.gen_range(0.0, 2.0 * PI);
 
       if let Some(a) = map.best_direction(o, step, angle, PI, PI / 4.0, 0.0) {
         let v = map.get_weight(o);
@@ -213,12 +191,59 @@ fn art(opts: &Opts) -> svg::Document {
         );
         if route.len() >= min_l {
           let rt = rdp(&route, 0.05);
-          let clr = ((1.0 - (v / max_density)) * (inks.len() as f64)) as usize;
+          let palindex = (palettes.len() as f64 * (o.1 - pad)
+            / (height - 2.0 * pad))
+            .floor() as usize;
+          let palinks = &palettes[palindex % palettes.len()];
+          let clrindex =
+            ((1.0 - (v / max_density)) * (palinks.len() as f64)) as usize;
+          let clr = inks
+            .iter()
+            .position(|&ink| ink == palinks[clrindex % palinks.len()])
+            .unwrap();
           routes.push((clr, rt));
         }
       }
     }
   }
+
+  let w = (height - 2.0 * pad) / (inks.len() as f64);
+  for i in 0..inks.len() {
+    let x1 = ww;
+    let x2 = x1 + w;
+    let y1 = pad + (i as f64) * w;
+    let y2 = y1 + w;
+    // square spiral
+    let center = ((x1 + x2) / 2.0, (y1 + y2) / 2.0);
+    let r = w * (2.0f64).sqrt() / 2.0 - 0.5 * pp;
+    let initial_a = 0.0;
+    let d_length = 0.5;
+    let d_length_to = 0.1;
+    let route = square_spiral(center, r, initial_a, d_length, d_length_to);
+    routes.push((i, route));
+    for xi in 0..8 {
+      routes.push((
+        i,
+        vec![
+          (x2 + xi as f64 * 0.5, y1 + 0.3),
+          (x2 + xi as f64 * 0.5, y2 - 0.3),
+        ],
+      ));
+    }
+  }
+
+  /*
+  routes.push((
+    0,
+    vec![
+      (pad, pad),
+      (width - pad, pad),
+      (width - pad, height - pad),
+      (pad, height - pad),
+      (pad, pad),
+    ],
+  ));
+  */
 
   let layers = inks
     .iter()
@@ -249,30 +274,7 @@ fn main() {
   svg::save(opts.file, &document).unwrap();
 }
 
-fn find_images(dir_path: &str) -> Vec<String> {
-  let mut images = Vec::new();
-  match fs::read_dir(dir_path) {
-    Ok(dir_entries) => {
-      for entry in dir_entries {
-        if let Ok(entry) = entry {
-          let path = entry.path();
-          if path.is_dir() {
-            images.append(&mut find_images(path.to_str().unwrap()));
-          } else if let Some(ext) = path.extension() {
-            let ext_str = ext.to_str().unwrap().to_lowercase();
-            if ext_str == "jpg" || ext_str == "jpeg" || ext_str == "png" {
-              images.push(path.to_str().unwrap().to_owned());
-            }
-          }
-        }
-      }
-    }
-    Err(_) => {}
-  }
-  images
-}
-
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, PartialEq)]
 pub struct Ink(&'static str, &'static str, &'static str, f64);
 #[derive(Clone, Copy)]
 pub struct Paper(&'static str, &'static str, bool);
@@ -506,44 +508,32 @@ impl WeightMap {
   }
 }
 
-fn pick_random_images<'a>(
-  paths: &'a [String],
-  count_imgs: usize,
-  rng: &mut impl rand::Rng,
-) -> Vec<&'a String> {
-  let mut indices: Vec<usize> = (0..paths.len()).collect();
-  rng.shuffle(&mut indices);
-  indices
-    .into_iter()
-    .take(count_imgs)
-    .map(|i| &paths[i])
-    .collect()
-}
-
-pub fn grayscale((r, g, b): (f64, f64, f64)) -> f64 {
-  return 0.299 * r + 0.587 * g + 0.114 * b;
-}
-
-fn mod_point(point: (f64, f64)) -> (f64, f64) {
-  let (x, y) = point;
-  let x_mod = (x + 1000.0) % 1.0;
-  let y_mod = (y + 1000.0) % 1.0;
-  (x_mod, y_mod)
-}
-
-fn scale(point: (f64, f64), factor: f64) -> (f64, f64) {
-  (point.0 * factor, point.1 * factor)
-}
-
-fn rotate(point: (f64, f64), angle: f64) -> (f64, f64) {
-  let sin_angle = angle.sin();
-  let cos_angle = angle.cos();
-  (
-    point.0 * cos_angle - point.1 * sin_angle,
-    point.0 * sin_angle + point.1 * cos_angle,
-  )
-}
-
-fn translate(point: (f64, f64), offset: (f64, f64)) -> (f64, f64) {
-  (point.0 + offset.0, point.1 + offset.1)
+fn square_spiral(
+  c: (f64, f64),
+  r: f64,
+  initial_a: f64,
+  d_length: f64,
+  d_length_to: f64,
+) -> Vec<(f64, f64)> {
+  let mut a: f64 = initial_a;
+  let length = r * 2. / (2. as f64).sqrt();
+  let delta = p_r((-length / 2., length / 2.), a);
+  let mut p = (c.0 + delta.0, c.1 + delta.1);
+  let mut l = length;
+  let mut i = 0;
+  let mut route = Vec::new();
+  loop {
+    if l < 0.0 {
+      break;
+    }
+    p = (p.0 + l * a.cos(), p.1 + l * a.sin());
+    route.push(p);
+    a -= PI / 2.;
+    if i > 0 {
+      let dl = mix(d_length_to, d_length, l / length);
+      l -= dl;
+    }
+    i += 1;
+  }
+  route
 }

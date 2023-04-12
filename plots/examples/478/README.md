@@ -6,7 +6,8 @@ video: /images/plots/478.mp4
 description: "'Transhumanist singularity' est une boucle animée de 4 plots A3 présentant une version transhumanisme de l'Homme de Vitruve qui nage dans un réseau de cerveaux en symbiose."
 tags:
   - plotloop
-  - wat
+  - weekandart
+  - event
   - a3
 ---
 

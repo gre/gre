@@ -21,7 +21,7 @@ pub struct Opts {
   pub height: f64,
   #[clap(short, long, default_value = "15.0")]
   pub pad: f64,
-  #[clap(short, long, default_value = "6.0")]
+  #[clap(short, long, default_value = "13.0")]
   pub seed: f64,
 }
 
@@ -75,8 +75,7 @@ fn art(opts: &Opts) -> svg::Document {
   let inks = if white_on_paper {
     vec![white_gel]
   } else {
-    //vec![black, indigo, pink]
-    vec![black, poppy_red, amber]
+    vec![black, indigo, pink]
   };
 
   let perlin = Perlin::new();
@@ -126,7 +125,7 @@ fn art(opts: &Opts) -> svg::Document {
 
   let max_density = 8.0;
 
-  let collages = vec![(0, (0.0, 0.15), 0.68, 0.0, true, max_density)];
+  let collages = vec![(0, (0.0, 0.0), 1.0, 0.0, true, max_density)];
 
   map.fill_fn(|(x, y)| {
     if x < pad || x > width - pad || y < pad || y > height - pad {
