@@ -8,4 +8,4 @@ tags:
 - event
 ---
 
-inks: Skull and Roses, Crimson.
+inks: Rouge Grenat, Rubine, Aurora Borealis.
