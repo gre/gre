@@ -37,6 +37,13 @@ export default {
       color: "#6441a5",
     },
     {
+      id: "youtube",
+      url: "https://youtube.com/@greweb",
+      icon: "/icons/youtube.svg",
+      text: "youtube",
+      color: "#ff0000",
+    },
+    {
       id: "github",
       url: "https://github.com/gre",
       icon: "/icons/github.svg",

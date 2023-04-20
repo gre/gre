@@ -1,0 +1,14 @@
+---
+date: "2023-04-20"
+title: "Golden Train #29"
+image: /images/plots/1072.jpg
+sourceFolderURL: https://github.com/gre/gre/tree/master/doodles/plottable-golden-train
+sourceFolder: plottable-golden-train
+nft: https://publicworks.art/work/plottable-golden-train/29
+tags:
+  - golden-train
+  - A6
+---
+
+This plot is one physical counterpart that was ordered by the digital owner of 'Plottable Golden Train #29'. 
+Plottable Golden Train includes many variations (bridges, cactus, clouds, eagles, colors,...) entirely generated with code at mint (generative art).

@@ -6,7 +6,6 @@ tags:
 - medieval
 ---
 
-
 Initial development of a medieval army for a future plottable medieval era collection.
 
 This was live streamed on twitch.tv/greweb
