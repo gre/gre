@@ -352,6 +352,9 @@ export default function Home({ posts, plots }) {
                     </a>
                   ))}
                 </div>
+                <div style={{ textAlign: "right" }}>
+                  <img src="/images/mail.jpg" width="300" />
+                </div>
               </div>
             </div>
             <blockquote>{description}</blockquote>
