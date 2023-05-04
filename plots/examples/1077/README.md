@@ -2,6 +2,8 @@
 date: "2023-04-20"
 title: "Lunar"
 image: /images/plots/1077.jpg
+tags:
+- lunar
 ---
 
 A3 plot made with Sakura Gelly Roll 08 on Fabriano Black Black paper.

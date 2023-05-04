@@ -1331,6 +1331,7 @@ dependencies = [
  "num-bigint 0.4.3",
  "num-integer",
  "num-traits 0.2.15",
+ "pointy",
  "rand 0.5.6",
  "rayon",
  "reqwest",
@@ -2775,6 +2776,15 @@ dependencies = [
  "crc32fast",
  "deflate",
  "miniz_oxide 0.3.7",
+]
+
+[[package]]
+name = "pointy"
+version = "0.4.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f08dc89a46f7c7f8f7233a3e5f2a0964ec7c9e3b4d1a949e52cd371940ab409d"
+dependencies = [
+ "num-traits 0.2.15",
 ]
 
 [[package]]

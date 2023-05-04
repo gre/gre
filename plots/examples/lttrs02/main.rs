@@ -16,7 +16,7 @@ pub struct Opts {
   pub height: f64,
   #[clap(short, long, default_value = "10.0")]
   pub pad: f64,
-  #[clap(short, long, default_value = "2.0")]
+  #[clap(short, long, default_value = "200.0")]
   pub seed: f64,
   #[clap(
     short,
@@ -41,6 +41,8 @@ fn art(opts: &Opts) -> svg::Document {
 
   let mut rng = rng_from_seed(opts.seed);
 
+  let ink_count = rng.gen_range(1, 4);
+
   let mut inks = vec![
     black,
     seibokublue,
@@ -53,7 +55,7 @@ fn art(opts: &Opts) -> svg::Document {
   ];
 
   rng.shuffle(&mut inks);
-  inks = inks[0..1].to_vec();
+  inks = inks[0..ink_count].to_vec();
 
   let width = opts.width;
   let height = opts.height;
@@ -71,29 +73,30 @@ fn art(opts: &Opts) -> svg::Document {
     extra_pad,
   );
 
-  let size = 10.0;
-  let word_dist = 1.0;
-  let line_dist = 0.3 * size;
+  let size = 8.0;
+  let word_dist = 0.6;
+  let line_dist = 0.4 * size;
 
   let mut unsafe_curves = Vec::new();
 
-  if rng.gen_bool(0.9) {
-    unsafe_curves.push(spiral_optimized(
-      width / 2.,
-      height / 2.,
-      90.,
-      line_dist,
-      0.1,
-    ));
-  } else {
-    unsafe_curves.push(spiral_angular(
-      PI / 2.0,
-      (pad, pad),
-      1.0,
-      width - 2.0 * pad,
-      line_dist / 2.0,
-    ));
-  }
+  let phases = 1;
+  let turns = rng.gen_range(30, 40);
+  let iterations = 1000 * turns;
+  let min_dist = 2.0;
+  let freq = 0.0; //rng.gen_range(-1.0f64, 0.2).max(0.0);
+  let amp = 0.0; //rng.gen_range(-1.0f64, 1.0).max(0.0);
+
+  unsafe_curves.push(spiral_square(
+    phases,
+    iterations,
+    turns,
+    min_dist,
+    freq,
+    amp,
+    (width / 2.0, height / 2.0),
+    0.0,
+    width / 2.0 - pad,
+  ));
 
   /*
   // for each contouring, we convert them into curves
@@ -117,8 +120,7 @@ fn art(opts: &Opts) -> svg::Document {
 
   let mut collection_words = opts.sentence.split(" ").collect::<Vec<_>>();
   rng.shuffle(&mut collection_words);
-  let count = rng.gen_range(1, 5);
-  collection_words = collection_words[0..count].to_vec();
+  collection_words = collection_words[0..ink_count].to_vec();
 
   let mut words = VecDeque::new();
   for word in collection_words {
@@ -189,9 +191,7 @@ fn art(opts: &Opts) -> svg::Document {
             .collect::<Vec<_>>(),
         );
 
-        if rng.gen_bool(0.3) {
-          clr_index = (clr_index + 1) % inks.len();
-        }
+        clr_index = (clr_index + 1) % inks.len();
       } else {
         words.push_front(text.clone());
       }
@@ -691,4 +691,86 @@ fn spiral_angular(
     l -= d_length;
   }
   d
+}
+
+fn spiral_square_parametric(
+  phases: usize,
+  t: f64,
+  turns: usize,
+  center: (f64, f64),
+  radius: f64,
+  square_size: f64,
+) -> (f64, f64) {
+  let twopi = 2.0 * PI;
+  let radiusend = square_size
+    * if phases % 2 == 0 {
+      1.0
+    } else {
+      (2.0_f64).sqrt()
+    };
+  let ang = (turns as f64) * twopi * t;
+  let r = mix(radius, radiusend, t);
+
+  let acos = ang.cos();
+  let asin = ang.sin();
+
+  let tp = t * (phases as f64);
+  let tremain = tp - tp.floor();
+
+  let tsquare = if tp % 2.0 < 1.0 {
+    tremain
+  } else {
+    1.0 - tremain
+  };
+
+  let x = mix(r * acos, r * acos.powi(2) * acos.signum(), tsquare);
+  let y = mix(r * asin, r * asin.powi(2) * asin.signum(), tsquare);
+
+  let (mut x, mut y) = p_r((x, y), PI / 4.0);
+
+  x += center.0;
+  y += center.1;
+
+  (x, y)
+}
+
+fn spiral_square(
+  phases: usize,
+  resolution: usize,
+  turns: usize,
+  min_dist: f64,
+  f: f64,
+  amp: f64,
+  center: (f64, f64),
+  radius: f64,
+  square_size: f64,
+) -> Vec<(f64, f64)> {
+  let mut points = vec![];
+  let mut phase = 0.0;
+  let mut last_p = (0.0, 0.0);
+
+  for i in 0..resolution {
+    let t = i as f64 / (resolution as f64);
+    let p =
+      spiral_square_parametric(phases, t, turns, center, radius, square_size);
+    let t2 = t - 1.0 / (turns as f64);
+    let disp = {
+      let q = spiral_square_parametric(
+        phases,
+        t2,
+        turns,
+        center,
+        radius,
+        square_size,
+      );
+      let d = (euclidian_dist(p, q) - min_dist).max(0.0);
+      let step = euclidian_dist(p, last_p);
+      phase += step * f;
+      let r = amp * d * phase.cos();
+      (r * phase.cos(), r * phase.sin())
+    };
+    last_p = p;
+    points.push((p.0 + disp.0, p.1 + disp.1));
+  }
+  points
 }
