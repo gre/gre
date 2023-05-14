@@ -11,8 +11,7 @@ fn main() {
   let chars: String = (0..49)
     .map(|_i| alphabet[rng.gen_range(0, alphabet.len())])
     .collect();
-  let hash = //"oopdnZVfpiciFNXXLPXqULvXXah95W5Pnvkgt3E9rVbBDfQeHfJ".to_string(); 
-  format!("oo{}", chars);
+  let hash = format!("oo{}", chars);
   let before = Instant::now();
   let (doc, _) = art(
     &Opts {

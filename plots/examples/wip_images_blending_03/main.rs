@@ -21,11 +21,11 @@ pub struct Opts {
   pub height: f64,
   #[clap(short, long, default_value = "15.0")]
   pub pad: f64,
-  #[clap(short, long, default_value = "260.0")]
+  #[clap(short, long, default_value = "199.0")]
   pub seed: f64,
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Debug, Copy)]
 pub enum Wrapping {
   Repeat,
   RepeatMirror,
@@ -118,8 +118,7 @@ fn art(opts: &Opts) -> svg::Document {
 
   let mut map = ValueMap::new(width, height, 0.38);
 
-  let count_imgs =
-    (1.0 + rng.gen_range(0f64, 2.0) * rng.gen_range(0.0, 1.0)).round() as usize;
+  let count_imgs = (1.0 + rng.gen_range(0f64, 1.0)).round() as usize;
   let paths = pick_random_images(&images, count_imgs, &mut rng);
 
   println!("paths: {:?}", paths);
@@ -189,6 +188,8 @@ fn art(opts: &Opts) -> svg::Document {
       )
     })
     .collect::<Vec<_>>();
+
+  println!("collages: {:#?}", collages);
 
   // TODO crop in
   // TODO radial repeat
