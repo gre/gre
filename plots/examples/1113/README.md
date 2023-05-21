@@ -8,4 +8,4 @@ tags:
   - order-and-disorder
 ---
 
-This plot is the first prototype of the ["Order and Disorder"](/plots/tags/order-and-disorder) generative collection.
+This plot is a prototype from the ["Order and Disorder"](/plots/tags/order-and-disorder) generative collection.
