@@ -59,7 +59,7 @@ export function PlotGrid({ children }) {
   );
 }
 
-export function Plot({ plot }) {
+export function Plot({ plot, height = 300 }) {
   const { data, n } = plot;
   const { image } = data;
   const title = `Plot #${plot.n} ${data.title ? " – " + data.title : ""}`;
@@ -70,11 +70,10 @@ export function Plot({ plot }) {
       : null;
 
   return (
-    <div className="plot">
+    <div className="plot" style={{ height }}>
       <style jsx>{`
         .plot {
           position: relative;
-          height: 200px;
           padding: 2px;
           flex-grow: 1;
         }
@@ -165,6 +164,13 @@ export default function Home({ plots }) {
             <PlottingHeader />
             <PlottingSectionVideos />
 
+            <style jsx>{`
+footer {
+  margin: 20px;
+  padding: 20px;
+  border-top: 2px solid #000;
+}
+`}</style>
 
             <footer>
               <MeBlock />

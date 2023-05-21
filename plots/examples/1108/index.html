@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://npmcdn.com/regl@2.1.0/dist/regl.min.js"></script>
+<script>
+function random_hash() {
+let chars = "0123456789abcdef";
+let result = '0x';
+for (let i = 64; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];
+return result;
+}
+let tokenData = {"tokenId": 1000000, "hash": random_hash()}
+console.log(`tokenData = {\"tokenId\": \"${tokenData["tokenId"]}\", \"hash\": \"${tokenData["hash"]}\"};`);
+</script>
+
+    <title></title>
+    <style>
+      body,
+      html {
+        padding: 0;
+        margin: 0;
+      }
+      svg {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      FEATURE_MODE=false;
+    </script>
+    <script src="./index.mjs"></script>
+    <script>main()</script>
+    <script src="./dist/features.js"></script>
+    <script>setTimeout(()=>{ console.log(calculateFeatures(tokenData)) }, 500)</script>
+  </body>
+</html>
