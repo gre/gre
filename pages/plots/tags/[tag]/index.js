@@ -8,8 +8,7 @@ import { Main } from "../../../../components/Main";
 import { Header } from "../../../../components/Header";
 import { Title } from "../../../../components/Title";
 import MeBlock from "../../../../components/MeBlock";
-import { Plot, Content, PlottingHeader } from "../..";
-import { PlottingSectionVideos } from "../../nft";
+import { Plot, Content, } from "../..";
 
 function PlotGrid({ children }) {
   return (
@@ -113,7 +112,7 @@ export default function Home({ tag, plots, tagContent }) {
             /> : null}
             <PlotGrid>
               {plots.map((plot) => (
-                <Plot height={400} plot={plot} key={plot.n} />
+                <Plot height={tagContent && tagContent.data && tagContent.data.imageheight || 400} plot={plot} key={plot.n} />
               ))}
             </PlotGrid>
 

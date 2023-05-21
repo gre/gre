@@ -1,9 +1,11 @@
 ---
-link: ""
+imageheight: 500
 ---
 
 
 These plots has been created as iterative prototypes during the development of "Order and Disorder" generative collection, eventually finalized to be released on an emerging art platform. (more information soon)
+
+<iframe width="100%" height="500" src="https://www.youtube.com/embed/_7qyx129u50?rel=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 
 # 'Plot and Disorder' collection
 
