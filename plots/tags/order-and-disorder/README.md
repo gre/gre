@@ -7,7 +7,7 @@ These plots has been created as iterative prototypes during the development of "
 
 <iframe width="100%" height="500" src="https://www.youtube.com/embed/_7qyx129u50?rel=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 
-# 'Plot and Disorder' collection
+# 'Order and Disorder' collection
 
 Order and Disorder collection explores interaction between simple shapes in various organized and disorganized manner. It starts with a simple square grid that diverges into emergence of patterns using Perlin noises.
 
