@@ -2,6 +2,7 @@
 date: "2022-02-13"
 title: "Fibers 6"
 image: /images/plots/403.jpg
+frDescription: "prototype réalisé pour la collection 'Plottable Fibers' (fxhash). Cette création simule des fibres pour créer une forme similaire à un plant de maïs. Chaque fibre est courbée par un algorithme minimaliste qui simule plusieurs forces physiques."
 sourceFolder: 401
 ---
 

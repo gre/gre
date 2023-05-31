@@ -2,6 +2,7 @@
 date: "2023-04-20"
 title: "Lunar"
 image: /images/plots/1077.jpg
+frDescription: "création issue d'un générateur basé sur un algorithme récursive, qui pave l'espace de cercles. chaque cercle est dessiné avec une spirale. Cette création est le résultat d'un processus aléatoire, rendu physique au stylo gel blanc sur le plotter. Malgré la simplicité de l'idée, le rendu démontre une grande complexité dans les choix qui sont possibles et les intersections créé entre les différents niveaux de spirales."
 tags:
 - lunar
 ---

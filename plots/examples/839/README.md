@@ -3,6 +3,7 @@ date: "2022-11-27"
 title: "Spirals and midjourney"
 image: /images/plots/839.jpg
 tweet: https://twitter.com/greweb/status/1599118992664190976
+frDescription: "concept qui mèle art génératif et intelligence articielle: il a été demandé à Midjourney de générer une image avec comme prompt une description précise du look de l'artiste @greweb. L'image a ensuite été converti en mode traits avec du code de pavage de spirales et réalisé physiquement au stylo plume."
 tags:
 - AI
 ---

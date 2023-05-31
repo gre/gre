@@ -13,6 +13,7 @@ let concat = (arr, el) => arr.concat(el);
 
 let WIDTH = 297;
 let HEIGHT = 420;
+
 let PAD = 10;
 let LINEAR = "linear";
 let PX = (px) => px + "px";
@@ -63,7 +64,7 @@ function art() {
   let vhetching = 1.5 + rand(1);
 
   let withMainObject = rand() < 0.5;
-  let will_line_divide = rand() < 0.5;
+  let will_line_divide = rand() < 0.4;
   let dark = rand(7) | 0;
   let main_color = rand(2) | 0;
   let main_obj_count = 1 + (rand(6) * rand()) | 0;
@@ -87,7 +88,7 @@ function art() {
 
   // establish the background pattern randomness
   let base = 2 + rand(3);
-  let b = rand() * rand();
+  let b = rand();
   let diff = base + rand(5) + rand(70) * rand() * b;
   let minv = base + rand(5);
   let maxv = minv * (1 + rand()) + rand(40) * b;
@@ -96,7 +97,7 @@ function art() {
   let f = rand(0.2) * rand(); // size variation
   let f2 = rand() * rand() * rand(); // color variation
   let f3 = rand(2) * rand(); // fill technique
-  let rotAmp = rand(40) * max(0, rand() - 0.5);
+  let rotAmp = rand(40) * max(0, rand() - 0.3);
 
   if (FEATURE_MODE) {
 

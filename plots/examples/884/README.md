@@ -3,6 +3,7 @@ date: "2022-09-11"
 title: "cutoff and resonance"
 image: /images/plots/884.jpg
 tweet: https://twitter.com/greweb/status/1613263386447581187
+frDescription: "prototype réalisé durant Genuary 2023, un challenge de la communauté de l'art génératif, sur le thème 'Generative Music'.Cette création a été présenté en direct sur Twitch et présente les courbes de fréquence d'une musique créé en live avec un synthétiseur analogique Roland T-8 et J-6. Plus d'information et vidéos sur le lien."
 tags:
 - genuary
 - music
