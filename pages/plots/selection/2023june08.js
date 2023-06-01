@@ -5,8 +5,6 @@ import { useRouter } from 'next/router'
 import QRCode from "react-qr-code";
 import { getPlots } from "../../../plots";
 import { Global } from "../../../components/Global";
-import { Container } from "../../../components/Container";
-import { Main } from "../../../components/Main";
 
 function Content({ children }) {
   return (
@@ -221,7 +219,7 @@ export async function getStaticProps() {
 
 export default function Home({ plots }) {
   const router = useRouter();
-  const title = `Plots Selection (27 june 2023)`;
+  const title = `Plots Selection (8 june 2023)`;
   const firstThumbnail = plots.map((p) => p.data.thumbnail).filter(Boolean)[0];
   const print = router.query.print === "true"
 

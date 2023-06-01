@@ -7,7 +7,6 @@ export async function getPlots() {
   // ^ IDK why, but if we try to catch \d, we only get the {3} ones !!
   const plots = [];
   for (const key of context1.keys().concat(context2.keys())) {
-    console.log(key)
     const folder = key.slice(2, key.length - 10);
     const m = folder.match(/^(\d+)$/);
     const content = await import(`./examples/${folder}/README.md`);

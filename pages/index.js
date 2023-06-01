@@ -267,9 +267,10 @@ export default function Home({ posts, plots }) {
             .socials {
               padding: 0px;
               list-style: none;
+              max-width: 660px;
             }
             .socials a {
-              padding: 8px;
+              padding: 12px;
               display: inline-block;
               opacity: 0.9;
             }
@@ -352,9 +353,6 @@ export default function Home({ posts, plots }) {
                     </a>
                   ))}
                 </div>
-                <div style={{ textAlign: "right" }}>
-                  <img src="/images/mail.jpg" width="300" />
-                </div>
               </div>
             </div>
             <blockquote>{description}</blockquote>
@@ -423,6 +421,9 @@ export default function Home({ posts, plots }) {
                   </span>
                 ))}
               </p>
+              <div style={{ margin: 10 }}>
+                <img src="/images/mail.jpg" width="220" />
+              </div>
             </footer>
           </div>
         </Main>
