@@ -3,6 +3,7 @@ date: "2022-05-18"
 title: "Wireframe (Reveal 7 / 7)"
 image: /images/plots/515.gif
 video: /images/plots/515.mp4
+frDescription: "prototype généré par le projet 'Wireframe' sorti sur fxhash. Cette grille de 8 frames permet de fabriquer une animation en stop motion. Ce concept 'plotloop' est la rencontre du plotting et de l'animation et a été popularisé par @greweb en 2021. Le résultat est visible sur le QR Code."
 description: "This plot is the second of a series of 7 plots that reveal 'Plottable Wireframe (8 frames)' – my next plottable generative art on fxhash"
 sourceFolderURL: https://github.com/gre/gre/tree/master/doodles/plottable-wireframe-loop
 nftGenerator: https://www.fxhash.xyz/generative/13157

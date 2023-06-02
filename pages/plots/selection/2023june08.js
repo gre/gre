@@ -137,13 +137,14 @@ function PrintPlot({ plot }) {
 .printplot {
   position: relative;
   font-size: 10pt;
-  width: 10cm;
-  height: 5cm;
+  width: 104mm;
+  height: 54mm;
   padding: 1em;
   box-sizing: border-box;
   border: 1px solid #eee;
   display: flex;
   flex-direction: row;
+  break-inside: avoid;
 }
 .printplot .content {
   display: flex;
@@ -168,10 +169,10 @@ function PrintPlot({ plot }) {
   font-size: 5pt;
   text-align: center;
   padding-left: 1em;
-  align-self: flex-end;
+  margin-top: 32pt;
 }
 .printplot .url span {
-  margin-bottom: 1em;
+  margin-top: 1em;
 }
       `}</style>
       <div className="content">
@@ -186,27 +187,29 @@ function PrintPlot({ plot }) {
         </div>
       </div>
       <div className="url">
-        <span>{`https://greweb.me/plots/`}<strong>{plot.n}</strong></span>
         <QRCode size={100} value={`https://greweb.me/plots/${n}`} />
+        <span>{`https://greweb.me/plots/`}<strong>{plot.n}</strong></span>
       </div>
     </div>
   )
 }
 
 const selection = [
-  "621",
-  "1063",
+  "198",
+  "207",
+  "304",
+  "403",
+  "515",
   "574",
   "577",
-  "1077",
+  "621",
+  "670",
   "839",
-  "304",
-  "1058",
-  "868",
-  "403",
-  "344",
-  "198",
+  "841",
   "884",
+  "1058",
+  "1059",
+  "1063",
 ]
 
 export async function getStaticProps() {
