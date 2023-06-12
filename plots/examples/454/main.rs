@@ -8,6 +8,8 @@ use svg::node::element::*;
 #[derive(Parser)]
 #[clap()]
 struct Opts {
+  #[clap(short, long, default_value = "image.svg")]
+  file: String,
   #[clap(short, long, default_value = "8.0")]
   seed: f64,
   #[clap(short, long, default_value = "0.5")]
@@ -16,13 +18,15 @@ struct Opts {
   width: f64,
   #[clap(short, long, default_value = "210.0")]
   height: f64,
+  #[clap(short, long, default_value = "10.0")]
+  pad: f64,
 }
 
 fn art(opts: &Opts) -> Vec<Group> {
   let colors = vec!["#000", "#000"];
   let width = opts.width;
   let height = opts.height;
-  let pad = 10.0;
+  let pad = opts.pad;
   let stroke_width = 0.25;
   let seed = opts.seed;
   let mut layers = Vec::new();
@@ -162,5 +166,5 @@ fn main() {
   for g in groups {
     document = document.add(g);
   }
-  svg::save("image.svg", &document).unwrap();
+  svg::save(opts.file, &document).unwrap();
 }

@@ -115,10 +115,14 @@ function art() {
     // as early as we can, we yield the features, for uglify to optimize the code.
     let features = {
       Paper: dark ? "Black" : "White",
+      Hole: mainHasHole ? "Yes" : "No",
+      Rayon: hasMainRayon ? "Yes" : "No",
     };
 
-    let golden = withMainObject && main_color && !monochrome && !reverseColor;
 
+
+    /*
+    let golden = withMainObject && main_color && !monochrome && !reverseColor;
     let o = composed([
       golden && "Golden",
       mainHasHole && "Holed",
@@ -154,6 +158,7 @@ function art() {
     }
 
     features["Object"] = o || "None"
+    */
 
     let sky = "";
     if (make_a_moon) {
@@ -170,31 +175,29 @@ function art() {
     }
     features.Sky = sky || "None"
 
-    features.Background = composed(
-      [
-        scoring(
-          diff - (minv + maxv) / 2,
-          [
-            "Packed",
-            -5,
-            "Dense",
-            2,
-            "Scattered",
-            8,
-            "Sparse"
-          ]
-        ),
-        scoring(
-          rotAmp, [
-          "Aligned",
-          0.2,
-          "Tilted",
+
+    features.Background =
+      scoring(
+        diff - (minv + maxv) / 2,
+        [
+          "Packed",
+          -5,
+          "Dense",
           2,
-          "Twisted"]
-        ),
-        "Squares"
-      ]
-    )
+          "Scattered",
+          8,
+          "Sparse"
+        ]
+      )
+
+    features["Background Alignment"] =
+      scoring(rotAmp, [
+        "Aligned",
+        0.2,
+        "Tilted",
+        2,
+        "Twisted"
+      ]);
 
     const effect = composed([
       reverseColor && "Reverse",
