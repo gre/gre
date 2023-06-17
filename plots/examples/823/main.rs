@@ -99,8 +99,8 @@ fn art(opts: &Opts) -> Vec<Group> {
   let mut rng = rng_from_seed(opts.seed);
 
   let mut routes = Vec::new();
-  let mut p = rng.gen_range(30.0, 60.0);
-  let min = rng.gen_range(-100f64, 30.0).max(0.1);
+  let mut p = rng.gen_range(30.0, 60.0) * width / 210.;
+  let min = rng.gen_range(-100f64, 30.0).max(0.1) * width / 210.;
   let mut i = 0;
   let border_count = rng.gen_range(5, 30);
   let splitincr = rng.gen_range(1.0, 20.0);

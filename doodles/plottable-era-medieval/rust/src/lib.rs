@@ -314,7 +314,7 @@ pub fn art(opts: &Opts, mask_mode: bool) -> (svg::Document, Feature) {
   // bowmen are going to place themselves together down the mountain
   // spearman with shields in front
 
-  for _i in 0..80 {
+  for _i in 0..rng.gen_range(1, 80) {
     // TODO figure out a flat area? instead of offset
     let yoffset = rng.gen_range(5.0, 20.0);
 
@@ -575,7 +575,7 @@ pub fn art(opts: &Opts, mask_mode: bool) -> (svg::Document, Feature) {
 
   // PLACE THE SUN
 
-  let max_sun_radius: f64 = 30.;
+  let max_sun_radius: f64 = width * 30. / 210.;
   let sun_density = 20.;
 
   // find the lowest point of the mountain
@@ -645,7 +645,7 @@ pub fn art(opts: &Opts, mask_mode: bool) -> (svg::Document, Feature) {
     &mut rng,
     &reflectables,
     &mut passage,
-    0.2,
+    0.12,
     4.0,
     yhorizon,
     bounds,

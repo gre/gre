@@ -16,9 +16,9 @@ fn main() {
   let (doc, _) = art(
     &Opts {
       hash,
-      width: 210.,
-      height: 297.,
-      pad: 10.,
+      width: 105.,
+      height: 148.5,
+      pad: 5.,
     },
     false,
   );
