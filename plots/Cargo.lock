@@ -1329,6 +1329,7 @@ dependencies = [
  "ndarray",
  "noise",
  "num-bigint 0.4.3",
+ "num-complex 0.2.4",
  "num-integer",
  "num-traits 0.2.15",
  "pointy",
