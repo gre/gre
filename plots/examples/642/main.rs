@@ -21,6 +21,8 @@ pub struct Opts {
   pub height: f64,
   #[clap(short, long, default_value = "105.0")]
   pub seed: f64,
+  #[clap(short, long, default_value = "10.0")]
+  pub pad: f64,
   #[clap(short, long, default_value = "0.0")]
   pub seed1: f64,
   #[clap(short, long, default_value = "0.0")]
@@ -37,7 +39,7 @@ fn art(opts: &Opts) -> Vec<Group> {
     vec![0.09, 0.3, 0.5],
   ];
 
-  let pad = 10.0;
+  let pad = opts.pad;
   let perlin = Perlin::new();
 
   let mut rng = rng_from_seed(opts.seed);
@@ -90,7 +92,7 @@ fn art(opts: &Opts) -> Vec<Group> {
       let scales = scales_per_color[color].clone();
 
       let mut poly = local_poly.clone();
-      poly.map_coords_inplace(|&(x, y)| {
+      poly.map_coords_inplace(|(x, y)| {
         (
           x * (opts.height - 2. * pad) + pad + (opts.width - opts.height) / 2.0,
           y * (opts.height - 2. * pad) + pad,

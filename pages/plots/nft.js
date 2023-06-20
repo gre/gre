@@ -171,7 +171,7 @@ const choices = [
     name: "Ethereum",
     address: "greweb.eth",
     addressReal: "0x68db7D679969f265b14BA8A495E4028360AD6759",
-    amount: "0.04 ETH",
+    amount: "0.05 ETH",
     collections: [
       {
         url: "https://opensea.io/collection/blockart?search[sortAscending]=true&search[sortBy]=PRICE&search[stringTraits][0][name]=Style&search[stringTraits][0][values][0]=Pattern%2003",
@@ -181,6 +181,10 @@ const choices = [
         url: "https://opensea.io/collection/plottables",
         description:
           "A plottable collection – IF the generator artists allows it",
+      },
+      {
+        url: "https://hodlers.one/",
+        description: "HODLERS plottable collection",
       },
     ],
   },
@@ -307,14 +311,10 @@ export default function Home({ tag }) {
   const { observe, currentBreakpoint } = useDimensions({
     breakpoints: { small: 0, large: 480 },
     updateOnBreakpointChange: true,
-    onResize: ({ currentBreakpoint }) => {
-
-    },
+    onResize: ({ currentBreakpoint }) => {},
   });
 
-
-
-  const padding = currentBreakpoint === "small" ? "5px" : "3em"
+  const padding = currentBreakpoint === "small" ? "5px" : "3em";
 
   return (
     <Global>
@@ -425,14 +425,14 @@ export default function Home({ tag }) {
                 </div>
               </Row>
 
-              {choice.allEditions ?
-
+              {choice.allEditions ? (
                 <Row>
                   <Circle n={2} />
                   <CTA href="https://alleditions.art/artist/greweb">
                     🛒 Order it on alleditions.art
                   </CTA>
-                </Row> :
+                </Row>
+              ) : (
                 <>
                   <Row>
                     <Circle n={2} />
@@ -449,24 +449,38 @@ export default function Home({ tag }) {
                         flexDirection: "column",
                       }}
                     >
-
-                      {
-                        choice.discordLimitedOffer ? (
-                          <>
-                            <Choice>
-                              <p style={{ padding: "0.8em 1.2em", background: "#F0F", color: "white", fontWeight: 400 }}>
-                                {"🎁 Special offer: send a very small amount instead (for verification). FREE physical edition (1/wallet). "}
-                                {
-                                  choice.discordLimitedOffer.expiration
-                                    ? <>ends in <Countdown date={choice.discordLimitedOffer.expiration} /></> : null}
-                                {
-                                  choice.discordLimitedOffer.maxItems
-                                    ? " – limited to the first " + choice.discordLimitedOffer.maxItems + " requests." : null}
-                              </p>
-                            </Choice>
-                            <Or />
-                          </>) : null
-                      }
+                      {choice.discordLimitedOffer ? (
+                        <>
+                          <Choice>
+                            <p
+                              style={{
+                                padding: "0.8em 1.2em",
+                                background: "#F0F",
+                                color: "white",
+                                fontWeight: 400,
+                              }}
+                            >
+                              {
+                                "🎁 Special offer: send a very small amount instead (for verification). FREE physical edition (1/wallet). "
+                              }
+                              {choice.discordLimitedOffer.expiration ? (
+                                <>
+                                  ends in{" "}
+                                  <Countdown
+                                    date={choice.discordLimitedOffer.expiration}
+                                  />
+                                </>
+                              ) : null}
+                              {choice.discordLimitedOffer.maxItems
+                                ? " – limited to the first " +
+                                  choice.discordLimitedOffer.maxItems +
+                                  " requests."
+                                : null}
+                            </p>
+                          </Choice>
+                          <Or />
+                        </>
+                      ) : null}
 
                       <Choice>
                         <Price>{choice.amount}</Price> to{" "}
@@ -487,7 +501,10 @@ export default function Home({ tag }) {
                       ) : null}
                     </div>
                     <p style={{ opacity: 0.5 }}>
-                      <em>(international shipping included, no VAT or customs fees)</em>
+                      <em>
+                        (international shipping included, no VAT or customs
+                        fees)
+                      </em>
                     </p>
                   </Row>
                   <Row>
@@ -500,11 +517,14 @@ export default function Home({ tag }) {
                         </CTA>
                       </p>
                       <p>
-                        Feel free to get in touch:{" "}<strong>greweb (at) protonmail.com</strong> / <a href="https://twitter.com/greweb">@greweb</a>.
+                        Feel free to get in touch:{" "}
+                        <strong>greweb (at) protonmail.com</strong> /{" "}
+                        <a href="https://twitter.com/greweb">@greweb</a>.
                       </p>
                     </div>
                   </Row>
-                </>}
+                </>
+              )}
             </div>
 
             <h3
@@ -515,8 +535,8 @@ export default function Home({ tag }) {
                 paddingTop: 10,
               }}
             >
-              @greweb physically plot on demand and deliver
-              signed plots worldwide to "plottable NFT" digital collectors.
+              @greweb physically plot on demand and deliver signed plots
+              worldwide to "plottable NFT" digital collectors.
             </h3>
 
             <img width="100%" src="/images/plots-promo/letters.jpeg" />
@@ -549,7 +569,6 @@ export default function Home({ tag }) {
   );
 }
 
-
 function formatDistanceToNow(diff, options) {
   const minutes = Math.floor(diff / 60000);
   const hours = Math.floor(minutes / 60);
@@ -568,7 +587,7 @@ function formatDistanceToNow(diff, options) {
   if (hours > 0) {
     return hours + " hour" + (hours > 1 ? "s" : "");
   }
-  return "ends soon!"
+  return "ends soon!";
 }
 
 function Countdown({ date }) {
