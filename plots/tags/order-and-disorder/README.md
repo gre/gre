@@ -1,7 +1,10 @@
 ---
 imageheight: 500
+nftcollection:
+  desc: "Owning a Order and Disorder NFT?"
+  ctaLink: "https://greweb.me/plots/nft?ethereum"
+  cta: "Request a physical edition"
 ---
-
 
 These plots has been created as iterative prototypes during the development of "Order and Disorder" generative collection, eventually finalized to be released on an emerging art platform. (more information soon)
 
