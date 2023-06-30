@@ -209,11 +209,11 @@ fn art(opts: &Opts) -> svg::Document {
         1.0,
       );
 
-    let grow = 6.0;
-    let precision = 0.4;
-    let breaking_angle_factor = 1.5;
-    let size = 3.3;
-    let word_dist = 1.2;
+    let grow = 7.0;
+    let precision = 0.5;
+    let breaking_angle_factor = 2.0;
+    let size = 3.4;
+    let word_dist = 1.4;
 
     let w = (width as f64 / precision) as u32;
     let h = (height as f64 / precision) as u32;
