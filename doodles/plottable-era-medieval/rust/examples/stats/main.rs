@@ -38,16 +38,9 @@ fn main() {
     let (doc, features) = art(
       &Opts {
         hash: hash.clone(),
-        width: 297.,
-        height: 210.,
+        height: 297.,
+        width: 210.,
         pad: 10.,
-        lightness,
-        color_cutoff,
-        color_offset: 0,
-        layers_count,
-        noise_effect,
-        kaleidoscope: false,
-        kaleidoscope_mod: 0,
       },
       false,
     );
@@ -58,8 +51,6 @@ fn main() {
   let mut inks_counter = HashMap::new();
   let mut inks_count_counter = HashMap::new();
   let mut paper_counter = HashMap::new();
-  let mut density_counter = HashMap::new();
-  let mut symmetry_counter = HashMap::new();
 
   let l = all.len();
 
@@ -74,15 +65,6 @@ fn main() {
 
     let paper_count = paper_counter.entry(feature.paper.clone()).or_insert(0);
     *paper_count += 1;
-
-    let density_count =
-      density_counter.entry(feature.density.clone()).or_insert(0);
-    *density_count += 1;
-
-    let symmetry_count = symmetry_counter
-      .entry(feature.symmetry.clone())
-      .or_insert(0);
-    *symmetry_count += 1;
   }
 
   println!("Inks distribution:");
@@ -97,16 +79,6 @@ fn main() {
 
   println!("Paper distribution:");
   for (k, v) in paper_counter.into_iter() {
-    println!("{:<30} : {}%", k, (100. * (v as f32)) / (l as f32));
-  }
-
-  println!("Density distribution:");
-  for (k, v) in density_counter.into_iter() {
-    println!("{:<30} : {}%", k, (100. * (v as f32)) / (l as f32));
-  }
-
-  println!("Symmetry distribution:");
-  for (k, v) in symmetry_counter.into_iter() {
     println!("{:<30} : {}%", k, (100. * (v as f32)) / (l as f32));
   }
 }

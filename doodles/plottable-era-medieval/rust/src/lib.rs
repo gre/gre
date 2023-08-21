@@ -115,7 +115,7 @@ pub fn art(opts: &Opts, mask_mode: bool) -> (svg::Document, Feature) {
   // colors
   // 0 : mountains & objects
   // 1 : sun
-  // 2 : human lights / fire
+  // 2 : human lights / fire -> MAYBE IT'S THE SAME COLOR!
   let (mut colors, paper) = (vec![black, amber, poppy_red], white_paper);
 
   // Prepare the generative code
@@ -130,7 +130,7 @@ pub fn art(opts: &Opts, mask_mode: bool) -> (svg::Document, Feature) {
 
   let min_route = 2;
   let yincr = 0.8;
-  let precision = 0.3; //0.15; // TODO lower?
+  let precision = 0.2;
   let horizon_yincr_factor = 0.3;
 
   let yhorizon = height / 2.0;
@@ -266,72 +266,11 @@ pub fn art(opts: &Opts, mask_mode: bool) -> (svg::Document, Feature) {
     }
   }
 
-  for _i in 0..rng.gen_range(1, 3) {
-    let close_to_horizon: f64 = rng.gen_range(0.0, 1.0);
-    let size = mix(8.0, 5.0, close_to_horizon);
-    let xflip = false; //rng.gen_bool(0.5);
-    let w = width * size / rng.gen_range(20.0, 50.0);
-    let origin = (
-      width / 2.0 + rng.gen_range(-1.0, 1.0) * 0.2 * width,
-      height * mix(0.8, 0.55, close_to_horizon),
-    );
-
-    routes.extend(
-      boat_with_army(&mut rng, origin, 0.0, size, w, xflip)
-        .iter()
-        .map(|route| (0, route.clone())),
-    );
-  }
-
   // TODO IDEA: Forest?
 
   // TODO IDEA: Harbour?
 
-  // ATTACKERS
-
-  for _i in 0..2 {
-    // TODO figure out a flat area? instead of offset
-    let yoffset = rng.gen_range(0.0, 20.0);
-
-    let x = rng.gen_range(0.2, 0.8) * width;
-    let y =
-      yoffset + middle_level_map[((x - pad) / precision).round() as usize];
-
-    let pos = (x, y);
-    let h = mix(12.0, 20.0, smoothstep(0.2 * height, yhorizon, y));
-    let action = rng.gen_range(0.0, 1.0);
-    let xflip = false;
-
-    let rts = trebuchet(&mut rng, pos, h, action, xflip);
-    let colored = rts
-      .iter()
-      .map(|route| (0, route.clone()))
-      .collect::<Vec<_>>();
-    reflectables.extend(colored.clone());
-    routes.extend(colored);
-  }
-
-  // bowmen are going to place themselves together down the mountain
-  // spearman with shields in front
-
-  for _i in 0..rng.gen_range(1, 80) {
-    // TODO figure out a flat area? instead of offset
-    let yoffset = rng.gen_range(5.0, 20.0);
-
-    let x = rng.gen_range(0.1, 0.9) * width;
-    let y =
-      yoffset + middle_level_map[((x - pad) / precision).round() as usize];
-
-    let pos = (x, y);
-    let size = 5.0;
-    let rts = bowman(&mut rng, pos, size);
-    let colored = rts
-      .iter()
-      .map(|route| (0, route.clone()))
-      .collect::<Vec<_>>();
-    reflectables.extend(colored.clone());
-    routes.extend(colored);
-  }
+  let mut castle_positions = vec![];
 
   // DEFENDERS
   // calculate a moving average
@@ -360,9 +299,11 @@ pub fn art(opts: &Opts, mask_mode: bool) -> (svg::Document, Feature) {
 
   smooth_heights.sort_by(|a, b| a.1.partial_cmp(&b.1).unwrap());
 
-  let sizebase = rng.gen_range(10.0, 20.0);
-  let castle_target =
-    (1.5 + rng.gen_range(0.0, 8.0) * rng.gen_range(0.0, 1.0)) as usize;
+  let mut mask = PaintMask::new(precision, width, height);
+
+  let sizebase = rng.gen_range(20.0, 25.0);
+  let castle_target = 1;
+  // (1.5 + rng.gen_range(0.0, 4.0) * rng.gen_range(0.0, 1.0)) as usize;
   let mut castles = Vec::new();
   let mut ranges = Vec::new();
   let mut i = 0;
@@ -409,13 +350,124 @@ pub fn art(opts: &Opts, mask_mode: bool) -> (svg::Document, Feature) {
     }
 
     ranges.push((left, right));
-    castles.push(castle(&peaks, scale, &mut rng, &mut passage));
+    let (rts, polygons, center) = castle(&peaks, scale, &mut rng, &mut passage);
+    for poly in polygons {
+      mask.paint_polygon(&poly);
+    }
+    castle_positions.push(center);
+    castles.push(rts);
   }
 
   for all in castles {
     for r in all {
       routes.push((0, r));
     }
+  }
+
+  // ATTACKERS
+
+  // trebuchets
+  for _i in 0..2 {
+    // TODO figure out a flat area? instead of offset
+    let yoffset = rng.gen_range(0.0, 20.0);
+
+    let x = rng.gen_range(0.2, 0.8) * width;
+    let y =
+      yoffset + middle_level_map[((x - pad) / precision).round() as usize];
+
+    let pos = (x, y);
+    let h = mix(12.0, 20.0, smoothstep(0.2 * height, yhorizon, y));
+    let action = rng.gen_range(0.0, 1.0);
+    let xflip = false;
+
+    let rts = trebuchet(&mut rng, pos, h, action, xflip);
+    let colored = rts
+      .iter()
+      .map(|route| (0, route.clone()))
+      .collect::<Vec<_>>();
+    reflectables.extend(colored.clone());
+    routes.extend(colored);
+
+    // projectile
+    if rng.gen_bool(0.5) {
+      let castlecenter =
+        castle_positions[rng.gen_range(0, castle_positions.len())];
+
+      let curveh = 0.8 * (castlecenter.1 - pad);
+
+      let mut destination = castlecenter;
+
+      destination.0 += rng.gen_range(-0.5, 0.5) * 5.0;
+      destination.1 += rng.gen_range(-0.5, 0.5) * 5.0;
+
+      let position_percent = rng.gen_range(0.3, 0.9);
+
+      let projectile = fireball_projectile(
+        &mut rng,
+        pos, // TODO use the actual trebuchet origin pos
+        destination,
+        curveh,
+        2.0,
+        position_percent,
+      );
+
+      routes.extend(projectile.clone());
+      reflectables.extend(projectile);
+    }
+  }
+
+  // bowmen are going to place themselves together down the mountain
+  // spearman with shields in front
+
+  let seed = rng.gen_range(-100.0, 100.0);
+  let freq = 0.02;
+
+  for _i in 0..rng.gen_range(100, 500) {
+    // TODO figure out a flat area? instead of offset
+    let yoffset = rng.gen_range(0.0, 50.0);
+
+    // FIXME avoid going in the water please
+
+    let x = rng.gen_range(0.05, 0.95) * width;
+    let y =
+      yoffset + middle_level_map[((x - pad) / precision).round() as usize];
+
+    if y > yhorizon - 10.0 {
+      continue;
+    }
+
+    if perlin.get([freq * x, freq * y, seed]) > 0.2 {
+      continue;
+    }
+
+    let pos = (x, y);
+    let size = 5.0;
+    let mut rts = bowman(&mut rng, pos, size);
+
+    let castlecenter =
+      castle_positions[rng.gen_range(0, castle_positions.len())];
+
+    let curveh = 0.6 * (castlecenter.1 - pad);
+
+    let mut destination = castlecenter;
+
+    destination.0 += rng.gen_range(-0.5, 0.5) * 5.0;
+    destination.1 += rng.gen_range(-0.5, 0.5) * 5.0;
+
+    let position_percent = rng.gen_range(0.1, 0.9) * rng.gen_range(0.5, 1.0);
+
+    let projectile =
+      arrow_projectile(pos, destination, curveh, 2.0, position_percent);
+
+    routes.extend(projectile.clone());
+    reflectables.extend(projectile);
+
+    let colored = rts
+      .iter()
+      .map(|route| (0, route.clone()))
+      .collect::<Vec<_>>();
+    reflectables.extend(colored.clone());
+    routes.extend(colored);
   }
 
   // MAKE THE SKY
@@ -460,11 +512,6 @@ pub fn art(opts: &Opts, mask_mode: bool) -> (svg::Document, Feature) {
 
   // CLOUDS SHAPES
 
-  let max_clouds = 8.0;
-  let count = (rng.gen_range(0.0, max_clouds)
-    * rng.gen_range(0.0, 1.0)
-    * rng.gen_range(0.0, 1.0)) as usize;
-
   passage.grow_passage(1.0);
 
   let in_shape = |p: (f64, f64)| -> bool {
@@ -479,25 +526,39 @@ pub fn art(opts: &Opts, mask_mode: bool) -> (svg::Document, Feature) {
         .all(|&p| in_shape(p))
   };
 
-  let count = rng.gen_range(0, 5);
+  // FIXME figure out the right number of clouds
+  // i think it's good to have a lot but have areas of exclusions?
+  // notably we should have wider padding around the castle and mountains
 
-  let circles = packing(
-    &mut rng,
-    50000,
-    count,
-    1,
-    0.0,
-    bounds,
-    &does_overlap,
-    5.0,
-    20.0,
-  );
+  let count = rng.gen_range(0, 2);
+  let layers_count = rng.gen_range(1, 4);
+
+  let circles = (0..layers_count)
+    .flat_map(|_i| {
+      packing(
+        &mut rng,
+        50000,
+        count,
+        1,
+        0.0,
+        bounds,
+        &does_overlap,
+        5.0,
+        20.0,
+      )
+    })
+    .collect::<Vec<_>>();
 
   let clouds: Vec<VCircle> = circles
     .iter()
     .flat_map(|c| {
       let (rts, circles) = cloud_in_circle(&mut rng, &c);
+      let is_outside = |p| mask.is_painted(p);
+      let rts = clip_routes(&rts, &is_outside, 0.3, 7);
       routes.extend(rts.iter().map(|r| (0, r.clone())));
+      for c in circles.clone() {
+        mask.paint_circle(&c);
+      }
       circles
     })
     .collect();
@@ -532,26 +593,27 @@ pub fn art(opts: &Opts, mask_mode: bool) -> (svg::Document, Feature) {
 
       let p = (x, y);
 
-      let should_draw = (0.2 * cloud_add
-        + 0.7
-          * perlin.get([
-            seed
-              + perlin.get([
-                //
-                0.02 * x,
-                7.7 * seed,
-                0.01 * y,
-              ]),
-            0.005 * x,
-            0.02 * y,
-          ])
-        + 0.3 * perlin.get([0.002 * x, 0.1 * y, seed / 5.]))
-        * (0.5 * cloud_add
-          + 2.0 * perlin.get([-3. - seed / 7., 0.001 * x, 0.001 * y]))
-        * (cloud_add + perlin.get([5. * seed / 7., 0.004 * x, 0.004 * y]))
-        > ythreshold
-          + 0.001 * (route.len() as f64)
-          + 0.3 * smoothstep(0.0, yhorizon, y);
+      let should_draw = !mask.is_painted(p)
+        && (0.2 * cloud_add
+          + 0.7
+            * perlin.get([
+              seed
+                + perlin.get([
+                  //
+                  0.02 * x,
+                  7.7 * seed,
+                  0.01 * y,
+                ]),
+              0.005 * x,
+              0.02 * y,
+            ])
+          + 0.3 * perlin.get([0.002 * x, 0.1 * y, seed / 5.]))
+          * (0.5 * cloud_add
+            + 2.0 * perlin.get([-3. - seed / 7., 0.001 * x, 0.001 * y]))
+          * (cloud_add + perlin.get([5. * seed / 7., 0.004 * x, 0.004 * y]))
+          > ythreshold
+            + 0.001 * (route.len() as f64)
+            + 0.3 * smoothstep(0.0, yhorizon, y);
 
       if y < lowy - 1.0 && should_draw {
         route.push(p);
@@ -576,7 +638,7 @@ pub fn art(opts: &Opts, mask_mode: bool) -> (svg::Document, Feature) {
   // PLACE THE SUN
 
   let max_sun_radius: f64 = width * 30. / 210.;
-  let sun_density = 20.;
+  let sun_density = 12.;
 
   // find the lowest point of the mountain
   let mut lowxi = 0;
@@ -612,10 +674,10 @@ pub fn art(opts: &Opts, mask_mode: bool) -> (svg::Document, Feature) {
       let xi = ((p.0 - pad) / precision) as usize;
       let h = height_map[xi];
       // TODO we want to do proper clipping instead of stopping the spiral in place.
-      // TODO clip the sun with boundaries too
+      // FIXME the sun clipping logic is not accurate enough
       // TODO we must use a mask to hide the sun behind clouds
 
-      let collides = p.1 < h && !clouds.iter().any(|c| c.includes(p));
+      let collides = p.1 < h && !mask.is_painted(p);
 
       if collides {
         route.push(p);
@@ -638,6 +700,24 @@ pub fn art(opts: &Opts, mask_mode: bool) -> (svg::Document, Feature) {
 
   // TODO random rays when sun light traverse sky?
 
+  // TODO we need to clip the reflections away from the boat
+  for _i in 0..rng.gen_range(1, 3) {
+    let close_to_horizon: f64 = rng.gen_range(0.0, 0.7);
+    let size = mix(10.0, 5.0, close_to_horizon);
+    let xflip = false; //rng.gen_bool(0.5);
+    let w = width * size / rng.gen_range(20.0, 50.0);
+    let origin = (
+      width / 2.0 + rng.gen_range(-1.0, 1.0) * 0.2 * width,
+      height * mix(0.9, 0.55, close_to_horizon),
+    );
+
+    routes.extend(
+      boat_with_army(&mut rng, origin, 0.0, size, w, xflip)
+        .iter()
+        .map(|route| (0, route.clone())),
+    );
+  }
+
   // REFLECT THE OBJECTS ON THE SEA
 
   // TODO clipping of the boat and the reflections. how to implement? strict clipping VS halo effect? => boat to export masks and then we can clip reflections?
@@ -645,8 +725,8 @@ pub fn art(opts: &Opts, mask_mode: bool) -> (svg::Document, Feature) {
     &mut rng,
     &reflectables,
     &mut passage,
-    0.12,
-    4.0,
+    0.5,
+    3.0,
     yhorizon,
     bounds,
     5,
@@ -1058,9 +1138,32 @@ fn reflect_shapes<R: Rng>(
   let xdisplacement = 30.0;
   let ydisplacement = 70.0;
 
+  let exact_balance = 0.9;
+
   for (clr, route) in reflectables.clone() {
+    for route in
+      slice_polylines(&route, rng.gen_range(1.0, 2.0) * stroke_len_base)
+    {
+      if !rng.gen_bool(exact_balance * probability) {
+        continue;
+      }
+      let dispy = rng.gen_range(0.0, 0.2 * ydisplacement)
+        * rng.gen_range(0.0, 1.0)
+        * rng.gen_range(0.0, 1.0);
+      let projection = route
+        .iter()
+        .map(|p| {
+          let x = p.0;
+          let mut y = 2.0 * ycenter - p.1;
+          y += dispy;
+          (x, y)
+        })
+        .collect();
+      new_shapes.push((clr, projection));
+    }
+
     for p in route {
-      if !rng.gen_bool(probability) {
+      if !rng.gen_bool((1.0 - exact_balance) * probability) {
         continue;
       }
       let sx = (min_stroke_length
@@ -1376,6 +1479,30 @@ impl PaintMask {
       for y in miny..maxy {
         let point = (x as f64 * precision, y as f64 * precision);
         if polygon_includes_point(polygon, point) {
+          self.mask[x + y * wi] = true;
+        }
+      }
+    }
+  }
+
+  fn paint_circle(&mut self, circle: &VCircle) {
+    let (minx, miny, maxx, maxy) = (
+      circle.x - circle.r,
+      circle.y - circle.r,
+      circle.x + circle.r,
+      circle.y + circle.r,
+    );
+    let precision = self.precision;
+    let width = self.width;
+    let minx = (minx / precision) as usize;
+    let miny = (miny / precision) as usize;
+    let maxx = (maxx / precision) as usize;
+    let maxy = (maxy / precision) as usize;
+    let wi = (width / precision) as usize;
+    for x in minx..maxx {
+      for y in miny..maxy {
+        let point = (x as f64 * precision, y as f64 * precision);
+        if euclidian_dist(point, (circle.x, circle.y)) < circle.r {
           self.mask[x + y * wi] = true;
         }
       }
@@ -2033,7 +2160,7 @@ fn cloud_in_circle<R: Rng>(
 
   let stretchy = rng.gen_range(0.2, 1.0);
 
-  let count = rng.gen_range(16, 40);
+  let count = rng.gen_range(40, 80);
   for _i in 0..count {
     let radius = circle.r * rng.gen_range(0.3, 0.5) * rng.gen_range(0.2, 1.0);
     let angle = rng.gen_range(0.0, 2.0 * PI);
@@ -2046,7 +2173,7 @@ fn cloud_in_circle<R: Rng>(
 
     let mut input_routes = vec![];
     let mut r = radius;
-    let dr = rng.gen_range(1.0, 3.0);
+    let dr = rng.gen_range(0.5, 2.0);
     loop {
       if r < 1.0 {
         break;
@@ -2954,11 +3081,14 @@ fn castle<R: Rng>(
   scale: f64,
   rng: &mut R,
   passage: &mut Passage,
-) -> Vec<Vec<(f64, f64)>> {
+) -> (Vec<Vec<(f64, f64)>>, Vec<Vec<(f64, f64)>>, (f64, f64)) {
   let mut routes = Vec::new();
+  let mut polys = Vec::new();
   if peaks.len() == 0 {
-    return routes;
+    return (routes, polys, (0.0, 0.0));
   }
+
+  let polypad = 0.8;
 
   /*
   let intersects_routes =
@@ -3011,6 +3141,12 @@ fn castle<R: Rng>(
 
   // wall top
   let mut route = Vec::new();
+  polys.push(vec![
+    (leftpeak2.0 - polypad, leftpeak2.1 + polypad),
+    (leftpeak2.0 - polypad, wallheighty - polypad),
+    (rightpeak2.0 + polypad, wallheighty - polypad),
+    (rightpeak2.0 + polypad, rightpeak2.1 + polypad),
+  ]);
   route.push(leftpeak2);
   route.push((leftpeak2.0, wallheighty));
   merlon(
@@ -3058,6 +3194,25 @@ fn castle<R: Rng>(
     route.push((b.0 + d1, towerheighty - d1));
     route.push((b.0, towerheighty));
     route.push(b);
+
+    // boundaries of the tower body
+    polys.push(vec![
+      (a.0 - polypad, a.1 + polypad),
+      (b.0 + polypad, b.1 + polypad),
+      (b.0 + polypad, towerheighty - polypad),
+      (a.0 - polypad, towerheighty - polypad),
+    ]);
+
+    // boundaries of the tower head
+    polys.push(vec![
+      (a.0 - polypad, towerheighty + polypad),
+      (b.0 + polypad, towerheighty + polypad),
+      (b.0 + polypad + d1, towerheighty - d1 + polypad),
+      (b.0 + polypad + d1, towerheighty - h1 - merlonh - polypad),
+      (a.0 - polypad - d1, towerheighty - h1 - merlonh - polypad),
+      (a.0 - polypad - d1, towerheighty - d1 + polypad),
+    ]);
+
     let right_side_path = vec![
       (b.0 + d1, towerheighty - d1 - h1),
       (b.0 + d1, towerheighty - d1),
@@ -3069,6 +3224,7 @@ fn castle<R: Rng>(
     }
     routes.push(route);
 
+    // windows
     let mut y = towerheighty;
     let w = scale * 0.25;
     let h = scale * rng.gen_range(1.0, 1.2);
@@ -3104,6 +3260,26 @@ fn castle<R: Rng>(
     route.push((x, wallheighty));
     routes.push(route);
 
+    // boundaries of chapel body
+    polys.push(vec![
+      (
+        wallcenter.0 + maint_width / 2.0 - polypad,
+        wallheighty + polypad,
+      ),
+      (
+        wallcenter.0 + maint_width / 2.0 + polypad,
+        wallheighty + polypad,
+      ),
+      (
+        wallcenter.0 + maint_width / 2.0 + polypad,
+        wallcenter.1 - maint_height - polypad,
+      ),
+      (
+        wallcenter.0 + maint_width / 2.0 - polypad,
+        wallcenter.1 - maint_height - polypad,
+      ),
+    ]);
+
     let w = maint_width * rng.gen_range(0.5, 0.55);
     let h = maint_roof_height;
     let y = wallcenter.1 - maint_height;
@@ -3111,6 +3287,13 @@ fn castle<R: Rng>(
       (wallcenter.0 - w, y),
       (wallcenter.0, y - h),
       (wallcenter.0 + w, y),
+    ]);
+
+    // boundaries of chapel roof
+    polys.push(vec![
+      (wallcenter.0 - w - polypad, y),
+      (wallcenter.0, y - h - polypad),
+      (wallcenter.0 + w + polypad, y),
     ]);
     let mut l = 0.0;
     loop {
@@ -3184,5 +3367,172 @@ fn castle<R: Rng>(
     }
   }
 
+  (routes, polys, (wallcenter.0, wallheighty))
+}
+
+fn lookup_projectile_curve(
+  origin: (f64, f64),
+  destination: (f64, f64),
+  curveh: f64,
+  position_percentage: f64,
+) -> (f64, f64) {
+  let mut p = lerp_point(origin, destination, position_percentage);
+  let dy = curveh
+    * (2.0 * (0.5 - (0.5 - position_percentage.max(0.0).min(1.0)).abs()))
+      .sqrt();
+  p.1 -= dy;
+  p
+}
+
+fn make_projectile_pos_ang(
+  origin: (f64, f64),
+  destination: (f64, f64),
+  curveh: f64,
+  position_percentage: f64,
+) -> ((f64, f64), f64) {
+  let p =
+    lookup_projectile_curve(origin, destination, curveh, position_percentage);
+
+  let s1 = lookup_projectile_curve(
+    origin,
+    destination,
+    curveh,
+    position_percentage - 0.001,
+  );
+  let s2 = lookup_projectile_curve(
+    origin,
+    destination,
+    curveh,
+    position_percentage + 0.001,
+  );
+  let angle = (s2.1 - s1.1).atan2(s2.0 - s1.0);
+
+  (p, angle)
+}
+
+fn arrow_projectile(
+  origin: (f64, f64),
+  destination: (f64, f64),
+  curveh: f64,
+  length: f64,
+  position_percentage: f64,
+) -> Vec<(usize, Vec<(f64, f64)>)> {
+  let mut routes = vec![];
+
+  let (p, angle) =
+    make_projectile_pos_ang(origin, destination, curveh, position_percentage);
+  let acos = angle.cos();
+  let asin = angle.sin();
+
+  let l1 = -length * 0.5;
+  let p1 = (p.0 + acos * l1, p.1 + asin * l1);
+  let l2 = length * 0.1;
+  let p2 = (p.0 + acos * l2, p.1 + asin * l2);
+  let l3 = length * 0.5;
+  let p3 = (p.0 + acos * l3, p.1 + asin * l3);
+
+  routes.push((0, vec![p1, p2]));
+  routes.push((2, vec![p2, p3]));
+
+  // return vec![vec![origin, destination]];
+  return routes;
+}
+
+fn fireball_projectile<R: Rng>(
+  rng: &mut R,
+  origin: (f64, f64),
+  destination: (f64, f64),
+  curveh: f64,
+  size: f64,
+  position_percentage: f64,
+) -> Vec<(usize, Vec<(f64, f64)>)> {
+  let mut routes = vec![];
+
+  let (p, _angle) =
+    make_projectile_pos_ang(origin, destination, curveh, position_percentage);
+
+  let count = (1. + size * 10.0) as usize;
+  for clr in vec![0, 2] {
+    let mut route = Vec::new();
+    for _i in 0..count {
+      let a = rng.gen_range(0.0, 2.0 * PI);
+      let acos = a.cos();
+      let asin = a.sin();
+      route.push((p.0 + size * acos, p.1 + size * asin));
+    }
+    routes.push((clr, route));
+
+    let perc_incr = rng.gen_range(0.01, 0.02);
+    let mut perc = (position_percentage - rng.gen_range(0.1, 0.3)).max(0.1);
+    let mut route = vec![];
+    let mut i = 0;
+    while perc < position_percentage {
+      let (p, angle) =
+        make_projectile_pos_ang(origin, destination, curveh, perc);
+      let a = angle
+        + PI * rng.gen_range(0.4, 0.6) * (if i % 2 == 0 { 1.0 } else { -1.0 });
+      let l = size * rng.gen_range(0.5, 1.0) * rng.gen_range(0.0, 1.0);
+      let acos = a.cos();
+      let asin = a.sin();
+      let p1 = (p.0 + acos * l, p.1 + asin * l);
+      route.push(p1);
+      perc += perc_incr * rng.gen_range(0.8, 1.2);
+      i += 1;
+    }
+    routes.push((clr, route));
+  }
+
+  // return vec![vec![origin, destination]];
+  return routes;
+}
+
+fn slice_polylines(
+  route: &Vec<(f64, f64)>,
+  segment_length: f64,
+) -> Vec<Vec<(f64, f64)>> {
+  let mut routes = vec![];
+  let mut l = 0.0;
+  let mut i = 1;
+  let mut prev = route[0];
+  let mut segment = vec![];
+  segment.push(prev);
+  loop {
+    if i >= route.len() {
+      break;
+    }
+    let mut next = route[i];
+    let mut d = euclidian_dist(prev, next);
+    while l + d < segment_length {
+      segment.push(next);
+      l += d;
+      i += 1;
+      if i >= route.len() {
+        routes.push(segment);
+        return routes;
+      }
+      prev = next;
+      next = route[i];
+      d = euclidian_dist(prev, next);
+    }
+    let current = lerp_point(prev, next, (segment_length - l) / d);
+    segment.push(current);
+    prev = current;
+    if segment.len() > 1 {
+      routes.push(segment);
+      segment = vec![prev];
+    }
+
+    /*
+    if l + d > segment_length {
+      let p = lerp_point(prev, current, (segment_length - l) / d);
+      routes.push(vec![prev, p]);
+      prev = p;
+      l += segment_length;
+    } else {
+      */
+    l = 0.0;
+    prev = current;
+    i += 1;
+  }
   routes
 }
