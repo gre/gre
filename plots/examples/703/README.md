@@ -6,6 +6,7 @@ sourceFolder: 701
 tags:
   - A6
   - inktober
+  - inktober2022
 ---
 
 Plotted with fountain pen and 5 inks on A6 paper for the 6th day of Inktober 2022.

@@ -7,6 +7,7 @@ sourceFolder: 719
 tags:
   - A6
   - inktober
+  - inktober2022
 ---
 
 Plotted with white and black rotring ink on A6 paper for the 10th day of Inktober 2022.

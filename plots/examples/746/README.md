@@ -4,6 +4,7 @@ title: "Salty (1/6)"
 image: /images/plots/746.jpg
 tags:
   - inktober
+  - inktober2022
   - A6
 ---
 

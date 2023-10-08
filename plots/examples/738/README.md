@@ -6,6 +6,7 @@ tweet: https://twitter.com/greweb/status/1582461306610688001
 sourceFolder: 737
 tags:
   - inktober
+  - inktober2022
   - A6
 ---
 

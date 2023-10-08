@@ -6,6 +6,7 @@ video: /images/plots/730.mp4
 tags:
   - plotloop
   - inktober
+  - inktober2022
 tweet: https://twitter.com/greweb/status/1581586408526860288
 ---
 

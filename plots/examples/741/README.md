@@ -4,6 +4,7 @@ title: "Fowl (1/5)"
 image: /images/plots/741.jpg
 tags:
   - inktober
+  - inktober2022
   - A6
 ---
 

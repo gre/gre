@@ -5,6 +5,7 @@ image: /images/plots/693.jpg
 tags:
   - A6
   - inktober
+  - inktober2022
 ---
 
 and then watercolored!

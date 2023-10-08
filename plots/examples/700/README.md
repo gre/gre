@@ -6,4 +6,5 @@ sourceFolder: 699
 tags:
   - A6
   - inktober
+  - inktober2022
 ---

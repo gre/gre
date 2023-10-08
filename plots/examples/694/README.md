@@ -6,6 +6,7 @@ sourceFolder: 693
 tags:
   - A6
   - inktober
+  - inktober2022
 ---
 
 and then watercolored!

@@ -5,6 +5,7 @@ image: /images/plots/732.jpg
 tags:
   - A6
   - inktober
+  - inktober2022
 ---
 
 Plotted with White gel pen on A6 black paper for the 13th day of Inktober 2022.

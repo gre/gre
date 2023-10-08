@@ -5,6 +5,7 @@ image: /images/plots/737.jpg
 tweet: https://twitter.com/greweb/status/1582461306610688001
 tags:
   - inktober
+  - inktober2022
   - A6
 ---
 

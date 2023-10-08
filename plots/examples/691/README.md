@@ -6,6 +6,7 @@ sourceFolder: 688
 tags:
   - A6
   - inktober
+  - inktober2022
 ---
 
 **Scurry.** _noun._ a situation of hurried and confused movement.

@@ -6,6 +6,7 @@ video: /images/plots/731.mp4
 tags:
   - plotloop
   - inktober
+  - inktober2022
 ---
 
 Improvement of [/plots/730](/plots/730).

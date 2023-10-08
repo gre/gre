@@ -5,4 +5,5 @@ image: /images/plots/699.jpg
 tags:
   - A6
   - inktober
+  - inktober2022
 ---

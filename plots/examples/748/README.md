@@ -5,6 +5,7 @@ sourceFolder: 746
 image: /images/plots/748.jpg
 tags:
   - inktober
+  - inktober2022
   - A6
 ---
 

@@ -4,6 +4,7 @@ title: "Bad Dog (1/4)"
 image: /images/plots/768.jpg
 tags:
   - inktober
+  - inktober2022
   - A6
 ---
 

@@ -4,6 +4,7 @@ title: "Scrape (1/7)"
 image: /images/plots/752.jpg
 tags:
   - inktober
+  - inktober2022
   - A6
 ---
 

@@ -7,6 +7,7 @@ video: /images/plots/767.mp4
 tags:
   - plotloop
   - inktober
+  - inktober2022
 ---
 
 Based on [/plots/731](/plots/731).

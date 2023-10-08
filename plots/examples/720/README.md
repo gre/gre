@@ -7,6 +7,7 @@ sourceFolder: 719
 tags:
   - A6
   - inktober
+  - inktober2022
 ---
 
 <img src="/images/plots/720alt.jpg" width="100%"/>
