@@ -137,7 +137,7 @@ impl HumanBody {
     }
   }
 
-  fn render(&self) -> Vec<Vec<(f64, f64)>> {
+  fn render(&self, clr: usize) -> Vec<(usize, Vec<(f64, f64)>)> {
     let mut routes = Vec::new();
     let hip = self.hip;
     let shoulder = self.shoulder;
@@ -151,13 +151,13 @@ impl HumanBody {
     let knee_left = self.knee_left;
     let head = self.head;
 
-    routes.push(vec![hip, shoulder, head]);
+    routes.push((clr, vec![hip, shoulder, head]));
 
-    routes.push(vec![shoulder, shoulder_right, elbow_right]);
-    routes.push(vec![shoulder, shoulder_left, elbow_left]);
+    routes.push((clr, vec![shoulder, shoulder_right, elbow_right]));
+    routes.push((clr, vec![shoulder, shoulder_left, elbow_left]));
 
-    routes.push(vec![hip, hip_right, knee_right]);
-    routes.push(vec![hip, hip_left, knee_left]);
+    routes.push((clr, vec![hip, hip_right, knee_right]));
+    routes.push((clr, vec![hip, hip_left, knee_left]));
 
     routes
   }
@@ -203,7 +203,8 @@ fn helmet(
   angle: f64,
   size: f64,
   xreverse: bool,
-) -> Vec<Vec<(f64, f64)>> {
+  clr: usize,
+) -> Vec<(usize, Vec<(f64, f64)>)> {
   let mut routes = Vec::new();
   let dx = 0.13 * size;
   let h = 0.4 * size;
@@ -226,20 +227,23 @@ fn helmet(
   routes
     .iter()
     .map(|route| {
-      route
-        .iter()
-        .map(|&(x, y)| {
-          let x = if xreverse { -x } else { x };
-          let (x, y) = p_r((x, y), ang);
-          (x + origin.0, y + origin.1)
-        })
-        .collect()
+      (
+        clr,
+        route
+          .iter()
+          .map(|&(x, y)| {
+            let x = if xreverse { -x } else { x };
+            let (x, y) = p_r((x, y), ang);
+            (x + origin.0, y + origin.1)
+          })
+          .collect(),
+      )
     })
     .collect()
 }
 
 trait MonochromeStrokable {
-  fn render(&self) -> Vec<Vec<(f64, f64)>>;
+  fn render(&self) -> Vec<(usize, Vec<(f64, f64)>)>;
 }
 
 trait PointCheckable {
@@ -248,13 +252,13 @@ trait PointCheckable {
 
 #[derive(Clone)]
 struct StrokesWithPolygonsBound {
-  strokes: Vec<Vec<(f64, f64)>>,
+  strokes: Vec<(usize, Vec<(f64, f64)>)>,
   polygons: Vec<Vec<(f64, f64)>>,
 }
 
 impl StrokesWithPolygonsBound {
   fn new(
-    strokes: Vec<Vec<(f64, f64)>>,
+    strokes: Vec<(usize, Vec<(f64, f64)>)>,
     polygons: Vec<Vec<(f64, f64)>>,
   ) -> Self {
     Self { strokes, polygons }
@@ -262,7 +266,7 @@ impl StrokesWithPolygonsBound {
 }
 
 impl MonochromeStrokable for StrokesWithPolygonsBound {
-  fn render(&self) -> Vec<Vec<(f64, f64)>> {
+  fn render(&self) -> Vec<(usize, Vec<(f64, f64)>)> {
     self.strokes.clone()
   }
 }
@@ -387,6 +391,7 @@ fn shield<R: Rng>(
   angle: f64,
   shape1: f64,
   shape2: f64,
+  clr: usize,
 ) -> StrokesWithPolygonsBound {
   let mut routes = Vec::new();
   let dx = 0.2 * size;
@@ -409,14 +414,17 @@ fn shield<R: Rng>(
 
   route = route_translate_rotate(&route, origin, angle);
   let polygons = vec![route.clone()];
-  routes.push(route);
+  routes.push((clr, route));
 
   let tick = rng.gen_range(0.2, 0.3);
   let y = rng.gen_range(-0.2, 0.0) * dy;
-  routes.push(route_translate_rotate(
-    &vec![(0.0, -tick * dy + y), (tick * dx, y), (0.0, tick * dy + y)],
-    origin,
-    angle,
+  routes.push((
+    clr,
+    route_translate_rotate(
+      &vec![(0.0, -tick * dy + y), (tick * dx, y), (0.0, tick * dy + y)],
+      origin,
+      angle,
+    ),
   ));
 
   StrokesWithPolygonsBound::new(routes, polygons)
@@ -429,12 +437,54 @@ fn proj_point(origin: (f64, f64), angle: f64, distance: f64) -> (f64, f64) {
   (x + distance * c, y + distance * s)
 }
 
+fn flag<R: Rng>(
+  rng: &mut R,
+  mask: &mut PaintMask,
+  origin: (f64, f64),
+  size: f64,
+  flag_length: f64,
+  clr: usize,
+) -> Vec<(usize, Vec<(f64, f64)>)> {
+  let mut routes = Vec::new();
+
+  let stick_len = rng.gen_range(1.2, 1.4) * size;
+  let stick_w = 0.2 * size;
+  let line_dist = 0.5;
+
+  let top = (origin.0, origin.1 - stick_len);
+
+  routes.push((
+    clr,
+    grow_stroke_zigzag((origin.0, origin.1), top, stick_w, line_dist),
+  ));
+
+  let flagstart = (0.05 * flag_length, 0.0);
+
+  let barebone = subdivide(vec![flagstart, (-flag_length, 0.0)], 2);
+  let shaking = rng.gen_range(0.0, 0.1) * flag_length;
+  let mut barebone = shake(rng, &barebone, shaking);
+  barebone[0] = flagstart;
+  let barebone = path_subdivide_to_curve(barebone, 1, 0.8);
+
+  let wmul = 2.0;
+  let freq = rng.gen_range(0.5, 2.0);
+
+  let widthf = |l: f64, _i| (1.0 + 0.5 * (l * freq).cos()) * wmul;
+
+  routes.extend(variable_polyline_spiral_fill(
+    rng, mask, top, barebone, 0.4, 0, &widthf, clr,
+  ));
+
+  routes
+}
+
 fn sword<R: Rng>(
   rng: &mut R,
   origin: (f64, f64),
   size: f64,
   angle: f64,
-) -> Vec<Vec<(f64, f64)>> {
+  clr: usize,
+) -> Vec<(usize, Vec<(f64, f64)>)> {
   let mut routes: Vec<Vec<(f64, f64)>> = Vec::new();
 
   let sword_len = rng.gen_range(0.8, 1.2) * size;
@@ -472,13 +522,16 @@ fn sword<R: Rng>(
   routes
     .iter()
     .map(|route| {
-      route
-        .iter()
-        .map(|&(x, y)| {
-          let (x, y) = p_r((x, y), angle);
-          (x + origin.0, y + origin.1)
-        })
-        .collect()
+      (
+        clr,
+        route
+          .iter()
+          .map(|&(x, y)| {
+            let (x, y) = p_r((x, y), angle);
+            (x + origin.0, y + origin.1)
+          })
+          .collect(),
+      )
     })
     .collect()
 }
@@ -488,7 +541,8 @@ fn spear<R: Rng>(
   origin: (f64, f64),
   size: f64,
   angle: f64,
-) -> Vec<Vec<(f64, f64)>> {
+  clr: usize,
+) -> Vec<(usize, Vec<(f64, f64)>)> {
   let mut routes: Vec<Vec<(f64, f64)>> = Vec::new();
 
   let spear_len = rng.gen_range(1.8, 2.2) * size;
@@ -517,25 +571,32 @@ fn spear<R: Rng>(
   routes
     .iter()
     .map(|route| {
-      route
-        .iter()
-        .map(|&(x, y)| {
-          let (x, y) = p_r((x, y), angle);
-          (x + origin.0, y + origin.1)
-        })
-        .collect()
+      (
+        clr,
+        route
+          .iter()
+          .map(|&(x, y)| {
+            let (x, y) = p_r((x, y), angle);
+            (x + origin.0, y + origin.1)
+          })
+          .collect(),
+      )
     })
     .collect()
 }
 
 fn horse_with_rider<R: Rng>(
   rng: &mut R,
+  mask: &mut PaintMask,
   origin: (f64, f64),
   angle: f64,
   size: f64, // reference size (height of the boat)
   xflip: bool,
+  mainclr: usize,
+  skinclr: usize,
+  is_leader: bool,
 ) -> StrokesWithPolygonsBound {
-  let mut routes = vec![];
+  let mut routes: Vec<(usize, Vec<(f64, f64)>)> = vec![];
   let xdir = if xflip { -1.0 } else { 1.0 };
 
   let x0 = -size * rng.gen_range(0.4, 0.5);
@@ -553,7 +614,7 @@ fn horse_with_rider<R: Rng>(
   route.push((x2, 0.0));
   route.push((x3 + 0.05 * size, yright + dy_edge + 0.05 * size));
   route = path_subdivide_to_curve(route, 2, 0.8);
-  routes.push(route);
+  routes.push((mainclr, route));
 
   // horse body top
   let mut route = Vec::new();
@@ -564,25 +625,25 @@ fn horse_with_rider<R: Rng>(
   route.push((x3, yright - dy_edge));
   route = path_subdivide_to_curve(route, 2, 0.8);
   // TODO route will be used to clip people
-  routes.push(route.clone());
+  routes.push((mainclr, route.clone()));
 
   // make horse head
   let a = (x3, yright);
   let b = (x3 + rng.gen_range(0.1, 0.3) * size, yright + 0.3 * size);
-  routes.push(grow_stroke_zigzag(a, b, 0.2 * size, 0.5));
-  routes.push(vec![a, b]);
+  routes.push((mainclr, grow_stroke_zigzag(a, b, 0.2 * size, 0.5)));
+  routes.push((mainclr, vec![a, b]));
 
   // make horse left feet
   let a = (x1 + 0.1 * size, y + 0.2 * size);
   let b = (x1 + rng.gen_range(-0.2, 0.2) * size, y + 0.5 * size);
-  routes.push(grow_stroke_zigzag(a, b, 0.1 * size, 0.5));
-  routes.push(vec![a, b]);
+  routes.push((mainclr, grow_stroke_zigzag(a, b, 0.1 * size, 0.5)));
+  routes.push((mainclr, vec![a, b]));
 
   // make horse right feet
   let a = (x3 - 0.1 * size, y);
   let b = (x3 + rng.gen_range(-0.2, 0.1) * size, y + 0.4 * size);
-  routes.push(grow_stroke_zigzag(a, b, 0.1 * size, 0.5));
-  routes.push(vec![a, b]);
+  routes.push((mainclr, grow_stroke_zigzag(a, b, 0.1 * size, 0.5)));
+  routes.push((mainclr, vec![a, b]));
 
   // humans
 
@@ -615,30 +676,32 @@ fn horse_with_rider<R: Rng>(
   let y = rng.gen_range(-0.1 * size, 0.0);
   let human = HumanBody::new((x, y), humansize, joints);
 
-  let human_body = human.render();
+  let human_body = human.render(mainclr);
   routes.extend(human_body);
 
   let left_hand = human.hand_left_pos_angle();
 
-  let spear_strokes = if rng.gen_bool(0.5) {
-    sword(rng, left_hand.0, 0.5 * size, left_hand.1)
+  let obj_strokes = if is_leader {
+    flag(rng, mask, left_hand.0, size * 0.5, 4.0 * size, skinclr)
+  } else if rng.gen_bool(0.5) {
+    sword(rng, left_hand.0, 0.5 * size, left_hand.1, mainclr)
   } else {
-    spear(rng, left_hand.0, size * 0.5, left_hand.1)
+    spear(rng, left_hand.0, size * 0.5, left_hand.1, mainclr)
   };
-  routes.extend(spear_strokes);
+  routes.extend(obj_strokes);
 
   let (headpos, headangle) = human.head_pos_angle();
-  let h = helmet(headpos, headangle, humansize, false);
+  let h = helmet(headpos, headangle, humansize, false, mainclr);
   routes.extend(h);
 
   let shield_p = human.elbow_right;
 
-  let s = shield(rng, shield_p, size * 0.6, 0.0, shape1, shape2);
+  let s = shield(rng, shield_p, size * 0.6, 0.0, shape1, shape2, mainclr);
 
   let is_colliding_shield = |point: (f64, f64)| s.includes_point(point);
 
   foreground_routes =
-    clip_routes(&foreground_routes, &is_colliding_shield, 1.0, 5);
+    clip_routes_with_colors(&foreground_routes, &is_colliding_shield, 1.0, 5);
 
   foreground_routes.extend(s.render());
 
@@ -659,7 +722,7 @@ fn horse_with_rider<R: Rng>(
       foreground_mask.is_painted((p.0 + mask_origin.0, p.1 + mask_origin.1))
     };
 
-    routes = clip_routes(&routes, &has_foreground, 1.0, 5);
+    routes = clip_routes_with_colors(&routes, &has_foreground, 1.0, 5);
   }
 
   routes.extend(foreground_routes.clone());
@@ -667,15 +730,18 @@ fn horse_with_rider<R: Rng>(
   // translate routes
   routes = routes
     .iter()
-    .map(|route| {
-      route
-        .iter()
-        .map(|&(x, y)| {
-          let x = xdir * x;
-          let (x, y) = p_r((x, y), angle);
-          (x + origin.0, y + origin.1)
-        })
-        .collect()
+    .map(|(clr, route)| {
+      (
+        *clr,
+        route
+          .iter()
+          .map(|&(x, y)| {
+            let x = xdir * x;
+            let (x, y) = p_r((x, y), angle);
+            (x + origin.0, y + origin.1)
+          })
+          .collect(),
+      )
     })
     .collect();
 
@@ -691,7 +757,7 @@ fn art(opts: &Opts) -> Vec<Group> {
   let size = opts.size;
   let mut rng = rng_from_seed(opts.seed);
 
-  let mut routes = Vec::new();
+  let mut routes: Vec<(usize, Vec<(f64, f64)>)> = Vec::new();
   let mut foreground_routes = Vec::new();
   let mut foreground_mask = PaintMask::new(0.5, width, height);
 
@@ -700,17 +766,37 @@ fn art(opts: &Opts) -> Vec<Group> {
   let mut xflip = false;
   while y < height - pad - size {
     let mut x = pad;
+    let mut lastflagx = -999.;
     let mut xreverse = false;
 
     x += rng.gen_range(0.0, 2.0) * size;
+    let w: f64 = size * rng.gen_range(4.0, 5.0);
+    let skin = rng.gen_range(1, 4);
+
     while x < width - pad - size {
-      let w = size * rng.gen_range(4.0, 5.0);
+      let first_part = xflip && x < 0.7 * width || !xflip && x > 0.3 * width;
       if x + w > width - pad {
         break;
       }
 
+      let leader = rng.gen_bool(if first_part { 0.7 } else { 0.001 })
+        && (lastflagx - x).abs() > size * 5.0;
+      if leader {
+        lastflagx = x;
+      }
+
       let origin: (f64, f64) = (x + w / 2.0, y + size);
-      let objects = horse_with_rider(&mut rng, origin, 0.0, size, xflip);
+      let objects = horse_with_rider(
+        &mut rng,
+        &mut foreground_mask,
+        origin,
+        0.0,
+        size,
+        xflip,
+        0,
+        skin,
+        leader,
+      );
       routes.extend(objects.strokes);
 
       x += 1.5 * size;
@@ -724,19 +810,23 @@ fn art(opts: &Opts) -> Vec<Group> {
 
   let has_foreground = |p| foreground_mask.is_painted(p);
 
-  routes = clip_routes(&routes, &has_foreground, 1.0, 5);
+  routes = clip_routes_with_colors(&routes, &has_foreground, 1.0, 5);
 
   routes.extend(foreground_routes);
 
-  vec![(routes, "black")]
+  let colors = vec!["black", "gold", "turquoise", "red"];
+
+  colors
     .iter()
     .enumerate()
-    .map(|(i, (routes, color))| {
+    .map(|(ci, color)| {
       let mut data = Data::new();
-      for route in routes.clone() {
-        data = render_route(data, route);
+      for (i, route) in routes.clone() {
+        if i == ci {
+          data = render_route(data, route);
+        }
       }
-      let mut l = layer(format!("{} {}", i, String::from(*color)).as_str());
+      let mut l = layer(format!("{} {}", ci, String::from(*color)).as_str());
       l = l.add(base_path(color, 0.35, data));
       l
     })
@@ -747,12 +837,12 @@ fn lerp_point(a: (f64, f64), b: (f64, f64), m: f64) -> (f64, f64) {
   (a.0 * (1. - m) + b.0 * m, a.1 * (1. - m) + b.1 * m)
 }
 
-fn clip_routes(
-  input_routes: &Vec<Vec<(f64, f64)>>,
+fn clip_routes_with_colors(
+  input_routes: &Vec<(usize, Vec<(f64, f64)>)>,
   is_outside: &dyn Fn((f64, f64)) -> bool,
   stepping: f64,
   dichotomic_iterations: usize,
-) -> Vec<Vec<(f64, f64)>> {
+) -> Vec<(usize, Vec<(f64, f64)>)> {
   // locate the intersection where inside and outside cross
   let search = |inside: (f64, f64), outside: (f64, f64), n| {
     let mut a = inside;
@@ -770,7 +860,8 @@ fn clip_routes(
 
   let mut routes = vec![];
 
-  for input_route in input_routes.iter() {
+  for (clrp, input_route) in input_routes.iter() {
+    let clr = *clrp;
     if input_route.len() < 2 {
       continue;
     }
@@ -810,7 +901,7 @@ fn clip_routes(
             route.push(intersection);
             if route.len() > 1 {
               // we have a valid route to accumulate
-              routes.push(route);
+              routes.push((clr, route));
             }
             route = vec![];
           } else {
@@ -832,7 +923,7 @@ fn clip_routes(
 
     if route.len() > 1 {
       // we have a valid route to accumulate
-      routes.push(route);
+      routes.push((clr, route));
     }
   }
 
@@ -892,4 +983,177 @@ fn main() {
     document = document.add(g);
   }
   svg::save(opts.file, &document).unwrap();
+}
+
+fn variable_polyline_spiral_fill<R: Rng>(
+  rng: &mut R,
+  paint: &mut PaintMask,
+  o: (f64, f64),
+  barebone: Vec<(f64, f64)>,
+  spiral_fill_dr: f64,
+  subsegments: usize,
+  widthf: &dyn Fn(f64, usize) -> f64,
+  clr: usize,
+) -> Vec<(usize, Vec<(f64, f64)>)> {
+  let mut routes = vec![];
+  if barebone.len() < 2 {
+    return routes;
+  }
+
+  // find highest radius
+  let mut r = 0.0;
+  for i in 1..barebone.len() {
+    let d = euclidian_dist((0.0, 0.0), barebone[i]);
+    if d > r {
+      r = d;
+    }
+  }
+  r += 1.0;
+
+  // local paint dist
+  let lpd = 2. * r;
+
+  let mut widths = vec![];
+  let mut l = 0.0;
+  let mut prev = (0.0, 0.0);
+  for i in 0..barebone.len() {
+    widths.push(widthf(l, i));
+    l += euclidian_dist(prev, barebone[i]);
+    prev = barebone[i];
+  }
+
+  let mut fibers: Vec<Vec<(f64, f64)>> = vec![];
+  let count = 2 + subsegments;
+  for _ in 0..count {
+    fibers.push(vec![]);
+  }
+  for i in 0..count {
+    let df = (i as f64) / ((count - 1) as f64) - 0.5;
+    for j in 0..barebone.len() {
+      let a = if j > 0 {
+        (barebone[j].1 - barebone[j - 1].1)
+          .atan2(barebone[j].0 - barebone[j - 1].0)
+      } else {
+        (barebone[1].1 - barebone[0].1).atan2(barebone[1].0 - barebone[0].0)
+      };
+      let orthogonal = a + PI / 2.0;
+      let dist = widths[j];
+      let d = df * dist * 0.5;
+      let p = barebone[j];
+      let q = (p.0 + d * orthogonal.cos(), p.1 + d * orthogonal.sin());
+      fibers[i].push(q);
+    }
+  }
+
+  // TODO with fibers[0] and fibers[last], we can make polygons and fill local_paint with it
+  let mut polys = vec![];
+  let mut globalpolys = vec![];
+  for i in 1..barebone.len() {
+    let a = fibers[0][i - 1];
+    let b = fibers[0][i];
+    let c = fibers[count - 1][i];
+    let d = fibers[count - 1][i - 1];
+
+    {
+      let a = (a.0 + lpd, a.1 + lpd);
+      let b = (b.0 + lpd, b.1 + lpd);
+      let c = (c.0 + lpd, c.1 + lpd);
+      let d = (d.0 + lpd, d.1 + lpd);
+      let polygon = vec![a, b, c, d];
+      polys.push(polygon);
+    }
+
+    {
+      let a = (a.0 + o.0, a.1 + o.1);
+      let b = (b.0 + o.0, b.1 + o.1);
+      let c = (c.0 + o.0, c.1 + o.1);
+      let d = (d.0 + o.0, d.1 + o.1);
+      globalpolys.push(vec![a, b, c, d]);
+    }
+  }
+
+  let spiral =
+    vec![(clr, spiral_optimized(r, 0.0, 2. * r, spiral_fill_dr, 0.1))];
+  let local_painted = |p: (f64, f64)| {
+    let q = (p.0 + lpd, p.1 + lpd);
+    !polys.iter().any(|poly| polygon_includes_point(&poly, q))
+
+    // !(euclidian_dist(p, (0.0, 0.0)) < lpd &&
+    // local_paint.is_painted(q))
+  };
+  routes.extend(clip_routes_with_colors(&spiral, &local_painted, 0.4, 5));
+
+  // TODO then we can colorize the paint
+
+  for fiber in fibers {
+    routes.push((clr, fiber));
+  }
+
+  // translate everything
+  let mut all = vec![];
+  for (clr, route) in routes {
+    let mut path = vec![];
+    for p in route {
+      let p = (p.0 + o.0, p.1 + o.1);
+      path.push(p);
+    }
+    all.push((clr, path));
+  }
+
+  regular_clip_polys(&all, paint, &globalpolys);
+
+  all
+}
+
+fn regular_clip(
+  routes: &Vec<(usize, Vec<(f64, f64)>)>,
+  paint: &mut PaintMask,
+) -> Vec<(usize, Vec<(f64, f64)>)> {
+  let is_outside = |p| paint.is_painted(p);
+  clip_routes_with_colors(&routes, &is_outside, 0.3, 5)
+}
+
+fn regular_clip_polys(
+  routes: &Vec<(usize, Vec<(f64, f64)>)>,
+  paint: &mut PaintMask,
+  polys: &Vec<Vec<(f64, f64)>>,
+) -> Vec<(usize, Vec<(f64, f64)>)> {
+  let rts = regular_clip(routes, paint);
+  for poly in polys.iter() {
+    paint.paint_polygon(poly);
+  }
+  rts
+}
+
+fn subdivide(path: Vec<(f64, f64)>, n: usize) -> Vec<(f64, f64)> {
+  if n <= 0 || path.len() < 2 {
+    return path;
+  }
+  let mut last = path[0];
+  let mut route = vec![last];
+  for &p in path.iter().skip(1) {
+    let a = lerp_point(last, p, 0.5);
+    route.push(a);
+    route.push(p);
+    last = p;
+  }
+  for _i in 0..n {
+    route = subdivide(route, n - 1);
+  }
+  route
+}
+
+fn shake<R: Rng>(
+  rng: &mut R,
+  path: &Vec<(f64, f64)>,
+  scale: f64,
+) -> Vec<(f64, f64)> {
+  path
+    .iter()
+    .map(|&(x, y)| {
+      let dx = rng.gen_range(-scale, scale);
+      let dy = rng.gen_range(-scale, scale);
+      (x + dx, y + dy)
+    })
+    .collect()
 }

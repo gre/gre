@@ -7,8 +7,6 @@ use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 use svg::node::element::path::Data;
 
-// TODO cut letter by letter!
-
 #[derive(Debug, Parser, Clone, Copy)]
 #[clap()]
 struct Args {
@@ -32,7 +30,6 @@ struct Args {
 struct TextValue {
   value: String,
 }
-
 #[derive(Debug, Deserialize, Serialize, Clone)]
 struct RangeValue {
   value: f64,
@@ -203,11 +200,13 @@ fn main() {
   let args = Args::parse();
   println!("{:#?}", args);
   let mut art = Art::new(args.clone());
+
   if args.simulation {
     livedraw_start_simulation(&mut art);
   } else {
     livedraw_start(&mut art);
   }
+
   println!("Bye!");
 }
 
