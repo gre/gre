@@ -5,6 +5,7 @@ image: /images/plots/1281.jpg
 tags:
 - A3
 - inktober
+- frost
 ---
 
 This implements "A local cellular model for snow crystal growth" paper by Clifford A. Reiter (2004) in Rust language, and renders it as a physical pen plot.
