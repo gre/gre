@@ -609,11 +609,3 @@ fn regular_clip_polys(
   }
   rts
 }
-
-fn curve_length(path: &Vec<(f64, f64)>) -> f64 {
-  let mut len = 0.0;
-  for i in 0..path.len() - 1 {
-    len += euclidian_dist(path[i], path[i + 1]);
-  }
-  len
-}
