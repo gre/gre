@@ -215,7 +215,7 @@ const choices = [
     name: "Stargaze",
     address: "stars15rce70qlpcztvvekjwpv4fx3s5k2ujjeedm5ng",
     addressReal: "stars15rce70qlpcztvvekjwpv4fx3s5k2ujjeedm5ng",
-    amount: "1000 STARS",
+    amount: "4000 STARS",
     collections: [
       {
         url: "https://stargaze.zone",
@@ -311,7 +311,7 @@ export default function Home({ tag }) {
   const { observe, currentBreakpoint } = useDimensions({
     breakpoints: { small: 0, large: 480 },
     updateOnBreakpointChange: true,
-    onResize: ({ currentBreakpoint }) => {},
+    onResize: ({ currentBreakpoint }) => { },
   });
 
   const padding = currentBreakpoint === "small" ? "5px" : "3em";
@@ -473,8 +473,8 @@ export default function Home({ tag }) {
                               ) : null}
                               {choice.discordLimitedOffer.maxItems
                                 ? " – limited to the first " +
-                                  choice.discordLimitedOffer.maxItems +
-                                  " requests."
+                                choice.discordLimitedOffer.maxItems +
+                                " requests."
                                 : null}
                             </p>
                           </Choice>
