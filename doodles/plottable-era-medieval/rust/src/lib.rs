@@ -3,11 +3,14 @@
  * Author: greweb – 2023 – Plottable Era (II) Medieval
  */
 mod utils;
+use fontdue::layout::*;
+use fontdue::*;
 use noise::*;
 use rand::rngs::StdRng;
 use rand::{Rng, SeedableRng};
 use serde::{Deserialize, Serialize};
 use std::f64::consts::PI;
+use std::iter;
 use std::ops::RangeInclusive;
 use svg::node::element::path::Data;
 use svg::node::element::{Group, Path};
@@ -29,6 +32,7 @@ pub struct Opts {
   pub width: f64,
   pub height: f64,
   pub pad: f64,
+  pub fontdata: Vec<u8>,
 }
 
 // Feature tells caracteristics of a given art variant
@@ -63,6 +67,9 @@ pub fn art(opts: &Opts, mask_mode: bool) -> (svg::Document, Feature) {
   let width = opts.width;
   let pad = opts.pad;
   let bounds = (pad, pad, width - pad, height - pad);
+
+  let mut font =
+    Font::from_bytes(opts.fontdata.clone(), FontSettings::default()).unwrap();
 
   // rng utilities
   let mut rng = rng_from_fxhash(&opts.hash);
@@ -111,6 +118,9 @@ pub fn art(opts: &Opts, mask_mode: bool) -> (svg::Document, Feature) {
   // TODO blue paper
   // TODO red paper??
 
+  let precision = 0.2;
+  let mut mask = PaintMask::new(precision, width, height);
+
   let prob = 0.12;
   // colors
   // 0 : mountains & objects
@@ -126,14 +136,43 @@ pub fn art(opts: &Opts, mask_mode: bool) -> (svg::Document, Feature) {
   let mut passage = Passage::new(0.5, width, height);
   let passage_threshold = 20;
 
+  // FRAME
+
+  let p = 10.0;
+  let m = 10.0;
+  let (pattern, strokew): (Box<dyn BandPattern>, f64) =
+    match rng.gen_range(0, 5) {
+      0 => (Box::new(MedievalBandLRectPattern::new()), 0.08 * p),
+      1 => (
+        Box::new(MedievalBandFeatherTrianglePattern::new()),
+        0.06 * p,
+      ),
+      2 => (Box::new(MedievalBandForkPattern::new()), 0.06 * p),
+      3 => (Box::new(MedievalBandComb::new()), 0.04 * p),
+      4 => (Box::new(MedievalBandCurvePattern::new()), 0.04 * p),
+      _ => (Box::new(MedievalBandConcentric::new(2)), 0.08 * p),
+    };
+  routes.extend(framing(
+    &mut rng,
+    &mut mask,
+    0,
+    (pad, pad, width - pad, height - pad),
+    pattern.as_ref(),
+    p,
+    m,
+    strokew,
+    3.0,
+    20000,
+  ));
+
   // SHAPE THE MOUNTAINS
 
   let min_route = 2;
   let yincr = 0.8;
-  let precision = 0.2;
   let horizon_yincr_factor = 0.3;
 
-  let yhorizon = height / 2.0;
+  // when the reflection is not middle, should it be stretched?
+  let yhorizon = height * 0.6;
   let horizon_factor_amp = height * 0.1;
 
   // store the high position on the mountains
@@ -298,8 +337,6 @@ pub fn art(opts: &Opts, mask_mode: bool) -> (svg::Document, Feature) {
   }
 
   smooth_heights.sort_by(|a, b| a.1.partial_cmp(&b.1).unwrap());
-
-  let mut mask = PaintMask::new(precision, width, height);
 
   let sizebase = rng.gen_range(20.0, 25.0);
   let castle_target = 1;
@@ -717,6 +754,28 @@ pub fn art(opts: &Opts, mask_mode: bool) -> (svg::Document, Feature) {
         .map(|route| (0, route.clone())),
     );
   }
+
+  // make the title. TODO find the best place for it / draw it first with clipping.
+
+  let txt = epic_title(&mut rng);
+  let fontsize = width / 28.0;
+  let iterations = 500000;
+  let density = 4.0;
+  // TODO make the filling having more resolution
+  routes.extend(draw_font(
+    &mut rng,
+    &mut font,
+    &mut mask,
+    fontsize,
+    (
+      pad + pad + 0.5 * fontsize,
+      height - pad - pad - 1.5 * fontsize,
+    ),
+    txt.as_str(),
+    0,
+    iterations,
+    density,
+  ));
 
   // REFLECT THE OBJECTS ON THE SEA
 
@@ -1438,6 +1497,15 @@ struct PaintMask {
 }
 
 impl PaintMask {
+  fn clone_empty(&self) -> Self {
+    Self {
+      mask: vec![false; self.mask.len()],
+      precision: self.precision,
+      width: self.width,
+      height: self.height,
+    }
+  }
+
   fn new(precision: f64, width: f64, height: f64) -> Self {
     let wi = (width / precision) as usize;
     let hi = (height / precision) as usize;
@@ -1464,6 +1532,30 @@ impl PaintMask {
     let y = (point.1 / precision) as usize;
     let wi = (width / precision) as usize;
     self.mask[x + y * wi]
+  }
+
+  fn paint_rectangle(&mut self, minx: f64, miny: f64, maxx: f64, maxy: f64) {
+    let precision = self.precision;
+    let width = self.width;
+    let minx = ((minx).max(0.).min(self.width) / precision) as usize;
+    let miny = ((miny).max(0.).min(self.height) / precision) as usize;
+    let maxx =
+      ((maxx + precision).max(0.).min(self.width) / precision) as usize;
+    let maxy =
+      ((maxy + precision).max(0.).min(self.height) / precision) as usize;
+    let wi = (width / precision) as usize;
+    for x in minx..maxx {
+      for y in miny..maxy {
+        self.mask[x + y * wi] = true;
+      }
+    }
+  }
+
+  fn paint_borders(&mut self, pad: f64) {
+    self.paint_rectangle(0., 0., self.width, pad);
+    self.paint_rectangle(0., 0., pad, self.height);
+    self.paint_rectangle(0., self.height - pad, self.width, self.height);
+    self.paint_rectangle(self.width - pad, 0., self.width, self.height);
   }
 
   fn paint_polygon(&mut self, polygon: &Vec<(f64, f64)>) {
@@ -1508,6 +1600,72 @@ impl PaintMask {
       }
     }
   }
+
+  fn paint_polyline(&mut self, polyline: &Vec<(f64, f64)>, strokew: f64) {
+    if polyline.len() < 1 {
+      return;
+    }
+    let first = polyline[0];
+    let mut minx = first.0;
+    let mut miny = first.1;
+    let mut maxx = first.0;
+    let mut maxy = first.1;
+    for p in polyline.iter().skip(1) {
+      minx = minx.min(p.0);
+      miny = miny.min(p.1);
+      maxx = maxx.max(p.0);
+      maxy = maxy.max(p.1);
+    }
+    minx = (minx - strokew).max(0.0);
+    miny = (miny - strokew).max(0.0);
+    maxx = (maxx + strokew).min(self.width);
+    maxy = (maxy + strokew).min(self.height);
+
+    let precision = self.precision;
+    let width = self.width;
+    let minx = (minx / precision) as usize;
+    let miny = (miny / precision) as usize;
+    let maxx = (maxx / precision) as usize;
+    let maxy = (maxy / precision) as usize;
+    let wi = (width / precision) as usize;
+    for x in minx..maxx {
+      for y in miny..maxy {
+        let point = (x as f64 * precision, y as f64 * precision);
+        for i in 0..polyline.len() - 1 {
+          let a = polyline[i];
+          let b = polyline[i + 1];
+          if sd_segment(point, a, b) < strokew {
+            self.mask[x + y * wi] = true;
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  fn paint_pixels(
+    &mut self,
+    topleft: (f64, f64),
+    data: &Vec<u8>,
+    datawidth: usize,
+  ) {
+    let precision = self.precision;
+    let ox = (topleft.0 / self.precision).max(0.0) as usize;
+    let oy = (topleft.1 / self.precision).max(0.0) as usize;
+    let wi = (self.width / precision) as usize;
+    let hi = (self.height / precision) as usize;
+    for (i, &v) in data.iter().enumerate() {
+      if v > 0 {
+        let dx = i % datawidth;
+        let dy = i / datawidth;
+        let x = ox + dx;
+        let y = oy + dy;
+        if x < wi && y < hi {
+          self.mask[x + y * wi] = true;
+        }
+      }
+    }
+  }
 }
 
 fn polygon_bounds(polygon: &Vec<(f64, f64)>) -> (f64, f64, f64, f64) {
@@ -1522,6 +1680,28 @@ fn polygon_bounds(polygon: &Vec<(f64, f64)>) -> (f64, f64, f64, f64) {
     maxy = maxy.max(y);
   }
   (minx, miny, maxx, maxy)
+}
+
+// TODO we can optim something as we just need a "point_in_segment"
+
+fn sd_segment(
+  (px, py): (f64, f64),
+  (ax, ay): (f64, f64),
+  (bx, by): (f64, f64),
+) -> f64 {
+  let pa_x = px - ax;
+  let pa_y = py - ay;
+  let ba_x = bx - ax;
+  let ba_y = by - ay;
+
+  let dot_pa_ba = pa_x * ba_x + pa_y * ba_y;
+  let dot_ba_ba = ba_x * ba_x + ba_y * ba_y;
+  let h = (dot_pa_ba / dot_ba_ba).max(0.0).min(1.0);
+
+  let h_x = ba_x * h;
+  let h_y = ba_y * h;
+
+  ((pa_x - h_x) * (pa_x - h_x) + (pa_y - h_y) * (pa_y - h_y)).sqrt()
 }
 
 impl PointCheckable for StrokesWithPolygonsBound {
@@ -3534,5 +3714,1042 @@ fn slice_polylines(
     prev = current;
     i += 1;
   }
+  routes
+}
+
+// medieval name generator
+pub fn epic_title<R: Rng>(rng: &mut R) -> String {
+  let mut city_start = vec![
+    "An", "Cul", "Dun", "Nor", "Ship", "Tre", "Win", "Mere", "Pol", "Tarn",
+    "Lin", "Man", "Baa", "Bra", "Bri", "Istan", "Bor", "Ast", "Ach", "Axe",
+    "Car", "Wolf", "Chet", "Holm", "Pen", "Port", "Beck", "Buck", "Bull",
+    "Bul", "Lis",
+  ];
+  let mut city_suffixes = vec![
+    "bourg", "burg", "castle", "bul", "des", "ster", "chester", "llon", "bury",
+    "borough", "by", "cott", "field", "gate", "ing", "tun", "wick", "worth",
+    "caster", "burgh", "ver", "bon",
+  ];
+  let mut city = city_start[rng.gen_range(0, city_start.len())].to_string();
+  city += city_suffixes[rng.gen_range(0, city_suffixes.len())];
+
+  let events = vec![
+    "Battle",
+    "War",
+    "Fall",
+    "Conquest",
+    "Crusade",
+    "Attack",
+    "Defense",
+    "Siege",
+    "Raid",
+    "Rise",
+    "Destruction",
+    "Era",
+    "Age",
+    "Reign",
+    "Empire",
+    "Kingdom",
+    "Doom",
+    "Dawn",
+    "History",
+  ];
+  let i =
+    (rng.gen_range(0., events.len() as f64) * rng.gen_range(0.5, 1.0)) as usize;
+  let mut event = events[i].to_string();
+  let going_prefix = rng.gen_bool(0.5);
+  let year = rng.gen_range(500, 1400);
+  if going_prefix {
+    return format!("{} {} - circa {}", city, event, year);
+  } else {
+    return format!("{} of {} - circa {}", event, city, year);
+  }
+}
+
+// homemade implementation of a filling technique that will spawn random worms that eat the space to colorize it!
+struct WormsFilling {
+  rot: f64,
+  step: f64,
+  straight: f64,
+  min_l: usize,
+  max_l: usize,
+  decrease_value: f64,
+  search_max: usize,
+  min_weight: f64,
+  freq: f64,
+  seed: f64,
+}
+impl WormsFilling {
+  // new
+  fn rand<R: Rng>(rng: &mut R) -> Self {
+    let seed = rng.gen_range(-999., 999.);
+    let rot = PI / rng.gen_range(1.0, 2.0);
+    let step = 0.4;
+    let straight = rng.gen_range(0.0, 0.1);
+    let min_l = 5;
+    let max_l = 20;
+    let decrease_value = 1.;
+    let search_max = 1000;
+    let min_weight = 1.;
+    let freq = 0.05;
+    Self {
+      rot,
+      step,
+      straight,
+      min_l,
+      max_l,
+      decrease_value,
+      search_max,
+      min_weight,
+      freq,
+      seed,
+    }
+  }
+
+  fn fill_in_paint<R: Rng>(
+    &self,
+    rng: &mut R,
+    drawings: &PaintMask,
+    clr: usize,
+    density: f64,
+    bound: (f64, f64, f64, f64),
+    iterations: usize,
+  ) -> Vec<(usize, Vec<(f64, f64)>)> {
+    let f = |x, y| {
+      if drawings.is_painted((x, y)) {
+        density
+      } else {
+        0.0
+      }
+    };
+    let coloring = |_: &Vec<(f64, f64)>| clr;
+    self.fill(rng, &f, bound, &coloring, iterations)
+  }
+
+  fn fill<R: Rng>(
+    &self,
+    rng: &mut R,
+    f: &dyn Fn(f64, f64) -> f64,
+    bound: (f64, f64, f64, f64),
+    clr: &dyn Fn(&Vec<(f64, f64)>) -> usize,
+    iterations: usize,
+  ) -> Vec<(usize, Vec<(f64, f64)>)> {
+    let mut routes = vec![];
+    let perlin = Perlin::new();
+    let w = bound.2 - bound.0;
+    let h = bound.3 - bound.1;
+    let precision = 0.4;
+    if w <= 2. * precision || h <= 2. * precision {
+      return routes;
+    }
+    let mut map = WeightMap::new(w, h, 0.4);
+
+    map.fill_fn(&|p| f(p.0 + bound.0, p.1 + bound.1));
+
+    let seed = self.seed;
+    let rot = self.rot;
+    let step = self.step;
+    let straight = self.straight;
+    let min_l = self.min_l;
+    let max_l = self.max_l;
+    let decrease_value = self.decrease_value;
+    let search_max = self.search_max;
+    let min_weight = self.min_weight;
+    let freq = self.freq;
+
+    let mut bail_out = 0;
+
+    for _i in 0..iterations {
+      let top = map.search_weight_top(rng, search_max, min_weight);
+      if top.is_none() {
+        bail_out += 1;
+        if bail_out > 10 {
+          break;
+        }
+      }
+      if let Some(o) = top {
+        let angle = perlin.get([seed, freq * o.0, freq * o.1]);
+
+        if let Some(a) = map.best_direction(o, step, angle, PI, PI / 4.0, 0.0) {
+          let route = map.dig_random_route(
+            o,
+            a,
+            step,
+            rot,
+            straight,
+            max_l,
+            decrease_value,
+          );
+          if route.len() >= min_l {
+            let points: Vec<(f64, f64)> = rdp(&route, 0.05);
+            // remap
+            let rt = points
+              .iter()
+              .map(|&p| (p.0 + bound.0, p.1 + bound.1))
+              .collect::<Vec<_>>();
+            let c = clr(&rt);
+            routes.push((c, rt));
+          }
+        }
+      }
+    }
+
+    routes
+  }
+}
+
+// data model that stores values information in 2D
+struct WeightMap {
+  weights: Vec<f64>,
+  w: usize,
+  h: usize,
+  width: f64,
+  height: f64,
+  precision: f64,
+}
+impl WeightMap {
+  fn new(width: f64, height: f64, precision: f64) -> WeightMap {
+    let w = ((width / precision) + 1.0) as usize;
+    let h = ((height / precision) + 1.0) as usize;
+    let weights = vec![0.0; w * h];
+    WeightMap {
+      weights,
+      w,
+      h,
+      width,
+      height,
+      precision,
+    }
+  }
+  fn fill_fn(&mut self, f: &impl Fn((f64, f64)) -> f64) {
+    for y in 0..self.h {
+      for x in 0..self.w {
+        let p = (x as f64 * self.precision, y as f64 * self.precision);
+        let v = f(p);
+        self.weights[y * self.w + x] = v;
+      }
+    }
+  }
+
+  // do a simple bilinear interpolation
+  fn get_weight(&self, p: (f64, f64)) -> f64 {
+    let x = p.0 / self.precision;
+    let y = p.1 / self.precision;
+    let x0 = x.floor() as usize;
+    let y0 = y.floor() as usize;
+    let x1 = (x0 + 1).min(self.w - 1);
+    let y1 = (y0 + 1).min(self.h - 1);
+    let dx = x - x0 as f64;
+    let dy = y - y0 as f64;
+    let w00 = self.weights[y0 * self.w + x0];
+    let w01 = self.weights[y0 * self.w + x1];
+    let w10 = self.weights[y1 * self.w + x0];
+    let w11 = self.weights[y1 * self.w + x1];
+    let w0 = w00 * (1.0 - dx) + w01 * dx;
+    let w1 = w10 * (1.0 - dx) + w11 * dx;
+    w0 * (1.0 - dy) + w1 * dy
+  }
+
+  // apply a gaussian filter to the weights around the point p with a given radius
+  fn decrease_weight_gaussian(
+    &mut self,
+    p: (f64, f64),
+    radius: f64,
+    value: f64,
+  ) {
+    let x = p.0 / self.precision;
+    let y = p.1 / self.precision;
+    let x0 = ((x - radius).floor().max(0.) as usize).min(self.w);
+    let y0 = ((y - radius).floor().max(0.) as usize).min(self.h);
+    let x1 = ((x + radius).ceil().max(0.) as usize).min(self.w);
+    let y1 = ((y + radius).ceil().max(0.) as usize).min(self.h);
+    if x0 >= self.w || y0 >= self.h {
+      return;
+    }
+    for y in y0..y1 {
+      for x in x0..x1 {
+        let p = (x as f64 * self.precision, y as f64 * self.precision);
+        let d = (p.0 - p.0).hypot(p.1 - p.1);
+        if d < radius {
+          let w = self.weights[y * self.w + x];
+          let v = value * (1.0 - d / radius);
+          self.weights[y * self.w + x] = w - v;
+        }
+      }
+    }
+  }
+
+  // find the best direction to continue the route by step
+  // returns None if we reach an edge or if there is no direction that can be found in the given angle += max_angle_rotation and when the weight is lower than 0.0
+  fn best_direction(
+    &self,
+    p: (f64, f64),
+    step: f64,
+    angle: f64,
+    max_ang_rotation: f64,
+    angle_precision: f64,
+    straight_factor: f64,
+  ) -> Option<f64> {
+    let mut best_ang = None;
+    let mut best_weight = 0.0;
+    let mut a = -max_ang_rotation;
+    while a < max_ang_rotation {
+      let ang = a + angle;
+      let dx = step * ang.cos();
+      let dy = step * ang.sin();
+      let np = (p.0 + dx, p.1 + dy);
+      if np.0 < 0.0 || np.0 > self.width || np.1 < 0.0 || np.1 > self.height {
+        a += angle_precision;
+        continue;
+      }
+      // more important when a is near 0.0 depending on straight factor
+      let wmul = (1.0 - straight_factor)
+        + (1.0 - a.abs() / max_ang_rotation) * straight_factor;
+      let weight = self.get_weight(np) * wmul;
+      if weight > best_weight {
+        best_weight = weight;
+        best_ang = Some(ang);
+      }
+      a += angle_precision;
+    }
+    return best_ang;
+  }
+
+  // FIXME we could optim this by keeping track of tops and not searching too random
+  fn search_weight_top<R: Rng>(
+    &mut self,
+    rng: &mut R,
+    search_max: usize,
+    min_weight: f64,
+  ) -> Option<(f64, f64)> {
+    let mut best_w = min_weight;
+    let mut best_p = None;
+    for _i in 0..search_max {
+      let x = rng.gen_range(0.0, self.width);
+      let y = rng.gen_range(0.0, self.height);
+      let p = (x, y);
+      let w = self.get_weight(p);
+      if w > best_w {
+        best_w = w;
+        best_p = Some(p);
+      }
+    }
+    return best_p;
+  }
+
+  fn dig_random_route(
+    &mut self,
+    origin: (f64, f64),
+    initial_angle: f64,
+    step: f64,
+    max_ang_rotation: f64,
+    straight_factor: f64,
+    max_length: usize,
+    decrease_value: f64,
+  ) -> Vec<(f64, f64)> {
+    let mut route = Vec::new();
+    let mut p = origin;
+    let mut angle = initial_angle;
+    for _i in 0..max_length {
+      if let Some(ang) = self.best_direction(
+        p,
+        step,
+        angle,
+        max_ang_rotation,
+        0.2 * max_ang_rotation,
+        straight_factor,
+      ) {
+        angle = ang;
+        let prev = p;
+        p = (p.0 + step * angle.cos(), p.1 + step * angle.sin());
+        route.push(p);
+        self.decrease_weight_gaussian(prev, step, decrease_value);
+      } else {
+        break;
+      }
+    }
+
+    route
+  }
+}
+
+fn draw_font<R: Rng>(
+  rng: &mut R,
+  font: &mut Font,
+  paint: &mut PaintMask,
+  fontsize: f64,
+  pos: (f64, f64),
+  text: &str,
+  clr: usize,
+  iterations: usize,
+  density: f64,
+) -> Vec<(usize, Vec<(f64, f64)>)> {
+  let filling = WormsFilling::rand(rng);
+
+  let mut drawing = paint.clone_empty();
+  let prec = drawing.precision;
+
+  let fonts = &[font.clone()];
+
+  let mut routes = Vec::new();
+
+  let px = (fontsize / prec) as f32;
+
+  let mut layout = Layout::new(CoordinateSystem::PositiveYDown);
+
+  let mut settings = LayoutSettings::default();
+  settings.x = (pos.0 / prec) as f32;
+  settings.y = (pos.1 / prec) as f32;
+  layout.reset(&settings);
+  layout.append(fonts, &TextStyle::new(text, px, 0));
+
+  for glyph in layout.glyphs() {
+    let (metrics, bytes) = font.rasterize_config(glyph.key);
+    if glyph.parent == '\n' {
+      continue;
+    }
+    let o = (glyph.x as f64 * prec, glyph.y as f64 * prec);
+    drawing.paint_pixels(o, &bytes, metrics.width);
+  }
+
+  routes.extend(filling.fill_in_paint(
+    rng,
+    &drawing,
+    clr,
+    density,
+    (
+      pos.0,
+      pos.1,
+      paint.width, // FIXME what is the width?
+      pos.1 + layout.height() as f64,
+    ),
+    iterations,
+  ));
+
+  routes
+}
+
+trait BandPattern {
+  fn pattern(
+    &self,
+    clr: usize,
+    length: f64,
+    bandw: f64,
+  ) -> Vec<(usize, Vec<(f64, f64)>)>;
+  fn corner(&self, clr: usize, bandw: f64) -> Vec<(usize, Vec<(f64, f64)>)>;
+
+  fn render_corner(
+    &self,
+    clr: usize,
+    position: (f64, f64),
+    angle: f64,
+    bandw: f64,
+  ) -> Vec<(usize, Vec<(f64, f64)>)> {
+    let untranslated = self.corner(clr, bandw);
+    let acos = angle.cos();
+    let asin = angle.sin();
+    let mut routes = vec![];
+    for (clr, route) in untranslated {
+      let mut r = vec![];
+      for &p in route.iter() {
+        let p = (
+          p.0 * acos + p.1 * asin + position.0,
+          p.1 * acos - p.0 * asin + position.1,
+        );
+        r.push(p);
+      }
+      routes.push((clr, r));
+    }
+    routes
+  }
+
+  fn render_band(
+    &self,
+    clr: usize,
+    from: (f64, f64),
+    to: (f64, f64),
+    bandw: f64,
+  ) -> Vec<(usize, Vec<(f64, f64)>)> {
+    let l = euclidian_dist(from, to);
+    let untranslated = self.pattern(clr, l, bandw);
+    // rotate & translate
+    let dx = to.0 - from.0;
+    let dy = to.1 - from.1;
+    let a = -dy.atan2(dx);
+    let acos = a.cos();
+    let asin = a.sin();
+    let mut routes = vec![];
+    for (clr, route) in untranslated {
+      let mut r = vec![];
+      for &p in route.iter() {
+        let p = (
+          p.0 * acos + p.1 * asin + from.0,
+          p.1 * acos - p.0 * asin + from.1,
+        );
+        r.push(p);
+      }
+      routes.push((clr, r));
+    }
+    routes
+  }
+}
+struct MedievalBandLRectPattern {
+  cellw: f64,
+  padx: f64,
+  pady: f64,
+  offx: f64,
+}
+impl MedievalBandLRectPattern {
+  fn new() -> Self {
+    Self {
+      cellw: 2.0,
+      padx: 0.15,
+      pady: 0.05,
+      offx: 0.25,
+    }
+  }
+}
+impl BandPattern for MedievalBandLRectPattern {
+  fn pattern(
+    &self,
+    clr: usize,
+    length: f64,
+    bandw: f64,
+  ) -> Vec<(usize, Vec<(f64, f64)>)> {
+    let mut routes = vec![];
+    let cellw = self.cellw * bandw;
+    let padx = self.padx * cellw;
+    let pady = self.pady * cellw;
+    let offx = self.offx * cellw;
+
+    let l = length + 2.0 * padx;
+
+    // round the cellw to make the exact length
+    let n = (l / cellw).round() as usize;
+    let cellw = l / (n as f64);
+
+    let mut p = -padx;
+    for _i in 0..n {
+      routes.push((
+        clr,
+        vec![
+          (p + padx + offx, -bandw / 2.0 + pady),
+          (p + cellw - padx, -bandw / 2.0 + pady),
+          (p + cellw - padx, bandw / 2.0 - pady),
+        ],
+      ));
+      routes.push((
+        clr,
+        vec![
+          (p + padx, -bandw / 2.0 + pady),
+          (p + padx, bandw / 2.0 - pady),
+          (p + cellw - padx - offx, bandw / 2.0 - pady),
+        ],
+      ));
+      p += cellw;
+    }
+    routes
+  }
+
+  fn corner(&self, clr: usize, bandw: f64) -> Vec<(usize, Vec<(f64, f64)>)> {
+    let cellw = self.cellw * bandw;
+    let pady = self.pady * cellw;
+    let d = bandw / 2.0 - pady;
+    vec![(clr, vec![(-d, -d), (d, -d), (d, d), (-d, d), (-d, -d)])]
+  }
+}
+
+struct MedievalBandFeatherTrianglePattern {
+  cellw: f64,
+  feather_ratio: f64,
+  count1: usize,
+  count2: usize,
+}
+impl MedievalBandFeatherTrianglePattern {
+  fn new() -> Self {
+    Self {
+      cellw: 6.0,
+      count1: 3,
+      count2: 3,
+      feather_ratio: 0.66,
+    }
+  }
+
+  fn feather(
+    &self,
+    clr: usize,
+    a: (f64, f64),
+    b: (f64, f64),
+    c: (f64, f64),
+  ) -> Vec<(usize, Vec<(f64, f64)>)> {
+    // TODO add a pad
+    let mut routes = vec![]; // array of (clr, path)
+    let count1 = self.count1;
+    let count2 = self.count2;
+    for i in 0..count1 {
+      let t = ((i + 1) as f64 / (count1 + 1) as f64) * self.feather_ratio;
+      let p = lerp_point(a, b, t);
+      let q = lerp_point(a, c, t);
+      routes.push((clr, vec![p, q]));
+    }
+    for i in 0..count2 {
+      let t = (i as f64 + 1.0) / (count2 + 1) as f64;
+      let end_bc = lerp_point(b, c, t);
+      routes
+        .push((clr, vec![lerp_point(a, end_bc, self.feather_ratio), end_bc]));
+    }
+    routes
+  }
+}
+impl BandPattern for MedievalBandFeatherTrianglePattern {
+  fn pattern(
+    &self,
+    clr: usize,
+    length: f64,
+    bandw: f64,
+  ) -> Vec<(usize, Vec<(f64, f64)>)> {
+    let mut routes = vec![];
+    let cellw = self.cellw * bandw;
+
+    // round the cellw to make the exact length
+    let n = (length / cellw).round() as usize;
+    let cellw = length / (n as f64);
+
+    let mut p = 0.0;
+    for _i in 0..n {
+      let dy = bandw;
+      routes
+        .push((clr, vec![(p, dy), (p + cellw / 2.0, -dy), (p + cellw, dy)]));
+
+      routes.extend(self.feather(
+        clr,
+        (p, dy),
+        (p + cellw / 2.0, -dy),
+        (p + cellw, dy),
+      ));
+
+      routes.extend(self.feather(
+        clr,
+        (p - cellw / 2.0, -dy),
+        (p + cellw / 2.0, -dy),
+        (p, dy),
+      ));
+
+      p += cellw;
+    }
+    routes
+  }
+
+  fn corner(&self, clr: usize, bandw: f64) -> Vec<(usize, Vec<(f64, f64)>)> {
+    let cellw = self.cellw * bandw;
+    let mut routes = self.feather(
+      clr,
+      (-bandw, cellw - bandw),
+      (-bandw, -bandw),
+      (bandw, bandw),
+    );
+    routes.push((clr, vec![(-bandw, -bandw), (bandw, bandw)]));
+    routes
+  }
+}
+
+struct MedievalBandForkPattern {
+  cellw: f64,
+  cutx: f64,
+  spacex: f64,
+  pady: f64,
+  simplecorner: bool,
+}
+impl MedievalBandForkPattern {
+  fn new() -> Self {
+    Self {
+      cellw: 2.0,
+      cutx: 0.6,
+      spacex: 0.3,
+      pady: 0.1,
+      simplecorner: false,
+    }
+  }
+}
+impl BandPattern for MedievalBandForkPattern {
+  fn pattern(
+    &self,
+    clr: usize,
+    length: f64,
+    bandw: f64,
+  ) -> Vec<(usize, Vec<(f64, f64)>)> {
+    let mut routes = vec![];
+    let cellw = self.cellw * bandw;
+    let cutx = cellw * self.cutx;
+    let spacex = self.spacex * cellw;
+    let pady = self.pady * bandw;
+    let dy = bandw / 2.0 - pady;
+
+    // round the cellw to make the exact length
+    // we eat an extra space for the last fork
+    let l = length + (cellw - cutx);
+    let n = (l / cellw).round() as usize;
+    let cellw = l / (n as f64);
+
+    let mut p = 0.0;
+    for _i in 0..n {
+      routes.push((clr, vec![(p, 0.0), (p + cutx - spacex, 0.0)]));
+      routes.push((clr, vec![(p + cutx, 0.0), (p + cellw, 0.0)]));
+
+      routes.push((
+        clr,
+        vec![(p, -dy), (p + cutx, -dy), (p + cutx, dy), (p, dy)],
+      ));
+
+      p += cellw;
+    }
+    routes
+  }
+
+  fn corner(&self, clr: usize, bandw: f64) -> Vec<(usize, Vec<(f64, f64)>)> {
+    if self.simplecorner {
+      return vec![(clr, vec![(bandw, 0.0), (0.0, 0.0), (0.0, bandw)])];
+    }
+    let sz = bandw * (0.5 - 2.0 * self.pady);
+    let rect = vec![(-sz, -sz), (sz, -sz), (sz, sz), (-sz, sz), (-sz, -sz)];
+    vec![
+      (clr, vec![(bandw, 0.0), (sz, 0.0)]),
+      (clr, vec![(0.0, sz), (0.0, bandw)]),
+      (clr, rect),
+    ]
+  }
+}
+
+struct MedievalBandConcentric {
+  count: usize,
+}
+impl MedievalBandConcentric {
+  fn new(count: usize) -> Self {
+    Self { count }
+  }
+}
+impl BandPattern for MedievalBandConcentric {
+  fn pattern(
+    &self,
+    clr: usize,
+    length: f64,
+    bandw: f64,
+  ) -> Vec<(usize, Vec<(f64, f64)>)> {
+    let mut routes = vec![];
+    for i in 0..self.count {
+      let y =
+        (i as f64 + 1.0) / (self.count as f64 + 1.0) * (2.0 * bandw) - bandw;
+      routes.push((clr, vec![(0.0, y), (length, y)]));
+    }
+    routes
+  }
+
+  fn corner(&self, clr: usize, bandw: f64) -> Vec<(usize, Vec<(f64, f64)>)> {
+    let mut routes = vec![];
+    for i in 0..self.count {
+      let y =
+        (i as f64 + 1.0) / (self.count as f64 + 1.0) * (2.0 * bandw) - bandw;
+      routes.push((clr, vec![(y, bandw), (y, y), (bandw, y)]));
+    }
+    routes
+  }
+}
+
+struct MedievalBandCurvePattern {
+  xrep: f64,
+  amp: f64,
+  inner: f64,
+  alt: bool,
+}
+impl MedievalBandCurvePattern {
+  fn new() -> Self {
+    Self {
+      xrep: 4.0,
+      amp: 0.5,
+      inner: 0.05,
+      alt: false,
+    }
+  }
+}
+impl BandPattern for MedievalBandCurvePattern {
+  fn pattern(
+    &self,
+    clr: usize,
+    length: f64,
+    bandw: f64,
+  ) -> Vec<(usize, Vec<(f64, f64)>)> {
+    let mut routes = vec![];
+    let xrep = self.xrep * bandw;
+    // round the cellw to make the exact length
+    let n = (length / xrep).round() as usize;
+    let xrep = length / (n as f64);
+
+    let amp = self.amp * bandw;
+
+    let precision = 0.2;
+
+    let mut curve1 = vec![];
+    let mut curve2 = vec![];
+    let mut p = 0.0;
+    while p < length {
+      let phase = 2.0 * PI * p / xrep;
+      if self.alt {
+        curve1.push((p, amp * phase.sin()));
+        curve2.push((p, amp * (phase + PI).sin()));
+      } else {
+        curve1.push((p, amp * phase.cos()));
+        curve2.push((p, amp * (phase + PI).cos()));
+      }
+      p += precision;
+    }
+    routes.push((clr, curve1));
+    routes.push((clr, curve2));
+
+    let mut p = 0.0;
+    let off = if self.alt { 0.25 } else { 0.5 };
+    for _i in 0..(2 * n) {
+      routes.push((
+        clr,
+        vec![
+          (p + xrep * (off - self.inner), 0.0),
+          (p + xrep * (off + self.inner), 0.0),
+        ],
+      ));
+      p += xrep / 2.0;
+    }
+
+    routes
+  }
+
+  fn corner(&self, clr: usize, bandw: f64) -> Vec<(usize, Vec<(f64, f64)>)> {
+    let d = self.amp * bandw;
+    let mut routes = vec![(
+      clr,
+      vec![
+        (0.0, bandw),
+        (0.0, 0.0),
+        (bandw + self.xrep * bandw * self.inner, 0.0),
+      ],
+    )];
+    if !self.alt {
+      routes.push((clr, vec![(-d, bandw), (-d, -d), (bandw, -d)]));
+      routes.push((clr, vec![(d, bandw), (d, d), (bandw, d)]));
+    }
+    routes
+  }
+}
+
+struct MedievalBandComb {
+  cellw: f64,
+  twistx: f64,
+  pady: f64,
+  ysplits: usize,
+  comblength: f64,
+}
+impl MedievalBandComb {
+  fn new() -> Self {
+    Self {
+      cellw: 2.0,
+      twistx: 0.4,
+      pady: 0.2,
+      ysplits: 4,
+      comblength: 0.5,
+    }
+  }
+}
+impl BandPattern for MedievalBandComb {
+  fn pattern(
+    &self,
+    clr: usize,
+    length: f64,
+    bandw: f64,
+  ) -> Vec<(usize, Vec<(f64, f64)>)> {
+    let mut routes = vec![];
+    let cellw = self.cellw * bandw;
+    let twistx = self.twistx * cellw;
+    let pady = self.pady * bandw;
+    let ysplits = self.ysplits;
+    let comblength = self.comblength * cellw;
+
+    // round the cellw to make the exact length
+    let n = (length / cellw).round() as usize;
+    let cellw = length / (n as f64);
+
+    let mut p = 0.0;
+    for _i in 0..(n + 1) {
+      let dy = bandw;
+      let maxp = (p + twistx).min(length);
+      routes.push((clr, vec![(p, -dy), (maxp, dy)]));
+      for j in 0..ysplits {
+        let y =
+          ((j as f64 + 0.5) / (ysplits as f64) - 0.5) * (2.0 * (bandw - pady));
+        let x = mix(p, p + twistx, (y + bandw) / (2.0 * bandw));
+        routes.push((clr, vec![(x.min(length), y), (x - comblength, y)]));
+      }
+      p += cellw;
+    }
+    routes
+  }
+
+  fn corner(&self, clr: usize, bandw: f64) -> Vec<(usize, Vec<(f64, f64)>)> {
+    let mut routes = vec![];
+    let pady = self.pady * bandw;
+    let ysplits = self.ysplits;
+
+    for j in 0..ysplits {
+      let y =
+        ((j as f64 + 0.5) / (ysplits as f64) - 0.5) * (2.0 * (bandw - pady));
+      routes.push((clr, vec![(-bandw, y), (bandw, y)]));
+    }
+    routes
+  }
+}
+
+fn framing<R: Rng>(
+  rng: &mut R,
+  paint: &mut PaintMask,
+  clr: usize,
+  bound: (f64, f64, f64, f64),
+  // pattern that will be colored for the framing
+  pattern: &dyn BandPattern,
+  // padding inside the frame
+  padding: f64,
+  // marging to exclude external
+  margin: f64,
+  // stroke width for the pattern
+  strokew: f64,
+  // density of the coloring
+  density: f64,
+  // nb of iteration of coloring logic
+  iterations: usize,
+) -> Vec<(usize, Vec<(f64, f64)>)> {
+  let mut routes = vec![];
+
+  // outer
+  routes.push((
+    clr,
+    vec![
+      (bound.0 + strokew, bound.1 + strokew),
+      (bound.2 - strokew, bound.1 + strokew),
+      (bound.2 - strokew, bound.3 - strokew),
+      (bound.0 + strokew, bound.3 - strokew),
+      (bound.0 + strokew, bound.1 + strokew),
+    ],
+  ));
+  // inner
+  routes.push((
+    clr,
+    vec![
+      (bound.0 + padding - strokew, bound.1 + padding - strokew),
+      (bound.2 - padding + strokew, bound.1 + padding - strokew),
+      (bound.2 - padding + strokew, bound.3 - padding + strokew),
+      (bound.0 + padding - strokew, bound.3 - padding + strokew),
+      (bound.0 + padding - strokew, bound.1 + padding - strokew),
+    ],
+  ));
+
+  let hp = padding / 2.;
+  let bandw = hp - strokew;
+
+  // top
+  routes.extend(pattern.render_band(
+    clr,
+    (bound.0 + padding, bound.1 + hp),
+    (bound.2 - padding, bound.1 + hp),
+    bandw,
+  ));
+  // topleft
+  routes.extend(pattern.render_corner(
+    clr,
+    (bound.0 + hp, bound.1 + hp),
+    0.0,
+    bandw,
+  ));
+
+  // right
+  routes.extend(pattern.render_band(
+    clr,
+    (bound.2 - hp, bound.1 + padding),
+    (bound.2 - hp, bound.3 - padding),
+    bandw,
+  ));
+  // topright
+  routes.extend(pattern.render_corner(
+    clr,
+    (bound.2 - hp, bound.1 + hp),
+    -0.5 * PI,
+    bandw,
+  ));
+
+  // bottom
+  routes.extend(pattern.render_band(
+    clr,
+    (bound.2 - padding, bound.3 - hp),
+    (bound.0 + padding, bound.3 - hp),
+    bandw,
+  ));
+  // bottomright
+  routes.extend(pattern.render_corner(
+    clr,
+    (bound.2 - hp, bound.3 - hp),
+    -PI,
+    bandw,
+  ));
+
+  // left
+  routes.extend(pattern.render_band(
+    clr,
+    (bound.0 + hp, bound.3 - padding),
+    (bound.0 + hp, bound.1 + padding),
+    bandw,
+  ));
+  // bottomleft
+  routes.extend(pattern.render_corner(
+    clr,
+    (bound.0 + hp, bound.3 - hp),
+    -1.5 * PI,
+    bandw,
+  ));
+
+  // strokes -> fill -> strokes. will create nice textures!
+  let mut drawings = paint.clone_empty();
+  for (_clr, route) in routes.iter() {
+    drawings.paint_polyline(route, strokew);
+  }
+  let filling = WormsFilling::rand(rng);
+  let routes =
+    filling.fill_in_paint(rng, &drawings, clr, density, bound, iterations);
+
+  // we paint the mask for the paint to include our frame.
+
+  // left
+  paint.paint_rectangle(
+    bound.0 - margin,
+    bound.1 - margin,
+    bound.0 + padding,
+    bound.3 + margin,
+  );
+  // right
+  paint.paint_rectangle(
+    bound.2 - padding,
+    bound.1 - margin,
+    bound.2 + margin,
+    bound.3 + margin,
+  );
+  // top
+  paint.paint_rectangle(
+    bound.0 - margin,
+    bound.1 - margin,
+    bound.2 + margin,
+    bound.1 + padding,
+  );
+  // bottom
+  paint.paint_rectangle(
+    bound.0 - margin,
+    bound.3 - padding,
+    bound.2 + margin,
+    bound.3 + margin,
+  );
+
   routes
 }

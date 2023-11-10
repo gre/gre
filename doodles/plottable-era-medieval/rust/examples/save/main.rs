@@ -12,6 +12,8 @@ fn main() {
     .map(|_i| alphabet[rng.gen_range(0, alphabet.len())])
     .collect();
   let hash = format!("oo{}", chars);
+  let fontdata = std::fs::read(&"../static/PrinceValiant.ttf").unwrap();
+
   let before = Instant::now();
   let (doc, _) = art(
     &Opts {
@@ -19,6 +21,7 @@ fn main() {
       width: 210.0,
       height: 297.0,
       pad: 10.,
+      fontdata,
     },
     false,
   );
