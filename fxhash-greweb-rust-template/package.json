@@ -4,9 +4,10 @@
   "version": "1.0.0",
   "scripts": {
     "start": "webpack -w",
-    "build": "webpack",
     "server": "ws -d dist",
-    "clean": "rm -rf dist pkg target"
+    "clean": "rm -rf dist pkg target",
+    "export-zip": "rm -f dist.zip; cd dist && zip -r ../dist.zip *",
+    "build": "npm run clean && webpack && npm run export-zip"
   },
   "repository": {
     "type": "git",

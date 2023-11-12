@@ -1,13 +1,12 @@
+/**
+ * LICENSE CC BY-NC-ND 4.0
+ * Author: greweb – 2023 – TEMPLATE
+ */
 import paperGLSL from "./shaders/paper.glsl";
 import mainGLSL from "./shaders/main.glsl";
 import mainDarkGLSL from "./shaders/main-dark.glsl";
 
 import("./pkg").then((module) => {
-  // TODO use latest dark vs light shaders
-  // TODO when ready, we need to call $fx ready
-
-  // Constants
-
   const hash = $fx.hash;
   const width = 210;
   const height = 297;
@@ -148,22 +147,6 @@ import("./pkg").then((module) => {
       [g.uniforms.time.variableName]: prop("T"),
       [g.uniforms.t.variableName]: prop("t"),
       [g.uniforms.paper.variableName]: framebuffer,
-      /*
-        const primary = colorRgb(palette.primary[1]);
-        const secondary = colorRgb(palette.secondary[1]);
-        const third = colorRgb(palette.third[1]);
-        const primaryHighlight = colorRgb(palette.primary[2]);
-        const secondaryHighlight = colorRgb(palette.secondary[2]);
-        const thirdHighlight = colorRgb(palette.third[2]);
-        */
-      /*
-           [g.uniforms.primary.variableName]: C1,
-           [g.uniforms.primaryHighlight.variableName]: C1H,
-           [g.uniforms.secondary.variableName]: C2,
-           [g.uniforms.secondaryHighlight.variableName]: C2H,
-           [g.uniforms.third.variableName]: C3,
-           [g.uniforms.thirdHighlight.variableName]: C3H,
-           */
       [g.uniforms.primary.variableName]: colorRgb(palette.primary[1]),
       [g.uniforms.primaryHighlight.variableName]: colorRgb(palette.primary[2]),
       [g.uniforms.secondary.variableName]: colorRgb(palette.secondary[1]),

@@ -8,7 +8,7 @@ module.exports = {
     path: path.resolve(__dirname, "dist"),
     filename: "index.js",
   },
-  mode: "production",
+  mode: process.env.BUILD_MODE || "production",
   module: {
     rules: [
       {
@@ -21,7 +21,13 @@ module.exports = {
     new CopyWebpackPlugin({
       patterns: [
         { from: "index.html", },
-        { from: "static/*", },
+        {
+          from: "static/*",
+          to: "[name][ext]",
+          info: {
+            minimized: true // tells plugin to not minimize the file
+          }
+        },
       ],
     }),
     new WasmPackPlugin({
