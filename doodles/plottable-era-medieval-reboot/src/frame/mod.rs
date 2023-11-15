@@ -49,7 +49,7 @@ pub fn medieval_frame<R: Rng>(
     m,
     strokew,
     3.0,
-    5000,
+    6000,
   ));
 
   routes

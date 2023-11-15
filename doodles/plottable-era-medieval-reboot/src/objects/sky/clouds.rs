@@ -13,31 +13,33 @@ use std::f64::consts::PI;
 pub fn cloud_in_circle<R: Rng>(
   rng: &mut R,
   paint: &mut PaintMask,
-  circle: &VCircle,
   clr: usize,
+  circle: &VCircle,
+  base_dr: f64,
+  minr: f64,
 ) -> Vec<(usize, Vec<(f64, f64)>)> {
   let mut routes = vec![];
 
   let mut circles: Vec<VCircle> = vec![];
 
-  let stretchy = rng.gen_range(0.2..1.0);
+  let heightmul = rng.gen_range(0.2..0.6);
 
-  let count = rng.gen_range(40..80);
+  let count = rng.gen_range(40..120);
   for _i in 0..count {
     let radius = circle.r * rng.gen_range(0.3..0.5) * rng.gen_range(0.2..1.0);
     let angle = rng.gen_range(0.0..2.0 * PI);
     let x = circle.x + angle.cos() * (circle.r - radius);
     let y = circle.y
-      + angle.sin() * (circle.r - radius) * rng.gen_range(0.5..1.0) * stretchy;
+      + angle.sin() * (circle.r - radius) * rng.gen_range(0.5..1.0) * heightmul;
     let circle = VCircle::new(x, y, radius);
 
     let should_crop = |p| circles.iter().any(|c| c.includes(p));
 
     let mut input_routes = vec![];
     let mut r = radius;
-    let dr = rng.gen_range(1.0..3.0);
+    let dr = base_dr * rng.gen_range(0.7..1.5);
     loop {
-      if r < 1.0 {
+      if r < minr {
         break;
       }
       let count = (r * 2.0 + 10.0) as usize;

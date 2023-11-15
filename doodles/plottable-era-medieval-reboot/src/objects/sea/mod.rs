@@ -2,7 +2,7 @@ use super::army::boat::boat_with_army;
 use crate::algo::{
   clipping::{clip_routes_with_colors, regular_clip},
   paintmask::PaintMask,
-  passage::{self, Passage},
+  passage::Passage,
   polylines::slice_polylines,
 };
 use rand::prelude::*;

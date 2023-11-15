@@ -116,6 +116,41 @@ pub fn route_scale_translate_rotate(
     .collect()
 }
 
+pub fn grow_path_zigzag(
+  path: Vec<(f64, f64)>,
+  angle: f64,
+  width: f64,
+  line_dist: f64,
+) -> Vec<(f64, f64)> {
+  let mut route: Vec<(f64, f64)> = Vec::new();
+  let dx = angle.cos();
+  let dy = angle.sin();
+  let incr_dx = -dy;
+  let incr_dy = dx;
+
+  let mut route = Vec::new();
+  let count = (width / line_dist).ceil() as usize;
+  let delta_i = if count < 2 { 0.0 } else { count as f64 / 2.0 };
+  let mut rev = false;
+  for i in 0..count {
+    let mul = (i as f64 - delta_i) / (count as f64);
+    let w = width * mul;
+    let it: Vec<&(f64, f64)> = if rev {
+      path.iter().rev().collect()
+    } else {
+      path.iter().collect()
+    };
+    for p in it {
+      let (x, y) = p;
+      let a = (x + incr_dx * w, y + incr_dy * w);
+      route.push(a);
+    }
+    rev = !rev;
+  }
+
+  route
+}
+
 pub fn grow_stroke_zigzag(
   from: (f64, f64),
   to: (f64, f64),

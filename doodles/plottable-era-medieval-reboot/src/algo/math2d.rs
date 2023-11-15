@@ -57,7 +57,7 @@ pub fn collides_segment(
   }
 }
 
-pub fn cross(a: (f64, f64), b: (f64, f64)) -> f64 {
+fn cross(a: (f64, f64), b: (f64, f64)) -> f64 {
   a.0 * b.1 - a.1 * b.0
 }
 

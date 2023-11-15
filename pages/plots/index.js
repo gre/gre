@@ -65,8 +65,8 @@ export function Plot({ plot, height = 300 }) {
   const title = `Plot #${plot.n} ${data.title ? " – " + data.title : ""}`;
   const url = `/plots/${n}`;
   const thumbnail =
-    image && image.endsWith(".jpg")
-      ? image.replace(/\.([^.]+)$/, "-thumbnail.$1")
+    image && (image.endsWith(".jpg") || image.endsWith(".gif"))
+      ? image.replace(/\.([^.]+)$/, "-thumbnail.jpg")
       : null;
 
   return (

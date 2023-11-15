@@ -3,10 +3,11 @@ mod eagle;
 mod sun;
 
 use rand::prelude::*;
+use std::f64::consts::PI;
 
 use crate::algo::{packing::VCircle, paintmask::PaintMask};
 
-use self::sun::sun;
+use self::{clouds::cloud_in_circle, eagle::eagle, sun::sun};
 
 /**
  * LICENSE CC BY-NC-ND 4.0
@@ -20,9 +21,41 @@ pub struct MedievalSky {
   pub sun_circle: VCircle,
   pub desired_clouds: usize,
   pub desired_eagles: usize,
+  pub width: f64,
+  pub height: f64,
+  pub pad: f64,
 }
 
 impl MedievalSky {
+  pub fn rand<R: Rng>(rng: &mut R, width: f64, height: f64, pad: f64) -> Self {
+    let sun_circle = VCircle::new(
+      width * rng.gen_range(0.4..0.6),
+      height * rng.gen_range(0.1..0.5),
+      width * rng.gen_range(0.07..0.1),
+    );
+
+    let desired_clouds = (rng.gen_range(-0.3f64..1.0)
+      * rng.gen_range(0.2..1.0)
+      * rng.gen_range(0.0..100.0))
+    .max(0.0) as usize;
+
+    let desired_eagles = (rng.gen_range(-0.2f64..1.0)
+      * rng.gen_range(0.2..1.0)
+      * rng.gen_range(0.0..50.0))
+    .max(0.0) as usize;
+
+    MedievalSky {
+      sun_color: 1,
+      cloud_color: 0,
+      eagle_color: 0,
+      sun_circle,
+      desired_clouds,
+      desired_eagles,
+      pad,
+      width,
+      height,
+    }
+  }
   pub fn render<R: Rng>(
     &self,
     rng: &mut R,
@@ -35,14 +68,60 @@ impl MedievalSky {
       sun_circle,
       desired_clouds,
       desired_eagles,
+      width,
+      height,
+      pad,
     } = *self;
     let mut routes = vec![];
 
+    // TODO we can use a packing in the available space to place the items below the yhorizon.
+    // that we we avoid too much collisions with the castle.
+    // then we pipe into a perlin noise to have interesting patterns
+    //
+    // TODO we also should add some straight lines for the sky too like in Era (1)
+    // we probably should follow the same noise pattern as the clouds
+    // so we can place them consistently together...
+
     // eagles
+    for _i in 0..desired_eagles {
+      let sz = rng.gen_range(0.01..0.03) * height;
+      let p = pad + sz;
+      let origin = (
+        p + rng.gen_range(0.0..1.0) * (width - p * 2.0),
+        p + rng.gen_range(0.0..0.5) * (height - p * 2.0),
+      );
+      let rotation = 0.3 * rng.gen_range(0.0..1.0) * rng.gen_range(-PI..PI);
+      let xreverse = rng.gen_bool(0.5);
+      routes.extend(eagle(
+        rng,
+        paint,
+        origin,
+        sz,
+        rotation,
+        xreverse,
+        eagle_color,
+      ));
+    }
 
     // clouds
-
-    // TODO should we add some straight lines for the sky too like in Era (1) ?
+    for _i in 0..desired_clouds {
+      let circle = VCircle::new(
+        rng.gen_range(0.0..1.0) * width,
+        rng.gen_range(0.05..1.0) * rng.gen_range(0.0..0.6) * height,
+        (0.02 + 0.1 * rng.gen_range(0.0..1.0) * rng.gen_range(0.0..1.0))
+          * height,
+      );
+      let base_dr = rng.gen_range(1.0..2.0);
+      let minr = 0.5 + rng.gen_range(0.0..circle.r) * rng.gen_range(0.0..0.3);
+      routes.extend(cloud_in_circle(
+        rng,
+        paint,
+        cloud_color,
+        &circle,
+        base_dr,
+        minr,
+      ));
+    }
 
     // sun
     routes.extend(sun(paint, sun_color, sun_circle.pos(), sun_circle.r, 0.5));

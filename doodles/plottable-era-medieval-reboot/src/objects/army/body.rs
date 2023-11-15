@@ -50,6 +50,7 @@ impl HumanBody {
   pub fn hand_right_pos_angle(&self) -> ((f64, f64), f64) {
     (self.elbow_right, self.joints.elbow_right_angle)
   }
+  /*
   pub fn foot_left_pos_angle(&self) -> ((f64, f64), f64) {
     (self.knee_left, self.joints.knee_left_angle)
   }
@@ -59,6 +60,7 @@ impl HumanBody {
   pub fn get_size(&self) -> f64 {
     self.height
   }
+  */
 
   pub fn new(
     origin: (f64, f64),

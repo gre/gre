@@ -54,7 +54,7 @@ export const PortfolioPlots = ({ plots }) => {
             <img
               src={
                 plot.data.image && plot.data.image.endsWith(".jpg")
-                  ? plot.data.image.replace(/\.([^.]+)$/, "-thumbnail.$1")
+                  ? plot.data.image.replace(/\.([^.]+)$/, "-thumbnail.jpg")
                   : plot.data.image
               }
               style={{
@@ -142,6 +142,7 @@ export const CarouselPlots = ({ plots }) => {
   );
 };
 
+/*
 export const StreamIntro = () => {
   return (
     <>
@@ -161,6 +162,7 @@ export const StreamIntro = () => {
     </>
   );
 };
+*/
 
 export const HighlightProjects = ({ projects }) => {
   return null;
@@ -369,9 +371,11 @@ export default function Home({ posts, plots }) {
             <section>
               <CarouselPlots plots={plots} />
             </section>
+            {/*
             <section>
               <StreamIntro />
             </section>
+            */}
             <section>
               <HighlightShader day={days.find((d) => d.n === 102)} />
             </section>

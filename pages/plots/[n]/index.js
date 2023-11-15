@@ -40,7 +40,7 @@ export default function Home({ plot, prev, next }) {
   const { image, video } = data;
   const thumbnail =
     image && image.endsWith(".jpg")
-      ? image.replace(/\.([^.]+)$/, "-thumbnail.$1")
+      ? image.replace(/\.([^.]+)$/, "-thumbnail.jpg")
       : null;
   const title = `Plot #${plot.n} ${data.title ? " – " + data.title : ""}`;
   const description = data.description || "";

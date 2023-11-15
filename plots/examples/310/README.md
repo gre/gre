@@ -1,7 +1,7 @@
 ---
 date: "2021-11-06"
 title: "Evolutive Bug – genesis"
-image: /images/plots/310.gif
+image: /images/plots/310.jpg
 sourceFolderURL: https://github.com/gre/gre/tree/master/doodles/evolutive-bug-01
 sourceFolder: evolutive-bug-01
 objkts:

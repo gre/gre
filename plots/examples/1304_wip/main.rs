@@ -26,7 +26,7 @@ pub struct Opts {
   pub page: usize,
   #[clap(short, long, default_value = "72")]
   pub total: usize,
-  #[clap(short, long, default_value = "625.0")]
+  #[clap(short, long, default_value = "1.0")]
   pub seed: f64,
   #[clap(short, long, default_value = "")]
   pub testing_seeds: String,

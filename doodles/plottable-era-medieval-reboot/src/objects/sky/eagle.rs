@@ -98,9 +98,6 @@ pub fn eagle<R: Rng>(
     routes.push(route);
   }
 
-  let mut circles = vec![];
-  let border = 1.2;
-
   // scale, rotate & translate
   let out = routes
     .iter()
@@ -117,8 +114,8 @@ pub fn eagle<R: Rng>(
     })
     .collect();
   let out = regular_clip(&out, paint);
-  for (x, y, r) in circles {
-    paint.paint_circle(x, y, r);
+  for (_, route) in &out {
+    paint.paint_polyline(&route, scale);
   }
   out
 }
