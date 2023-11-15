@@ -7,8 +7,8 @@ use rand::prelude::*;
 pub mod flagpattern;
 pub mod traits;
 
-use self::traits::House;
+use self::traits::Blazon;
 
-pub fn get_duel_houses<R: Rng>(rng: &mut R) -> (House, House) {
-  (House::Lys, House::Lys)
+pub fn get_duel_houses<R: Rng>(rng: &mut R) -> (Blazon, Blazon) {
+  (Blazon::Lys, Blazon::Lys)
 }

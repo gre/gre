@@ -87,7 +87,6 @@ impl Castle {
         height: wallh,
         scale,
         clr,
-        dark_wall: self.dark_wall,
         portcullis: self.portcullis,
       };
       routes.extend(wall.render(rng, paint));

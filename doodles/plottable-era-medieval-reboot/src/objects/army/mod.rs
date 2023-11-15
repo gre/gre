@@ -1,9 +1,11 @@
 use self::{
   archer::bowman, belfry::belfry, horseman::horse_with_rider,
-  house::traits::House, trebuchet::trebuchet,
+  trebuchet::trebuchet,
 };
 use crate::algo::{math1d::mix, paintmask::PaintMask};
 use rand::prelude::*;
+
+use super::blazon::traits::Blazon;
 
 /**
  * LICENSE CC BY-NC-ND 4.0
@@ -17,7 +19,6 @@ pub mod catapult;
 pub mod head;
 pub mod helmet;
 pub mod horseman;
-pub mod house;
 pub mod shield;
 pub mod spear;
 pub mod sword;
@@ -30,7 +31,8 @@ pub struct ArmyOnMountain {
   pub yhorizon: f64,
   pub width: f64,
   // kind of army
-  pub house: House,
+  pub house: Blazon,
+  // castle informations...
 }
 
 impl ArmyOnMountain {
@@ -113,6 +115,8 @@ impl ArmyOnMountain {
       let size = 0.04 * self.width;
       routes.extend(bowman(rng, paint, clr, origin, size));
     }
+
+    // TODO we also are going to spawn some projectiles.
 
     routes
   }

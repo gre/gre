@@ -2,18 +2,21 @@ mod algo;
 mod frame;
 mod fxhash;
 mod objects;
+mod palette;
 mod performance;
 mod svgplot;
 
 use algo::math1d::mix;
 use algo::packing::VCircle;
 use fxhash::*;
-use objects::army::house::get_duel_houses;
 use objects::army::ArmyOnMountain;
+use objects::blazon::get_duel_houses;
 use objects::castle::Castle;
 use objects::mountains::*;
 use objects::sea::Sea;
 use objects::sky::MedievalSky;
+use palette::palette;
+use palette::GOLD_GEL;
 use rand::prelude::*;
 use serde::Serialize;
 use svgplot::*;
@@ -58,70 +61,7 @@ pub fn render(
   perf.span_end("init");
 
   // Colors
-
-  let red_gel = Ink("Red Gel", "#BF738C", "#D880A6", 0.35);
-  let orange_gel = Ink("Orange Gel", "#B27333", "#E68C4D", 0.35);
-  let blue_gel = Ink("Blue Gel", "#338CFF", "#4D8CFF", 0.35);
-  let green_gel = Ink("Green Gel", "#00B2A6", "#19CCBF", 0.35);
-
-  let gold_gel = Ink("Gold Gel", "#D8B240", "#FFE38C", 0.6);
-  let silver_gel = Ink("Silver Gel", "#CCCCCC", "#FFFFFF", 0.6);
-  let white_gel = Ink("White Gel", "#E5E5E5", "#FFFFFF", 0.35);
-  let black = Ink("Black", "#1A1A1A", "#000000", 0.35);
-  let seibokublue = Ink("Sailor Sei-boku", "#1060a3", "#153a5d", 0.35);
-  let inaho = Ink("iroshizuku ina-ho", "#ba6", "#7f6a33", 0.35);
-  let imperial_purple = Ink("Imperial Purple", "#4D0066", "#260F33", 0.35);
-  let sherwood_green = Ink("Sherwood Green", "#337239", "#194D19", 0.35);
-  let evergreen = Ink("Evergreen", "#4D6633", "#263319", 0.35);
-  let soft_mint = Ink("Soft Mint", "#33E0CC", "#19B299", 0.35);
-  let turquoise = Ink("Turquoise", "#00B4E6", "#005A8C", 0.35);
-  let sargasso_sea = Ink("Sargasso Sea", "#162695", "#111962", 0.35);
-  let indigo = Ink("Indigo", "#667599", "#334D66", 0.35);
-  let aurora_borealis = Ink("Aurora Borealis", "#009999", "#004D66", 0.35);
-  let pumpkin = Ink("Pumpkin", "#FF8033", "#E54D00", 0.35);
-  let pink = Ink("Pink", "#fd728e", "#E5604D", 0.35);
-  let hope_pink = Ink("Hope Pink", "#fc839b", "#E53399", 0.35);
-  let amber = Ink("Amber", "#FFC745", "#FF8000", 0.35);
-  let poppy_red = Ink("Poppy Red", "#E51A1A", "#80001A", 0.35);
-  let red_dragon = Ink("Red Dragon", "#9e061a", "#5b0a14", 0.35);
-  let fire_and_ice = Ink("Fire And Ice", "#00BEDE", "#006478", 0.35);
-  let bloody_brexit = Ink("Bloody Brexit", "#05206B", "#2E0033", 0.35);
-
-  // ideas for color:
-  // monochrome => any color
-  // bicolor => 0 is mostly always black
-  // bicolor => maybe seilor seiboku + ina ho
-  // bicolor => maybe grey + ina ho
-  // bicolor => black + grey
-
-  // FIXME to figure out:
-  // is black paper necessarily night time? therefore do we make the sky night?
-  // maybe the sun is the moon then, and it's white?
-  // but then what would gold be? the attackers and castle lights? could work
-  // we could try some nice combination as shared before too.
-  // love the idea to have a monochrome white, even if it's light time???
-
-  let white_paper = Paper("White", "#fff", false);
-  let black_paper = Paper("Black", "#202020", true);
-  let grey_paper = Paper("Grey", "#959fa8", true);
-  // TODO blue paper
-  // TODO red paper??
-
-  // colors
-  // 0 : mountains & objects
-  // 1 : sun
-  // 2 : human lights / fire -> MAYBE IT'S THE SAME COLOR!
-  let (mut colors, mut paper) = (vec![black, amber, poppy_red], white_paper);
-
-  if rng.gen_bool(0.7) {
-    colors = vec![white_gel, gold_gel, gold_gel];
-    paper = black_paper;
-  }
-
-  if rng.gen_bool(0.1) {
-    colors = vec![black, white_gel, black];
-    paper = grey_paper;
-  }
+  let (colors, paper) = palette(&mut rng);
 
   // Make the scene
   perf.span("scene");
@@ -157,7 +97,7 @@ pub fn render(
   perf.span_end("epic title");
 
   perf.span("framing");
-  let golden_frame = colors[1] == gold_gel && rng.gen_bool(0.3);
+  let golden_frame = colors[1] == GOLD_GEL && rng.gen_bool(0.3);
   let clr = if golden_frame { 1 } else { 0 };
   decoration_routes.extend(medieval_frame(
     &mut rng, &mut paint, width, height, pad, framingw, clr,

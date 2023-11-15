@@ -1,2 +1,1 @@
 - replace f64 by f32
-- wormsfilling need to be optim to keep track of "top heights"

@@ -24,7 +24,6 @@ pub struct CastleWall {
   pub height: f64,
   pub scale: f64,
   pub clr: usize,
-  pub dark_wall: bool,
   pub portcullis: bool,
 }
 
@@ -71,61 +70,35 @@ impl CastleWall {
     route.push(right);
     routes.push((clr, route));
 
-    // wall texture
-    if self.dark_wall {
-      let its = rng.gen_range(3000..5000);
-      let density = rng.gen_range(1.0..3.0);
-      routes.extend(WormsFilling::rand(rng).fill(
-        rng,
-        &|x, y| {
-          if polygons_includes_point(&polys, (x, y)) {
-            density
-          } else {
-            0.0
-          }
-        },
-        (
-          pos.0 - width / 2.0,
-          pos.1 - height,
-          pos.0 + width / 2.0,
-          ybase,
-        ),
-        &|_| clr,
-        0.5,
-        its,
-        5,
-      ));
-    } else {
-      let xrep = scale * rng.gen_range(2.6..3.2);
-      let yrep = scale * rng.gen_range(1.2..1.6);
-      let mut alt = false;
-      let mut y = wallheighty + merlonh + yrep;
+    let xrep = scale * rng.gen_range(2.6..3.2);
+    let yrep = scale * rng.gen_range(1.2..1.6);
+    let mut alt = false;
+    let mut y = wallheighty + merlonh + yrep;
+    loop {
+      if y > ybase {
+        break;
+      }
+      let mut x = left.0;
+      if alt {
+        x += xrep / 2.0;
+      }
       loop {
-        if y > ybase {
+        if x > right.0 {
           break;
         }
-        let mut x = left.0;
-        if alt {
-          x += xrep / 2.0;
+        let strokel = scale * rng.gen_range(1.3..1.5);
+        let dx = scale * rng.gen_range(-0.2..0.2);
+        let dy = scale * rng.gen_range(-0.1..0.1);
+        let x1 = (x + dx).max(left.0).min(right.0);
+        let x2 = (x + dx + strokel).max(left.0).min(right.0);
+        let y1 = y + dy;
+        if y1 < ybase && y1 < ybase && rng.gen_bool(0.95) {
+          routes.push((clr, vec![(x1, y + dy), (x2, y + dy)]));
         }
-        loop {
-          if x > right.0 {
-            break;
-          }
-          let strokel = scale * rng.gen_range(1.3..1.5);
-          let dx = scale * rng.gen_range(-0.2..0.2);
-          let dy = scale * rng.gen_range(-0.1..0.1);
-          let x1 = (x + dx).max(left.0).min(right.0);
-          let x2 = (x + dx + strokel).max(left.0).min(right.0);
-          let y1 = y + dy;
-          if y1 < ybase && y1 < ybase && rng.gen_bool(0.95) {
-            routes.push((clr, vec![(x1, y + dy), (x2, y + dy)]));
-          }
-          x += xrep;
-        }
-        y += yrep;
-        alt = !alt;
+        x += xrep;
       }
+      y += yrep;
+      alt = !alt;
     }
 
     /*

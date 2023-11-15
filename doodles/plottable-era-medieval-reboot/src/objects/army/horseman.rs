@@ -2,7 +2,9 @@ use crate::algo::{
   clipping::regular_clip,
   math2d::p_r,
   paintmask::PaintMask,
-  polylines::{grow_stroke_zigzag, path_subdivide_to_curve},
+  polylines::{
+    grow_stroke_zigzag, path_subdivide_to_curve, route_scale_translate_rotate,
+  },
 };
 use rand::prelude::*;
 use std::f64::consts::PI;
@@ -178,19 +180,17 @@ pub fn horse_with_rider<R: Rng>(
   routes = routes
     .iter()
     .map(|(clr, route)| {
-      (
-        *clr,
-        route
-          .iter()
-          .map(|&(x, y)| {
-            let x = xdir * x;
-            let (x, y) = p_r((x, y), angle);
-            (x + origin.0, y + origin.1)
-          })
-          .collect(),
-      )
+      let proj =
+        route_scale_translate_rotate(route, (xdir, 1.0), origin, angle);
+      (*clr, proj)
     })
     .collect();
 
-  regular_clip(&routes, mask)
+  let out = regular_clip(&routes, mask);
+
+  for (_clr, rt) in routes {
+    mask.paint_polyline(&rt, 1.0);
+  }
+
+  out
 }
