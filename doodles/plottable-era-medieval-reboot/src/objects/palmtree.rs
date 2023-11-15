@@ -1,4 +1,8 @@
-use crate::algo::{clipping::clip_routes_with_colors, paintmask::PaintMask};
+use crate::algo::{
+  clipping::{clip_routes_with_colors, regular_clip},
+  paintmask::PaintMask,
+  polylines::{path_subdivide_to_curve, shake, Polylines},
+};
 use noise::*;
 use rand::prelude::*;
 
@@ -7,4 +11,50 @@ use rand::prelude::*;
  * Author: greweb – 2023 – Plottable Era: (II) Medieval
  */
 
-struct TODO {}
+pub struct PalmTree {
+  pub origin: (f32, f32),
+  pub size: f32,
+}
+
+impl PalmTree {
+  pub fn render<R: Rng>(
+    &self,
+    rng: &mut R,
+    paint: &mut PaintMask,
+  ) -> Polylines {
+    let mut routes = Polylines::new();
+    let p = self.origin;
+    let h = self.size;
+    let mut path = vec![
+      (p.0, p.1),
+      (
+        p.0 - rng.gen_range(-1.0..1.0) * h * 0.2,
+        p.1 - rng.gen_range(0.3..0.6) * h,
+      ),
+      (p.0 - rng.gen_range(-1.0..1.0) * h * 0.4, p.1 - h),
+    ];
+    path = path_subdivide_to_curve(path, 2, 0.66);
+    for _j in 0..5 {
+      routes.push((0, shake(path.clone(), 0.4, rng)));
+    }
+    for _j in 0..rng.gen_range(4..12) {
+      let x = rng.gen_range(0.5 * h..h)
+        * (if rng.gen_bool(0.5) { -1.0 } else { 1.0 });
+      let mut path = vec![
+        (p.0, p.1 - h * rng.gen_range(0.9..1.0)),
+        (p.0 + x * 0.5, p.1 - h - rng.gen_range(-1.0..1.0) * h * 0.2),
+        (p.0 + x, p.1 - h * rng.gen_range(0.3..1.1)),
+      ];
+      path = path_subdivide_to_curve(path, 2, 0.66);
+      routes.push((0, path));
+    }
+
+    routes = regular_clip(&routes, paint);
+
+    for (_clr, route) in &routes {
+      paint.paint_polyline(route, 0.08 * h);
+    }
+
+    routes
+  }
+}

@@ -410,7 +410,7 @@ pub fn trebuchet<R: Rng>(
   routes = regular_clip(&routes, paint);
 
   for (_clr, route) in &routes {
-    paint.paint_polyline(route, 0.06 * height);
+    paint.paint_polyline(route, 0.04 * height);
   }
 
   routes

@@ -6,13 +6,13 @@ mod palette;
 mod performance;
 mod svgplot;
 
+use algo::clipping::clip_routes_with_colors;
 use algo::math1d::mix;
-use algo::packing::VCircle;
 use fxhash::*;
 use objects::army::ArmyOnMountain;
 use objects::blazon::get_duel_houses;
-use objects::castle;
 use objects::castle::Castle;
+use objects::mountains::front::FrontMountains;
 use objects::mountains::*;
 use objects::sea::Sea;
 use objects::sky::MedievalSky;
@@ -23,7 +23,6 @@ use serde::Serialize;
 use svgplot::*;
 use wasm_bindgen::prelude::*;
 mod epictitle;
-use algo::clipping::regular_clip;
 use algo::paintmask::*;
 use algo::text::*;
 use epictitle::*;
@@ -105,27 +104,33 @@ pub fn render(
   ));
   perf.span_end("framing");
 
+  let yhorizon = rng.gen_range(0.5..0.6) * height;
+
   //  mountains
   perf.span("mountains_front");
   // TODO better peaky shapes. not too annoying. can sometimes disappear
-  let ystart = rng.gen_range(0.8..0.95) * height;
+  let ystart = mix(yhorizon, height, rng.gen_range(0.0..1.0));
   let ybase = height;
   let clr = 0;
-  let mut mountains = Mountains::init(clr, ybase, ystart, width);
+  let mut mountains = FrontMountains {
+    clr,
+    ybase,
+    ystart,
+    width,
+  };
   routes.extend(mountains.render(&mut rng, &mut paint));
   perf.span_end("mountains_front");
 
   // TODO: here opportunity to have front facing attackers
 
   perf.span("sea");
-  let yhorizon = rng.gen_range(0.6..0.8) * height;
   let boat_color = 0;
   let sea = Sea::from(&paint, yhorizon, boat_color);
   let sea_routes = sea.render(&mut rng, &mut paint);
   perf.span_end("sea");
 
   perf.span("mountains");
-  let ymax = mix(0.0, yhorizon, 0.7);
+  let ymax = mix(0.0, yhorizon, 0.6);
   let count = rng.gen_range(2..8);
   let mountains =
     MountainsV2::rand(&mut rng, 0, width, height, yhorizon, ymax, count);
@@ -167,47 +172,21 @@ pub fn render(
     }
   }
 
-  // TODO rework mountains...
-  /*
-  let ystart = yhorizon - rng.gen_range(0.05..0.15) * height;
-  let ybase = yhorizon;
-  let clr = 0;
-  let mut mountains = Mountains::init(clr, ybase, ystart, width);
-  routes.extend(mountains.render(&mut rng, &mut paint));
-  */
-  perf.span_end("mountains");
-
-  // TODO calculate where the castle will be based on mountains
-  // we will use it to orient attackers
-
-  // FIXME: ohno the attackers are in front of the mountains, but i need the ridge before...
-  // we need to split the render logic (dont call it render) and build the mountain in the init
-  // so we can ridge at any time
-
-  perf.span("attackers");
-  /*
-  let ridge = mountains.ridge();
-  let army = ArmyOnMountain {
-    yhorizon,
-    ridge,
-    width,
-    house: attacker_house,
-  };
-  routes.extend(army.render(&mut rng, &mut paint));
-  */
-  perf.span_end("attackers");
-
-  /*
-   */
-
   perf.span("sky");
   let sky = MedievalSky::rand(&mut rng, width, height, pad);
-  routes.extend(sky.render(&mut rng, &mut paint));
-
+  // prevent sky to glitch inside the sea
+  let is_below_horizon = |(_x, y): (f32, f32)| y > yhorizon;
+  let sky_routes = clip_routes_with_colors(
+    &sky.render(&mut rng, &mut paint),
+    &is_below_horizon,
+    1.0,
+    5,
+  );
+  routes.extend(sky_routes);
   perf.span_end("sky");
 
   perf.span("reflect_shapes");
-  let probability_par_color = vec![0.05, 0.1, 0.12];
+  let probability_par_color = vec![0.08, 0.1, 0.2];
 
   routes.extend(sea.reflect_shapes(
     &mut rng,

@@ -214,5 +214,11 @@ pub fn boat_with_army<R: Rng>(
     })
     .collect();
 
-  regular_clip(&routes, mask)
+  routes = regular_clip(&routes, mask);
+
+  for (_clr, route) in &routes {
+    mask.paint_polyline(route, 0.1 * size);
+  }
+
+  routes
 }

@@ -30,18 +30,18 @@ impl MedievalSky {
   pub fn rand<R: Rng>(rng: &mut R, width: f32, height: f32, pad: f32) -> Self {
     let sun_circle = VCircle::new(
       width * rng.gen_range(0.4..0.6),
-      height * rng.gen_range(0.1..0.5),
+      height * rng.gen_range(0.1..0.4),
       width * rng.gen_range(0.07..0.1),
     );
 
     let desired_clouds = (rng.gen_range(-0.3f32..1.0)
       * rng.gen_range(0.2..1.0)
-      * rng.gen_range(0.0..100.0))
+      * rng.gen_range(0.0..80.0))
     .max(0.0) as usize;
 
     let desired_eagles = (rng.gen_range(-0.2f32..1.0)
       * rng.gen_range(0.2..1.0)
-      * rng.gen_range(0.0..50.0))
+      * rng.gen_range(0.0..20.0))
     .max(0.0) as usize;
 
     MedievalSky {

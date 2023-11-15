@@ -1,9 +1,10 @@
 use super::army::boat::boat_with_army;
 use crate::algo::{
   clipping::{clip_routes_with_colors, regular_clip},
+  math1d::mix,
   paintmask::PaintMask,
   passage::Passage,
-  polylines::slice_polylines,
+  polylines::{slice_polylines, Polylines},
 };
 use rand::prelude::*;
 
@@ -61,16 +62,17 @@ impl Sea {
 
     let ydisplacement = 0.5 * paint.height;
     let xdisplacement = 0.3 * ydisplacement;
+    let stroke_len_base = 0.04 * paint.width;
 
     routes.extend(reflect_shapes(
       rng,
       &reflectables,
       &mut passage,
-      0.3,
-      3.0,
+      probability_par_color,
+      stroke_len_base,
       self.yhorizon,
       (0.0, 0.0, paint.width, paint.height),
-      5,
+      3,
       xdisplacement,
       ydisplacement,
     ));
@@ -89,15 +91,29 @@ impl Sea {
     let width = paint.width;
     let height = paint.height;
 
-    if rng.gen_bool(0.8) {
-      let origin = (
-        width * rng.gen_range(0.3..0.7),
-        self.yhorizon + height * rng.gen_range(0.0..0.1),
-      );
+    // TODO: better placement of boats
+
+    let boats_count = rng.gen_range(0..8);
+    let mut boat_positions = (0..boats_count)
+      .map(|_| {
+        (
+          width * rng.gen_range(0.2..0.8),
+          mix(self.yhorizon, height, rng.gen_range(0.1..1.0)),
+        )
+      })
+      .collect::<Vec<_>>();
+
+    boat_positions.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap());
+
+    for origin in boat_positions {
       let size = width * 0.05;
       let angle = rng.gen_range(-0.1..0.1) * rng.gen_range(0.0..1.0);
       let w = size * rng.gen_range(4.0..5.0);
-      let xflip = rng.gen_bool(0.5);
+      let xflip = if rng.gen_bool(0.8) {
+        origin.0 > width / 2.0
+      } else {
+        rng.gen_bool(0.5)
+      };
       routes.extend(boat_with_army(
         rng,
         paint,
@@ -110,6 +126,8 @@ impl Sea {
       ));
     }
 
+    // TODO port
+
     routes
   }
 }
@@ -120,7 +138,7 @@ fn reflect_shapes<R: Rng>(
   reflectables: &Vec<(usize, Vec<(f32, f32)>)>,
   // TODO use passage to not have too much density
   passage: &mut Passage,
-  probability: f32,
+  probability_per_color: Vec<f32>,
   stroke_len_base: f32,
   ycenter: f32,
   boundaries: (f32, f32, f32, f32),
@@ -133,32 +151,13 @@ fn reflect_shapes<R: Rng>(
   let min_stroke_length = 0.5 * stroke_len_base;
   let max_stroke_length = stroke_len_base;
 
-  let exact_balance = 0.9;
-
   for (clr, route) in reflectables.clone() {
-    for route in
-      slice_polylines(&route, rng.gen_range(1.0..2.0) * stroke_len_base)
+    let probability = probability_per_color[clr];
+    for p in slice_polylines(&route, rng.gen_range(1.0..2.0) * stroke_len_base)
+      .iter()
+      .flatten()
     {
-      if !rng.gen_bool((exact_balance * probability) as f64) {
-        continue;
-      }
-      let dispy = rng.gen_range(0.0..0.2 * ydisplacement)
-        * rng.gen_range(0.0..1.0)
-        * rng.gen_range(0.0..1.0);
-      let projection = route
-        .iter()
-        .map(|p| {
-          let x = p.0;
-          let mut y = 2.0 * ycenter - p.1;
-          y += dispy;
-          (x, y)
-        })
-        .collect();
-      new_shapes.push((clr, projection));
-    }
-
-    for p in route {
-      if !rng.gen_bool(((1.0 - exact_balance) * probability) as f64) {
+      if !rng.gen_bool(probability as f64) {
         continue;
       }
       let sx = (min_stroke_length

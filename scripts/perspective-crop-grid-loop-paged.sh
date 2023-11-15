@@ -13,7 +13,7 @@ shift
 FPS=$1
 shift
 WIDTH=${WIDTH:-1280}
-HEIGHT=${HEIGHT:-1280}
+HEIGHT=${HEIGHT:-906}
 
 if [ -z "$INPUT" ] || [ -z "$OUTPUT_DIR" ] || [ -z "$FPS" ]; then
   echo "Usage: $0 input outputdir fps width height 4x2 ...list_of_pixel_positions..."
