@@ -12,23 +12,23 @@ impl BandPattern for MedievalBandConcentric {
   fn pattern(
     &self,
     clr: usize,
-    length: f64,
-    bandw: f64,
-  ) -> Vec<(usize, Vec<(f64, f64)>)> {
+    length: f32,
+    bandw: f32,
+  ) -> Vec<(usize, Vec<(f32, f32)>)> {
     let mut routes = vec![];
     for i in 0..self.count {
       let y =
-        (i as f64 + 1.0) / (self.count as f64 + 1.0) * (2.0 * bandw) - bandw;
+        (i as f32 + 1.0) / (self.count as f32 + 1.0) * (2.0 * bandw) - bandw;
       routes.push((clr, vec![(0.0, y), (length, y)]));
     }
     routes
   }
 
-  fn corner(&self, clr: usize, bandw: f64) -> Vec<(usize, Vec<(f64, f64)>)> {
+  fn corner(&self, clr: usize, bandw: f32) -> Vec<(usize, Vec<(f32, f32)>)> {
     let mut routes = vec![];
     for i in 0..self.count {
       let y =
-        (i as f64 + 1.0) / (self.count as f64 + 1.0) * (2.0 * bandw) - bandw;
+        (i as f32 + 1.0) / (self.count as f32 + 1.0) * (2.0 * bandw) - bandw;
       routes.push((clr, vec![(y, bandw), (y, y), (bandw, y)]));
     }
     routes

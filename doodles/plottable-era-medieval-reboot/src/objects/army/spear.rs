@@ -3,12 +3,12 @@ use rand::prelude::*;
 
 pub fn spear<R: Rng>(
   rng: &mut R,
-  origin: (f64, f64),
-  size: f64,
-  angle: f64,
+  origin: (f32, f32),
+  size: f32,
+  angle: f32,
   clr: usize,
-) -> Vec<(usize, Vec<(f64, f64)>)> {
-  let mut routes: Vec<Vec<(f64, f64)>> = Vec::new();
+) -> Vec<(usize, Vec<(f32, f32)>)> {
+  let mut routes: Vec<Vec<(f32, f32)>> = Vec::new();
 
   let spear_len = rng.gen_range(1.8..2.2) * size;
   let spear_w = 0.06 * size;

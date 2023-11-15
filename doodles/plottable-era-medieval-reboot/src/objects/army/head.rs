@@ -1,5 +1,5 @@
 use crate::algo::polylines::route_translate_rotate;
-use std::f64::consts::PI;
+use std::f32::consts::PI;
 
 /**
  * LICENSE CC BY-NC-ND 4.0
@@ -7,10 +7,10 @@ use std::f64::consts::PI;
  */
 pub fn head_square(
   clr: usize,
-  origin: (f64, f64),
-  angle: f64,
-  size: f64,
-) -> Vec<(usize, Vec<(f64, f64)>)> {
+  origin: (f32, f32),
+  angle: f32,
+  size: f32,
+) -> Vec<(usize, Vec<(f32, f32)>)> {
   let mut routes = Vec::new();
   let dx = 0.13 * size;
   let h = 0.4 * size;

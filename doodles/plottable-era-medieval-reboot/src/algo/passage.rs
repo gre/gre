@@ -4,13 +4,13 @@
  */
 #[derive(Clone)]
 pub struct Passage {
-  precision: f64,
-  width: f64,
-  height: f64,
+  precision: f32,
+  width: f32,
+  height: f32,
   counters: Vec<usize>,
 }
 impl Passage {
-  pub fn new(precision: f64, width: f64, height: f64) -> Self {
+  pub fn new(precision: f32, width: f32, height: f32) -> Self {
     let wi = (width / precision).ceil() as usize;
     let hi = (height / precision).ceil() as usize;
     let counters = vec![0; wi * hi];
@@ -22,7 +22,7 @@ impl Passage {
     }
   }
 
-  fn index(self: &Self, (x, y): (f64, f64)) -> usize {
+  fn index(self: &Self, (x, y): (f32, f32)) -> usize {
     let wi = (self.width / self.precision).ceil() as usize;
     let hi = (self.height / self.precision).ceil() as usize;
     let xi = ((x / self.precision).round() as usize).max(0).min(wi - 1);
@@ -30,14 +30,14 @@ impl Passage {
     yi * wi + xi
   }
 
-  pub fn count(self: &mut Self, p: (f64, f64)) -> usize {
+  pub fn count(self: &mut Self, p: (f32, f32)) -> usize {
     let i = self.index(p);
     let v = self.counters[i] + 1;
     self.counters[i] = v;
     v
   }
 
-  pub fn count_once(self: &mut Self, p: (f64, f64)) {
+  pub fn count_once(self: &mut Self, p: (f32, f32)) {
     let i = self.index(p);
     let v = self.counters[i];
     if v == 0 {
@@ -45,12 +45,12 @@ impl Passage {
     }
   }
 
-  pub fn get(self: &Self, p: (f64, f64)) -> usize {
+  pub fn get(self: &Self, p: (f32, f32)) -> usize {
     let i = self.index(p);
     self.counters[i]
   }
 
-  pub fn grow_passage(self: &mut Self, radius: f64) {
+  pub fn grow_passage(self: &mut Self, radius: f32) {
     let precision = self.precision;
     let width = self.width;
     let height = self.height;

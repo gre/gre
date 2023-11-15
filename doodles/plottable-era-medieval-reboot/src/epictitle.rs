@@ -41,7 +41,7 @@ pub fn epic_title<R: Rng>(rng: &mut R) -> String {
     "Dawn",
     "History",
   ];
-  let i = (rng.gen_range(0.0..events.len() as f64) * rng.gen_range(0.5..1.0))
+  let i = (rng.gen_range(0.0..events.len() as f32) * rng.gen_range(0.5..1.0))
     as usize;
   let event = events[i].to_string();
   let going_prefix = rng.gen_bool(0.5);

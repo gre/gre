@@ -1,23 +1,25 @@
-pub fn euclidian_dist((x1, y1): (f64, f64), (x2, y2): (f64, f64)) -> f64 {
+use super::math1d::mix;
+
+pub fn euclidian_dist((x1, y1): (f32, f32), (x2, y2): (f32, f32)) -> f32 {
   let dx = x1 - x2;
   let dy = y1 - y2;
   return (dx * dx + dy * dy).sqrt();
 }
 
-pub fn lerp_point(a: (f64, f64), b: (f64, f64), m: f64) -> (f64, f64) {
+pub fn lerp_point(a: (f32, f32), b: (f32, f32), m: f32) -> (f32, f32) {
   (a.0 * (1. - m) + b.0 * m, a.1 * (1. - m) + b.1 * m)
 }
 
-pub fn p_r(p: (f64, f64), a: f64) -> (f64, f64) {
+pub fn p_r(p: (f32, f32), a: f32) -> (f32, f32) {
   (a.cos() * p.0 + a.sin() * p.1, a.cos() * p.1 - a.sin() * p.0)
 }
 
 pub fn collides_segment(
-  from_1: (f64, f64),
-  to_1: (f64, f64),
-  from_2: (f64, f64),
-  to_2: (f64, f64),
-) -> Option<(f64, f64)> {
+  from_1: (f32, f32),
+  to_1: (f32, f32),
+  from_2: (f32, f32),
+  to_2: (f32, f32),
+) -> Option<(f32, f32)> {
   // see https://stackoverflow.com/a/565282
   let p = from_1;
   let q = from_2;
@@ -57,14 +59,41 @@ pub fn collides_segment(
   }
 }
 
-fn cross(a: (f64, f64), b: (f64, f64)) -> f64 {
+fn cross(a: (f32, f32), b: (f32, f32)) -> f32 {
   a.0 * b.1 - a.1 * b.0
 }
 
-fn div(a: (f64, f64), b: f64) -> (f64, f64) {
+fn div(a: (f32, f32), b: f32) -> (f32, f32) {
   (a.0 / b, a.1 / b)
 }
 
-pub fn same_point(a: (f64, f64), b: (f64, f64)) -> bool {
+pub fn same_point(a: (f32, f32), b: (f32, f32)) -> bool {
   (a.0 - b.0).abs() < 0.0001 && (a.1 - b.1).abs() < 0.0001
+}
+
+pub fn strictly_in_boundaries(
+  p: (f32, f32),
+  boundaries: (f32, f32, f32, f32),
+) -> bool {
+  p.0 > boundaries.0
+    && p.0 < boundaries.2
+    && p.1 > boundaries.1
+    && p.1 < boundaries.3
+}
+
+// ridge is ordered on x
+pub fn lookup_ridge(ridge: &Vec<(f32, f32)>, x: f32) -> f32 {
+  let mut last = ridge[0];
+  if x <= last.0 {
+    return last.1;
+  }
+  for &p in ridge.iter() {
+    if last.0 < x && x <= p.0 {
+      let y = mix(last.1, p.1, (x - last.0) / (p.0 - last.0));
+      return y;
+    } else {
+      last = p;
+    }
+  }
+  return last.1;
 }

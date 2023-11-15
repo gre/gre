@@ -11,11 +11,11 @@ use rand::prelude::*;
  */
 
 pub struct Chapel {
-  pub width: f64,
-  pub height: f64,
-  pub scale: f64,
-  pub pos: (f64, f64),
-  pub ybase: f64,
+  pub width: f32,
+  pub height: f32,
+  pub scale: f32,
+  pub pos: (f32, f32),
+  pub ybase: f32,
   pub clr: usize,
   pub dark_fill: bool,
 }
@@ -25,7 +25,7 @@ impl Chapel {
     &self,
     rng: &mut R,
     paint: &mut PaintMask,
-  ) -> Vec<(usize, Vec<(f64, f64)>)> {
+  ) -> Vec<(usize, Vec<(f32, f32)>)> {
     let ybase = self.ybase;
     let pos = self.pos;
     let width = self.width;
@@ -41,15 +41,15 @@ fn castle_chapel<R: Rng>(
   rng: &mut R,
   paint: &mut PaintMask,
   // ybase is where the chapel foundation need to start
-  ybase: f64,
+  ybase: f32,
   // center of the chapel base
-  pos: (f64, f64),
-  width: f64,
-  height: f64,
-  scale: f64,
+  pos: (f32, f32),
+  width: f32,
+  height: f32,
+  scale: f32,
   dark_fill: bool,
   clr: usize,
-) -> Vec<(usize, Vec<(f64, f64)>)> {
+) -> Vec<(usize, Vec<(f32, f32)>)> {
   let mut routes = vec![];
   let mut polys = vec![];
   let mut route = Vec::new();

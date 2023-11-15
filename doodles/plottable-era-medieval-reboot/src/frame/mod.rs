@@ -14,17 +14,17 @@ use rand::prelude::*;
 pub fn medieval_frame<R: Rng>(
   rng: &mut R,
   mask: &mut PaintMask,
-  width: f64,
-  height: f64,
-  pad: f64,
-  innerp: f64,
+  width: f32,
+  height: f32,
+  pad: f32,
+  innerp: f32,
   clr: usize,
-) -> Vec<(usize, Vec<(f64, f64)>)> {
+) -> Vec<(usize, Vec<(f32, f32)>)> {
   let mut routes = vec![];
 
   let p = innerp;
   let m = pad;
-  let (pattern, strokew): (Box<dyn BandPattern>, f64) =
+  let (pattern, strokew): (Box<dyn BandPattern>, f32) =
     match rng.gen_range(0..5) {
       0 => (Box::new(lrect::MedievalBandLRectPattern::new()), 0.08 * p),
       1 => (

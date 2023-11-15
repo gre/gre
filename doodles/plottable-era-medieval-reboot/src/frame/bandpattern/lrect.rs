@@ -1,10 +1,10 @@
 use super::BandPattern;
 
 pub struct MedievalBandLRectPattern {
-  cellw: f64,
-  padx: f64,
-  pady: f64,
-  offx: f64,
+  cellw: f32,
+  padx: f32,
+  pady: f32,
+  offx: f32,
 }
 impl MedievalBandLRectPattern {
   pub fn new() -> Self {
@@ -20,9 +20,9 @@ impl BandPattern for MedievalBandLRectPattern {
   fn pattern(
     &self,
     clr: usize,
-    length: f64,
-    bandw: f64,
-  ) -> Vec<(usize, Vec<(f64, f64)>)> {
+    length: f32,
+    bandw: f32,
+  ) -> Vec<(usize, Vec<(f32, f32)>)> {
     let mut routes = vec![];
     let cellw = self.cellw * bandw;
     let padx = self.padx * cellw;
@@ -33,7 +33,7 @@ impl BandPattern for MedievalBandLRectPattern {
 
     // round the cellw to make the exact length
     let n = (l / cellw).round() as usize;
-    let cellw = l / (n as f64);
+    let cellw = l / (n as f32);
 
     let mut p = -padx;
     for _i in 0..n {
@@ -58,7 +58,7 @@ impl BandPattern for MedievalBandLRectPattern {
     routes
   }
 
-  fn corner(&self, clr: usize, bandw: f64) -> Vec<(usize, Vec<(f64, f64)>)> {
+  fn corner(&self, clr: usize, bandw: f32) -> Vec<(usize, Vec<(f32, f32)>)> {
     let cellw = self.cellw * bandw;
     let pady = self.pady * cellw;
     let d = bandw / 2.0 - pady;

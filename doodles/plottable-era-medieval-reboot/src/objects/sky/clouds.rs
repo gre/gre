@@ -3,7 +3,7 @@ use crate::algo::{
   shapes::arc,
 };
 use rand::prelude::*;
-use std::f64::consts::PI;
+use std::f32::consts::PI;
 
 /**
  * LICENSE CC BY-NC-ND 4.0
@@ -15,9 +15,9 @@ pub fn cloud_in_circle<R: Rng>(
   paint: &mut PaintMask,
   clr: usize,
   circle: &VCircle,
-  base_dr: f64,
-  minr: f64,
-) -> Vec<(usize, Vec<(f64, f64)>)> {
+  base_dr: f32,
+  minr: f32,
+) -> Vec<(usize, Vec<(f32, f32)>)> {
   let mut routes = vec![];
 
   let mut circles: Vec<VCircle> = vec![];

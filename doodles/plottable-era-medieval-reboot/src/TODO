@@ -1,1 +1,4 @@
-- replace f64 by f32
+- rework mountains: 
+  - front: peaky styles, possible placement for small items,...
+  - back: style, shaper, logic before attackers, place castle location.
+

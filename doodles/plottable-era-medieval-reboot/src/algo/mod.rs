@@ -1,6 +1,7 @@
 pub mod clipping;
 pub mod math1d;
 pub mod math2d;
+pub mod moving_average;
 pub mod multicut;
 pub mod packing;
 pub mod paintmask;

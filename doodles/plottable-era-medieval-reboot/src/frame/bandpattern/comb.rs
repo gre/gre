@@ -3,11 +3,11 @@ use crate::algo::math1d::mix;
 use super::BandPattern;
 
 pub struct MedievalBandComb {
-  cellw: f64,
-  twistx: f64,
-  pady: f64,
+  cellw: f32,
+  twistx: f32,
+  pady: f32,
   ysplits: usize,
-  comblength: f64,
+  comblength: f32,
 }
 impl MedievalBandComb {
   pub fn new() -> Self {
@@ -24,9 +24,9 @@ impl BandPattern for MedievalBandComb {
   fn pattern(
     &self,
     clr: usize,
-    length: f64,
-    bandw: f64,
-  ) -> Vec<(usize, Vec<(f64, f64)>)> {
+    length: f32,
+    bandw: f32,
+  ) -> Vec<(usize, Vec<(f32, f32)>)> {
     let mut routes = vec![];
     let cellw = self.cellw * bandw;
     let twistx = self.twistx * cellw;
@@ -36,7 +36,7 @@ impl BandPattern for MedievalBandComb {
 
     // round the cellw to make the exact length
     let n = (length / cellw).round() as usize;
-    let cellw = length / (n as f64);
+    let cellw = length / (n as f32);
 
     let mut p = 0.0;
     for _i in 0..(n + 1) {
@@ -45,7 +45,7 @@ impl BandPattern for MedievalBandComb {
       routes.push((clr, vec![(p, -dy), (maxp, dy)]));
       for j in 0..ysplits {
         let y =
-          ((j as f64 + 0.5) / (ysplits as f64) - 0.5) * (2.0 * (bandw - pady));
+          ((j as f32 + 0.5) / (ysplits as f32) - 0.5) * (2.0 * (bandw - pady));
         let x = mix(p, p + twistx, (y + bandw) / (2.0 * bandw));
         routes.push((clr, vec![(x.min(length), y), (x - comblength, y)]));
       }
@@ -54,14 +54,14 @@ impl BandPattern for MedievalBandComb {
     routes
   }
 
-  fn corner(&self, clr: usize, bandw: f64) -> Vec<(usize, Vec<(f64, f64)>)> {
+  fn corner(&self, clr: usize, bandw: f32) -> Vec<(usize, Vec<(f32, f32)>)> {
     let mut routes = vec![];
     let pady = self.pady * bandw;
     let ysplits = self.ysplits;
 
     for j in 0..ysplits {
       let y =
-        ((j as f64 + 0.5) / (ysplits as f64) - 0.5) * (2.0 * (bandw - pady));
+        ((j as f32 + 0.5) / (ysplits as f32) - 0.5) * (2.0 * (bandw - pady));
       routes.push((clr, vec![(-bandw, y), (bandw, y)]));
     }
     routes

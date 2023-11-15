@@ -1,13 +1,12 @@
 use crate::algo::{
   clipping::regular_clip,
-  math2d::p_r,
   paintmask::PaintMask,
   polylines::{
     grow_stroke_zigzag, path_subdivide_to_curve, route_scale_translate_rotate,
   },
 };
 use rand::prelude::*;
-use std::f64::consts::PI;
+use std::f32::consts::PI;
 
 use super::{
   body::{HumanBody, HumanJointAngles},
@@ -25,15 +24,15 @@ use super::{
 pub fn horse_with_rider<R: Rng>(
   rng: &mut R,
   mask: &mut PaintMask,
-  origin: (f64, f64),
-  angle: f64,
-  size: f64, // reference size (height of the boat)
+  origin: (f32, f32),
+  angle: f32,
+  size: f32, // reference size (height of the boat)
   xflip: bool,
   mainclr: usize,
   skinclr: usize,
   is_leader: bool,
-) -> Vec<(usize, Vec<(f64, f64)>)> {
-  let mut routes: Vec<(usize, Vec<(f64, f64)>)> = vec![];
+) -> Vec<(usize, Vec<(f32, f32)>)> {
+  let mut routes: Vec<(usize, Vec<(f32, f32)>)> = vec![];
   let xdir = if xflip { -1.0 } else { 1.0 };
 
   let x0 = -size * rng.gen_range(0.4..0.5);
@@ -103,7 +102,6 @@ pub fn horse_with_rider<R: Rng>(
     hip_left_angle: PI / 2.0 + 0.5,
     knee_right_angle: PI / 2.0,
     knee_left_angle: PI / 2.0,
-
     left_arm_bend: 0.5,
     right_arm_bend: 0.4,
     left_leg_bend: 0.0,
@@ -145,7 +143,7 @@ pub fn horse_with_rider<R: Rng>(
   );
 
   // FIXME
-  // let is_colliding_shield = |point: (f64, f64)| s.includes_point(point);
+  // let is_colliding_shield = |point: (f32, f32)| s.includes_point(point);
 
   //foreground_routes =
   //  clip_routes_with_colors(&foreground_routes, &is_colliding_shield, 1.0, 5);
@@ -166,7 +164,7 @@ pub fn horse_with_rider<R: Rng>(
         .collect::<Vec<_>>(),
     );
 
-    let has_foreground = |p: (f64, f64)| {
+    let has_foreground = |p: (f32, f32)| {
       foreground_mask.is_painted((p.0 + mask_origin.0, p.1 + mask_origin.1))
     };
 

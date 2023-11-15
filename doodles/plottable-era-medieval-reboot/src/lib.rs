@@ -11,6 +11,7 @@ use algo::packing::VCircle;
 use fxhash::*;
 use objects::army::ArmyOnMountain;
 use objects::blazon::get_duel_houses;
+use objects::castle;
 use objects::castle::Castle;
 use objects::mountains::*;
 use objects::sea::Sea;
@@ -45,10 +46,10 @@ pub struct Feature {
 #[wasm_bindgen]
 pub fn render(
   hash: String,
-  width: f64,
-  height: f64,
-  pad: f64,
-  precision: f64,
+  width: f32,
+  height: f32,
+  pad: f32,
+  precision: f32,
   fontdata: Vec<u8>,
   mask_mode: bool,
   debug: bool,
@@ -124,12 +125,56 @@ pub fn render(
   perf.span_end("sea");
 
   perf.span("mountains");
+  let ymax = mix(0.0, yhorizon, 0.7);
+  let count = rng.gen_range(2..8);
+  let mountains =
+    MountainsV2::rand(&mut rng, 0, width, height, yhorizon, ymax, count);
+  perf.span_end("mountains");
+
+  let army: ArmyOnMountain = ArmyOnMountain {
+    house: attacker_house,
+  };
+
+  for mountain in mountains.mountains {
+    perf.span("attackers");
+    routes.extend(army.render(&mut rng, &mut paint, &mountain));
+    perf.span_end("attackers");
+
+    perf.span("mountains");
+    routes.extend(mountain.render(&mut rng, &mut paint));
+    perf.span_end("mountains");
+
+    if let Some(castle) = &mountain.castle {
+      perf.span("castle");
+      let castle = Castle {
+        pos: castle.position,
+        width: castle.width,
+        scale: 1.0,
+        clr: 0,
+        ybase: yhorizon,
+        wallh: rng.gen_range(0.05..0.1) * height,
+        wall: true,
+        left_tower: true,
+        right_tower: true,
+        dark_wall: rng.gen_bool(0.5),
+        chapel: rng.gen_bool(0.5),
+        dark_chapel: rng.gen_bool(0.5),
+        destructed_wall: rng.gen_bool(0.5),
+        portcullis: rng.gen_bool(0.5),
+      };
+      routes.extend(castle.render(&mut rng, &mut paint));
+      perf.span_end("castle");
+    }
+  }
+
   // TODO rework mountains...
+  /*
   let ystart = yhorizon - rng.gen_range(0.05..0.15) * height;
   let ybase = yhorizon;
   let clr = 0;
   let mut mountains = Mountains::init(clr, ybase, ystart, width);
   routes.extend(mountains.render(&mut rng, &mut paint));
+  */
   perf.span_end("mountains");
 
   // TODO calculate where the castle will be based on mountains
@@ -140,6 +185,7 @@ pub fn render(
   // so we can ridge at any time
 
   perf.span("attackers");
+  /*
   let ridge = mountains.ridge();
   let army = ArmyOnMountain {
     yhorizon,
@@ -148,34 +194,11 @@ pub fn render(
     house: attacker_house,
   };
   routes.extend(army.render(&mut rng, &mut paint));
+  */
   perf.span_end("attackers");
 
-  perf.span("castle");
-  let castle = Castle {
-    pos: (
-      width / 2.0,
-      mix(
-        ystart,
-        ybase,
-        rng.gen_range(0.0..1.0) * rng.gen_range(0.0..1.0),
-      ),
-    ),
-    width: width * rng.gen_range(0.3..0.5),
-    scale: 1.0,
-    clr: 0,
-    ybase: yhorizon,
-    wallh: rng.gen_range(0.1..0.15) * height,
-    wall: true,
-    left_tower: true,
-    right_tower: true,
-    dark_wall: rng.gen_bool(0.5),
-    chapel: rng.gen_bool(0.5),
-    dark_chapel: rng.gen_bool(0.5),
-    destructed_wall: rng.gen_bool(0.5),
-    portcullis: rng.gen_bool(0.5),
-  };
-  routes.extend(castle.render(&mut rng, &mut paint));
-  perf.span_end("castle");
+  /*
+   */
 
   perf.span("sky");
   let sky = MedievalSky::rand(&mut rng, width, height, pad);

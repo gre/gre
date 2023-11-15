@@ -1,11 +1,17 @@
+use core::arch;
+
 use self::{
   archer::bowman, belfry::belfry, horseman::horse_with_rider,
   trebuchet::trebuchet,
 };
-use crate::algo::{math1d::mix, paintmask::PaintMask};
+use crate::algo::{
+  math1d::mix,
+  math2d::{euclidian_dist, lookup_ridge},
+  paintmask::PaintMask,
+};
 use rand::prelude::*;
 
-use super::blazon::traits::Blazon;
+use super::{blazon::traits::Blazon, castle, mountains::Mountain};
 
 /**
  * LICENSE CC BY-NC-ND 4.0
@@ -26,13 +32,8 @@ pub mod trebuchet;
 
 // we could use this multiple times if we have multiple mountains
 pub struct ArmyOnMountain {
-  // boundaries of where the army can be
-  pub ridge: Vec<(f64, f64)>,
-  pub yhorizon: f64,
-  pub width: f64,
   // kind of army
   pub house: Blazon,
-  // castle informations...
 }
 
 impl ArmyOnMountain {
@@ -40,80 +41,96 @@ impl ArmyOnMountain {
     &self,
     rng: &mut R,
     paint: &mut PaintMask,
-  ) -> Vec<(usize, Vec<(f64, f64)>)> {
+    mountain: &Mountain,
+  ) -> Vec<(usize, Vec<(f32, f32)>)> {
+    let riders_count = rng.gen_range(0..20);
+    let archers_count = rng.gen_range(0..50);
+
+    let ridge = mountain.ridge.clone();
+    let width = mountain.width;
+    let yhorizon = mountain.yhorizon;
+
     let mut routes = vec![];
 
-    // TODO verify each of these correctly implement clipping...
-
-    // hack because we're not placed correctly
-    let paint = &mut paint.clone_empty();
-
-    // TODO placement
-    let ridge = self.ridge.clone();
     let first = ridge[0];
     let last = ridge[ridge.len() - 1];
     let x = mix(first.0, last.0, rng.gen_range(0.1..0.9));
-    let y = self.yhorizon - 5.0; // todo lookup => need to put that lookup in algo
-    let origin = (x, y);
-    let height = 0.1 * self.width;
-    let action_percent = rng.gen_range(0.0..1.0);
-    let xflip = rng.gen_bool(0.5);
-    let clr = 0;
-    routes.extend(trebuchet(
-      rng,
-      paint,
-      origin,
-      height,
-      action_percent,
-      xflip,
-      clr,
-    ));
+    let y = mix(lookup_ridge(&ridge, x), yhorizon, rng.gen_range(0.0..1.0));
+    if y < yhorizon {
+      let too_close_to_castle = if let Some(castle) = &mountain.castle {
+        euclidian_dist((x, y), castle.position) < 0.2 * castle.width
+      } else {
+        false
+      };
+      if !too_close_to_castle {
+        let origin = (x, y);
+        let height = 0.1 * width;
+        let action_percent = rng.gen_range(0.0..1.0);
+        let xflip = rng.gen_bool(0.5);
+        let clr = 0;
+        routes.extend(trebuchet(
+          rng,
+          paint,
+          origin,
+          height,
+          action_percent,
+          xflip,
+          clr,
+        ));
+      }
+    }
 
-    // TODO placement
-    let ridge = self.ridge.clone();
-    let first = ridge[0];
-    let last = ridge[ridge.len() - 1];
-    let x = mix(first.0, last.0, rng.gen_range(0.1..0.9));
-    let y = self.yhorizon - 5.0; // todo lookup => need to put that lookup in algo
-    let origin = (x, y);
-    let height = 0.1 * self.width;
-    let clr = 0;
-    let bridge_width = rng.gen_range(0.3..0.6) * height;
-    let bridge_opening = rng.gen_range(0.0f64..1.5).min(1.0);
-    let xflip = rng.gen_bool(0.5);
-    routes.extend(belfry(
-      rng,
-      paint,
-      clr,
-      origin,
-      height,
-      bridge_width,
-      bridge_opening,
-      xflip,
-    ));
-
-    // TODO placement
-    let angle = 0.0;
-    let x = mix(first.0, last.0, rng.gen_range(0.1..0.9));
-    let y = self.yhorizon - 5.0; // todo lookup => need to put that lookup in algo
-    let origin = (x, y);
-    let size = 0.04 * self.width;
-    let mainclr = 0;
-    let skinclr = 0;
-    let xflip = rng.gen_bool(0.5);
-    let is_leader = rng.gen_bool(0.1);
-    routes.extend(horse_with_rider(
-      rng, paint, origin, angle, size, xflip, mainclr, skinclr, is_leader,
-    ));
-
-    // TODO placement
-    let clr = 0;
-    for _i in 0..5 {
+    if let Some(_castle) = &mountain.castle {
+      let first = ridge[0];
+      let last = ridge[ridge.len() - 1];
       let x = mix(first.0, last.0, rng.gen_range(0.1..0.9));
-      let y = self.yhorizon - 5.0; // todo lookup => need to put that lookup in algo
-      let origin = (x, y);
-      let size = 0.04 * self.width;
-      routes.extend(bowman(rng, paint, clr, origin, size));
+      let y = lookup_ridge(&ridge, x);
+      if y < yhorizon {
+        let origin = (x, y);
+        let height = 0.1 * width;
+        let clr = 0;
+        let bridge_width = rng.gen_range(0.3..0.6) * height;
+        let bridge_opening = rng.gen_range(0.0f32..1.5).min(1.0);
+        let xflip = rng.gen_bool(0.5);
+        routes.extend(belfry(
+          rng,
+          paint,
+          clr,
+          origin,
+          height,
+          bridge_width,
+          bridge_opening,
+          xflip,
+        ));
+      }
+    }
+
+    for _i in 0..riders_count {
+      let angle = 0.0;
+      let x = mix(first.0, last.0, rng.gen_range(0.1..0.9));
+      let y = mix(lookup_ridge(&ridge, x), yhorizon, rng.gen_range(0.0..1.0));
+      if y < yhorizon {
+        let origin = (x, y);
+        let size = 0.04 * width;
+        let mainclr = 0;
+        let skinclr = 0;
+        let xflip = rng.gen_bool(0.5);
+        let is_leader = rng.gen_bool(0.1);
+        routes.extend(horse_with_rider(
+          rng, paint, origin, angle, size, xflip, mainclr, skinclr, is_leader,
+        ));
+      }
+    }
+
+    let clr = 0;
+    for _i in 0..archers_count {
+      let x = mix(first.0, last.0, rng.gen_range(0.1..0.9));
+      let y = mix(lookup_ridge(&ridge, x), yhorizon, rng.gen_range(0.0..1.0));
+      if y < yhorizon {
+        let origin = (x, y);
+        let size = 0.04 * width;
+        routes.extend(bowman(rng, paint, clr, origin, size));
+      }
     }
 
     // TODO we also are going to spawn some projectiles.

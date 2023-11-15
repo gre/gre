@@ -8,9 +8,9 @@ use rand::prelude::*;
 
 pub fn wall_shadow<R: Rng>(
   rng: &mut R,
-  path: Vec<(f64, f64)>,
-  stroke_len: f64,
-) -> Vec<Vec<(f64, f64)>> {
+  path: Vec<(f32, f32)>,
+  stroke_len: f32,
+) -> Vec<Vec<(f32, f32)>> {
   let mut routes = Vec::new();
   if path.len() < 2 {
     return routes;
@@ -45,13 +45,13 @@ pub fn wall_shadow<R: Rng>(
 }
 
 pub fn merlon(
-  polys: &mut Vec<Vec<(f64, f64)>>,
-  route: &mut Vec<(f64, f64)>,
-  leftx: f64,
-  lefty: f64,
-  rightx: f64,
-  _righty: f64,
-  h: f64,
+  polys: &mut Vec<Vec<(f32, f32)>>,
+  route: &mut Vec<(f32, f32)>,
+  leftx: f32,
+  lefty: f32,
+  rightx: f32,
+  _righty: f32,
+  h: f32,
 ) {
   let mut count = ((rightx - leftx) / h).ceil();
   count = (count / 2.0).floor() * 2.0 + 1.0;

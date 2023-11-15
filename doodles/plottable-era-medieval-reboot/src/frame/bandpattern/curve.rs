@@ -1,10 +1,10 @@
 use super::BandPattern;
-use std::f64::consts::PI;
+use std::f32::consts::PI;
 
 pub struct MedievalBandCurvePattern {
-  xrep: f64,
-  amp: f64,
-  inner: f64,
+  xrep: f32,
+  amp: f32,
+  inner: f32,
   alt: bool,
 }
 impl MedievalBandCurvePattern {
@@ -21,14 +21,14 @@ impl BandPattern for MedievalBandCurvePattern {
   fn pattern(
     &self,
     clr: usize,
-    length: f64,
-    bandw: f64,
-  ) -> Vec<(usize, Vec<(f64, f64)>)> {
+    length: f32,
+    bandw: f32,
+  ) -> Vec<(usize, Vec<(f32, f32)>)> {
     let mut routes = vec![];
     let xrep = self.xrep * bandw;
     // round the cellw to make the exact length
     let n = (length / xrep).round() as usize;
-    let xrep = length / (n as f64);
+    let xrep = length / (n as f32);
 
     let amp = self.amp * bandw;
 
@@ -67,7 +67,7 @@ impl BandPattern for MedievalBandCurvePattern {
     routes
   }
 
-  fn corner(&self, clr: usize, bandw: f64) -> Vec<(usize, Vec<(f64, f64)>)> {
+  fn corner(&self, clr: usize, bandw: f32) -> Vec<(usize, Vec<(f32, f32)>)> {
     let d = self.amp * bandw;
     let mut routes = vec![(
       clr,

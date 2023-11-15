@@ -13,16 +13,16 @@ use rand::prelude::*;
 pub fn eagle<R: Rng>(
   rng: &mut R,
   paint: &mut PaintMask,
-  origin: (f64, f64),
-  sz: f64,
-  rotation: f64,
+  origin: (f32, f32),
+  sz: f32,
+  rotation: f32,
   xreverse: bool,
   clr: usize,
-) -> Vec<(usize, Vec<(f64, f64)>)> {
+) -> Vec<(usize, Vec<(f32, f32)>)> {
   let scale = sz / 5.0;
   let xmul = if xreverse { -1.0 } else { 1.0 };
   let count = 2 + (scale * 3.0) as usize;
-  let mut routes: Vec<Vec<(f64, f64)>> = Vec::new();
+  let mut routes: Vec<Vec<(f32, f32)>> = Vec::new();
 
   let shaking = scale * 0.1;
 
@@ -32,7 +32,7 @@ pub fn eagle<R: Rng>(
   let headcompression = rng.gen_range(0.1..0.5);
   let headoff = rng.gen_range(0.1..0.5);
   for i in 0..count {
-    let yp = (i as f64 - (count - 1) as f64 * 0.5) / (count as f64);
+    let yp = (i as f32 - (count - 1) as f32 * 0.5) / (count as f32);
     let ybase = bodyh * yp;
     let route = shake(
       path_subdivide_to_curve(
@@ -72,7 +72,7 @@ pub fn eagle<R: Rng>(
   let wing2up = rng.gen_bool(0.5);
 
   for i in 0..count {
-    let xp = (i as f64 - (count - 1) as f64 * 0.5) / (count as f64);
+    let xp = (i as f32 - (count - 1) as f32 * 0.5) / (count as f32);
     let xbase = wingw * xp;
     let wing1 = rng.gen_range(0.8..1.1) * wing1m;
     let wing2 =

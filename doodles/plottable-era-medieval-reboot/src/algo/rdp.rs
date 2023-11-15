@@ -9,7 +9,7 @@ use std::ops::RangeInclusive;
 // adapted from library "ramer_douglas_peucker"
 /// Given a set of points and an epsilon, returns a list of indexes to keep.
 /// If the first and last points are the same, then the points are treated as a closed polygon
-pub fn rdp(points: &Vec<(f64, f64)>, epsilon: f64) -> Vec<(f64, f64)> {
+pub fn rdp(points: &Vec<(f32, f32)>, epsilon: f32) -> Vec<(f32, f32)> {
   if points.len() < 3 {
     return points.clone();
   }
@@ -33,7 +33,7 @@ pub fn rdp(points: &Vec<(f64, f64)>, epsilon: f64) -> Vec<(f64, f64)> {
 
     let (max_distance, max_index) =
       points[range_start + 1..range_end].iter().enumerate().fold(
-        (0.0_f64, 0),
+        (0.0_f32, 0),
         move |(max_distance, max_index), (index, &point)| {
           let distance = match line.to(point) {
             Some(distance) => distance,
@@ -92,14 +92,14 @@ pub fn rdp(points: &Vec<(f64, f64)>, epsilon: f64) -> Vec<(f64, f64)> {
 // adapted from "legasea_line"
 #[derive(Copy, Clone, PartialEq, Debug)]
 pub struct LineDistance {
-  a: f64,
-  b: f64,
-  c: f64,
-  pub length: f64,
+  a: f32,
+  b: f32,
+  c: f32,
+  pub length: f32,
 }
 
 impl LineDistance {
-  pub fn new(p1: (f64, f64), p2: (f64, f64)) -> Self {
+  pub fn new(p1: (f32, f32), p2: (f32, f32)) -> Self {
     let (x1, y1) = p1;
     let (x2, y2) = p2;
     let a = y2 - y1;
@@ -108,7 +108,7 @@ impl LineDistance {
     let length = euclidian_dist(p1, p2);
     Self { a, b, c, length }
   }
-  pub fn to(&self, point: (f64, f64)) -> Option<f64> {
+  pub fn to(&self, point: (f32, f32)) -> Option<f32> {
     let Self { a, b, c, length } = self;
     if 0.0 == *length {
       None

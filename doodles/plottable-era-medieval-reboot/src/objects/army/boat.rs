@@ -5,7 +5,7 @@ use crate::algo::{
   polylines::{path_subdivide_to_curve, route_scale_translate_rotate},
 };
 use rand::prelude::*;
-use std::f64::consts::PI;
+use std::f32::consts::PI;
 
 /**
  * LICENSE CC BY-NC-ND 4.0
@@ -16,12 +16,12 @@ pub fn boat_with_army<R: Rng>(
   rng: &mut R,
   mask: &mut PaintMask,
   clr: usize,
-  origin: (f64, f64),
-  angle: f64,
-  size: f64, // reference size (height of the boat)
-  w: f64,
+  origin: (f32, f32),
+  angle: f32,
+  size: f32, // reference size (height of the boat)
+  w: f32,
   xflip: bool,
-) -> Vec<(usize, Vec<(f64, f64)>)> {
+) -> Vec<(usize, Vec<(f32, f32)>)> {
   let mut routes = vec![];
 
   // TODO rework to mask on the real mask
@@ -168,7 +168,7 @@ pub fn boat_with_army<R: Rng>(
 
     // FIXME is this still needed?
     /*
-        let is_colliding_shield = |point: (f64, f64)| s.includes_point(point);
+        let is_colliding_shield = |point: (f32, f32)| s.includes_point(point);
 
         foreground_routes =
           clip_routes_with_colors(&foreground_routes, &is_colliding_shield, 1.0, 5);
@@ -192,7 +192,7 @@ pub fn boat_with_army<R: Rng>(
     }
     */
 
-    let has_foreground = |p: (f64, f64)| {
+    let has_foreground = |p: (f32, f32)| {
       foreground_mask.is_painted((p.0 + mask_origin.0, p.1 + mask_origin.1))
     };
 

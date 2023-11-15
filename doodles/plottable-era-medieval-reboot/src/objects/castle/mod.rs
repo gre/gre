@@ -15,11 +15,11 @@ mod walltower;
 
 pub struct Castle {
   // ybase is where the chapel foundation need to start
-  pub ybase: f64,
+  pub ybase: f32,
   // center of the castle base
-  pub pos: (f64, f64),
-  pub width: f64,
-  pub scale: f64,
+  pub pos: (f32, f32),
+  pub width: f32,
+  pub scale: f32,
   pub clr: usize,
   // other properties
   pub left_tower: bool,
@@ -30,7 +30,7 @@ pub struct Castle {
   pub destructed_wall: bool,
   pub portcullis: bool,
   pub dark_wall: bool,
-  pub wallh: f64,
+  pub wallh: f32,
 }
 
 impl Castle {
@@ -38,7 +38,7 @@ impl Castle {
     &self,
     rng: &mut R,
     paint: &mut PaintMask,
-  ) -> Vec<(usize, Vec<(f64, f64)>)> {
+  ) -> Vec<(usize, Vec<(f32, f32)>)> {
     let pos = self.pos;
     let width = self.width;
     let scale = self.scale;

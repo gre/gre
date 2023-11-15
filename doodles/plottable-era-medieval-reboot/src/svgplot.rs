@@ -10,8 +10,8 @@ pub fn make_document(
   hash: &str,
   feature_json: String,
   palette_json: String,
-  width: f64,
-  height: f64,
+  width: f32,
+  height: f32,
   mask_mode: bool,
   paper_background: &str,
   layers: &Vec<String>,
@@ -48,7 +48,7 @@ pub fn make_document(
   svg
 }
 
-pub fn render_route(route: &Vec<(f64, f64)>) -> String {
+pub fn render_route(route: &Vec<(f32, f32)>) -> String {
   let mut d = String::new();
   if route.is_empty() {
     return d;
@@ -68,12 +68,12 @@ pub fn render_route(route: &Vec<(f64, f64)>) -> String {
   d
 }
 
-fn significant_mm(f: f64) -> String {
+fn significant_mm(f: f32) -> String {
   ((f * 100.0).floor() / 100.0).to_string()
 }
 
 pub fn make_layers(
-  data: &Vec<(&str, &str, f64, Vec<Vec<(f64, f64)>>)>,
+  data: &Vec<(&str, &str, f32, Vec<Vec<(f32, f32)>>)>,
 ) -> Vec<String> {
   data
     .iter()
@@ -92,11 +92,11 @@ pub fn make_layers(
 
       let mut layer = format!("<g {}>", layer_attributes);
 
-      let opacity: f64 = 0.7;
-      let opdiff = 0.15 / (routes.len() as f64);
-      let mut trace = 0f64;
+      let opacity: f32 = 0.7;
+      let opdiff = 0.15 / (routes.len() as f32);
+      let mut trace = 0f32;
       for route in routes {
-        trace += 1f64;
+        trace += 1f32;
         let path_data = render_route(route);
         layer.push_str(&format!(
           "<path opacity=\"{}\" d=\"{}\"/>",
@@ -117,7 +117,7 @@ pub struct Ink(
   pub &'static str,
   pub &'static str,
   pub &'static str,
-  pub f64,
+  pub f32,
 );
 
 #[derive(Clone, Copy, Serialize)]
@@ -133,7 +133,7 @@ pub struct Palette {
 }
 
 pub fn make_layers_from_routes_colors(
-  routes: &Vec<(usize, Vec<(f64, f64)>)>,
+  routes: &Vec<(usize, Vec<(f32, f32)>)>,
   colors: &Vec<Ink>,
   mask_mode: bool,
 ) -> Vec<String> {
@@ -166,7 +166,7 @@ pub fn make_layers_from_routes_colors(
 }
 
 pub fn inks_stats(
-  routes: &Vec<(usize, Vec<(f64, f64)>)>,
+  routes: &Vec<(usize, Vec<(f32, f32)>)>,
   colors: &Vec<Ink>,
 ) -> Vec<&'static str> {
   let colors_count = colors.len();

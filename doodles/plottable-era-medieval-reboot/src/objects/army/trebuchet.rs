@@ -6,7 +6,7 @@ use crate::algo::{
   shapes::circle_route,
 };
 use rand::prelude::*;
-use std::f64::consts::PI;
+use std::f32::consts::PI;
 
 /**
  * LICENSE CC BY-NC-ND 4.0
@@ -16,13 +16,13 @@ use std::f64::consts::PI;
 pub fn trebuchet<R: Rng>(
   rng: &mut R,
   paint: &mut PaintMask,
-  origin: (f64, f64),
-  height: f64,
-  action_percent: f64,
+  origin: (f32, f32),
+  height: f32,
+  action_percent: f32,
   xflip: bool,
   clr: usize,
-) -> Vec<(usize, Vec<(f64, f64)>)> {
-  let mut routes: Vec<(usize, Vec<(f64, f64)>)> = Vec::new();
+) -> Vec<(usize, Vec<(f32, f32)>)> {
+  let mut routes: Vec<(usize, Vec<(f32, f32)>)> = Vec::new();
 
   let xmul = if xflip { -1.0 } else { 1.0 };
 
@@ -408,6 +408,10 @@ pub fn trebuchet<R: Rng>(
   }
 
   routes = regular_clip(&routes, paint);
+
+  for (_clr, route) in &routes {
+    paint.paint_polyline(route, 0.06 * height);
+  }
 
   routes
 }

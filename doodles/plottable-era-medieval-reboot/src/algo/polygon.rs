@@ -4,11 +4,11 @@
  */
 use crate::algo::math2d::*;
 
-pub fn polygon_bounds(polygon: &Vec<(f64, f64)>) -> (f64, f64, f64, f64) {
-  let mut minx = f64::MAX;
-  let mut miny = f64::MAX;
-  let mut maxx = f64::MIN;
-  let mut maxy = f64::MIN;
+pub fn polygon_bounds(polygon: &Vec<(f32, f32)>) -> (f32, f32, f32, f32) {
+  let mut minx = f32::MAX;
+  let mut miny = f32::MAX;
+  let mut maxx = f32::MIN;
+  let mut maxy = f32::MIN;
   for &(x, y) in polygon {
     minx = minx.min(x);
     miny = miny.min(y);
@@ -19,8 +19,8 @@ pub fn polygon_bounds(polygon: &Vec<(f64, f64)>) -> (f64, f64, f64, f64) {
 }
 
 pub fn polygons_includes_point(
-  polygons: &Vec<Vec<(f64, f64)>>,
-  p: (f64, f64),
+  polygons: &Vec<Vec<(f32, f32)>>,
+  p: (f32, f32),
 ) -> bool {
   for polygon in polygons {
     if polygon_includes_point(polygon, p) {
@@ -31,8 +31,8 @@ pub fn polygons_includes_point(
 }
 
 pub fn polygon_includes_point(
-  polygon: &Vec<(f64, f64)>,
-  p: (f64, f64),
+  polygon: &Vec<(f32, f32)>,
+  p: (f32, f32),
 ) -> bool {
   let mut inside = false;
   let mut j = polygon.len() - 1;
@@ -50,10 +50,10 @@ pub fn polygon_includes_point(
 }
 
 pub fn cut_polygon(
-  poly: &Vec<(f64, f64)>,
-  a: (f64, f64),
-  b: (f64, f64),
-) -> Vec<Vec<(f64, f64)>> {
+  poly: &Vec<(f32, f32)>,
+  a: (f32, f32),
+  b: (f32, f32),
+) -> Vec<Vec<(f32, f32)>> {
   let poly = if !same_point(poly[0], poly[poly.len() - 1]) {
     let mut poly = poly.clone();
     poly.push(poly[0]);
@@ -61,7 +61,7 @@ pub fn cut_polygon(
   } else {
     poly.clone()
   };
-  let mut prev: Option<(f64, f64)> = None;
+  let mut prev: Option<(f32, f32)> = None;
   let mut first = Vec::new();
   let mut second = Vec::new();
   let mut on_first = true;

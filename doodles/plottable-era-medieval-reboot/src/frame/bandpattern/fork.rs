@@ -1,10 +1,10 @@
 use super::BandPattern;
 
 pub struct MedievalBandForkPattern {
-  cellw: f64,
-  cutx: f64,
-  spacex: f64,
-  pady: f64,
+  cellw: f32,
+  cutx: f32,
+  spacex: f32,
+  pady: f32,
   simplecorner: bool,
 }
 impl MedievalBandForkPattern {
@@ -22,9 +22,9 @@ impl BandPattern for MedievalBandForkPattern {
   fn pattern(
     &self,
     clr: usize,
-    length: f64,
-    bandw: f64,
-  ) -> Vec<(usize, Vec<(f64, f64)>)> {
+    length: f32,
+    bandw: f32,
+  ) -> Vec<(usize, Vec<(f32, f32)>)> {
     let mut routes = vec![];
     let cellw = self.cellw * bandw;
     let cutx = cellw * self.cutx;
@@ -36,7 +36,7 @@ impl BandPattern for MedievalBandForkPattern {
     // we eat an extra space for the last fork
     let l = length + (cellw - cutx);
     let n = (l / cellw).round() as usize;
-    let cellw = l / (n as f64);
+    let cellw = l / (n as f32);
 
     let mut p = 0.0;
     for _i in 0..n {
@@ -53,7 +53,7 @@ impl BandPattern for MedievalBandForkPattern {
     routes
   }
 
-  fn corner(&self, clr: usize, bandw: f64) -> Vec<(usize, Vec<(f64, f64)>)> {
+  fn corner(&self, clr: usize, bandw: f32) -> Vec<(usize, Vec<(f32, f32)>)> {
     if self.simplecorner {
       return vec![(clr, vec![(bandw, 0.0), (0.0, 0.0), (0.0, bandw)])];
     }

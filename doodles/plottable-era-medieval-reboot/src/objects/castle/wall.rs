@@ -8,7 +8,7 @@ use crate::algo::{
   wormsfilling::WormsFilling,
 };
 use rand::prelude::*;
-use std::f64::consts::PI;
+use std::f32::consts::PI;
 
 /**
  * LICENSE CC BY-NC-ND 4.0
@@ -17,12 +17,12 @@ use std::f64::consts::PI;
 
 pub struct CastleWall {
   // ybase is where the chapel foundation need to start
-  pub ybase: f64,
+  pub ybase: f32,
   // center of the wall base
-  pub pos: (f64, f64),
-  pub width: f64,
-  pub height: f64,
-  pub scale: f64,
+  pub pos: (f32, f32),
+  pub width: f32,
+  pub height: f32,
+  pub scale: f32,
   pub clr: usize,
   pub portcullis: bool,
 }
@@ -32,7 +32,7 @@ impl CastleWall {
     &self,
     rng: &mut R,
     paint: &mut PaintMask,
-  ) -> Vec<(usize, Vec<(f64, f64)>)> {
+  ) -> Vec<(usize, Vec<(f32, f32)>)> {
     let ybase = self.ybase;
     let pos = self.pos;
     let width = self.width;

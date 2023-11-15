@@ -3,7 +3,7 @@ use crate::algo::rdp::*;
 use noise::*;
 use rand::prelude::*;
 use std::collections::HashSet;
-use std::f64::consts::PI;
+use std::f32::consts::PI;
 
 /**
  * LICENSE CC BY-NC-ND 4.0
@@ -11,16 +11,16 @@ use std::f64::consts::PI;
  */
 // homemade implementation of a filling technique that will spawn random worms that eat the space to colorize it!
 pub struct WormsFilling {
-  rot: f64,
-  step: f64,
-  straight: f64,
+  rot: f32,
+  step: f32,
+  straight: f32,
   min_l: usize,
   max_l: usize,
-  decrease_value: f64,
-  min_weight: f64,
-  freq: f64,
+  decrease_value: f32,
+  min_weight: f32,
+  freq: f32,
   seed: f64,
-  angle_precision: f64,
+  angle_precision: f32,
 }
 impl WormsFilling {
   // new
@@ -54,10 +54,10 @@ impl WormsFilling {
     rng: &mut R,
     drawings: &PaintMask,
     clr: usize,
-    density: f64,
-    bound: (f64, f64, f64, f64),
+    density: f32,
+    bound: (f32, f32, f32, f32),
     iterations: usize,
-  ) -> Vec<(usize, Vec<(f64, f64)>)> {
+  ) -> Vec<(usize, Vec<(f32, f32)>)> {
     let f = |x, y| {
       if drawings.is_painted((x, y)) {
         density
@@ -65,7 +65,7 @@ impl WormsFilling {
         0.0
       }
     };
-    let coloring = |_: &Vec<(f64, f64)>| clr;
+    let coloring = |_: &Vec<(f32, f32)>| clr;
     let precision = 0.4;
     let search_max = 10;
     self.fill(rng, &f, bound, &coloring, precision, iterations, search_max)
@@ -74,13 +74,13 @@ impl WormsFilling {
   pub fn fill<R: Rng>(
     &self,
     rng: &mut R,
-    f: &dyn Fn(f64, f64) -> f64,
-    bound: (f64, f64, f64, f64),
-    clr: &dyn Fn(&Vec<(f64, f64)>) -> usize,
-    precision: f64,
+    f: &dyn Fn(f32, f32) -> f32,
+    bound: (f32, f32, f32, f32),
+    clr: &dyn Fn(&Vec<(f32, f32)>) -> usize,
+    precision: f32,
     iterations: usize,
     search_max: usize,
-  ) -> Vec<(usize, Vec<(f64, f64)>)> {
+  ) -> Vec<(usize, Vec<(f32, f32)>)> {
     let mut routes = vec![];
     let perlin = Perlin::new(rng.gen());
     let w = bound.2 - bound.0;
@@ -100,7 +100,7 @@ impl WormsFilling {
     let min_l = self.min_l;
     let max_l = self.max_l;
     let decrease_value = self.decrease_value;
-    let freq = self.freq;
+    let freq = self.freq as f64;
 
     let mut bail_out = 0;
 
@@ -113,7 +113,8 @@ impl WormsFilling {
         }
       }
       if let Some(o) = top {
-        let angle = perlin.get([seed, freq * o.0, freq * o.1]);
+        let angle =
+          perlin.get([seed, freq * o.0 as f64, freq * o.1 as f64]) as f32;
 
         if let Some(a) =
           map.best_direction(o, step, angle, PI, self.angle_precision, 0.0)
@@ -128,7 +129,7 @@ impl WormsFilling {
             decrease_value,
           );
           if route.len() >= min_l {
-            let points: Vec<(f64, f64)> = rdp(&route, 0.05);
+            let points: Vec<(f32, f32)> = rdp(&route, 0.05);
             // remap
             let rt = points
               .iter()
@@ -147,21 +148,21 @@ impl WormsFilling {
 
 // data model that stores values information in 2D
 struct WeightMap {
-  weights: Vec<f64>,
+  weights: Vec<f32>,
   living_indexes: HashSet<usize>,
-  living_threshold: f64,
+  living_threshold: f32,
   w: usize,
   h: usize,
-  width: f64,
-  height: f64,
-  precision: f64,
+  width: f32,
+  height: f32,
+  precision: f32,
 }
 impl WeightMap {
   pub fn new(
-    width: f64,
-    height: f64,
-    precision: f64,
-    living_threshold: f64,
+    width: f32,
+    height: f32,
+    precision: f32,
+    living_threshold: f32,
   ) -> WeightMap {
     let w = ((width / precision) + 1.0) as usize;
     let h = ((height / precision) + 1.0) as usize;
@@ -177,11 +178,11 @@ impl WeightMap {
       precision,
     }
   }
-  pub fn fill_fn(&mut self, f: &impl Fn((f64, f64)) -> f64) {
+  pub fn fill_fn(&mut self, f: &impl Fn((f32, f32)) -> f32) {
     let mut living_indexes = HashSet::new();
     for x in 0..self.w {
       for y in 0..self.h {
-        let p = (x as f64 * self.precision, y as f64 * self.precision);
+        let p = (x as f32 * self.precision, y as f32 * self.precision);
         let v = f(p);
         self.weights[y * self.w + x] = v;
         if v > self.living_threshold {
@@ -193,15 +194,15 @@ impl WeightMap {
   }
 
   // do a simple bilinear interpolation
-  pub fn get_weight(&self, p: (f64, f64)) -> f64 {
+  pub fn get_weight(&self, p: (f32, f32)) -> f32 {
     let x = p.0 / self.precision;
     let y = p.1 / self.precision;
     let x0 = x.floor() as usize;
     let y0 = y.floor() as usize;
     let x1 = (x0 + 1).min(self.w - 1);
     let y1 = (y0 + 1).min(self.h - 1);
-    let dx = x - x0 as f64;
-    let dy = y - y0 as f64;
+    let dx = x - x0 as f32;
+    let dy = y - y0 as f32;
     let w00 = self.weights[y0 * self.w + x0];
     let w01 = self.weights[y0 * self.w + x1];
     let w10 = self.weights[y1 * self.w + x0];
@@ -214,9 +215,9 @@ impl WeightMap {
   // apply a gaussian filter to the weights around the point p with a given radius
   pub fn decrease_weight_gaussian(
     &mut self,
-    p: (f64, f64),
-    radius: f64,
-    value: f64,
+    p: (f32, f32),
+    radius: f32,
+    value: f32,
   ) {
     let x = p.0 / self.precision;
     let y = p.1 / self.precision;
@@ -233,7 +234,7 @@ impl WeightMap {
     let weights = &mut self.weights;
     for y in y0..y1 {
       for x in x0..x1 {
-        let p = (x as f64 * precision, y as f64 * precision);
+        let p = (x as f32 * precision, y as f32 * precision);
         let dx = p.0 - p.0;
         let dy = p.1 - p.1;
         let d2 = dx * dx + dy * dy;
@@ -256,13 +257,13 @@ impl WeightMap {
   // returns None if we reach an edge or if there is no direction that can be found in the given angle += max_angle_rotation and when the weight is lower than 0.0
   pub fn best_direction(
     &self,
-    p: (f64, f64),
-    step: f64,
-    angle: f64,
-    max_ang_rotation: f64,
-    angle_precision: f64,
-    straight_factor: f64,
-  ) -> Option<f64> {
+    p: (f32, f32),
+    step: f32,
+    angle: f32,
+    max_ang_rotation: f32,
+    angle_precision: f32,
+    straight_factor: f32,
+  ) -> Option<f32> {
     let mut best_ang = None;
     let mut best_weight = 0.0;
     let mut a = -max_ang_rotation;
@@ -291,8 +292,8 @@ impl WeightMap {
   pub fn search_weight_top(
     &mut self,
     search_max: usize,
-    min_weight: f64,
-  ) -> Option<(f64, f64)> {
+    min_weight: f32,
+  ) -> Option<(f32, f32)> {
     let living_indexes = &self.living_indexes;
     let l = living_indexes.len();
     if l == 0 {
@@ -316,22 +317,22 @@ impl WeightMap {
     return best_p.map(|i| {
       let w = self.w;
       let precision = self.precision;
-      let x = (i % w) as f64 * precision;
-      let y = (i / w) as f64 * precision;
+      let x = (i % w) as f32 * precision;
+      let y = (i / w) as f32 * precision;
       (x, y)
     });
   }
 
   pub fn dig_random_route(
     &mut self,
-    origin: (f64, f64),
-    initial_angle: f64,
-    step: f64,
-    max_ang_rotation: f64,
-    straight_factor: f64,
+    origin: (f32, f32),
+    initial_angle: f32,
+    step: f32,
+    max_ang_rotation: f32,
+    straight_factor: f32,
     max_length: usize,
-    decrease_value: f64,
-  ) -> Vec<(f64, f64)> {
+    decrease_value: f32,
+  ) -> Vec<(f32, f32)> {
     let mut route = Vec::new();
     let mut p = origin;
     let mut angle = initial_angle;

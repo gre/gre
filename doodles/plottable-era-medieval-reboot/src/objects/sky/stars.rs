@@ -1,6 +1,6 @@
 use crate::algo::paintmask::PaintMask;
 use rand::prelude::*;
-use std::f64::consts::PI;
+use std::f32::consts::PI;
 
 /**
  * LICENSE CC BY-NC-ND 4.0

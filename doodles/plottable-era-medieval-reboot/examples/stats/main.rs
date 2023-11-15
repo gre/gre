@@ -66,7 +66,7 @@ fn main() {
     vec.sort_by(|a, b| b.1.cmp(a.1));
     println!("\n{}", k);
     for (k, v) in vec {
-      let percentage = (*v as f64 / n as f64 * 1000.0).round() / 10.0;
+      let percentage = (*v as f32 / n as f32 * 1000.0).round() / 10.0;
       println!("\t{}%: {}", percentage, k);
     }
   }

@@ -2,69 +2,69 @@ use crate::algo::{clipping::regular_clip, paintmask::PaintMask};
 
 #[derive(Clone, Copy)]
 pub struct HumanJointAngles {
-  pub body_angle: f64,
-  pub head_angle: f64,
+  pub body_angle: f32,
+  pub head_angle: f32,
   // shoulders (left, right)
-  pub shoulder_right_angle: f64,
-  pub shoulder_left_angle: f64,
+  pub shoulder_right_angle: f32,
+  pub shoulder_left_angle: f32,
   // elbows (left, right)
-  pub elbow_right_angle: f64,
-  pub elbow_left_angle: f64,
+  pub elbow_right_angle: f32,
+  pub elbow_left_angle: f32,
   // hips
-  pub hip_right_angle: f64,
-  pub hip_left_angle: f64,
+  pub hip_right_angle: f32,
+  pub hip_left_angle: f32,
   // knees (left, right)
-  pub knee_right_angle: f64,
-  pub knee_left_angle: f64,
+  pub knee_right_angle: f32,
+  pub knee_left_angle: f32,
 
-  pub left_arm_bend: f64,
-  pub left_leg_bend: f64,
-  pub right_arm_bend: f64,
-  pub right_leg_bend: f64,
+  pub left_arm_bend: f32,
+  pub left_leg_bend: f32,
+  pub right_arm_bend: f32,
+  pub right_leg_bend: f32,
 }
 
 #[derive(Clone, Copy)]
 pub struct HumanBody {
   pub joints: HumanJointAngles,
-  pub height: f64,
-  pub hip: (f64, f64),
-  pub shoulder: (f64, f64),
-  pub shoulder_right: (f64, f64),
-  pub shoulder_left: (f64, f64),
-  pub elbow_right: (f64, f64),
-  pub elbow_left: (f64, f64),
-  pub hip_right: (f64, f64),
-  pub hip_left: (f64, f64),
-  pub knee_right: (f64, f64),
-  pub knee_left: (f64, f64),
-  pub head: (f64, f64),
+  pub height: f32,
+  pub hip: (f32, f32),
+  pub shoulder: (f32, f32),
+  pub shoulder_right: (f32, f32),
+  pub shoulder_left: (f32, f32),
+  pub elbow_right: (f32, f32),
+  pub elbow_left: (f32, f32),
+  pub hip_right: (f32, f32),
+  pub hip_left: (f32, f32),
+  pub knee_right: (f32, f32),
+  pub knee_left: (f32, f32),
+  pub head: (f32, f32),
 }
 
 impl HumanBody {
-  pub fn head_pos_angle(&self) -> ((f64, f64), f64) {
+  pub fn head_pos_angle(&self) -> ((f32, f32), f32) {
     (self.head, self.joints.head_angle)
   }
-  pub fn hand_left_pos_angle(&self) -> ((f64, f64), f64) {
+  pub fn hand_left_pos_angle(&self) -> ((f32, f32), f32) {
     (self.elbow_left, self.joints.elbow_left_angle)
   }
-  pub fn hand_right_pos_angle(&self) -> ((f64, f64), f64) {
+  pub fn hand_right_pos_angle(&self) -> ((f32, f32), f32) {
     (self.elbow_right, self.joints.elbow_right_angle)
   }
   /*
-  pub fn foot_left_pos_angle(&self) -> ((f64, f64), f64) {
+  pub fn foot_left_pos_angle(&self) -> ((f32, f32), f32) {
     (self.knee_left, self.joints.knee_left_angle)
   }
-  pub fn foot_right_pos_angle(&self) -> ((f64, f64), f64) {
+  pub fn foot_right_pos_angle(&self) -> ((f32, f32), f32) {
     (self.knee_right, self.joints.knee_right_angle)
   }
-  pub fn get_size(&self) -> f64 {
+  pub fn get_size(&self) -> f32 {
     self.height
   }
   */
 
   pub fn new(
-    origin: (f64, f64),
-    height: f64,
+    origin: (f32, f32),
+    height: f32,
     joints: HumanJointAngles,
   ) -> Self {
     let h = height;
@@ -120,7 +120,7 @@ impl HumanBody {
     &self,
     paint: &mut PaintMask,
     clr: usize,
-  ) -> Vec<(usize, Vec<(f64, f64)>)> {
+  ) -> Vec<(usize, Vec<(f32, f32)>)> {
     let mut routes = Vec::new();
     let hip = self.hip;
     let shoulder = self.shoulder;
@@ -146,7 +146,7 @@ impl HumanBody {
   }
 }
 
-fn proj_point(origin: (f64, f64), angle: f64, distance: f64) -> (f64, f64) {
+fn proj_point(origin: (f32, f32), angle: f32, distance: f32) -> (f32, f32) {
   let (x, y) = origin;
   let s = angle.sin();
   let c = angle.cos();

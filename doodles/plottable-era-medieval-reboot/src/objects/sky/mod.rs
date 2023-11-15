@@ -3,7 +3,7 @@ mod eagle;
 mod sun;
 
 use rand::prelude::*;
-use std::f64::consts::PI;
+use std::f32::consts::PI;
 
 use crate::algo::{packing::VCircle, paintmask::PaintMask};
 
@@ -21,25 +21,25 @@ pub struct MedievalSky {
   pub sun_circle: VCircle,
   pub desired_clouds: usize,
   pub desired_eagles: usize,
-  pub width: f64,
-  pub height: f64,
-  pub pad: f64,
+  pub width: f32,
+  pub height: f32,
+  pub pad: f32,
 }
 
 impl MedievalSky {
-  pub fn rand<R: Rng>(rng: &mut R, width: f64, height: f64, pad: f64) -> Self {
+  pub fn rand<R: Rng>(rng: &mut R, width: f32, height: f32, pad: f32) -> Self {
     let sun_circle = VCircle::new(
       width * rng.gen_range(0.4..0.6),
       height * rng.gen_range(0.1..0.5),
       width * rng.gen_range(0.07..0.1),
     );
 
-    let desired_clouds = (rng.gen_range(-0.3f64..1.0)
+    let desired_clouds = (rng.gen_range(-0.3f32..1.0)
       * rng.gen_range(0.2..1.0)
       * rng.gen_range(0.0..100.0))
     .max(0.0) as usize;
 
-    let desired_eagles = (rng.gen_range(-0.2f64..1.0)
+    let desired_eagles = (rng.gen_range(-0.2f32..1.0)
       * rng.gen_range(0.2..1.0)
       * rng.gen_range(0.0..50.0))
     .max(0.0) as usize;
@@ -60,7 +60,7 @@ impl MedievalSky {
     &self,
     rng: &mut R,
     paint: &mut PaintMask,
-  ) -> Vec<(usize, Vec<(f64, f64)>)> {
+  ) -> Vec<(usize, Vec<(f32, f32)>)> {
     let MedievalSky {
       sun_color,
       cloud_color,
@@ -84,7 +84,7 @@ impl MedievalSky {
 
     // eagles
     for _i in 0..desired_eagles {
-      let sz = rng.gen_range(0.01..0.03) * height;
+      let sz = rng.gen_range(0.008..0.02) * height;
       let p = pad + sz;
       let origin = (
         p + rng.gen_range(0.0..1.0) * (width - p * 2.0),

@@ -2,7 +2,7 @@ use crate::algo::clipping::*;
 use crate::algo::math2d::*;
 use crate::algo::polygon::*;
 use rand::prelude::*;
-use std::f64::consts::PI;
+use std::f32::consts::PI;
 
 /**
  * LICENSE CC BY-NC-ND 4.0
@@ -11,17 +11,17 @@ use std::f64::consts::PI;
 
 pub fn multicut_along_line<R: Rng>(
   rng: &mut R,
-  routes_in: &Vec<(usize, Vec<(f64, f64)>)>,
-  polys_in: &Vec<Vec<(f64, f64)>>,
+  routes_in: &Vec<(usize, Vec<(f32, f32)>)>,
+  polys_in: &Vec<Vec<(f32, f32)>>,
   clr: usize,
-  from: (f64, f64),
-  to: (f64, f64),
-  mut increment_f: impl FnMut(&mut R) -> f64,
-  mut angle_delta_f: impl FnMut(&mut R) -> f64,
-  mut sliding_f: impl FnMut(&mut R) -> f64,
-  mut pushback_f: impl FnMut(&mut R) -> f64,
-  mut pushback_rotation_f: impl FnMut(&mut R) -> f64,
-) -> (Vec<(usize, Vec<(f64, f64)>)>, Vec<Vec<(f64, f64)>>) {
+  from: (f32, f32),
+  to: (f32, f32),
+  mut increment_f: impl FnMut(&mut R) -> f32,
+  mut angle_delta_f: impl FnMut(&mut R) -> f32,
+  mut sliding_f: impl FnMut(&mut R) -> f32,
+  mut pushback_f: impl FnMut(&mut R) -> f32,
+  mut pushback_rotation_f: impl FnMut(&mut R) -> f32,
+) -> (Vec<(usize, Vec<(f32, f32)>)>, Vec<Vec<(f32, f32)>>) {
   let mut routes = routes_in.clone();
   let mut polys = polys_in.clone();
   let initial = increment_f(rng) / 2.0;
@@ -54,15 +54,15 @@ pub fn multicut_along_line<R: Rng>(
 }
 
 pub fn binary_cut_and_slide(
-  routes_in: &Vec<(usize, Vec<(f64, f64)>)>,
-  polys_in: &Vec<Vec<(f64, f64)>>,
-  center: (f64, f64),
-  ang: f64,
-  sliding: f64,
-  pushback: f64,
-  pushback_rotation: f64,
+  routes_in: &Vec<(usize, Vec<(f32, f32)>)>,
+  polys_in: &Vec<Vec<(f32, f32)>>,
+  center: (f32, f32),
+  ang: f32,
+  sliding: f32,
+  pushback: f32,
+  pushback_rotation: f32,
   clr: usize,
-) -> (Vec<(usize, Vec<(f64, f64)>)>, Vec<Vec<(f64, f64)>>) {
+) -> (Vec<(usize, Vec<(f32, f32)>)>, Vec<Vec<(f32, f32)>>) {
   let mut routes = vec![];
   let mut polys = vec![];
 
@@ -95,7 +95,7 @@ pub fn binary_cut_and_slide(
         c.0 += point.0;
         c.1 += point.1;
       }
-      let len = p.len() as f64;
+      let len = p.len() as f32;
       c = (c.0 / len, c.1 / len);
 
       let leftmul = if is_left(c) { 1.0 } else { -1.0 };

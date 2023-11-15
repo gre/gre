@@ -9,9 +9,9 @@ use crate::algo::polygon::*;
 #[derive(Clone)]
 pub struct PaintMask {
   mask: Vec<bool>,
-  pub precision: f64,
-  pub width: f64,
-  pub height: f64,
+  pub precision: f32,
+  pub width: f32,
+  pub height: f32,
 }
 
 impl PaintMask {
@@ -26,7 +26,7 @@ impl PaintMask {
     }
   }
 
-  pub fn new(precision: f64, width: f64, height: f64) -> Self {
+  pub fn new(precision: f32, width: f32, height: f32) -> Self {
     let wi = (width / precision) as usize;
     let hi = (height / precision) as usize;
     Self {
@@ -37,7 +37,7 @@ impl PaintMask {
     }
   }
 
-  pub fn is_painted(&self, point: (f64, f64)) -> bool {
+  pub fn is_painted(&self, point: (f32, f32)) -> bool {
     let precision = self.precision;
     let wi = (self.width / precision) as usize;
     let hi = (self.height / precision) as usize;
@@ -46,7 +46,7 @@ impl PaintMask {
     self.mask[x + y * wi]
   }
 
-  pub fn grow(&mut self, growpad: f64) {
+  pub fn grow(&mut self, growpad: f32) {
     let wi = (self.width / self.precision) as usize;
 
     let precision = self.precision;
@@ -114,7 +114,7 @@ impl PaintMask {
     }
   }
 
-  pub fn paint_fn<F: Fn((f64, f64)) -> bool>(&mut self, f: F) {
+  pub fn paint_fn<F: Fn((f32, f32)) -> bool>(&mut self, f: F) {
     let precision = self.precision;
     let width = self.width;
     let height = self.height;
@@ -122,7 +122,7 @@ impl PaintMask {
     let hi = (height / precision) as usize;
     for x in 0..wi {
       for y in 0..hi {
-        let point = (x as f64 * precision, y as f64 * precision);
+        let point = (x as f32 * precision, y as f32 * precision);
         if f(point) {
           self.mask[x + y * wi] = true;
         }
@@ -130,7 +130,7 @@ impl PaintMask {
     }
   }
 
-  pub fn paint_circle(&mut self, cx: f64, cy: f64, cr: f64) {
+  pub fn paint_circle(&mut self, cx: f32, cy: f32, cr: f32) {
     let (minx, miny, maxx, maxy) = (
       (cx - cr).max(0.),
       (cy - cr).max(0.),
@@ -146,7 +146,7 @@ impl PaintMask {
     let wi = (width / precision) as usize;
     for x in minx..maxx {
       for y in miny..maxy {
-        let point = (x as f64 * precision, y as f64 * precision);
+        let point = (x as f32 * precision, y as f32 * precision);
         if euclidian_dist(point, (cx, cy)) < cr {
           self.mask[x + y * wi] = true;
         }
@@ -156,7 +156,7 @@ impl PaintMask {
 
   pub fn paint_pixels(
     &mut self,
-    topleft: (f64, f64),
+    topleft: (f32, f32),
     data: &Vec<u8>,
     datawidth: usize,
   ) {
@@ -180,10 +180,10 @@ impl PaintMask {
 
   pub fn paint_rectangle(
     &mut self,
-    minx: f64,
-    miny: f64,
-    maxx: f64,
-    maxy: f64,
+    minx: f32,
+    miny: f32,
+    maxx: f32,
+    maxy: f32,
   ) {
     let precision = self.precision;
     let width = self.width;
@@ -201,14 +201,14 @@ impl PaintMask {
     }
   }
 
-  pub fn paint_borders(&mut self, pad: f64) {
+  pub fn paint_borders(&mut self, pad: f32) {
     self.paint_rectangle(0., 0., self.width, pad);
     self.paint_rectangle(0., 0., pad, self.height);
     self.paint_rectangle(0., self.height - pad, self.width, self.height);
     self.paint_rectangle(self.width - pad, 0., self.width, self.height);
   }
 
-  pub fn paint_polygon(&mut self, polygon: &Vec<(f64, f64)>) {
+  pub fn paint_polygon(&mut self, polygon: &Vec<(f32, f32)>) {
     let (minx, miny, maxx, maxy) = polygon_bounds(polygon);
     let precision = self.precision;
     let width = self.width;
@@ -221,7 +221,7 @@ impl PaintMask {
     let wi = (width / precision) as usize;
     for x in minx..maxx {
       for y in miny..maxy {
-        let point = (x as f64 * precision, y as f64 * precision);
+        let point = (x as f32 * precision, y as f32 * precision);
         if polygon_includes_point(polygon, point) {
           self.mask[x + y * wi] = true;
         }
@@ -229,7 +229,7 @@ impl PaintMask {
     }
   }
 
-  pub fn paint_polyline(&mut self, polyline: &Vec<(f64, f64)>, strokew: f64) {
+  pub fn paint_polyline(&mut self, polyline: &Vec<(f32, f32)>, strokew: f32) {
     if polyline.len() < 1 {
       return;
     }
@@ -258,7 +258,7 @@ impl PaintMask {
     let wi = (width / precision) as usize;
     for x in minx..maxx {
       for y in miny..maxy {
-        let point = (x as f64 * precision, y as f64 * precision);
+        let point = (x as f32 * precision, y as f32 * precision);
         for i in 0..polyline.len() - 1 {
           let a = polyline[i];
           let b = polyline[i + 1];
@@ -273,10 +273,10 @@ impl PaintMask {
 }
 
 fn point_in_segment(
-  (px, py): (f64, f64),
-  (ax, ay): (f64, f64),
-  (bx, by): (f64, f64),
-  strokew: f64,
+  (px, py): (f32, f32),
+  (ax, ay): (f32, f32),
+  (bx, by): (f32, f32),
+  strokew: f32,
 ) -> bool {
   let pa_x = px - ax;
   let pa_y = py - ay;

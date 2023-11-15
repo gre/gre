@@ -3,6 +3,7 @@ use super::{
   head::head_square,
 };
 use crate::algo::{
+  clipping::regular_clip,
   math1d::mix,
   paintmask::PaintMask,
   polylines::{
@@ -10,7 +11,7 @@ use crate::algo::{
   },
 };
 use rand::prelude::*;
-use std::f64::consts::PI;
+use std::f32::consts::PI;
 
 /**
  * LICENSE CC BY-NC-ND 4.0
@@ -21,9 +22,9 @@ pub fn bowman<R: Rng>(
   rng: &mut R,
   paint: &mut PaintMask,
   clr: usize,
-  origin: (f64, f64),
-  size: f64,
-) -> Vec<(usize, Vec<(f64, f64)>)> {
+  origin: (f32, f32),
+  size: f32,
+) -> Vec<(usize, Vec<(f32, f32)>)> {
   let phase = rng.gen_range(0.0..1.0);
   let shoulder_right_angle = mix(0.0, -PI / 4.0, phase);
   let elbow_right_angle = shoulder_right_angle;
@@ -59,17 +60,23 @@ pub fn bowman<R: Rng>(
   let bow = long_bow(clr, pos, size * 0.5, -angle, phase);
   new_routes.extend(bow);
 
+  new_routes = regular_clip(&new_routes, paint);
+
+  for (_clr, route) in &new_routes {
+    paint.paint_polyline(route, 0.1 * size);
+  }
+
   new_routes
 }
 
 fn long_bow(
   clr: usize,
-  origin: (f64, f64),
-  size: f64,
-  angle: f64,
-  phase: f64,
-) -> Vec<(usize, Vec<(f64, f64)>)> {
-  let mut routes: Vec<Vec<(f64, f64)>> = Vec::new();
+  origin: (f32, f32),
+  size: f32,
+  angle: f32,
+  phase: f32,
+) -> Vec<(usize, Vec<(f32, f32)>)> {
+  let mut routes: Vec<Vec<(f32, f32)>> = Vec::new();
 
   // arc au repos
   let dy = 0.5 * size;
@@ -92,8 +99,13 @@ fn long_bow(
   routes.push(string);
 
   // translate routes
-  routes
+  let out = routes
     .iter()
-    .map(|route| (clr, route_translate_rotate(route, origin, angle)))
-    .collect()
+    .map(|route| {
+      let route = route_translate_rotate(route, origin, angle);
+      (clr, route)
+    })
+    .collect();
+
+  out
 }

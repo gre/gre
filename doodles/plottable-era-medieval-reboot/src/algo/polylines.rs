@@ -1,10 +1,13 @@
 use super::math2d::*;
 use rand::prelude::*;
 
+pub type Polyline = Vec<(f32, f32)>;
+pub type Polylines = Vec<(usize, Polyline)>;
+
 pub fn path_subdivide_to_curve_it(
-  path: Vec<(f64, f64)>,
-  interpolation: f64,
-) -> Vec<(f64, f64)> {
+  path: Vec<(f32, f32)>,
+  interpolation: f32,
+) -> Vec<(f32, f32)> {
   let l = path.len();
   if l < 3 {
     return path;
@@ -35,10 +38,10 @@ pub fn path_subdivide_to_curve_it(
 }
 
 pub fn path_subdivide_to_curve(
-  path: Vec<(f64, f64)>,
+  path: Vec<(f32, f32)>,
   n: usize,
-  interpolation: f64,
-) -> Vec<(f64, f64)> {
+  interpolation: f32,
+) -> Vec<(f32, f32)> {
   let mut route = path;
   for _i in 0..n {
     route = path_subdivide_to_curve_it(route, interpolation);
@@ -47,10 +50,10 @@ pub fn path_subdivide_to_curve(
 }
 
 pub fn shake<R: Rng>(
-  path: Vec<(f64, f64)>,
-  scale: f64,
+  path: Vec<(f32, f32)>,
+  scale: f32,
   rng: &mut R,
-) -> Vec<(f64, f64)> {
+) -> Vec<(f32, f32)> {
   path
     .iter()
     .map(|&(x, y)| {
@@ -62,10 +65,10 @@ pub fn shake<R: Rng>(
 }
 
 pub fn route_translate_rotate(
-  route: &Vec<(f64, f64)>,
-  origin: (f64, f64),
-  angle: f64,
-) -> Vec<(f64, f64)> {
+  route: &Vec<(f32, f32)>,
+  origin: (f32, f32),
+  angle: f32,
+) -> Vec<(f32, f32)> {
   let acos = angle.cos();
   let asin = angle.sin();
   route
@@ -80,11 +83,11 @@ pub fn route_translate_rotate(
 }
 
 pub fn route_xreverse_translate_rotate(
-  route: &Vec<(f64, f64)>,
+  route: &Vec<(f32, f32)>,
   xreverse: bool,
-  origin: (f64, f64),
-  angle: f64,
-) -> Vec<(f64, f64)> {
+  origin: (f32, f32),
+  angle: f32,
+) -> Vec<(f32, f32)> {
   let acos = angle.cos();
   let asin = angle.sin();
   route
@@ -100,11 +103,11 @@ pub fn route_xreverse_translate_rotate(
 }
 
 pub fn route_scale_translate_rotate(
-  route: &Vec<(f64, f64)>,
-  scale: (f64, f64),
-  origin: (f64, f64),
-  angle: f64,
-) -> Vec<(f64, f64)> {
+  route: &Vec<(f32, f32)>,
+  scale: (f32, f32),
+  origin: (f32, f32),
+  angle: f32,
+) -> Vec<(f32, f32)> {
   let acos = angle.cos();
   let asin = angle.sin();
   route
@@ -117,12 +120,12 @@ pub fn route_scale_translate_rotate(
 }
 
 pub fn grow_path_zigzag(
-  path: Vec<(f64, f64)>,
-  angle: f64,
-  width: f64,
-  line_dist: f64,
-) -> Vec<(f64, f64)> {
-  let mut route: Vec<(f64, f64)> = Vec::new();
+  path: Vec<(f32, f32)>,
+  angle: f32,
+  width: f32,
+  line_dist: f32,
+) -> Vec<(f32, f32)> {
+  let mut route: Vec<(f32, f32)> = Vec::new();
   let dx = angle.cos();
   let dy = angle.sin();
   let incr_dx = -dy;
@@ -130,12 +133,12 @@ pub fn grow_path_zigzag(
 
   let mut route = Vec::new();
   let count = (width / line_dist).ceil() as usize;
-  let delta_i = if count < 2 { 0.0 } else { count as f64 / 2.0 };
+  let delta_i = if count < 2 { 0.0 } else { count as f32 / 2.0 };
   let mut rev = false;
   for i in 0..count {
-    let mul = (i as f64 - delta_i) / (count as f64);
+    let mul = (i as f32 - delta_i) / (count as f32);
     let w = width * mul;
-    let it: Vec<&(f64, f64)> = if rev {
+    let it: Vec<&(f32, f32)> = if rev {
       path.iter().rev().collect()
     } else {
       path.iter().collect()
@@ -152,11 +155,11 @@ pub fn grow_path_zigzag(
 }
 
 pub fn grow_stroke_zigzag(
-  from: (f64, f64),
-  to: (f64, f64),
-  width: f64,
-  line_dist: f64,
-) -> Vec<(f64, f64)> {
+  from: (f32, f32),
+  to: (f32, f32),
+  width: f32,
+  line_dist: f32,
+) -> Vec<(f32, f32)> {
   let (x0, y0) = from;
   let (x1, y1) = to;
   let (dx, dy) = (x1 - x0, y1 - y0);
@@ -166,10 +169,10 @@ pub fn grow_stroke_zigzag(
 
   let mut route = Vec::new();
   let count = (width / line_dist).ceil() as usize;
-  let delta_i = if count < 2 { 0.0 } else { count as f64 / 2.0 };
+  let delta_i = if count < 2 { 0.0 } else { count as f32 / 2.0 };
   let mut rev = false;
   for i in 0..count {
-    let mul = (i as f64 - delta_i) / (count as f64);
+    let mul = (i as f32 - delta_i) / (count as f32);
     let w = width * mul;
     let a = (from.0 + incr_dx * w, from.1 + incr_dy * w);
     let b = (to.0 + incr_dx * w, to.1 + incr_dy * w);
@@ -187,9 +190,9 @@ pub fn grow_stroke_zigzag(
 }
 
 pub fn slice_polylines(
-  route: &Vec<(f64, f64)>,
-  segment_length: f64,
-) -> Vec<Vec<(f64, f64)>> {
+  route: &Vec<(f32, f32)>,
+  segment_length: f32,
+) -> Vec<Vec<(f32, f32)>> {
   let mut routes = vec![];
   let mut l = 0.0;
   let mut i = 1;

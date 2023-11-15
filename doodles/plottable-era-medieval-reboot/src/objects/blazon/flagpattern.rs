@@ -15,7 +15,7 @@ impl FlagPattern {
     house: Blazon,
     rng: &mut R,
     paint: &mut PaintMask,
-  ) -> Vec<(usize, Vec<(f64, f64)>)> {
+  ) -> Vec<(usize, Vec<(f32, f32)>)> {
     let mut routes = vec![];
 
     routes

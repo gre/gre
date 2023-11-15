@@ -6,18 +6,18 @@ use crate::algo::paintmask::*;
  */
 
 pub fn regular_clip(
-  routes: &Vec<(usize, Vec<(f64, f64)>)>,
+  routes: &Vec<(usize, Vec<(f32, f32)>)>,
   paint: &PaintMask,
-) -> Vec<(usize, Vec<(f64, f64)>)> {
+) -> Vec<(usize, Vec<(f32, f32)>)> {
   let is_outside = |p| paint.is_painted(p);
   clip_routes_with_colors(&routes, &is_outside, 0.3, 5)
 }
 
 pub fn regular_clip_polys(
-  routes: &Vec<(usize, Vec<(f64, f64)>)>,
+  routes: &Vec<(usize, Vec<(f32, f32)>)>,
   paint: &mut PaintMask,
-  polys: &Vec<Vec<(f64, f64)>>,
-) -> Vec<(usize, Vec<(f64, f64)>)> {
+  polys: &Vec<Vec<(f32, f32)>>,
+) -> Vec<(usize, Vec<(f32, f32)>)> {
   let rts = regular_clip(routes, paint);
   for poly in polys.iter() {
     paint.paint_polygon(poly);
@@ -26,13 +26,13 @@ pub fn regular_clip_polys(
 }
 
 pub fn clip_routes_with_colors(
-  input_routes: &Vec<(usize, Vec<(f64, f64)>)>,
-  is_outside: &dyn Fn((f64, f64)) -> bool,
-  stepping: f64,
+  input_routes: &Vec<(usize, Vec<(f32, f32)>)>,
+  is_outside: &dyn Fn((f32, f32)) -> bool,
+  stepping: f32,
   dichotomic_iterations: usize,
-) -> Vec<(usize, Vec<(f64, f64)>)> {
+) -> Vec<(usize, Vec<(f32, f32)>)> {
   // locate the intersection where inside and outside cross
-  let search = |inside: (f64, f64), outside: (f64, f64), n| {
+  let search = |inside: (f32, f32), outside: (f32, f32), n| {
     let mut a = inside;
     let mut b = outside;
     for _i in 0..n {

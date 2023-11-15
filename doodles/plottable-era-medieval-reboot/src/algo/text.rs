@@ -16,14 +16,14 @@ pub fn draw_font_with_worms_filling<R: Rng>(
   rng: &mut R,
   font: &mut Font,
   paint: &mut PaintMask,
-  fontsize: f64,
-  pos: (f64, f64),
+  fontsize: f32,
+  pos: (f32, f32),
   text: &str,
   clr: usize,
   iterations: usize,
-  density: f64,
-  growpad: f64,
-) -> Vec<(usize, Vec<(f64, f64)>)> {
+  density: f32,
+  growpad: f32,
+) -> Vec<(usize, Vec<(f32, f32)>)> {
   let filling = WormsFilling::rand(rng);
 
   let mut drawing = paint.clone_empty();
@@ -43,14 +43,14 @@ pub fn draw_font_with_worms_filling<R: Rng>(
   layout.reset(&settings);
   layout.append(fonts, &TextStyle::new(text, px, 0));
 
-  let mut maxw = 0.0f64;
+  let mut maxw = 0.0f32;
   for glyph in layout.glyphs() {
     let (metrics, bytes) = font.rasterize_config(glyph.key);
     if glyph.parent == '\n' {
       continue;
     }
-    let o = (glyph.x as f64 * prec, glyph.y as f64 * prec);
-    maxw = maxw.max(o.0 + metrics.width as f64 * prec);
+    let o = (glyph.x as f32 * prec, glyph.y as f32 * prec);
+    maxw = maxw.max(o.0 + metrics.width as f32 * prec);
     drawing.paint_pixels(o, &bytes, metrics.width);
   }
 
@@ -59,7 +59,7 @@ pub fn draw_font_with_worms_filling<R: Rng>(
     &drawing,
     clr,
     density,
-    (pos.0, pos.1, maxw, pos.1 + layout.height() as f64),
+    (pos.0, pos.1, maxw, pos.1 + layout.height() as f32),
     iterations,
   ));
 

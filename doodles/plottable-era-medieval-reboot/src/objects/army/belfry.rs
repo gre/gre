@@ -1,6 +1,9 @@
-use crate::algo::{math1d::mix, paintmask::PaintMask, shapes::circle_route};
+use crate::algo::{
+  clipping::regular_clip, math1d::mix, paintmask::PaintMask,
+  shapes::circle_route,
+};
 use rand::prelude::*;
-use std::f64::consts::PI;
+use std::f32::consts::PI;
 
 /**
  * LICENSE CC BY-NC-ND 4.0
@@ -20,8 +23,8 @@ pub enum StructurePattern {
 }
 
 pub struct Floor {
-  pub position: (f64, f64),
-  pub height: f64,
+  pub position: (f32, f32),
+  pub height: f32,
   pub pattern: FloorPattern,
   pub structure_pattern: StructurePattern,
 }
@@ -35,13 +38,13 @@ pub fn belfry<R: Rng>(
   rng: &mut R,
   paint: &mut PaintMask,
   clr: usize,
-  origin: (f64, f64),
-  height: f64,
-  bridge_width: f64,
-  bridge_opening: f64,
+  origin: (f32, f32),
+  height: f32,
+  bridge_width: f32,
+  bridge_opening: f32,
   xflip: bool,
   // FIXME: the mountain will have a slope. how to handle that?
-) -> Vec<(usize, Vec<(f64, f64)>)> {
+) -> Vec<(usize, Vec<(f32, f32)>)> {
   let mut routes = Vec::new();
 
   let pole_in_front = rng.gen_bool(0.5);
@@ -75,13 +78,13 @@ pub fn belfry<R: Rng>(
   let y2 = origin.1 - height;
   let x2 = origin.0;
   let count = rng.gen_range(3..7);
-  let xrandomfactor = rng.gen_range(-1.0f64..0.6).max(0.0);
+  let xrandomfactor = rng.gen_range(-1.0f32..0.6).max(0.0);
   let mut last_x = x1;
   let floors = (0..count)
     .map(|i| {
-      let ipercent = i as f64 / count as f64;
+      let ipercent = i as f32 / count as f32;
       let y = mix(y1, y2, ipercent);
-      let mut h = height / count as f64;
+      let mut h = height / count as f32;
       let is_roof = i == count - 1;
       if is_roof {
         h *= rng.gen_range(0.5..1.0);
@@ -170,7 +173,7 @@ pub fn belfry<R: Rng>(
       let y2 = y - h;
       route.push((x2, y2));
       let y3 = if is_roof {
-        y - h * rng.gen_range(0.3f64..1.2).min(1.0)
+        y - h * rng.gen_range(0.3f32..1.2).min(1.0)
       } else {
         y - h
       };
@@ -248,7 +251,7 @@ pub fn belfry<R: Rng>(
   routes.push(vec![anchor1, anchor2]);
 
   for i in 0..bridge_count {
-    let m = i as f64 * spacing;
+    let m = i as f32 * spacing;
     let disp = (-m * asin, m * acos);
     let mut route = Vec::new();
     let bridge_from =
@@ -264,8 +267,14 @@ pub fn belfry<R: Rng>(
 
   let mut out = vec![];
   for route in routes {
-    paint.paint_polyline(&route, 0.1 * height);
     out.push((clr, route));
   }
+
+  out = regular_clip(&out, paint);
+
+  for (_clr, route) in &out {
+    paint.paint_polyline(&route, 0.05 * height);
+  }
+
   out
 }

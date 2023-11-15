@@ -1,15 +1,15 @@
-use std::f64::consts::PI;
+use std::f32::consts::PI;
 
 use super::math2d::euclidian_dist;
 
 pub fn circle_route(
-  center: (f64, f64),
-  r: f64,
+  center: (f32, f32),
+  r: f32,
   count: usize,
-) -> Vec<(f64, f64)> {
+) -> Vec<(f32, f32)> {
   let mut route = Vec::new();
   for i in 0..(count + 1) {
-    let a = 2. * PI * (i as f64) / (count as f64);
+    let a = 2. * PI * (i as f32) / (count as f32);
     let x = center.0 + r * a.cos();
     let y = center.1 + r * a.sin();
     route.push((x, y));
@@ -18,15 +18,15 @@ pub fn circle_route(
 }
 
 pub fn arc(
-  center: (f64, f64),
-  r: f64,
-  start: f64,
-  end: f64,
+  center: (f32, f32),
+  r: f32,
+  start: f32,
+  end: f32,
   count: usize,
-) -> Vec<(f64, f64)> {
+) -> Vec<(f32, f32)> {
   let mut route = Vec::new();
   for i in 0..(count + 1) {
-    let a = start + (end - start) * i as f64 / (count as f64);
+    let a = start + (end - start) * i as f32 / (count as f32);
     let x = center.0 + r * a.cos();
     let y = center.1 + r * a.sin();
     route.push((x, y));
@@ -35,16 +35,16 @@ pub fn arc(
 }
 
 pub fn spiral_optimized(
-  x: f64,
-  y: f64,
-  radius: f64,
-  dr: f64,
-  approx: f64,
-) -> Vec<(f64, f64)> {
+  x: f32,
+  y: f32,
+  radius: f32,
+  dr: f32,
+  approx: f32,
+) -> Vec<(f32, f32)> {
   let two_pi = 2.0 * PI;
   let mut route = Vec::new();
   let mut r = radius;
-  let mut a = 0f64;
+  let mut a = 0f32;
   loop {
     let p = (x + r * a.cos(), y + r * a.sin());
     let l = route.len();

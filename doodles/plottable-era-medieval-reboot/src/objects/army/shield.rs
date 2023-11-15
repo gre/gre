@@ -8,10 +8,10 @@ pub fn shield<R: Rng>(
   rng: &mut R,
   paint: &mut PaintMask,
   clr: usize,
-  origin: (f64, f64),
-  size: f64,
-  angle: f64,
-) -> Vec<(usize, Vec<(f64, f64)>)> {
+  origin: (f32, f32),
+  size: f32,
+  angle: f32,
+) -> Vec<(usize, Vec<(f32, f32)>)> {
   let mut routes = Vec::new();
   let dx = 0.2 * size;
   let dy = 0.4 * size;

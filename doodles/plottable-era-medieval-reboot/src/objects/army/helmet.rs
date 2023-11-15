@@ -2,16 +2,16 @@ use crate::algo::{
   clipping::regular_clip, math2d::p_r, paintmask::PaintMask,
   polylines::route_xreverse_translate_rotate,
 };
-use std::f64::consts::PI;
+use std::f32::consts::PI;
 
 pub fn full_helmet(
   paint: &mut PaintMask,
   clr: usize,
-  origin: (f64, f64),
-  angle: f64,
-  size: f64,
+  origin: (f32, f32),
+  angle: f32,
+  size: f32,
   xreverse: bool,
-) -> Vec<(usize, Vec<(f64, f64)>)> {
+) -> Vec<(usize, Vec<(f32, f32)>)> {
   let mut routes = Vec::new();
   let dx = 0.13 * size;
   let h = 0.4 * size;
@@ -50,12 +50,12 @@ pub fn full_helmet(
 }
 
 pub fn helmet(
-  origin: (f64, f64),
-  angle: f64,
-  size: f64,
+  origin: (f32, f32),
+  angle: f32,
+  size: f32,
   xreverse: bool,
   clr: usize,
-) -> Vec<(usize, Vec<(f64, f64)>)> {
+) -> Vec<(usize, Vec<(f32, f32)>)> {
   let mut routes = Vec::new();
   let dx = 0.13 * size;
   let h = 0.4 * size;

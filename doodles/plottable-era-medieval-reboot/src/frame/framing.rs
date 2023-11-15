@@ -1,7 +1,7 @@
 use super::bandpattern::BandPattern;
 use crate::algo::{paintmask::PaintMask, wormsfilling::WormsFilling};
 use rand::prelude::*;
-use std::f64::consts::PI;
+use std::f32::consts::PI;
 
 /**
  * LICENSE CC BY-NC-ND 4.0
@@ -11,20 +11,20 @@ pub fn framing<R: Rng>(
   rng: &mut R,
   paint: &mut PaintMask,
   clr: usize,
-  bound: (f64, f64, f64, f64),
+  bound: (f32, f32, f32, f32),
   // pattern that will be colored for the framing
   pattern: &dyn BandPattern,
   // padding inside the frame
-  padding: f64,
+  padding: f32,
   // marging to exclude external
-  margin: f64,
+  margin: f32,
   // stroke width for the pattern
-  strokew: f64,
+  strokew: f32,
   // density of the coloring
-  density: f64,
+  density: f32,
   // nb of iteration of coloring logic
   iterations: usize,
-) -> Vec<(usize, Vec<(f64, f64)>)> {
+) -> Vec<(usize, Vec<(f32, f32)>)> {
   let mut routes = vec![];
 
   // outer

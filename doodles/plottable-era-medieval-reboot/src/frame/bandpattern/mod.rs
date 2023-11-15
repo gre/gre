@@ -16,19 +16,19 @@ pub trait BandPattern {
   fn pattern(
     &self,
     clr: usize,
-    length: f64,
-    bandw: f64,
-  ) -> Vec<(usize, Vec<(f64, f64)>)>;
+    length: f32,
+    bandw: f32,
+  ) -> Vec<(usize, Vec<(f32, f32)>)>;
 
-  fn corner(&self, clr: usize, bandw: f64) -> Vec<(usize, Vec<(f64, f64)>)>;
+  fn corner(&self, clr: usize, bandw: f32) -> Vec<(usize, Vec<(f32, f32)>)>;
 
   fn render_corner(
     &self,
     clr: usize,
-    position: (f64, f64),
-    angle: f64,
-    bandw: f64,
-  ) -> Vec<(usize, Vec<(f64, f64)>)> {
+    position: (f32, f32),
+    angle: f32,
+    bandw: f32,
+  ) -> Vec<(usize, Vec<(f32, f32)>)> {
     let untranslated = self.corner(clr, bandw);
     let acos = angle.cos();
     let asin = angle.sin();
@@ -50,10 +50,10 @@ pub trait BandPattern {
   fn render_band(
     &self,
     clr: usize,
-    from: (f64, f64),
-    to: (f64, f64),
-    bandw: f64,
-  ) -> Vec<(usize, Vec<(f64, f64)>)> {
+    from: (f32, f32),
+    to: (f32, f32),
+    bandw: f32,
+  ) -> Vec<(usize, Vec<(f32, f32)>)> {
     let l = euclidian_dist(from, to);
     let untranslated = self.pattern(clr, l, bandw);
     // rotate & translate

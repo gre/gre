@@ -10,12 +10,12 @@ use rand::prelude::*;
  */
 pub struct CastleWallTower {
   // ybase is where the chapel foundation need to start
-  pub ybase: f64,
+  pub ybase: f32,
   // center of the wall base
-  pub pos: (f64, f64),
-  pub width: f64,
-  pub height: f64,
-  pub scale: f64,
+  pub pos: (f32, f32),
+  pub width: f32,
+  pub height: f32,
+  pub scale: f32,
   pub clr: usize,
 }
 
@@ -24,7 +24,7 @@ impl CastleWallTower {
     &self,
     rng: &mut R,
     paint: &mut PaintMask,
-  ) -> Vec<(usize, Vec<(f64, f64)>)> {
+  ) -> Vec<(usize, Vec<(f32, f32)>)> {
     let ybase = self.ybase;
     let pos = self.pos;
     let width = self.width;
@@ -44,7 +44,7 @@ impl CastleWallTower {
     let h1 = scale * rng.gen_range(3.0..5.0);
     let merlonh = scale * rng.gen_range(1.0..2.2);
 
-    let mut route: Vec<(f64, f64)> = Vec::new();
+    let mut route: Vec<(f32, f32)> = Vec::new();
     route.push(a);
     route.push((a.0, towerheighty));
     route.push((a.0 - d1, towerheighty - d1));

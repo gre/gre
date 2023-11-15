@@ -8,12 +8,12 @@ use rand::prelude::*;
 pub fn sword<R: Rng>(
   rng: &mut R,
   paint: &mut PaintMask,
-  origin: (f64, f64),
-  size: f64,
-  angle: f64,
+  origin: (f32, f32),
+  size: f32,
+  angle: f32,
   clr: usize,
-) -> Vec<(usize, Vec<(f64, f64)>)> {
-  let mut routes: Vec<Vec<(f64, f64)>> = Vec::new();
+) -> Vec<(usize, Vec<(f32, f32)>)> {
+  let mut routes: Vec<Vec<(f32, f32)>> = Vec::new();
 
   let sword_len = rng.gen_range(0.8..1.2) * size;
   let handle_len = 0.12 * size;

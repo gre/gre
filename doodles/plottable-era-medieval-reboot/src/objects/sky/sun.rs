@@ -11,10 +11,10 @@ use crate::algo::{
 pub fn sun(
   paint: &mut PaintMask,
   clr: usize,
-  c: (f64, f64),
-  r: f64,
-  dr: f64,
-) -> Vec<(usize, Vec<(f64, f64)>)> {
+  c: (f32, f32),
+  r: f32,
+  dr: f32,
+) -> Vec<(usize, Vec<(f32, f32)>)> {
   let routes = vec![
     (clr, spiral_optimized(c.0, c.1, r, dr, 0.1)),
     (clr, circle_route(c, r, (r * 2. + 8.) as usize)),

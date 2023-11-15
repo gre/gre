@@ -15,11 +15,11 @@ use rand::prelude::*;
 pub struct Sea {
   sea_mask: PaintMask,
   boat_color: usize,
-  yhorizon: f64,
+  yhorizon: f32,
 }
 
 impl Sea {
-  pub fn from(paint: &PaintMask, yhorizon: f64, boat_color: usize) -> Self {
+  pub fn from(paint: &PaintMask, yhorizon: f32, boat_color: usize) -> Self {
     let mut sea_mask = paint.clone();
     sea_mask.paint_fn(&|(_, y)| y < yhorizon);
 
@@ -41,9 +41,9 @@ impl Sea {
     &self,
     rng: &mut R,
     paint: &mut PaintMask,
-    reflectables: &Vec<(usize, Vec<(f64, f64)>)>,
-    probability_par_color: Vec<f64>,
-  ) -> Vec<(usize, Vec<(f64, f64)>)> {
+    reflectables: &Vec<(usize, Vec<(f32, f32)>)>,
+    probability_par_color: Vec<f32>,
+  ) -> Vec<(usize, Vec<(f32, f32)>)> {
     let mut routes = vec![];
     // TODO implement
 
@@ -55,7 +55,7 @@ impl Sea {
     // 3: for each grid point we will project a % of the density on the sea, & apply some dash effect & y disp
 
     let mut passage = Passage::new(0.5, paint.width, paint.height);
-    let is_below_sea_level = |(_x, y): (f64, f64)| y > self.yhorizon;
+    let is_below_sea_level = |(_x, y): (f32, f32)| y > self.yhorizon;
     let reflectables =
       clip_routes_with_colors(&reflectables, &is_below_sea_level, 0.5, 3);
 
@@ -84,7 +84,7 @@ impl Sea {
     &self,
     rng: &mut R,
     paint: &mut PaintMask,
-  ) -> Vec<(usize, Vec<(f64, f64)>)> {
+  ) -> Vec<(usize, Vec<(f32, f32)>)> {
     let mut routes = vec![];
     let width = paint.width;
     let height = paint.height;
@@ -117,17 +117,17 @@ impl Sea {
 // FIXME this is the old impl
 fn reflect_shapes<R: Rng>(
   rng: &mut R,
-  reflectables: &Vec<(usize, Vec<(f64, f64)>)>,
+  reflectables: &Vec<(usize, Vec<(f32, f32)>)>,
   // TODO use passage to not have too much density
   passage: &mut Passage,
-  probability: f64,
-  stroke_len_base: f64,
-  ycenter: f64,
-  boundaries: (f64, f64, f64, f64),
+  probability: f32,
+  stroke_len_base: f32,
+  ycenter: f32,
+  boundaries: (f32, f32, f32, f32),
   max_passage: usize,
-  xdisplacement: f64,
-  ydisplacement: f64,
-) -> Vec<(usize, Vec<(f64, f64)>)> {
+  xdisplacement: f32,
+  ydisplacement: f32,
+) -> Vec<(usize, Vec<(f32, f32)>)> {
   let mut new_shapes = Vec::new();
 
   let min_stroke_length = 0.5 * stroke_len_base;
@@ -139,7 +139,7 @@ fn reflect_shapes<R: Rng>(
     for route in
       slice_polylines(&route, rng.gen_range(1.0..2.0) * stroke_len_base)
     {
-      if !rng.gen_bool(exact_balance * probability) {
+      if !rng.gen_bool((exact_balance * probability) as f64) {
         continue;
       }
       let dispy = rng.gen_range(0.0..0.2 * ydisplacement)
@@ -158,12 +158,12 @@ fn reflect_shapes<R: Rng>(
     }
 
     for p in route {
-      if !rng.gen_bool((1.0 - exact_balance) * probability) {
+      if !rng.gen_bool(((1.0 - exact_balance) * probability) as f64) {
         continue;
       }
       let sx = (min_stroke_length
         + (max_stroke_length - min_stroke_length)
-          * rng.gen_range(0f64..1.0).powi(2))
+          * rng.gen_range(0f32..1.0).powi(2))
         / 2.0;
       let sy = 0.3 * rng.gen_range(-1.0..1.0) * rng.gen_range(0.0..1.0);
       let x = p.0

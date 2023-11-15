@@ -14,7 +14,7 @@ pub struct PerfRecords {
   spans: Vec<Span>,
 }
 pub struct PerfResult {
-  per_label: HashMap<String, f64>,
+  per_label: HashMap<String, f32>,
 }
 impl PerfRecords {
   /**
@@ -61,7 +61,7 @@ impl PerfRecords {
         let maybe_time = per_label.get(&span.label).unwrap_or(&0.);
         per_label.insert(
           span.label.clone(),
-          maybe_time + span.stop.duration_since(span.start).as_secs_f64(),
+          maybe_time + span.stop.duration_since(span.start).as_secs_f32(),
         );
       });
     }
