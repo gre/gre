@@ -1,4 +1,25 @@
-- rework mountains: 
-  - front: peaky styles, possible placement for small items,...
-  - back: style, shaper, logic before attackers, place castle location.
+- BUG when lowering precision at 0.1 there are some crash. let's run a lot of results to identify where.
+- fix the horse & rider
+- warrior
+- people on the machines
+- fix the mountain shaping & castle position
+- blazon & their impact + flags
+- hut areas + fire
+- projectiles
+- rework clouds position & add linear clouds
+- prepare some new castle items to be placed on stream
+  - watch towers
+  - flags
+  - relique
+  - lights & decorations
+  - stairs
+  - drawbridge
 
+on stream:
+  - palettes
+  - stars shapes
+  - work on the castle
+  - palisade
+  - scale on the castle + defenders
+  - make a catapult
+  - divide the terrain in two to organize the fight

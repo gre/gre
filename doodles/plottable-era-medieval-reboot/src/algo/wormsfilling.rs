@@ -11,16 +11,16 @@ use std::f32::consts::PI;
  */
 // homemade implementation of a filling technique that will spawn random worms that eat the space to colorize it!
 pub struct WormsFilling {
-  rot: f32,
-  step: f32,
-  straight: f32,
-  min_l: usize,
-  max_l: usize,
-  decrease_value: f32,
-  min_weight: f32,
-  freq: f32,
-  seed: f64,
-  angle_precision: f32,
+  pub rot: f32,
+  pub step: f32,
+  pub straight: f32,
+  pub min_l: usize,
+  pub max_l: usize,
+  pub decrease_value: f32,
+  pub min_weight: f32,
+  pub freq: f32,
+  pub seed: f64,
+  pub angle_precision: f32,
 }
 impl WormsFilling {
   // new

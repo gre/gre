@@ -106,6 +106,11 @@ impl Castle {
       routes.extend(chapel.render(rng, paint));
     }
 
+    // we also create a halo cropping around castle
+    for (_, route) in &routes {
+      paint.paint_polyline(route, 1.4);
+    }
+
     routes
   }
 }

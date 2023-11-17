@@ -1,4 +1,8 @@
-use crate::algo::{clipping::regular_clip, paintmask::PaintMask};
+use crate::algo::{
+  clipping::regular_clip, paintmask::PaintMask, polylines::Polylines,
+};
+use rand::prelude::*;
+use std::f32::consts::PI;
 
 #[derive(Clone, Copy)]
 pub struct HumanJointAngles {

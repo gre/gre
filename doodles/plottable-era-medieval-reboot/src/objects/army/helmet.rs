@@ -1,10 +1,47 @@
 use crate::algo::{
-  clipping::regular_clip, math2d::p_r, paintmask::PaintMask,
+  clipping::regular_clip, paintmask::PaintMask,
   polylines::route_xreverse_translate_rotate,
 };
 use std::f32::consts::PI;
 
-pub fn full_helmet(
+pub struct FullHelmet {
+  pub origin: (f32, f32),
+  pub angle: f32,
+  pub size: f32,
+  pub xreverse: bool,
+}
+impl FullHelmet {
+  pub fn init(
+    origin: (f32, f32),
+    angle: f32,
+    size: f32,
+    xreverse: bool,
+  ) -> Self {
+    Self {
+      origin,
+      angle,
+      size,
+      xreverse,
+    }
+  }
+
+  pub fn render(
+    &self,
+    paint: &mut PaintMask,
+    clr: usize,
+  ) -> Vec<(usize, Vec<(f32, f32)>)> {
+    full_helmet(
+      paint,
+      clr,
+      self.origin,
+      self.angle,
+      self.size,
+      self.xreverse,
+    )
+  }
+}
+
+fn full_helmet(
   paint: &mut PaintMask,
   clr: usize,
   origin: (f32, f32),
@@ -33,9 +70,26 @@ pub fn full_helmet(
   routes.push(vec![(-dx, -0.5 * h), (dx + 0.6 * extrax, -0.4 * h)]);
   routes.push(vec![(-dx, -0.5 * h), (dx + 0.6 * extrax, -0.6 * h)]);
 
+  let poly1 = vec![
+    (-dx, 0.0),
+    (-dx, -h),
+    (dx, -h),
+    (dx + extrax, -0.5 * h),
+    (dx, 0.0),
+    (-dx, 0.0),
+  ];
+  let poly2 = vec![
+    (dx + extrax, -0.5 * h),
+    (0.2 * dx, -1.3 * h),
+    (0.2 * dx, 0.3 * h),
+  ];
+
+  let poly1 = route_xreverse_translate_rotate(&poly1, xreverse, origin, angle);
+  let poly2 = route_xreverse_translate_rotate(&poly2, xreverse, origin, angle);
+
   let ang = angle + PI / 2.0;
   // translate and rotate routes
-  regular_clip(
+  let routes = regular_clip(
     &routes
       .iter()
       .map(|route| {
@@ -46,7 +100,12 @@ pub fn full_helmet(
       })
       .collect(),
     paint,
-  )
+  );
+
+  paint.paint_polygon(&poly1);
+  paint.paint_polygon(&poly2);
+
+  routes
 }
 
 pub fn helmet(
@@ -71,8 +130,6 @@ pub fn helmet(
     (-dx, -h * 0.7),
   ]);
 
-  // TODO implement
-
   let ang = angle + PI / 2.0;
   // translate and rotate routes
   routes
@@ -80,14 +137,7 @@ pub fn helmet(
     .map(|route| {
       (
         clr,
-        route
-          .iter()
-          .map(|&(x, y)| {
-            let x = if xreverse { -x } else { x };
-            let (x, y) = p_r((x, y), ang);
-            (x + origin.0, y + origin.1)
-          })
-          .collect(),
+        route_xreverse_translate_rotate(route, xreverse, origin, ang),
       )
     })
     .collect()

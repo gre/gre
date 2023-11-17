@@ -1,12 +1,14 @@
-use super::army::boat::boat_with_army;
+use super::{army::boat::boat_with_army, blazon::traits::Blazon};
 use crate::algo::{
   clipping::{clip_routes_with_colors, regular_clip},
   math1d::mix,
   paintmask::PaintMask,
   passage::Passage,
-  polylines::{slice_polylines, Polylines},
+  polylines::slice_polylines,
 };
 use rand::prelude::*;
+pub mod beach;
+pub mod port;
 
 /**
  * LICENSE CC BY-NC-ND 4.0
@@ -17,24 +19,24 @@ pub struct Sea {
   sea_mask: PaintMask,
   boat_color: usize,
   yhorizon: f32,
+  blazon: Blazon,
 }
 
 impl Sea {
-  pub fn from(paint: &PaintMask, yhorizon: f32, boat_color: usize) -> Self {
+  pub fn from(
+    paint: &PaintMask,
+    yhorizon: f32,
+    boat_color: usize,
+    blazon: Blazon,
+  ) -> Self {
     let mut sea_mask = paint.clone();
     sea_mask.paint_fn(&|(_, y)| y < yhorizon);
-
-    // FIXME how are we going to project here the above part that isn't drawn yet?
-    // TODO figure out areas where there is a sea,
-    // that way we can determine where to place possible boats
-    // this is where we will be able to also project the mountains
-
-    // TODO some algo that need to do some kind of flood fill to locate the big areas
 
     Self {
       yhorizon,
       sea_mask,
       boat_color,
+      blazon,
     }
   }
 
@@ -46,7 +48,7 @@ impl Sea {
     probability_par_color: Vec<f32>,
   ) -> Vec<(usize, Vec<(f32, f32)>)> {
     let mut routes = vec![];
-    // TODO implement
+    // TODO idea to improve this:
 
     // 1: we select the part above yhorizon sea level
 
@@ -60,7 +62,7 @@ impl Sea {
     let reflectables =
       clip_routes_with_colors(&reflectables, &is_below_sea_level, 0.5, 3);
 
-    let ydisplacement = 0.5 * paint.height;
+    let ydisplacement = 0.3 * paint.height;
     let xdisplacement = 0.3 * ydisplacement;
     let stroke_len_base = 0.04 * paint.width;
 
@@ -91,26 +93,45 @@ impl Sea {
     let width = paint.width;
     let height = paint.height;
 
+    // this mask is used to find location to pack things
+    let mut sea_mask = self.sea_mask.clone();
+
     // TODO: better placement of boats
 
-    let boats_count = rng.gen_range(0..8);
+    let tries = 10;
+
+    let basew = width * rng.gen_range(0.15..0.25);
+
+    let boats_count = (rng.gen_range(0.0f32..20.0) * rng.gen_range(-0.5..1.0))
+      .max(0.0) as usize;
     let mut boat_positions = (0..boats_count)
-      .map(|_| {
-        (
-          width * rng.gen_range(0.2..0.8),
-          mix(self.yhorizon, height, rng.gen_range(0.1..1.0)),
-        )
+      .filter_map(|_| {
+        for _ in 0..tries {
+          let x = width * rng.gen_range(0.2..0.8);
+          let yp = rng.gen_range(0.1..1.0);
+          let y = mix(self.yhorizon, height, yp);
+          let w =
+            basew * (1.0 + rng.gen_range(-0.4..0.8) * rng.gen_range(0.0..1.0));
+          let size = width * mix(0.03, 0.08, yp);
+          if !sea_mask.is_painted((x, y)) {
+            let minx = x - w / 2.0;
+            let maxx = x + w / 2.0;
+            let miny = y - w / 10.0;
+            let maxy = y + w / 10.0;
+            sea_mask.paint_rectangle(minx, miny, maxx, maxy);
+            return Some((x, y, w, size));
+          }
+        }
+        return None;
       })
       .collect::<Vec<_>>();
 
     boat_positions.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap());
 
-    for origin in boat_positions {
-      let size = width * 0.05;
+    for (x, y, w, size) in boat_positions {
       let angle = rng.gen_range(-0.1..0.1) * rng.gen_range(0.0..1.0);
-      let w = size * rng.gen_range(4.0..5.0);
       let xflip = if rng.gen_bool(0.8) {
-        origin.0 > width / 2.0
+        x > width / 2.0
       } else {
         rng.gen_bool(0.5)
       };
@@ -118,11 +139,12 @@ impl Sea {
         rng,
         paint,
         self.boat_color,
-        origin,
+        (x, y),
         angle,
         size,
         w,
         xflip,
+        self.blazon,
       ));
     }
 

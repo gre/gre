@@ -7,3 +7,5 @@ use std::f32::consts::PI;
  * Author: greweb – 2023 – Plottable Era: (II) Medieval
  */
 struct Palisade {}
+
+// TODO

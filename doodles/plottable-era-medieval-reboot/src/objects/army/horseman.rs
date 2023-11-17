@@ -1,9 +1,12 @@
-use crate::algo::{
-  clipping::regular_clip,
-  paintmask::PaintMask,
-  polylines::{
-    grow_stroke_zigzag, path_subdivide_to_curve, route_scale_translate_rotate,
+use crate::{
+  algo::{
+    clipping::{clip_routes_with_colors, regular_clip},
+    paintmask::PaintMask,
+    polylines::{
+      grow_stroke_zigzag, path_subdivide_to_curve, route_scale_translate_rotate,
+    },
   },
+  objects::blazon::{self, traits::Blazon},
 };
 use rand::prelude::*;
 use std::f32::consts::PI;
@@ -11,7 +14,7 @@ use std::f32::consts::PI;
 use super::{
   body::{HumanBody, HumanJointAngles},
   helmet::helmet,
-  shield::shield,
+  shield::Shield,
   spear::spear,
   sword::sword,
 };
@@ -31,6 +34,7 @@ pub fn horse_with_rider<R: Rng>(
   mainclr: usize,
   skinclr: usize,
   is_leader: bool,
+  blazon: Blazon,
 ) -> Vec<(usize, Vec<(f32, f32)>)> {
   let mut routes: Vec<(usize, Vec<(f32, f32)>)> = vec![];
   let xdir = if xflip { -1.0 } else { 1.0 };
@@ -131,24 +135,14 @@ pub fn horse_with_rider<R: Rng>(
 
   let shield_p = human.elbow_right;
 
-  let s = shield(
-    rng,
-    mask,
-    mainclr,
-    shield_p,
-    size * 0.6,
-    0.0,
-    //shape1,
-    //shape2,
-  );
+  let s = Shield::init(rng, mainclr, shield_p, 0.6 * size, 0.0, false, blazon);
 
-  // FIXME
-  // let is_colliding_shield = |point: (f32, f32)| s.includes_point(point);
+  let is_colliding_shield = |point: (f32, f32)| s.includes_point(point);
 
-  //foreground_routes =
-  //  clip_routes_with_colors(&foreground_routes, &is_colliding_shield, 1.0, 5);
+  foreground_routes =
+    clip_routes_with_colors(&foreground_routes, &is_colliding_shield, 1.0, 5);
 
-  foreground_routes.extend(s);
+  foreground_routes.extend(s.render(mask));
 
   /*
   for poly in s.polygons.iter() {

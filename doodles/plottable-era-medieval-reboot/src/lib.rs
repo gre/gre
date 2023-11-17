@@ -14,6 +14,7 @@ use objects::blazon::get_duel_houses;
 use objects::castle::Castle;
 use objects::mountains::front::FrontMountains;
 use objects::mountains::*;
+use objects::sea::beach::Beach;
 use objects::sea::Sea;
 use objects::sky::MedievalSky;
 use palette::palette;
@@ -64,7 +65,7 @@ pub fn render(
   let (colors, paper) = palette(&mut rng);
 
   // Make the scene
-  perf.span("scene");
+
   let (attacker_house, defender_house) = get_duel_houses(&mut rng);
 
   let mut routes = vec![];
@@ -104,13 +105,14 @@ pub fn render(
   ));
   perf.span_end("framing");
 
-  let yhorizon = rng.gen_range(0.5..0.6) * height;
+  // TODO allow crazy case where the yhorizon can be 20-40% but with more boats and possible battles in the sea
+  let yhorizon = rng.gen_range(0.4..0.7) * height;
 
   //  mountains
   perf.span("mountains_front");
   // TODO better peaky shapes. not too annoying. can sometimes disappear
   let ystart = mix(yhorizon, height, rng.gen_range(0.0..1.0));
-  let ybase = height;
+  let ybase = height - pad;
   let clr = 0;
   let mut mountains = FrontMountains {
     clr,
@@ -125,7 +127,7 @@ pub fn render(
 
   perf.span("sea");
   let boat_color = 0;
-  let sea = Sea::from(&paint, yhorizon, boat_color);
+  let sea = Sea::from(&paint, yhorizon, boat_color, attacker_house);
   let sea_routes = sea.render(&mut rng, &mut paint);
   perf.span_end("sea");
 
@@ -137,12 +139,29 @@ pub fn render(
   perf.span_end("mountains");
 
   let army: ArmyOnMountain = ArmyOnMountain {
+    debug: false,
     house: attacker_house,
   };
 
-  for mountain in mountains.mountains {
+  for mountain in mountains.mountains.iter() {
+    if mountain.has_beach {
+      perf.span("beach");
+      let beach = Beach::init(
+        &mut rng,
+        &mut paint,
+        yhorizon,
+        width,
+        0,
+        0,
+        0,
+        attacker_house,
+      );
+      routes.extend(beach.render(&mut rng, &mut paint));
+      perf.span_end("beach");
+    }
+
     perf.span("attackers");
-    routes.extend(army.render(&mut rng, &mut paint, &mountain));
+    routes.extend(army.render(&mut rng, &mut paint, &mountain, &mountains));
     perf.span_end("attackers");
 
     perf.span("mountains");
@@ -198,8 +217,6 @@ pub fn render(
 
   routes.extend(sea_routes);
   routes.extend(decoration_routes);
-
-  perf.span_end("scene");
 
   let inks = inks_stats(&routes, &colors);
 

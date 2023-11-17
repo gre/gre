@@ -12,6 +12,6 @@ fn main() {
     .collect();
   let fontdata = std::fs::read(&"./static/PrinceValiant.ttf").unwrap();
   let hash = format!("oo{}", chars);
-  let code = render(hash, 210.0, 297.0, 5.0, 0.2, fontdata, false, false);
+  let code = render(hash, 210.0, 297.0, 5.0, 0.2, fontdata, false, true);
   std::fs::write("image.svg", code).expect("Unable to write file");
 }

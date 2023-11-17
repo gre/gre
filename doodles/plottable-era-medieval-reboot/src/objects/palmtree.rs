@@ -1,9 +1,8 @@
 use crate::algo::{
-  clipping::{clip_routes_with_colors, regular_clip},
+  clipping::regular_clip,
   paintmask::PaintMask,
   polylines::{path_subdivide_to_curve, shake, Polylines},
 };
-use noise::*;
 use rand::prelude::*;
 
 /**
@@ -17,10 +16,14 @@ pub struct PalmTree {
 }
 
 impl PalmTree {
+  pub fn init(origin: (f32, f32), size: f32) -> Self {
+    Self { origin, size }
+  }
   pub fn render<R: Rng>(
     &self,
     rng: &mut R,
     paint: &mut PaintMask,
+    clr: usize,
   ) -> Polylines {
     let mut routes = Polylines::new();
     let p = self.origin;
@@ -35,7 +38,7 @@ impl PalmTree {
     ];
     path = path_subdivide_to_curve(path, 2, 0.66);
     for _j in 0..5 {
-      routes.push((0, shake(path.clone(), 0.4, rng)));
+      routes.push((clr, shake(path.clone(), 0.4, rng)));
     }
     for _j in 0..rng.gen_range(4..12) {
       let x = rng.gen_range(0.5 * h..h)
@@ -46,7 +49,7 @@ impl PalmTree {
         (p.0 + x, p.1 - h * rng.gen_range(0.3..1.1)),
       ];
       path = path_subdivide_to_curve(path, 2, 0.66);
-      routes.push((0, path));
+      routes.push((clr, path));
     }
 
     routes = regular_clip(&routes, paint);

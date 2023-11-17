@@ -37,64 +37,8 @@ impl Passage {
     v
   }
 
-  pub fn count_once(self: &mut Self, p: (f32, f32)) {
-    let i = self.index(p);
-    let v = self.counters[i];
-    if v == 0 {
-      self.counters[i] = 1;
-    }
-  }
-
   pub fn get(self: &Self, p: (f32, f32)) -> usize {
     let i = self.index(p);
     self.counters[i]
-  }
-
-  pub fn grow_passage(self: &mut Self, radius: f32) {
-    let precision = self.precision;
-    let width = self.width;
-    let height = self.height;
-    let counters: Vec<usize> = self.counters.iter().cloned().collect();
-    let mut mask = Vec::new();
-    // TODO, in future for even better perf, I will rewrite this
-    // working directly with index integers instead of having to use index() / count_once()
-    let mut x = -radius;
-    loop {
-      if x >= radius {
-        break;
-      }
-      let mut y = -radius;
-      loop {
-        if y >= radius {
-          break;
-        }
-        if x * x + y * y < radius * radius {
-          mask.push((x, y));
-        }
-        y += precision;
-      }
-      x += precision;
-    }
-
-    let mut x = 0.0;
-    loop {
-      if x >= width {
-        break;
-      }
-      let mut y = 0.0;
-      loop {
-        if y >= height {
-          break;
-        }
-        let index = self.index((x, y));
-        if counters[index] > 0 {
-          for &(dx, dy) in mask.iter() {
-            self.count_once((x + dx, y + dy));
-          }
-        }
-        y += precision;
-      }
-      x += precision;
-    }
   }
 }

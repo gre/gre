@@ -24,6 +24,7 @@ pub fn bowman<R: Rng>(
   clr: usize,
   origin: (f32, f32),
   size: f32,
+  xflip: bool,
 ) -> Vec<(usize, Vec<(f32, f32)>)> {
   let phase = rng.gen_range(0.0..1.0);
   let shoulder_right_angle = mix(0.0, -PI / 4.0, phase);
@@ -46,7 +47,7 @@ pub fn bowman<R: Rng>(
     right_leg_bend: 1.0,
   };
   let humansize = size * 0.5;
-  let xcenter = origin.0 - size * 0.5;
+  let xcenter = origin.0;
   let human = HumanBody::new((xcenter, origin.1), humansize, joints);
   let mut new_routes = vec![];
 
@@ -63,7 +64,7 @@ pub fn bowman<R: Rng>(
   new_routes = regular_clip(&new_routes, paint);
 
   for (_clr, route) in &new_routes {
-    paint.paint_polyline(route, 0.1 * size);
+    paint.paint_polyline(route, 0.08 * size);
   }
 
   new_routes

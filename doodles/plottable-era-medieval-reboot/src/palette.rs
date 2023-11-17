@@ -38,6 +38,7 @@ pub static BLOODY_BREXIT: Ink =
 pub static WHITE_PAPER: Paper = Paper("White", "#fff", false);
 pub static BLACK_PAPER: Paper = Paper("Black", "#202020", true);
 pub static GREY_PAPER: Paper = Paper("Grey", "#959fa8", true);
+// TODO add DARK_BLUE_PAPER
 
 /**
  * LICENSE CC BY-NC-ND 4.0

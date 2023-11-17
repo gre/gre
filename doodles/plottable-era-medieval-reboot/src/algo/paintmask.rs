@@ -54,8 +54,6 @@ impl PaintMask {
     let height = self.height;
     let data: Vec<bool> = self.mask.iter().cloned().collect();
     let mut pos = Vec::new();
-    // TODO, in future for even better perf, I will rewrite this
-    // working directly with index integers instead of having to use index() / count_once()
     let mut x = -growpad;
     loop {
       if x >= growpad {
@@ -126,6 +124,37 @@ impl PaintMask {
         if f(point) {
           self.mask[x + y * wi] = true;
         }
+      }
+    }
+  }
+
+  pub fn reverse(&mut self) {
+    for v in self.mask.iter_mut() {
+      *v = !*v;
+    }
+  }
+
+  /*
+  paint.paint_columns_left_to_right(&|x| {
+    let yridge = lookup_ridge(&self.ridge, x).min(yhorizon);
+    yridge..yhorizon
+  });
+  */
+  pub fn paint_columns_left_to_right<F: Fn(f32) -> std::ops::Range<f32>>(
+    &mut self,
+    f: F,
+  ) {
+    let precision = self.precision;
+    let width = self.width;
+    let height = self.height;
+    let wi = (width / precision) as usize;
+    let hi = (height / precision) as usize;
+    for x in 0..wi {
+      let range = f(x as f32 * precision);
+      let miny = (range.start.max(0.) / precision) as usize;
+      let maxy = ((range.end / precision) as usize).min(hi);
+      for y in miny..maxy {
+        self.mask[x + y * wi] = true;
       }
     }
   }

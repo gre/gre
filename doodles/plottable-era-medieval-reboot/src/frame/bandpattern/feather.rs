@@ -25,7 +25,6 @@ impl MedievalBandFeatherTrianglePattern {
     b: (f32, f32),
     c: (f32, f32),
   ) -> Vec<(usize, Vec<(f32, f32)>)> {
-    // TODO add a pad
     let mut routes = vec![]; // array of (clr, path)
     let count1 = self.count1;
     let count2 = self.count2;

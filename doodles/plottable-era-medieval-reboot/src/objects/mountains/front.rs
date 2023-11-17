@@ -1,6 +1,8 @@
 use crate::{
-  algo::{clipping::clip_routes_with_colors, paintmask::PaintMask},
-  objects::palmtree::PalmTree,
+  algo::{
+    clipping::clip_routes_with_colors, math1d::mix, paintmask::PaintMask,
+  },
+  objects::army::trebuchet::trebuchet,
 };
 use noise::*;
 use rand::prelude::*;
@@ -22,6 +24,8 @@ impl FrontMountains {
     let ybase = self.ybase;
     let ystart = self.ystart;
     let width = self.width;
+
+    let mut paint_before = paint.clone();
 
     // TODO rework the implementation
     // TODO we may split the idea of front vs back mountains
@@ -77,14 +81,14 @@ impl FrontMountains {
       curves.push(curve);
     }
 
-    let mut palm_tree_candidates = vec![];
-    let palm_mod = 10;
-    let palm_pad = width * 0.05;
-    let palm_ythreshold = paint.height * 0.9;
+    let mut trebuchet_candidates = vec![];
+    let trebuchet_pad = width * 0.1;
+    let trebuchet_ythreshold = paint.height * 0.9;
 
     let mut ridge = vec![];
     let first = curves[0].clone();
     let len = first.len();
+    let trebuchet_mod = 1 + len / 20;
     for i in 0..len {
       let p = first[i];
       let mut max = p.1;
@@ -95,23 +99,40 @@ impl FrontMountains {
         }
       }
       ridge.push((p.0, max));
-      if max < palm_ythreshold
-        && i % palm_mod == 0
-        && palm_pad < p.0
-        && p.0 < width - palm_pad
+
+      if max < trebuchet_ythreshold
+        && i % trebuchet_mod == 0
+        && trebuchet_pad < p.0
+        && p.0 < width - trebuchet_pad
         && rng.gen_bool(0.2)
       {
-        palm_tree_candidates.push((p.0, max));
+        let y = mix(max, ybase, rng.gen_range(0.0..0.6));
+        trebuchet_candidates.push((p.0, y));
       }
     }
 
-    for o in palm_tree_candidates {
-      let tree = PalmTree {
-        origin: o,
-        size: rng.gen_range(0.02..0.04) * paint.height,
-      };
-      routes.extend(tree.render(rng, paint));
+    trebuchet_candidates.shuffle(rng);
+
+    let trebuchets_max =
+      (rng.gen_range(-1.0f32..3.5) * rng.gen_range(0.5..1.0)).max(0.0) as usize;
+
+    for &o in trebuchet_candidates.iter().take(trebuchets_max) {
+      let height = rng.gen_range(0.1..0.15) * width;
+      let action_percent = rng.gen_range(0.0..1.0);
+      let xflip = rng.gen_bool(0.5);
+      let clr = 0;
+      routes.extend(trebuchet(
+        rng,
+        &mut paint_before,
+        o,
+        height,
+        action_percent,
+        xflip,
+        clr,
+      ));
     }
+
+    paint.paint(&paint_before);
 
     routes
   }

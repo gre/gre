@@ -17,6 +17,7 @@ pub mod front;
  * Author: greweb – 2023 – Plottable Era: (II) Medieval
  */
 
+#[derive(Clone, Copy)]
 pub struct CastleGrounding {
   pub position: (f32, f32),
   pub width: f32,
@@ -29,6 +30,7 @@ pub struct Mountain {
   pub ridge: Vec<(f32, f32)>,
   pub yhorizon: f32,
   pub width: f32,
+  pub has_beach: bool,
   // info for the render time
   pub routes: Polylines,
 }
@@ -40,9 +42,10 @@ impl Mountain {
     paint: &mut PaintMask,
   ) -> Polylines {
     let out = regular_clip(&self.routes, paint);
-    paint.paint_fn(&|(x, y)| {
-      let yridge = lookup_ridge(&self.ridge, x);
-      yridge < y && y < self.yhorizon
+    let yhorizon = self.yhorizon;
+    paint.paint_columns_left_to_right(&|x| {
+      let yridge = lookup_ridge(&self.ridge, x).min(yhorizon);
+      yridge..yhorizon
     });
     out
   }
@@ -51,6 +54,9 @@ impl Mountain {
 pub struct MountainsV2 {
   pub mountains: Vec<Mountain>,
 }
+
+// TODO the castle position is sometimes weird.
+// TODO the castle is still too small at the moment.
 
 impl MountainsV2 {
   pub fn rand<R: Rng>(
@@ -79,11 +85,6 @@ impl MountainsV2 {
       let mut routes: Polylines = Vec::new();
       let mut local_height_map: Vec<f32> = Vec::new();
 
-      if j == 0 {
-        // horizon line
-        routes.push((clr, vec![(0.0, yhorizon), (width, yhorizon)]));
-      }
-
       let h: f32 = rng.gen_range(3.0..5.0);
       let ampfactor = mix(0.01, 0.1, jf) * rng.gen_range(0.5..1.0);
       let ynoisefactor = rng.gen_range(0.01..0.1);
@@ -92,15 +93,15 @@ impl MountainsV2 {
       } else {
         2.0 + (rng.gen_range(-1f32..8.0) * rng.gen_range(0.0..1.0)).max(0.0)
       };
-      let amp1 = rng.gen_range(0.0..10.0) * rng.gen_range(0.0..1.0);
-      let amp2 = rng.gen_range(0.0..8.0) * rng.gen_range(0.0..1.0);
+      let amp1 = rng.gen_range(0.0..4.0) * rng.gen_range(0.0..1.0);
+      let amp2 = rng.gen_range(0.0..4.0) * rng.gen_range(0.0..1.0);
       let amp3 = rng.gen_range(0.0..4.0) * rng.gen_range(0.0..1.0);
       let center = rng.gen_range(0.2..0.8) * width;
 
       let stopy = mix(yhorizon, ymax, 0.2 + 0.8 * jf);
 
       // Build the mountains bottom-up, with bunch of perlin noises
-      let mut base_y = height;
+      let mut base_y = yhorizon + 0.2 * height;
       let mut miny = base_y;
       let mut maxy = 0.0;
       let mut first = true;
@@ -249,8 +250,8 @@ impl MountainsV2 {
         // take an interesting high point
         let mut castle_position = smoothed_ridge[0];
         let borderypush = height * 0.5;
-        let xmin = 0.1 * width;
-        let xmax = 0.9 * width;
+        let xmin = 0.2 * width;
+        let xmax = 0.8 * width;
         for p in smoothed_ridge.iter() {
           // formula to avoid borders
           let x = p.1;
@@ -266,7 +267,7 @@ impl MountainsV2 {
         }
 
         // TODO we could vary this based on the mountain shape
-        let castle_width = rng.gen_range(0.2..0.3) * width;
+        let castle_width = rng.gen_range(0.2..0.35) * width;
 
         let leftx = castle_position.0 - castle_width / 2.0;
         let righty = castle_position.0 + castle_width / 2.0;
@@ -290,6 +291,7 @@ impl MountainsV2 {
         yhorizon,
         routes,
         width,
+        has_beach: j == 0,
       });
     }
 

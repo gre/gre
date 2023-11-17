@@ -87,6 +87,7 @@ pub fn lookup_ridge(ridge: &Vec<(f32, f32)>, x: f32) -> f32 {
   if x <= last.0 {
     return last.1;
   }
+  // FIXME opportunity to rewrite this with dochotomic search
   for &p in ridge.iter() {
     if last.0 < x && x <= p.0 {
       let y = mix(last.1, p.1, (x - last.0) / (p.0 - last.0));
