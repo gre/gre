@@ -1,25 +1,38 @@
-- BUG when lowering precision at 0.1 there are some crash. let's run a lot of results to identify where.
 - fix the horse & rider
 - warrior
-- people on the machines
+- palisade
+- rocks
+- bushes
 - fix the mountain shaping & castle position
-- blazon & their impact + flags
-- hut areas + fire
-- projectiles
-- rework clouds position & add linear clouds
-- prepare some new castle items to be placed on stream
-  - watch towers
+- rework castle. prepare some new castle items to be placed on stream
   - flags
+  - defenders on the walls
+  - watch towers
+  - stairs
   - relique
   - lights & decorations
-  - stairs
   - drawbridge
+- people on the machines
+- scale on the castle + defenders
+- make a belier
+- make a catapult
+- projectiles
+- hut areas
+- blazon & their impact + flags
+- clouds rework. variety with Linear Clouds + Worms Filling Cloud. (Using a gradient of values)
+- stars shapes
 
-on stream:
-  - palettes
-  - stars shapes
-  - work on the castle
-  - palisade
-  - scale on the castle + defenders
-  - make a catapult
-  - divide the terrain in two to organize the fight
+- IDEA make a triangular structure with warriors going in. the structure have some part uncovered so we can see the inside a bit.
+- BUG when lowering precision at 0.1 there are some crash. let's run a lot of results to identify where.
+
+==== on stream ====
+
+- work on the destruction. fire. smoke.
+- palettes
+- divide the terrain in two to organize the fight
+
+Rare "Special":
+- lockness event. 
+- Excalibur. Eg on the rock
+- Cheval de Troie. full gold.
+- "zombie"/ghul mode. with the red moon. ref to zelda?

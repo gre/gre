@@ -1,7 +1,9 @@
-use crate::algo::paintmask::PaintMask;
+use crate::{algo::paintmask::PaintMask, global::GlobalCtx};
 use rand::prelude::*;
 
 use self::{chapel::Chapel, wall::CastleWall, walltower::CastleWallTower};
+
+use super::blazon::traits::Blazon;
 
 mod chapel;
 mod decorations;
@@ -31,11 +33,13 @@ pub struct Castle {
   pub portcullis: bool,
   pub dark_wall: bool,
   pub wallh: f32,
+  pub blazon: Blazon,
 }
 
 impl Castle {
   pub fn render<R: Rng>(
     &self,
+    ctx: &mut GlobalCtx,
     rng: &mut R,
     paint: &mut PaintMask,
   ) -> Vec<(usize, Vec<(f32, f32)>)> {

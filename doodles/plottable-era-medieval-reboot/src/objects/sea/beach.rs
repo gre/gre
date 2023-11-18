@@ -6,7 +6,12 @@ use crate::{
     clipping::regular_clip, paintmask::PaintMask, polylines::Polylines,
     wormsfilling::WormsFilling,
   },
-  objects::{army::boat::Boat, blazon::traits::Blazon, palmtree::PalmTree},
+  global::{GlobalCtx, Special},
+  objects::{
+    army::{boat::Boat, trojanhorse::trojanhorse},
+    blazon::traits::Blazon,
+    palmtree::PalmTree,
+  },
 };
 
 use super::port::Port;
@@ -30,6 +35,7 @@ pub struct Beach {
 
 impl Beach {
   pub fn init<R: Rng>(
+    ctx: &mut GlobalCtx,
     rng: &mut R,
     paint: &mut PaintMask,
     yhorizon: f32,
@@ -43,7 +49,7 @@ impl Beach {
     let trees_count = (rng.gen_range(-1.0f32..1.0) * rng.gen_range(0.0..30.0))
       .max(0.0) as usize;
     let port_boats_count = (rng.gen_range(-2.0f32..5.5)).max(0.0) as usize;
-    let port = if rng.gen_bool(0.5) {
+    let port = if rng.gen_bool(0.3) {
       let size = rng.gen_range(0.1..0.3) * width;
       let origin = (width * rng.gen_range(0.2..0.8), yhorizon);
       avoiding_area.paint_rectangle(
@@ -80,11 +86,13 @@ impl Beach {
 
   pub fn render<R: Rng>(
     &self,
+    ctx: &mut GlobalCtx,
     rng: &mut R,
     paint: &mut PaintMask,
   ) -> Polylines {
     let width = self.width;
     let mut routes = vec![];
+
     for tree in &self.trees {
       routes.extend(tree.render(rng, paint, self.treeclr));
     }
@@ -121,6 +129,17 @@ impl Beach {
       let ang = rng.gen_range(-1.0..1.0) * angamp;
       let boat = Boat::init(rng, origin, boatsize, ang, w, xflip, blazon);
       routes.extend(boat.render(rng, paint, self.portclr));
+    }
+
+    if ctx.specials.contains(&Special::TrojanHorse) {
+      let origin = (
+        width * rng.gen_range(0.2..0.8),
+        self.yhorizon
+          - rng.gen_range(0.0..0.02) * rng.gen_range(0.0..1.0) * paint.height,
+      );
+      let xflip = rng.gen_bool(0.5);
+      let size = rng.gen_range(0.1..0.2) * paint.height;
+      routes.extend(trojanhorse(rng, paint, origin, size, xflip, 1));
     }
 
     routes.extend(beach_rendering(rng, paint, self.clr, self.yhorizon, width));

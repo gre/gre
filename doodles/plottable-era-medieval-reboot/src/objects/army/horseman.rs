@@ -6,7 +6,7 @@ use crate::{
       grow_stroke_zigzag, path_subdivide_to_curve, route_scale_translate_rotate,
     },
   },
-  objects::blazon::{self, traits::Blazon},
+  objects::blazon::traits::Blazon,
 };
 use rand::prelude::*;
 use std::f32::consts::PI;
@@ -14,6 +14,7 @@ use std::f32::consts::PI;
 use super::{
   body::{HumanBody, HumanJointAngles},
   helmet::helmet,
+  horse::Horse,
   shield::Shield,
   spear::spear,
   sword::sword,
@@ -23,6 +24,67 @@ use super::{
  * LICENSE CC BY-NC-ND 4.0
  * Author: greweb – 2023 – Plottable Era: (II) Medieval
  */
+
+pub struct Rider {
+  pub horse: Horse,
+  pub origin: (f32, f32),
+  pub size: f32,
+  pub angle: f32,
+  pub xflip: bool,
+  pub blazon: Blazon,
+  pub mainclr: usize,
+  pub skinclr: usize,
+}
+
+impl Rider {
+  pub fn init(
+    origin: (f32, f32),
+    size: f32,
+    angle: f32,
+    xflip: bool,
+    blazon: Blazon,
+    mainclr: usize,
+    skinclr: usize,
+    decorationratio: f32,
+    foot_offset: f32,
+  ) -> Self {
+    let horse = Horse::init(
+      origin,
+      size,
+      angle,
+      xflip,
+      mainclr,
+      skinclr,
+      decorationratio,
+      foot_offset,
+    );
+
+    Self {
+      horse,
+      origin,
+      size,
+      angle,
+      xflip,
+      blazon,
+      mainclr,
+      skinclr,
+    }
+  }
+
+  pub fn render<R: Rng>(
+    &self,
+    rng: &mut R,
+    mask: &mut PaintMask,
+  ) -> Vec<(usize, Vec<(f32, f32)>)> {
+    let horse = &self.horse;
+    let routes = horse.render(rng, mask);
+    // add halo around horse
+    for (_, route) in routes.iter() {
+      mask.paint_polyline(route, 1.0);
+    }
+    routes
+  }
+}
 
 pub fn horse_with_rider<R: Rng>(
   rng: &mut R,

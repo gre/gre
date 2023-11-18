@@ -1,4 +1,4 @@
-use super::{body::*, helmet::FullHelmet, shield::Shield};
+use super::{body::*, helmet::Helmet, shield::Shield};
 use crate::{
   algo::{
     clipping::regular_clip,
@@ -209,7 +209,7 @@ pub fn boat_with_army<R: Rng>(
 
     let (headpos, headangle) = human.head_pos_angle();
 
-    let helmet = FullHelmet::init(headpos, headangle, humansize, xflip);
+    let helmet = Helmet::init(headpos, headangle, humansize, xflip);
     helmets.push(helmet);
 
     let shield_p = human.elbow_right;

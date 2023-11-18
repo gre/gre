@@ -147,7 +147,7 @@ impl WormsFilling {
 }
 
 // data model that stores values information in 2D
-struct WeightMap {
+pub struct WeightMap {
   weights: Vec<f32>,
   living_indexes: HashSet<usize>,
   living_threshold: f32,

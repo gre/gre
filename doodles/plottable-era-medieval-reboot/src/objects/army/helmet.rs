@@ -4,13 +4,13 @@ use crate::algo::{
 };
 use std::f32::consts::PI;
 
-pub struct FullHelmet {
+pub struct Helmet {
   pub origin: (f32, f32),
   pub angle: f32,
   pub size: f32,
   pub xreverse: bool,
 }
-impl FullHelmet {
+impl Helmet {
   pub fn init(
     origin: (f32, f32),
     angle: f32,
@@ -108,6 +108,7 @@ fn full_helmet(
   routes
 }
 
+#[deprecated]
 pub fn helmet(
   origin: (f32, f32),
   angle: f32,
@@ -119,8 +120,9 @@ pub fn helmet(
   let dx = 0.13 * size;
   let h = 0.4 * size;
 
+  let poly = vec![(-dx, 0.0), (-dx, -h), (dx, -h), (dx, 0.0), (-dx, 0.0)];
   // head
-  routes.push(vec![(-dx, 0.0), (-dx, -h), (dx, -h), (dx, 0.0), (-dx, 0.0)]);
+  routes.push(poly.clone());
 
   routes.push(vec![
     (-dx, -h * 0.7),

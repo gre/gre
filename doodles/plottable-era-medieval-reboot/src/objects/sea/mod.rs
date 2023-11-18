@@ -1,10 +1,13 @@
 use super::{army::boat::boat_with_army, blazon::traits::Blazon};
-use crate::algo::{
-  clipping::{clip_routes_with_colors, regular_clip},
-  math1d::mix,
-  paintmask::PaintMask,
-  passage::Passage,
-  polylines::slice_polylines,
+use crate::{
+  algo::{
+    clipping::{clip_routes_with_colors, regular_clip},
+    math1d::mix,
+    paintmask::PaintMask,
+    passage::Passage,
+    polylines::slice_polylines,
+  },
+  global::{GlobalCtx, Special},
 };
 use rand::prelude::*;
 pub mod beach;
@@ -86,10 +89,16 @@ impl Sea {
 
   pub fn render<R: Rng>(
     &self,
+    ctx: &mut GlobalCtx,
     rng: &mut R,
     paint: &mut PaintMask,
   ) -> Vec<(usize, Vec<(f32, f32)>)> {
     let mut routes = vec![];
+
+    if ctx.specials.contains(&Special::TrojanHorse) {
+      return routes;
+    }
+
     let width = paint.width;
     let height = paint.height;
 

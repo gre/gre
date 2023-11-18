@@ -5,7 +5,10 @@ mod sun;
 use rand::prelude::*;
 use std::f32::consts::PI;
 
-use crate::algo::{packing::VCircle, paintmask::PaintMask};
+use crate::{
+  algo::{packing::VCircle, paintmask::PaintMask},
+  global::GlobalCtx,
+};
 
 use self::{clouds::cloud_in_circle, eagle::eagle, sun::sun};
 
@@ -27,7 +30,13 @@ pub struct MedievalSky {
 }
 
 impl MedievalSky {
-  pub fn rand<R: Rng>(rng: &mut R, width: f32, height: f32, pad: f32) -> Self {
+  pub fn rand<R: Rng>(
+    ctx: &mut GlobalCtx,
+    rng: &mut R,
+    width: f32,
+    height: f32,
+    pad: f32,
+  ) -> Self {
     let sun_circle = VCircle::new(
       width * rng.gen_range(0.4..0.6),
       height * rng.gen_range(0.1..0.4),

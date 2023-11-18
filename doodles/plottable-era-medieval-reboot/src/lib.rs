@@ -1,6 +1,7 @@
 mod algo;
 mod frame;
 mod fxhash;
+mod global;
 mod objects;
 mod palette;
 mod performance;
@@ -9,6 +10,7 @@ mod svgplot;
 use algo::clipping::clip_routes_with_colors;
 use algo::math1d::mix;
 use fxhash::*;
+use global::GlobalCtx;
 use objects::army::ArmyOnMountain;
 use objects::blazon::get_duel_houses;
 use objects::castle::Castle;
@@ -59,10 +61,11 @@ pub fn render(
   perf.span("init");
   let mut rng = rng_from_hash(&hash);
   let mut font = load_font(&fontdata);
-  perf.span_end("init");
 
   // Colors
   let (colors, paper) = palette(&mut rng);
+  let mut ctx =
+    GlobalCtx::rand(&mut rng, width, height, precision, &colors, &paper);
 
   // Make the scene
 
@@ -73,6 +76,8 @@ pub fn render(
 
   let mut decoration_routes = vec![];
   let framingw = 0.05 * width;
+
+  perf.span_end("init");
 
   perf.span("epic title");
   let txt = epic_title(&mut rng);
@@ -128,7 +133,7 @@ pub fn render(
   perf.span("sea");
   let boat_color = 0;
   let sea = Sea::from(&paint, yhorizon, boat_color, attacker_house);
-  let sea_routes = sea.render(&mut rng, &mut paint);
+  let sea_routes = sea.render(&mut ctx, &mut rng, &mut paint);
   perf.span_end("sea");
 
   perf.span("mountains");
@@ -147,6 +152,7 @@ pub fn render(
     if mountain.has_beach {
       perf.span("beach");
       let beach = Beach::init(
+        &mut ctx,
         &mut rng,
         &mut paint,
         yhorizon,
@@ -156,12 +162,14 @@ pub fn render(
         0,
         attacker_house,
       );
-      routes.extend(beach.render(&mut rng, &mut paint));
+      routes.extend(beach.render(&mut ctx, &mut rng, &mut paint));
       perf.span_end("beach");
     }
 
     perf.span("attackers");
-    routes.extend(army.render(&mut rng, &mut paint, &mountain, &mountains));
+    routes.extend(
+      army.render(&mut ctx, &mut rng, &mut paint, &mountain, &mountains),
+    );
     perf.span_end("attackers");
 
     perf.span("mountains");
@@ -170,6 +178,7 @@ pub fn render(
 
     if let Some(castle) = &mountain.castle {
       perf.span("castle");
+      // TODO the randomness is to be done inside a Castle::rand()
       let castle = Castle {
         pos: castle.position,
         width: castle.width,
@@ -185,14 +194,15 @@ pub fn render(
         dark_chapel: rng.gen_bool(0.5),
         destructed_wall: rng.gen_bool(0.5),
         portcullis: rng.gen_bool(0.5),
+        blazon: defender_house,
       };
-      routes.extend(castle.render(&mut rng, &mut paint));
+      routes.extend(castle.render(&mut ctx, &mut rng, &mut paint));
       perf.span_end("castle");
     }
   }
 
   perf.span("sky");
-  let sky = MedievalSky::rand(&mut rng, width, height, pad);
+  let sky = MedievalSky::rand(&mut ctx, &mut rng, width, height, pad);
   // prevent sky to glitch inside the sea
   let is_below_horizon = |(_x, y): (f32, f32)| y > yhorizon;
   let sky_routes = clip_routes_with_colors(

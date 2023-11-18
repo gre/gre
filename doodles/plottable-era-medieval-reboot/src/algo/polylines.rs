@@ -1,3 +1,5 @@
+use std::f32::consts::PI;
+
 use super::math2d::*;
 use rand::prelude::*;
 
@@ -64,6 +66,15 @@ pub fn shake<R: Rng>(
     .collect()
 }
 
+pub fn route_rotate(route: &Vec<(f32, f32)>, angle: f32) -> Vec<(f32, f32)> {
+  let acos = angle.cos();
+  let asin = angle.sin();
+  route
+    .iter()
+    .map(|&(x, y)| (x * acos + y * asin, y * acos - x * asin))
+    .collect()
+}
+
 pub fn route_translate_rotate(
   route: &Vec<(f32, f32)>,
   origin: (f32, f32),
@@ -80,6 +91,19 @@ pub fn route_translate_rotate(
       )
     })
     .collect()
+}
+
+pub fn translate_rotate(
+  (x, y): (f32, f32),
+  origin: (f32, f32),
+  angle: f32,
+) -> (f32, f32) {
+  let acos = angle.cos();
+  let asin = angle.sin();
+  (
+    x * acos + y * asin + origin.0,
+    y * acos - x * asin + origin.1,
+  )
 }
 
 pub fn route_xreverse_translate_rotate(
@@ -151,6 +175,26 @@ pub fn grow_path_zigzag(
     rev = !rev;
   }
 
+  route
+}
+
+pub fn grow_as_rectangle(
+  from: (f32, f32),
+  to: (f32, f32),
+  width: f32,
+) -> Vec<(f32, f32)> {
+  let (x0, y0) = from;
+  let (x1, y1) = to;
+  let (dx, dy) = (x1 - x0, y1 - y0);
+  let len = (dx * dx + dy * dy).sqrt();
+  let incr_dx = -width * dy / len;
+  let incr_dy = width * dx / len;
+  let mut route = Vec::new();
+  route.push((x0 + incr_dx, y0 + incr_dy));
+  route.push((x1 + incr_dx, y1 + incr_dy));
+  route.push((x1 - incr_dx, y1 - incr_dy));
+  route.push((x0 - incr_dx, y0 - incr_dy));
+  route.push((x0 + incr_dx, y0 + incr_dy));
   route
 }
 
@@ -230,4 +274,38 @@ pub fn slice_polylines(
     i += 1;
   }
   routes
+}
+
+// follow a path to build two polylines that expand along the path with some widths
+pub fn path_to_fibers(
+  path: Polyline,
+  widths: Vec<f32>,
+  count: usize,
+) -> Vec<Polyline> {
+  if count < 2 {
+    return vec![path];
+  }
+  let mut fibers: Vec<Vec<(f32, f32)>> = vec![];
+  for _ in 0..count {
+    fibers.push(vec![]);
+  }
+  for i in 0..count {
+    let df = (i as f32) / ((count - 1) as f32) - 0.5;
+    for j in 0..path.len() {
+      let p = path[j];
+      let a = if j > 0 {
+        let prev = path[j - 1];
+        (p.1 - prev.1).atan2(p.0 - prev.0)
+      } else {
+        (path[1].1 - path[0].1).atan2(path[1].0 - path[0].0)
+      };
+      let orthogonal = a + PI / 2.0;
+      let dist = widths[j];
+      let d = df * dist * 0.5;
+      let q = (p.0 + d * orthogonal.cos(), p.1 + d * orthogonal.sin());
+      fibers[i].push(q);
+    }
+  }
+
+  fibers
 }

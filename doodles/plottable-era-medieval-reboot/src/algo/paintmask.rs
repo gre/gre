@@ -134,6 +134,49 @@ impl PaintMask {
     }
   }
 
+  pub fn intersects(&mut self, other: &Self) {
+    if other.width != self.width
+      || other.height != self.height
+      || other.precision != self.precision
+    {
+      panic!("PaintMask::intersection: incompatible sizes");
+    }
+    for (i, &v) in other.mask.iter().enumerate() {
+      if !v {
+        self.mask[i] = false;
+      }
+    }
+  }
+
+  pub fn painted_boundaries(&self) -> (f32, f32, f32, f32) {
+    let precision = self.precision;
+    let width = self.width;
+    let height = self.height;
+    let wi = (width / precision) as usize;
+    let hi = (height / precision) as usize;
+    let mut minx = width;
+    let mut miny = height;
+    let mut maxx = 0.0f32;
+    let mut maxy = 0.0f32;
+    for x in 0..wi {
+      for y in 0..hi {
+        if self.mask[x + y * wi] {
+          minx = minx.min(x as f32 * precision);
+          miny = miny.min(y as f32 * precision);
+          maxx = maxx.max(x as f32 * precision);
+          maxy = maxy.max(y as f32 * precision);
+        }
+      }
+    }
+    if minx > maxx || miny > maxy {
+      minx = 0.0;
+      maxx = 0.0;
+      miny = 0.0;
+      maxy = 0.0;
+    }
+    (minx, miny, maxx, maxy)
+  }
+
   /*
   paint.paint_columns_left_to_right(&|x| {
     let yridge = lookup_ridge(&self.ridge, x).min(yhorizon);

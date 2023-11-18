@@ -1,22 +1,23 @@
 use self::{
-  archer::bowman, belfry::belfry, horseman::horse_with_rider,
-  trebuchet::trebuchet, warrior::warrior,
+  archer::bowman, belfry::belfry, horseman::Rider, trebuchet::trebuchet,
+  warrior::warrior,
 };
-use crate::algo::{
-  math1d::mix,
-  math2d::{euclidian_dist, lookup_ridge},
-  packing::VCircle,
-  paintmask::PaintMask,
-  shapes::circle_route,
+use super::{
+  blazon::traits::Blazon,
+  mountains::{Mountain, MountainsV2},
+};
+use crate::{
+  algo::{
+    math1d::mix,
+    math2d::{euclidian_dist, lookup_ridge},
+    packing::VCircle,
+    paintmask::PaintMask,
+    shapes::circle_route,
+  },
+  global::{GlobalCtx, Special},
 };
 use noise::*;
 use rand::prelude::*;
-
-use super::{
-  blazon::traits::Blazon,
-  castle,
-  mountains::{Mountain, MountainsV2},
-};
 
 /**
  * LICENSE CC BY-NC-ND 4.0
@@ -29,12 +30,15 @@ pub mod body;
 pub mod catapult;
 pub mod head;
 pub mod helmet;
+pub mod horse;
 pub mod horseman;
 pub mod shield;
 pub mod spear;
 pub mod sword;
 pub mod trebuchet;
+pub mod trojanhorse;
 pub mod warrior;
+pub mod wheeledplatform;
 
 // we could use this multiple times if we have multiple mountains
 pub struct ArmyOnMountain {
@@ -50,6 +54,7 @@ pub struct ArmyOnMountain {
 impl ArmyOnMountain {
   pub fn render<R: Rng>(
     &self,
+    ctx: &mut GlobalCtx,
     rng: &mut R,
     paint: &mut PaintMask,
     mountain: &Mountain,
@@ -57,6 +62,11 @@ impl ArmyOnMountain {
   ) -> Vec<(usize, Vec<(f32, f32)>)> {
     let house = self.house;
     let mut routes = vec![];
+
+    if ctx.specials.contains(&Special::TrojanHorse) {
+      return routes;
+    }
+
     let perlin = Perlin::new(rng.gen());
 
     let norm = paint.width as f64;
@@ -175,13 +185,31 @@ impl ArmyOnMountain {
           let origin = (x, y);
           let size = 0.04 * width;
           let mainclr = 0;
-          let skinclr = 0;
+          let skinclr = 1;
+          let decorationratio = 0.3;
           let xflip = x > castle.position.0;
+          let foot_offset = 1.0;
+          let rider = Rider::init(
+            origin,
+            size,
+            angle,
+            xflip,
+            house,
+            mainclr,
+            skinclr,
+            decorationratio,
+            foot_offset,
+          );
+
+          routes.extend(rider.render(rng, paint));
+
+          /*
           let is_leader = rng.gen_bool(0.1);
           routes.extend(horse_with_rider(
             rng, paint, origin, angle, size, xflip, mainclr, skinclr,
             is_leader, house,
           ));
+          */
 
           let area = VCircle::new(x, y - 0.3 * size, 0.5 * size);
           debug_circle.push(area);

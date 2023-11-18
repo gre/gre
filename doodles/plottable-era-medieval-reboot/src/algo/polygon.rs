@@ -4,6 +4,8 @@
  */
 use crate::algo::math2d::*;
 
+use super::polylines::Polyline;
+
 pub fn polygon_bounds(polygon: &Vec<(f32, f32)>) -> (f32, f32, f32, f32) {
   let mut minx = f32::MAX;
   let mut miny = f32::MAX;
@@ -86,4 +88,26 @@ pub fn cut_polygon(
     return vec![poly.clone()];
   }
   return vec![first, second];
+}
+
+pub fn make_wireframe_from_vertexes(
+  vertex1: &Polyline,
+  vertex2: &Polyline,
+) -> Vec<Vec<(f32, f32)>> {
+  // vertex1 and 2 are supposed to be same size
+  let len = vertex1.len().min(vertex2.len());
+  let mut polys = vec![];
+  if len < 2 {
+    return polys;
+  }
+  for i in 0..(len - 1) {
+    let j = i + 1;
+    let mut poly = vec![];
+    poly.push(vertex1[i]);
+    poly.push(vertex1[j]);
+    poly.push(vertex2[j]);
+    poly.push(vertex2[i]);
+    polys.push(poly);
+  }
+  polys
 }
