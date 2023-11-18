@@ -1,4 +1,5 @@
 use super::math1d::mix;
+use rand::prelude::*;
 
 pub fn euclidian_dist((x1, y1): (f32, f32), (x2, y2): (f32, f32)) -> f32 {
   let dx = x1 - x2;
@@ -97,4 +98,24 @@ pub fn lookup_ridge(ridge: &Vec<(f32, f32)>, x: f32) -> f32 {
     }
   }
   return last.1;
+}
+
+pub fn sample_2d_candidates_f32<R: Rng>(
+  rng: &mut R,
+  f: &dyn Fn((f32, f32)) -> f32,
+  dim: usize,
+  samples: usize,
+) -> Vec<(f32, f32)> {
+  let mut candidates = Vec::new();
+  for x in 0..dim {
+    for y in 0..dim {
+      let p = ((x as f32) / (dim as f32), (y as f32) / (dim as f32));
+      if f(p) > rng.gen_range(0.0..1.0) {
+        candidates.push(p);
+      }
+    }
+  }
+  candidates.shuffle(rng);
+  candidates.truncate(samples);
+  return candidates;
 }

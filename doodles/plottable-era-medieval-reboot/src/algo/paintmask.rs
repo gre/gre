@@ -177,12 +177,6 @@ impl PaintMask {
     (minx, miny, maxx, maxy)
   }
 
-  /*
-  paint.paint_columns_left_to_right(&|x| {
-    let yridge = lookup_ridge(&self.ridge, x).min(yhorizon);
-    yridge..yhorizon
-  });
-  */
   pub fn paint_columns_left_to_right<F: Fn(f32) -> std::ops::Range<f32>>(
     &mut self,
     f: F,

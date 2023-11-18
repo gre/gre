@@ -1,7 +1,11 @@
 use rand::prelude::*;
 
 use crate::{
-  algo::wormsfilling::WeightMap,
+  algo::{
+    clipping::regular_clip, paintmask::PaintMask, polylines::Polylines,
+    wormsfilling::WeightMap,
+  },
+  objects::projectile::{ball::Ball, trail::Trail},
   svgplot::{Ink, Paper},
 };
 
@@ -37,6 +41,11 @@ pub struct GlobalCtx {
     Axes.
   */
   pub destruction_map: WeightMap,
+
+  // projectile management
+  pub balls: Vec<Ball>,
+  pub trails: Vec<Trail>,
+  pub projectilesclr: usize,
 }
 
 impl GlobalCtx {
@@ -69,6 +78,43 @@ impl GlobalCtx {
       specials,
       night_time,
       destruction_map,
+      balls: vec![],
+      trails: vec![],
+      projectilesclr: 2, // FIXME IDK YET.. if rng.gen_bool(0.5) { 2 } else { 0 },
     }
+  }
+
+  pub fn throw_ball(&mut self, ball: Ball, trail: Trail) {
+    self.balls.push(ball);
+    self.trails.push(trail);
+  }
+
+  pub fn render_projectiles<R: Rng>(
+    &self,
+    rng: &mut R,
+    existing_routes: &mut Polylines,
+    preserve_area: &PaintMask,
+  ) {
+    let mut removing_area = preserve_area.clone();
+
+    let mut routes = vec![];
+
+    let clr = self.projectilesclr;
+
+    for ball in self.balls.iter() {
+      routes.extend(ball.render(rng, &mut removing_area, clr));
+    }
+    for trail in self.trails.iter() {
+      routes.extend(trail.render(rng, &mut removing_area, clr));
+    }
+
+    routes = regular_clip(&routes, preserve_area);
+
+    let mut mask = preserve_area.clone();
+    mask.reverse();
+    mask.intersects(&removing_area);
+    *existing_routes = regular_clip(existing_routes, &mask);
+
+    existing_routes.extend(routes);
   }
 }

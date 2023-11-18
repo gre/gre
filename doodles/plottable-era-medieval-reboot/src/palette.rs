@@ -4,7 +4,7 @@ use crate::svgplot::Ink;
 use crate::svgplot::Paper;
 
 pub static GOLD_GEL: Ink = Ink("Gold Gel", "#D8B240", "#FFE38C", 0.6);
-pub static RED_GEL: Ink = Ink("Red Gel", "#BF738C", "#D880A6", 0.35);
+pub static RED_GEL: Ink = Ink("Red Gel", "#BF738C", "#D880A6", 0.6);
 pub static ORANGE_GEL: Ink = Ink("Orange Gel", "#B27333", "#E68C4D", 0.35);
 pub static BLUE_GEL: Ink = Ink("Blue Gel", "#338CFF", "#4D8CFF", 0.35);
 pub static GREEN_GEL: Ink = Ink("Green Gel", "#00B2A6", "#19CCBF", 0.35);
@@ -39,6 +39,7 @@ pub static WHITE_PAPER: Paper = Paper("White", "#fff", false);
 pub static BLACK_PAPER: Paper = Paper("Black", "#202020", true);
 pub static GREY_PAPER: Paper = Paper("Grey", "#959fa8", true);
 // TODO add DARK_BLUE_PAPER
+// TODO add BLUE_PAPER
 
 /**
  * LICENSE CC BY-NC-ND 4.0
@@ -58,7 +59,7 @@ pub fn palette<R: Rng>(rng: &mut R) -> (Vec<Ink>, Paper) {
   // maybe the sun is the moon then, and it's white?
   // but then what would gold be? the attackers and castle lights? could work
   // we could try some nice combination as shared before too.
-  // love the idea to have a monochrome white, even if it's light time???
+  // love the idea to have a monochrome white, even if it's light time
 
   // lights in attackers and castle if it's night time
 
@@ -72,12 +73,12 @@ pub fn palette<R: Rng>(rng: &mut R) -> (Vec<Ink>, Paper) {
   let (mut colors, mut paper) = (vec![BLACK, AMBER, POPPY_RED], WHITE_PAPER);
 
   if rng.gen_bool(0.7) {
-    colors = vec![WHITE_GEL, GOLD_GEL, GOLD_GEL];
+    colors = vec![WHITE_GEL, GOLD_GEL, RED_GEL];
     paper = BLACK_PAPER;
   }
 
   if rng.gen_bool(0.1) {
-    colors = vec![BLACK, WHITE_GEL, BLACK];
+    colors = vec![BLACK, WHITE_GEL, WHITE_GEL];
     paper = GREY_PAPER;
   }
 

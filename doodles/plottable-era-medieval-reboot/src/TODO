@@ -1,8 +1,7 @@
-- fix the horse & rider
-- warrior
 - palisade
 - rocks
 - bushes
+- BUG glitch sometimes on clipping in reflections. clouds???
 - fix the mountain shaping & castle position
 - rework castle. prepare some new castle items to be placed on stream
   - flags
@@ -12,24 +11,31 @@
   - relique
   - lights & decorations
   - drawbridge
+- clouds rework. variety with Linear Clouds + Worms Filling Cloud. (Using a gradient of values)
+- projectiles
+- blazon & their impact + flags
 - people on the machines
 - scale on the castle + defenders
+- cords with people climbing. (not just ladders, it can be with an angle)
 - make a belier
 - make a catapult
-- projectiles
 - hut areas
-- blazon & their impact + flags
-- clouds rework. variety with Linear Clouds + Worms Filling Cloud. (Using a gradient of values)
 - stars shapes
+
+- add post processing anim. add an invisible polygon to make a texture in the web side (replace to activate).
+  - on sea (like (I) Primitive)
+  - on the fires to make the glow & have some sort of moving effect
 
 - IDEA make a triangular structure with warriors going in. the structure have some part uncovered so we can see the inside a bit.
 - BUG when lowering precision at 0.1 there are some crash. let's run a lot of results to identify where.
 
 ==== on stream ====
 
-- work on the destruction. fire. smoke.
+- organize the ArmyOnMountain fight. divide the terrain. rework the code to add more kind of items and people.
+
 - palettes
-- divide the terrain in two to organize the fight
+
+- work on the destruction. fire. smoke.
 
 Rare "Special":
 - lockness event. 

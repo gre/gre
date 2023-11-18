@@ -6,6 +6,7 @@ pub mod multicut;
 pub mod packing;
 pub mod paintmask;
 pub mod passage;
+pub mod pathsampler;
 pub mod polygon;
 pub mod polylines;
 pub mod rdp;

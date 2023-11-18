@@ -109,6 +109,7 @@ pub fn render(
     &mut rng, &mut paint, width, height, pad, framingw, clr,
   ));
   perf.span_end("framing");
+  let mask_with_framing = paint.clone();
 
   // TODO allow crazy case where the yhorizon can be 20-40% but with more boats and possible battles in the sea
   let yhorizon = rng.gen_range(0.4..0.7) * height;
@@ -125,7 +126,7 @@ pub fn render(
     ystart,
     width,
   };
-  routes.extend(mountains.render(&mut rng, &mut paint));
+  routes.extend(mountains.render(&mut ctx, &mut rng, &mut paint));
   perf.span_end("mountains_front");
 
   // TODO: here opportunity to have front facing attackers
@@ -143,10 +144,7 @@ pub fn render(
     MountainsV2::rand(&mut rng, 0, width, height, yhorizon, ymax, count);
   perf.span_end("mountains");
 
-  let army: ArmyOnMountain = ArmyOnMountain {
-    debug: false,
-    house: attacker_house,
-  };
+  let army: ArmyOnMountain = ArmyOnMountain::init(attacker_house);
 
   for mountain in mountains.mountains.iter() {
     if mountain.has_beach {
@@ -226,6 +224,11 @@ pub fn render(
   perf.span_end("reflect_shapes");
 
   routes.extend(sea_routes);
+
+  perf.span("projectiles");
+  ctx.render_projectiles(&mut rng, &mut routes, &mask_with_framing);
+  perf.span_end("projectiles");
+
   routes.extend(decoration_routes);
 
   let inks = inks_stats(&routes, &colors);

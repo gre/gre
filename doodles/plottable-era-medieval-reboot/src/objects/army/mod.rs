@@ -1,6 +1,6 @@
 use self::{
-  archer::bowman, belfry::belfry, horseman::Rider, trebuchet::trebuchet,
-  warrior::warrior,
+  archer::bowman, belfry::belfry, rider::Rider, swordwarrior::SwordWarrior,
+  trebuchet::Trebuchet,
 };
 use super::{
   blazon::traits::Blazon,
@@ -31,10 +31,11 @@ pub mod catapult;
 pub mod head;
 pub mod helmet;
 pub mod horse;
-pub mod horseman;
+pub mod rider;
 pub mod shield;
 pub mod spear;
 pub mod sword;
+pub mod swordwarrior;
 pub mod trebuchet;
 pub mod trojanhorse;
 pub mod warrior;
@@ -43,8 +44,7 @@ pub mod wheeledplatform;
 // we could use this multiple times if we have multiple mountains
 pub struct ArmyOnMountain {
   pub debug: bool,
-  // kind of army
-  pub house: Blazon,
+  pub blazon: Blazon,
   // TODO idea: we could split the area in 2 parts for attackers defenders.
 
   // TODO we need to build a camp area for the attackers. or maybe it's in the front mountain?
@@ -52,6 +52,13 @@ pub struct ArmyOnMountain {
 }
 
 impl ArmyOnMountain {
+  pub fn init(blazon: Blazon) -> Self {
+    Self {
+      debug: false,
+      blazon,
+    }
+  }
+
   pub fn render<R: Rng>(
     &self,
     ctx: &mut GlobalCtx,
@@ -60,8 +67,11 @@ impl ArmyOnMountain {
     mountain: &Mountain,
     mountains: &MountainsV2,
   ) -> Vec<(usize, Vec<(f32, f32)>)> {
-    let house = self.house;
+    let blazon = self.blazon;
     let mut routes = vec![];
+
+    let mainclr = 0;
+    let blazonclr = 1;
 
     if ctx.specials.contains(&Special::TrojanHorse) {
       return routes;
@@ -123,15 +133,9 @@ impl ArmyOnMountain {
             let action_percent = rng.gen_range(0.0..1.0);
             let xflip = x > castle.position.0;
             let clr = 0;
-            routes.extend(trebuchet(
-              rng,
-              paint,
-              origin,
-              height,
-              action_percent,
-              xflip,
-              clr,
-            ));
+            let trebuchet =
+              Trebuchet::init(rng, origin, height, action_percent, xflip, clr);
+            routes.extend(trebuchet.render(paint));
 
             let area = VCircle::new(x, y - 0.3 * height, height);
             debug_circle.push(area);
@@ -174,6 +178,14 @@ impl ArmyOnMountain {
         }
       }
 
+      // TODO we could figure out a global zone on which the teams are going to spawn. based on a noise.
+
+      // TODO regroup riders, warriors, archers in a single loop
+      // and we will just look what (x,y) can be and have a "max count" for each category of items.
+      // we could also organize some sort of density map if we want.
+
+      // TODO angle to follow a bit the terrain.
+
       for _i in 0..riders_sampling {
         let angle = 0.0;
         let x = mix(first.0, last.0, rng.gen_range(0.1..0.9));
@@ -184,19 +196,18 @@ impl ArmyOnMountain {
         {
           let origin = (x, y);
           let size = 0.04 * width;
-          let mainclr = 0;
-          let skinclr = 1;
           let decorationratio = 0.3;
           let xflip = x > castle.position.0;
           let foot_offset = 1.0;
           let rider = Rider::init(
+            rng,
             origin,
             size,
             angle,
             xflip,
-            house,
+            blazon,
             mainclr,
-            skinclr,
+            blazonclr,
             decorationratio,
             foot_offset,
           );
@@ -206,8 +217,8 @@ impl ArmyOnMountain {
           /*
           let is_leader = rng.gen_bool(0.1);
           routes.extend(horse_with_rider(
-            rng, paint, origin, angle, size, xflip, mainclr, skinclr,
-            is_leader, house,
+            rng, paint, origin, angle, size, xflip, mainclr, blazonclr,
+            is_leader, blazon,
           ));
           */
 
@@ -228,7 +239,10 @@ impl ArmyOnMountain {
           let origin = (x, y);
           let size = 0.04 * width;
           let xflip = x > castle.position.0;
-          routes.extend(warrior(rng, paint, clr, origin, 0.0, size, xflip));
+          let swordwarrior = SwordWarrior::init(
+            rng, origin, size, 0.0, xflip, blazon, clr, blazonclr,
+          );
+          routes.extend(swordwarrior.render(rng, paint));
 
           let area = VCircle::new(x, y - 0.3 * size, 0.5 * size);
           debug_circle.push(area);

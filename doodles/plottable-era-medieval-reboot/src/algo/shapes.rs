@@ -1,6 +1,11 @@
+use rand::prelude::*;
 use std::f32::consts::PI;
 
-use super::math2d::euclidian_dist;
+use super::{
+  math2d::{euclidian_dist, sample_2d_candidates_f32},
+  packing::VCircle,
+  polylines::{path_subdivide_to_curve, Polyline},
+};
 
 pub fn circle_route(
   center: (f32, f32),
@@ -59,4 +64,33 @@ pub fn spiral_optimized(
     }
   }
   route
+}
+
+pub fn yarnballs<R: Rng>(
+  rng: &mut R,
+  o: (f32, f32),
+  r: f32,
+  density: f32,
+) -> Polyline {
+  let pow = 1.8;
+  let samples = sample_2d_candidates_f32(
+    rng,
+    &|p| {
+      let dx = p.0 - 0.5;
+      let dy = p.1 - 0.5;
+      let d2 = dx * dx + dy * dy;
+      if d2 > 0.25 {
+        0.0
+      } else {
+        d2
+      }
+    },
+    (6. * r) as usize,
+    (8. + density * (r).powf(pow)) as usize,
+  );
+  let route = path_subdivide_to_curve(samples, 2, 0.7);
+  route
+    .iter()
+    .map(|(x, y)| (2.0 * r * (x - 0.5) + o.0, 2.0 * r * (y - 0.5) + o.1))
+    .collect()
 }

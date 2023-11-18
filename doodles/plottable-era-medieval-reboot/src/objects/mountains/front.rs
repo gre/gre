@@ -1,8 +1,13 @@
 use crate::{
   algo::{
     clipping::clip_routes_with_colors, math1d::mix, paintmask::PaintMask,
+    polylines::path_subdivide_to_curve,
   },
-  objects::army::trebuchet::trebuchet,
+  global::GlobalCtx,
+  objects::{
+    army::trebuchet::Trebuchet,
+    projectile::{ball::Ball, trail::Trail},
+  },
 };
 use noise::*;
 use rand::prelude::*;
@@ -17,6 +22,7 @@ pub struct FrontMountains {
 impl FrontMountains {
   pub fn render<R: Rng>(
     &mut self,
+    ctx: &mut GlobalCtx,
     rng: &mut R,
     paint: &mut PaintMask,
   ) -> Vec<(usize, Vec<(f32, f32)>)> {
@@ -106,6 +112,7 @@ impl FrontMountains {
         && p.0 < width - trebuchet_pad
         && rng.gen_bool(0.2)
       {
+        // TODO some small glich, we need to push down if we have mountain curve that makes trebuchet off the screen
         let y = mix(max, ybase, rng.gen_range(0.0..0.6));
         trebuchet_candidates.push((p.0, y));
       }
@@ -121,18 +128,38 @@ impl FrontMountains {
       let action_percent = rng.gen_range(0.0..1.0);
       let xflip = rng.gen_bool(0.5);
       let clr = 0;
-      routes.extend(trebuchet(
-        rng,
-        &mut paint_before,
-        o,
-        height,
-        action_percent,
-        xflip,
-        clr,
-      ));
+      let trebuchet =
+        Trebuchet::init(rng, o, height, action_percent, xflip, clr);
+      routes.extend(trebuchet.render(&mut paint_before));
+
+      if rng.gen_bool(0.3) {
+        // TODO add a method on trebuchet directly that can be reused. it will take a "target" and go % way to it
+        let o = trebuchet.get_basket_position();
+        let topy = mix(0.0, o.1, rng.gen_range(0.5..0.8));
+        let d = (ctx.width * rng.gen_range(0.3..0.7), topy);
+        let path = vec![o, (o.0, mix(o.1, topy, rng.gen_range(0.6..0.8))), d];
+        let path = path_subdivide_to_curve(path, 2, 0.7);
+        let size = rng.gen_range(2.0..5.0);
+        let particles = rng.gen_range(10..30);
+        let strokes = rng.gen_range(1..5);
+        let ball = Ball::init(rng, d, size);
+        let trailmaxpercent = 1.0;
+        let trail = Trail::init(
+          rng,
+          &paint,
+          path,
+          size,
+          trailmaxpercent,
+          particles,
+          strokes,
+        );
+        ctx.throw_ball(ball, trail);
+      }
     }
 
     paint.paint(&paint_before);
+
+    paint.paint_polyline(&ridge, 1.0);
 
     routes
   }

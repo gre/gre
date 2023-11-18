@@ -4,6 +4,8 @@ use crate::algo::{
 };
 use std::f32::consts::PI;
 
+// TODO implement different helmet types
+
 pub struct Helmet {
   pub origin: (f32, f32),
   pub angle: f32,
@@ -70,23 +72,6 @@ fn full_helmet(
   routes.push(vec![(-dx, -0.5 * h), (dx + 0.6 * extrax, -0.4 * h)]);
   routes.push(vec![(-dx, -0.5 * h), (dx + 0.6 * extrax, -0.6 * h)]);
 
-  let poly1 = vec![
-    (-dx, 0.0),
-    (-dx, -h),
-    (dx, -h),
-    (dx + extrax, -0.5 * h),
-    (dx, 0.0),
-    (-dx, 0.0),
-  ];
-  let poly2 = vec![
-    (dx + extrax, -0.5 * h),
-    (0.2 * dx, -1.3 * h),
-    (0.2 * dx, 0.3 * h),
-  ];
-
-  let poly1 = route_xreverse_translate_rotate(&poly1, xreverse, origin, angle);
-  let poly2 = route_xreverse_translate_rotate(&poly2, xreverse, origin, angle);
-
   let ang = angle + PI / 2.0;
   // translate and rotate routes
   let routes = regular_clip(
@@ -102,45 +87,10 @@ fn full_helmet(
     paint,
   );
 
-  paint.paint_polygon(&poly1);
-  paint.paint_polygon(&poly2);
+  // consider routes to be polygon for now.
+  for (_clr, route) in &routes {
+    paint.paint_polygon(&route);
+  }
 
   routes
-}
-
-#[deprecated]
-pub fn helmet(
-  origin: (f32, f32),
-  angle: f32,
-  size: f32,
-  xreverse: bool,
-  clr: usize,
-) -> Vec<(usize, Vec<(f32, f32)>)> {
-  let mut routes = Vec::new();
-  let dx = 0.13 * size;
-  let h = 0.4 * size;
-
-  let poly = vec![(-dx, 0.0), (-dx, -h), (dx, -h), (dx, 0.0), (-dx, 0.0)];
-  // head
-  routes.push(poly.clone());
-
-  routes.push(vec![
-    (-dx, -h * 0.7),
-    (-dx, -h * 0.8),
-    (dx, -h * 0.8),
-    (dx, -h * 0.7),
-    (-dx, -h * 0.7),
-  ]);
-
-  let ang = angle + PI / 2.0;
-  // translate and rotate routes
-  routes
-    .iter()
-    .map(|route| {
-      (
-        clr,
-        route_xreverse_translate_rotate(route, xreverse, origin, ang),
-      )
-    })
-    .collect()
 }

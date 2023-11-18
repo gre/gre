@@ -138,7 +138,7 @@ impl Sea {
     boat_positions.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap());
 
     for (x, y, w, size) in boat_positions {
-      let angle = rng.gen_range(-0.1..0.1) * rng.gen_range(0.0..1.0);
+      let angle = rng.gen_range(-0.2..0.2) * rng.gen_range(0.0..1.0);
       let xflip = if rng.gen_bool(0.8) {
         x > width / 2.0
       } else {
