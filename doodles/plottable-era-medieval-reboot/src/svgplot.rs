@@ -120,17 +120,8 @@ pub struct Ink(
   pub f32,
 );
 
-#[derive(Clone, Copy, Serialize)]
+#[derive(Clone, Copy, Serialize, PartialEq)]
 pub struct Paper(pub &'static str, pub &'static str, pub bool);
-
-// This is also returned in the SVG to have more metadata for the JS side to render a digital version
-#[derive(Clone, Serialize)]
-pub struct Palette {
-  pub primary: Ink,
-  pub secondary: Ink,
-  pub third: Ink,
-  pub paper: Paper,
-}
 
 pub fn make_layers_from_routes_colors(
   routes: &Vec<(usize, Vec<(f32, f32)>)>,

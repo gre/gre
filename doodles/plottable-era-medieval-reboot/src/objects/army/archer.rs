@@ -27,7 +27,8 @@ pub fn bowman<R: Rng>(
   xflip: bool,
 ) -> Vec<(usize, Vec<(f32, f32)>)> {
   let phase = rng.gen_range(0.0..1.0);
-  let shoulder_right_angle = mix(0.0, -PI / 4.0, phase);
+  let shoulder_right_angle =
+    -PI / 2.0 + mix(PI / 4.0, PI / 2.0, phase) * if xflip { -1.0 } else { 1.0 };
   let elbow_right_angle = shoulder_right_angle;
 
   let joints = HumanJointAngles {

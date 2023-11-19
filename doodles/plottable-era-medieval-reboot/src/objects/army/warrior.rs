@@ -3,7 +3,7 @@ use super::{
   helmet::Helmet,
   shield::Shield,
 };
-use crate::{algo::paintmask::PaintMask, objects::blazon::traits::Blazon};
+use crate::{algo::paintmask::PaintMask, objects::blazon::Blazon};
 use rand::prelude::*;
 use std::f32::consts::PI;
 

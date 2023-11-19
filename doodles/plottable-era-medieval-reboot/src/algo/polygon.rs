@@ -111,3 +111,62 @@ pub fn make_wireframe_from_vertexes(
   }
   polys
 }
+
+pub fn make_tri_wireframe_from_vertexes(
+  vertex1: &Polyline,
+  vertex2: &Polyline,
+) -> Vec<Vec<(f32, f32)>> {
+  // vertex1 and 2 are supposed to be same size
+  let len = vertex1.len().min(vertex2.len());
+  let mut polys = vec![];
+  if len < 2 {
+    return polys;
+  }
+  for i in 0..(len - 1) {
+    let j = i + 1;
+    let mut poly = vec![];
+    poly.push(vertex1[i]);
+    poly.push(vertex1[j]);
+    poly.push(vertex2[j]);
+    polys.push(poly);
+    let mut poly = vec![];
+    poly.push(vertex2[j]);
+    poly.push(vertex2[i]);
+    poly.push(vertex1[i]);
+    polys.push(poly);
+  }
+  polys
+}
+
+pub fn polygons_find_miny(
+  polygons: &Vec<Vec<(f32, f32)>>,
+  x: f32,
+) -> Option<f32> {
+  let mut value: Option<f32> = None;
+
+  for polygon in polygons {
+    for i in 0..polygon.len() {
+      let (x1, y1) = polygon[i];
+      let (x2, y2) = polygon[(i + 1) % polygon.len()];
+
+      // Check if the line segment is vertical
+      if x1 == x2 {
+        continue;
+      }
+
+      // Ensure x is between x1 and x2
+      if (x1 < x && x < x2) || (x2 < x && x < x1) {
+        // Linear interpolation to find y at given x
+        let y = y1 + (x - x1) * (y2 - y1) / (x2 - x1);
+
+        value = match value {
+          Some(hy) if y < hy => Some(y),
+          None => Some(y),
+          _ => value,
+        };
+      }
+    }
+  }
+
+  value
+}

@@ -278,12 +278,12 @@ pub fn slice_polylines(
 
 // follow a path to build two polylines that expand along the path with some widths
 pub fn path_to_fibers(
-  path: Polyline,
-  widths: Vec<f32>,
+  path: &Polyline,
+  widths: &Vec<f32>,
   count: usize,
 ) -> Vec<Polyline> {
   if count < 2 {
-    return vec![path];
+    return vec![path.clone()];
   }
   let mut fibers: Vec<Vec<(f32, f32)>> = vec![];
   for _ in 0..count {

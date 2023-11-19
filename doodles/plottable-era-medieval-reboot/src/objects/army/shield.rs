@@ -3,7 +3,7 @@ use crate::{
     clipping::regular_clip_polys, paintmask::PaintMask,
     polygon::polygons_includes_point, polylines::route_translate_rotate,
   },
-  objects::blazon::traits::Blazon,
+  objects::blazon::Blazon,
 };
 use rand::prelude::*;
 

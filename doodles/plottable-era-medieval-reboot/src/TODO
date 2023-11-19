@@ -1,14 +1,13 @@
 - palisade
-- rocks
-- bushes
-- BUG glitch sometimes on clipping in reflections. clouds???
 - fix the mountain shaping & castle position
+- axe warrior
+- spear warrior
+- shield to react on the blazon
 - rework castle. prepare some new castle items to be placed on stream
   - flags
   - defenders on the walls
   - watch towers
   - stairs
-  - relique
   - lights & decorations
   - drawbridge
 - clouds rework. variety with Linear Clouds + Worms Filling Cloud. (Using a gradient of values)
@@ -21,19 +20,20 @@
 - make a catapult
 - hut areas
 - stars shapes
+- alone horse in battlefield
+- how to make a column of people , maybe the shields to be clipped before? sort by y?
 
 - add post processing anim. add an invisible polygon to make a texture in the web side (replace to activate).
   - on sea (like (I) Primitive)
   - on the fires to make the glow & have some sort of moving effect
 
-- IDEA make a triangular structure with warriors going in. the structure have some part uncovered so we can see the inside a bit.
 - BUG when lowering precision at 0.1 there are some crash. let's run a lot of results to identify where.
+- IDEA: observer/lost people on the rock :D
+- IDEA: a warrior watching the scene from the front mountain. raising the hands. possibly with weapons on them. render using the worms filling. maybe we allow a rock to be present on the very bottom and it is on it? we can also put random stuff like Axe,... check list of objs : FLAGS!
 
 ==== on stream ====
 
 - organize the ArmyOnMountain fight. divide the terrain. rework the code to add more kind of items and people.
-
-- palettes
 
 - work on the destruction. fire. smoke.
 
@@ -41,4 +41,6 @@ Rare "Special":
 - lockness event. 
 - Excalibur. Eg on the rock
 - Cheval de Troie. full gold.
+- polish the particle. they are sometimes starting off screen. also they need to be oriented to the castle. so maybe we need to store abstracted data and resolve at the end of the scene.
 - "zombie"/ghul mode. with the red moon. ref to zelda?
+- for these specials. have special titles too.

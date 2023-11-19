@@ -1,8 +1,8 @@
-use crate::{algo::paintmask::PaintMask, objects::blazon::traits::Blazon};
+use crate::{algo::paintmask::PaintMask, objects::blazon::Blazon};
 use rand::prelude::*;
 use std::f32::consts::PI;
 
-use super::{horse::Horse, sword::Sword, warrior::Warrior};
+use super::{sword::Sword, warrior::Warrior};
 
 /**
  * LICENSE CC BY-NC-ND 4.0

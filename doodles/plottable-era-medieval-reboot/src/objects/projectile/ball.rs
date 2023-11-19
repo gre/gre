@@ -28,6 +28,7 @@ impl Ball {
     let r = self.r;
     let mut routes = vec![];
     let density = 2.0;
+    // TODO do the random spiral instead?
     routes.push((clr, yarnballs(rng, origin, r, density)));
     //routes.push((0, yarnballs(rng, origin, r, density * 0.8)));
     //routes.push((2, yarnballs(rng, origin, r, density * 0.2)));

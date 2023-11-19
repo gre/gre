@@ -1,11 +1,15 @@
-use super::{army::boat::boat_with_army, blazon::traits::Blazon};
+use super::{
+  army::boatarmy::BoatArmy,
+  blazon::Blazon,
+  rock::{self, Rock},
+};
 use crate::{
   algo::{
     clipping::{clip_routes_with_colors, regular_clip},
     math1d::mix,
     paintmask::PaintMask,
     passage::Passage,
-    polylines::slice_polylines,
+    polylines::{slice_polylines, Polylines},
   },
   global::{GlobalCtx, Special},
 };
@@ -23,6 +27,29 @@ pub struct Sea {
   boat_color: usize,
   yhorizon: f32,
   blazon: Blazon,
+}
+
+trait SeaShape<R: Rng> {
+  fn render_sea_shape(&self, rng: &mut R, paint: &mut PaintMask) -> Polylines;
+  fn get_y_order(&self) -> f32;
+}
+
+impl<R: Rng> SeaShape<R> for Rock {
+  fn render_sea_shape(&self, rng: &mut R, paint: &mut PaintMask) -> Polylines {
+    self.render(rng, paint)
+  }
+  fn get_y_order(&self) -> f32 {
+    self.origin.1
+  }
+}
+
+impl<R: Rng> SeaShape<R> for BoatArmy {
+  fn render_sea_shape(&self, rng: &mut R, paint: &mut PaintMask) -> Polylines {
+    self.render(rng, paint)
+  }
+  fn get_y_order(&self) -> f32 {
+    self.origin.1
+  }
 }
 
 impl Sea {
@@ -93,72 +120,134 @@ impl Sea {
     rng: &mut R,
     paint: &mut PaintMask,
   ) -> Vec<(usize, Vec<(f32, f32)>)> {
-    let mut routes = vec![];
-
-    if ctx.specials.contains(&Special::TrojanHorse) {
-      return routes;
-    }
-
     let width = paint.width;
     let height = paint.height;
+
+    let no_boats = ctx.specials.contains(&Special::TrojanHorse);
+
+    let rocks_count = (rng.gen_range(0.0f32..14.0) * rng.gen_range(-0.5..1.0))
+      .max(0.0) as usize;
+    let boats_count = if no_boats {
+      0
+    } else {
+      (rng.gen_range(0.0f32..20.0) * rng.gen_range(-0.5..1.0)).max(0.0) as usize
+    };
+
+    // Place rocks
+    let mut sea_shapes: Vec<Box<dyn SeaShape<R>>> = vec![];
 
     // this mask is used to find location to pack things
     let mut sea_mask = self.sea_mask.clone();
 
-    // TODO: better placement of boats
+    let mut should_set_excalibur = rng.gen_bool(0.1);
 
     let tries = 10;
+    sea_shapes.extend(
+      (0..rocks_count)
+        .filter_map(|_| {
+          for _ in 0..tries {
+            let x = width * rng.gen_range(0.0..1.0);
+            let yp = rng.gen_range(0.0..1.0);
+            let y = mix(self.yhorizon, height, yp);
+            if !sea_mask.is_painted((x, y)) {
+              let size = (0.04
+                + rng.gen_range(0.0..0.04) * rng.gen_range(0.0..1.0))
+                * width;
+              let minx = x - size;
+              let maxx = x + size;
+              let miny = y - size;
+              let maxy = y;
+              sea_mask.paint_rectangle(minx, miny, maxx, maxy);
+              let origin = (x, y);
+              let count_poly = rng.gen_range(4..20);
+              let elevation = rng.gen_range(1.5..3.0);
 
-    let basew = width * rng.gen_range(0.15..0.25);
+              let rockclr = if rng.gen_bool(0.02) { 1 } else { 0 };
 
-    let boats_count = (rng.gen_range(0.0f32..20.0) * rng.gen_range(-0.5..1.0))
-      .max(0.0) as usize;
-    let mut boat_positions = (0..boats_count)
-      .filter_map(|_| {
-        for _ in 0..tries {
-          let x = width * rng.gen_range(0.2..0.8);
-          let yp = rng.gen_range(0.1..1.0);
-          let y = mix(self.yhorizon, height, yp);
-          let w =
-            basew * (1.0 + rng.gen_range(-0.4..0.8) * rng.gen_range(0.0..1.0));
-          let size = width * mix(0.03, 0.08, yp);
-          if !sea_mask.is_painted((x, y)) {
-            let minx = x - w / 2.0;
-            let maxx = x + w / 2.0;
-            let miny = y - w / 10.0;
-            let maxy = y + w / 10.0;
-            sea_mask.paint_rectangle(minx, miny, maxx, maxy);
-            return Some((x, y, w, size));
+              let excalibur = if should_set_excalibur
+                && size > 0.06 * width
+                && (0.3..0.7).contains(&(x / width))
+              {
+                should_set_excalibur = false;
+                true
+              } else {
+                false
+              };
+
+              let rock = Rock::init(
+                rng, origin, size, rockclr, count_poly, elevation, excalibur,
+              );
+              if rock.sword.is_some() {
+                ctx.specials.insert(Special::Excalibur);
+              }
+              let b: Box<dyn SeaShape<R>> = Box::new(rock);
+              return Some(b);
+            }
           }
-        }
-        return None;
-      })
-      .collect::<Vec<_>>();
+          return None;
+        })
+        .collect::<Vec<_>>(),
+    );
 
-    boat_positions.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap());
+    // Place boats
 
-    for (x, y, w, size) in boat_positions {
-      let angle = rng.gen_range(-0.2..0.2) * rng.gen_range(0.0..1.0);
-      let xflip = if rng.gen_bool(0.8) {
-        x > width / 2.0
-      } else {
-        rng.gen_bool(0.5)
-      };
-      routes.extend(boat_with_army(
-        rng,
-        paint,
-        self.boat_color,
-        (x, y),
-        angle,
-        size,
-        w,
-        xflip,
-        self.blazon,
-      ));
+    let tries = 10;
+    let basew = width * rng.gen_range(0.15..0.25);
+    sea_shapes.extend(
+      (0..boats_count)
+        .filter_map(|_| {
+          for _ in 0..tries {
+            let x = width * rng.gen_range(0.2..0.8);
+            let yp = rng.gen_range(0.1..1.0);
+            let y = mix(self.yhorizon, height, yp);
+            let w = basew
+              * (1.0 + rng.gen_range(-0.4..0.8) * rng.gen_range(0.0..1.0));
+            let size = width * mix(0.03, 0.08, yp);
+            if !sea_mask.is_painted((x, y)) {
+              let minx = x - w / 2.0;
+              let maxx = x + w / 2.0;
+              let miny = y - w / 10.0;
+              let maxy = y + w / 10.0;
+              sea_mask.paint_rectangle(minx, miny, maxx, maxy);
+
+              //for (x, y, w, size) in boat_positions {
+              let angle = rng.gen_range(-0.2..0.2) * rng.gen_range(0.0..1.0);
+              let xflip = if rng.gen_bool(0.8) {
+                x > width / 2.0
+              } else {
+                rng.gen_bool(0.5)
+              };
+              let boat = BoatArmy::init(
+                rng,
+                self.boat_color,
+                (x, y),
+                size,
+                angle,
+                w,
+                xflip,
+                self.blazon,
+              );
+              // routes.extend(boat.render(rng, paint));
+              //}
+
+              let b: Box<dyn SeaShape<R>> = Box::new(boat);
+              return Some(b);
+            }
+          }
+          return None;
+        })
+        .collect::<Vec<_>>(),
+    );
+
+    // Render
+
+    sea_shapes
+      .sort_by(|a, b| b.get_y_order().partial_cmp(&a.get_y_order()).unwrap());
+
+    let mut routes = vec![];
+    for s in sea_shapes {
+      routes.extend(s.render_sea_shape(rng, paint));
     }
-
-    // TODO port
-
     routes
   }
 }

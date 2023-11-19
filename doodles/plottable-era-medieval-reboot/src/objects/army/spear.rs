@@ -1,51 +1,49 @@
-use crate::algo::{math2d::p_r, polylines::grow_stroke_zigzag};
-use rand::prelude::*;
+use crate::algo::{
+  clipping::regular_clip,
+  paintmask::PaintMask,
+  polylines::{grow_as_rectangle, route_translate_rotate, Polylines},
+};
 
-pub fn spear<R: Rng>(
-  rng: &mut R,
-  origin: (f32, f32),
-  size: f32,
-  angle: f32,
-  clr: usize,
-) -> Vec<(usize, Vec<(f32, f32)>)> {
-  let mut routes: Vec<Vec<(f32, f32)>> = Vec::new();
+pub struct Spear {
+  pub routes: Polylines,
+  pub polys: Vec<Vec<(f32, f32)>>,
+}
 
-  let spear_len = rng.gen_range(1.8..2.2) * size;
-  let spear_w = 0.06 * size;
+impl Spear {
+  pub fn init(clr: usize, origin: (f32, f32), size: f32, angle: f32) -> Self {
+    let mut routes = vec![];
+    let mut polys = vec![];
 
-  let blade_w = 0.15 * size;
-  let blade_len = 0.3 * size;
+    let spear_len = size;
+    let spear_w = 0.03 * size;
+    let blade_w = 0.07 * size;
+    let blade_len = 0.15 * size;
+    let stick = grow_as_rectangle(
+      (-spear_len / 2.0, 0.0),
+      (spear_len / 2.0, 0.0),
+      spear_w / 2.0,
+    );
+    let stick = route_translate_rotate(&stick, origin, -angle);
+    polys.push(stick.clone());
+    routes.push((clr, stick));
 
-  let line_dist = 0.3;
+    let mut head = Vec::new();
+    head.push((spear_len / 2.0, -blade_w / 2.0));
+    head.push((spear_len / 2.0 + blade_len, 0.0));
+    head.push((spear_len / 2.0, blade_w / 2.0));
+    head.push(head[0]);
+    let head = route_translate_rotate(&head, origin, -angle);
+    polys.push(head.clone());
+    routes.push((clr, head));
 
-  routes.push(grow_stroke_zigzag(
-    (-spear_len / 2.0, 0.0),
-    (spear_len / 2.0, 0.0),
-    spear_w,
-    line_dist,
-  ));
+    Self { routes, polys }
+  }
 
-  let mut route = Vec::new();
-  route.push((spear_len / 2.0, -blade_w / 2.0));
-  route.push((spear_len / 2.0 + blade_len, 0.0));
-  route.push((spear_len / 2.0, blade_w / 2.0));
-  route.push(route[0]);
-  routes.push(route);
-
-  // translate routes
-  routes
-    .iter()
-    .map(|route| {
-      (
-        clr,
-        route
-          .iter()
-          .map(|&(x, y)| {
-            let (x, y) = p_r((x, y), angle);
-            (x + origin.0, y + origin.1)
-          })
-          .collect(),
-      )
-    })
-    .collect()
+  pub fn render(&self, paint: &mut PaintMask) -> Polylines {
+    let routes = regular_clip(&self.routes, paint);
+    for poly in &self.polys {
+      paint.paint_polygon(poly);
+    }
+    routes
+  }
 }

@@ -10,7 +10,7 @@ use crate::{
     },
     wormsfilling::WormsFilling,
   },
-  objects::blazon::traits::Blazon,
+  objects::blazon::Blazon,
 };
 use rand::prelude::*;
 

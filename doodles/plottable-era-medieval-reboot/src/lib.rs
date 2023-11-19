@@ -7,10 +7,14 @@ mod palette;
 mod performance;
 mod svgplot;
 
+use std::f32::consts::PI;
+
 use algo::clipping::clip_routes_with_colors;
 use algo::math1d::mix;
+use algo::shapes::circle_route;
 use fxhash::*;
 use global::GlobalCtx;
+use objects::army::flag::Flag;
 use objects::army::ArmyOnMountain;
 use objects::blazon::get_duel_houses;
 use objects::castle::Castle;
@@ -19,7 +23,7 @@ use objects::mountains::*;
 use objects::sea::beach::Beach;
 use objects::sea::Sea;
 use objects::sky::MedievalSky;
-use palette::palette;
+use palette::Palette;
 use palette::GOLD_GEL;
 use rand::prelude::*;
 use serde::Serialize;
@@ -63,13 +67,11 @@ pub fn render(
   let mut font = load_font(&fontdata);
 
   // Colors
-  let (colors, paper) = palette(&mut rng);
-  let mut ctx =
-    GlobalCtx::rand(&mut rng, width, height, precision, &colors, &paper);
+  let (attacker_house, defender_house) = get_duel_houses(&mut rng);
+  let palette = Palette::init(&mut rng, attacker_house);
+  let mut ctx = GlobalCtx::rand(&mut rng, width, height, precision, &palette);
 
   // Make the scene
-
-  let (attacker_house, defender_house) = get_duel_houses(&mut rng);
 
   let mut routes = vec![];
   let mut paint = PaintMask::new(precision, width, height);
@@ -103,13 +105,50 @@ pub fn render(
   perf.span_end("epic title");
 
   perf.span("framing");
-  let golden_frame = colors[1] == GOLD_GEL && rng.gen_bool(0.3);
+  let golden_frame = palette.inks[1] == GOLD_GEL && rng.gen_bool(0.3);
   let clr = if golden_frame { 1 } else { 0 };
   decoration_routes.extend(medieval_frame(
     &mut rng, &mut paint, width, height, pad, framingw, clr,
   ));
   perf.span_end("framing");
   let mask_with_framing = paint.clone();
+
+  // playground when developing
+
+  /*
+  for _ in 0..100 {
+    let s = rng.gen_range(10.0..50.0);
+    let ang = rng.gen_range(-PI..PI)
+      * rng.gen_range(0.0..1.0)
+      * rng.gen_range(0.0..1.0)
+      * rng.gen_range(0.0..1.0)
+      - PI / 2.0;
+    let o = (
+      rng.gen_range(0.1..0.9) * width,
+      rng.gen_range(0.1..0.9) * height,
+    );
+    let clr = rng.gen_range(0..3);
+    let rev = rng.gen_bool(0.5);
+    let cloth_height_factor = rng.gen_range(0.3..0.6);
+    let cloth_len_factor = rng.gen_range(0.3..1.0);
+    let rts = Flag::init(
+      &mut rng,
+      0,
+      clr,
+      o,
+      s,
+      ang,
+      rev,
+      cloth_height_factor,
+      cloth_len_factor,
+    )
+    .render(&mut paint);
+    routes.extend(rts.clone());
+    for (_, rt) in rts.iter() {
+      paint.paint_polyline(&rt, 1.0);
+    }
+  }
+  */
 
   // TODO allow crazy case where the yhorizon can be 20-40% but with more boats and possible battles in the sea
   let yhorizon = rng.gen_range(0.4..0.7) * height;
@@ -128,8 +167,6 @@ pub fn render(
   };
   routes.extend(mountains.render(&mut ctx, &mut rng, &mut paint));
   perf.span_end("mountains_front");
-
-  // TODO: here opportunity to have front facing attackers
 
   perf.span("sea");
   let boat_color = 0;
@@ -231,25 +268,20 @@ pub fn render(
 
   routes.extend(decoration_routes);
 
-  let inks = inks_stats(&routes, &colors);
+  let inks = inks_stats(&routes, &palette.inks);
 
   let feature = Feature {
     inks: inks.join(", "),
     inks_count: inks.len(),
-    paper: paper.0.to_string(),
+    paper: palette.paper.0.to_string(),
   };
 
   let feature_json = serde_json::to_string(&feature).unwrap();
 
-  let palette_json = serde_json::to_string(&Palette {
-    paper,
-    primary: colors[0 % colors.len()],
-    secondary: colors[1 % colors.len()],
-    third: colors[2 % colors.len()],
-  })
-  .unwrap();
+  let palette_json: String = palette.to_json();
 
-  let layers = make_layers_from_routes_colors(&routes, &colors, mask_mode);
+  let layers =
+    make_layers_from_routes_colors(&routes, &palette.inks, mask_mode);
 
   let svg = make_document(
     hash.as_str(),
@@ -258,7 +290,7 @@ pub fn render(
     width,
     height,
     mask_mode,
-    paper.1,
+    palette.paper.1,
     &layers,
     Some(perf),
   );

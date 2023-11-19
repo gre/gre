@@ -116,7 +116,7 @@ impl MedievalSky {
     for _i in 0..desired_clouds {
       let circle = VCircle::new(
         rng.gen_range(0.0..1.0) * width,
-        rng.gen_range(0.05..1.0) * rng.gen_range(0.0..0.6) * height,
+        rng.gen_range(0.0..1.0) * rng.gen_range(0.0..0.5) * height,
         (0.02 + 0.1 * rng.gen_range(0.0..1.0) * rng.gen_range(0.0..1.0))
           * height,
       );

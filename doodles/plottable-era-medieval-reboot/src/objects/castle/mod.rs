@@ -3,12 +3,13 @@ use rand::prelude::*;
 
 use self::{chapel::Chapel, wall::CastleWall, walltower::CastleWallTower};
 
-use super::blazon::traits::Blazon;
+use super::blazon::Blazon;
 
-mod chapel;
-mod decorations;
-mod wall;
-mod walltower;
+pub mod chapel;
+pub mod decorations;
+pub mod relic;
+pub mod wall;
+pub mod walltower;
 
 /**
  * LICENSE CC BY-NC-ND 4.0

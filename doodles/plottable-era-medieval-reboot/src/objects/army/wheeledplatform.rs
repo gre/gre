@@ -98,7 +98,7 @@ impl WheeledPlatform {
   }
 }
 
-fn wheel(
+pub fn wheel(
   paint: &mut PaintMask,
   p: (f32, f32),
   r: f32,

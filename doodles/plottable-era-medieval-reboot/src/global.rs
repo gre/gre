@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 use rand::prelude::*;
 
 use crate::{
@@ -6,7 +8,7 @@ use crate::{
     wormsfilling::WeightMap,
   },
   objects::projectile::{ball::Ball, trail::Trail},
-  svgplot::{Ink, Paper},
+  palette::Palette,
 };
 
 /**
@@ -14,20 +16,20 @@ use crate::{
  * Author: greweb – 2023 – Plottable Era: (II) Medieval
  */
 
-#[derive(PartialEq)]
+#[derive(PartialEq, Eq, Hash)]
 pub enum Special {
   TrojanHorse,
-  Lockness,  // TODO
-  Excalibur, // TODO
-  Ghuls,     // TODO
-  Giant,     // TODO
+  Lockness, // TODO
+  Excalibur,
+  Ghuls, // TODO
+  Giant, // TODO
 }
 
 pub struct GlobalCtx {
   pub width: f32,
   pub height: f32,
   pub precision: f32,
-  pub specials: Vec<Special>,
+  pub specials: HashSet<Special>,
   pub night_time: bool,
 
   /*
@@ -54,13 +56,15 @@ impl GlobalCtx {
     width: f32,
     height: f32,
     precision: f32,
-    colors: &Vec<Ink>,
-    paper: &Paper,
+    palette: &Palette,
   ) -> Self {
-    let mut specials = vec![];
+    let mut specials = HashSet::new();
     if rng.gen_bool(0.01) {
-      specials.push(Special::TrojanHorse);
+      specials.insert(Special::TrojanHorse);
     }
+
+    let paper = palette.paper;
+    let colors = &palette.inks;
 
     let destruction_map = WeightMap::new(width, height, precision, 0.0);
     let mut night_time = paper.2;
@@ -80,7 +84,7 @@ impl GlobalCtx {
       destruction_map,
       balls: vec![],
       trails: vec![],
-      projectilesclr: 2, // FIXME IDK YET.. if rng.gen_bool(0.5) { 2 } else { 0 },
+      projectilesclr: 1, // FIXME IDK YET.. if rng.gen_bool(0.5) { 1 } else { 0 },
     }
   }
 

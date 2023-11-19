@@ -30,6 +30,7 @@ pub struct HumanJointAngles {
 #[derive(Clone, Copy)]
 pub struct HumanBody {
   pub joints: HumanJointAngles,
+  pub origin: (f32, f32),
   pub height: f32,
   pub hip: (f32, f32),
   pub shoulder: (f32, f32),
@@ -104,6 +105,7 @@ impl HumanBody {
     let head = proj_point(shoulder, j.head_angle, 0.3 * h);
 
     Self {
+      origin,
       joints,
       height,
       hip,

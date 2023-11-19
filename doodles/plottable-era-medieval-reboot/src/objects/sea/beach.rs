@@ -9,7 +9,7 @@ use crate::{
   global::{GlobalCtx, Special},
   objects::{
     army::{boat::Boat, trojanhorse::trojanhorse},
-    blazon::traits::Blazon,
+    blazon::Blazon,
     palmtree::PalmTree,
   },
 };

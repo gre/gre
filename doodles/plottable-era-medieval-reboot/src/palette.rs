@@ -1,7 +1,10 @@
-use rand::prelude::*;
-
+use crate::objects::blazon::Blazon;
 use crate::svgplot::Ink;
 use crate::svgplot::Paper;
+use core::panic;
+use rand::prelude::*;
+use serde::Serialize;
+use serde_json::json;
 
 pub static GOLD_GEL: Ink = Ink("Gold Gel", "#D8B240", "#FFE38C", 0.6);
 pub static RED_GEL: Ink = Ink("Red Gel", "#BF738C", "#D880A6", 0.6);
@@ -46,41 +49,203 @@ pub static GREY_PAPER: Paper = Paper("Grey", "#959fa8", true);
  * Author: greweb – 2023 – Plottable Era: (II) Medieval
  */
 
-pub fn palette<R: Rng>(rng: &mut R) -> (Vec<Ink>, Paper) {
-  // ideas for color:
-  // monochrome => any color
-  // bicolor => 0 is mostly always black
-  // bicolor => maybe seilor seiboku + ina ho
-  // bicolor => maybe grey + ina ho
-  // bicolor => black + grey
+pub struct Palette {
+  pub inks: Vec<Ink>,
+  pub paper: Paper,
+  pub monochrome: bool,
+}
+impl Palette {
+  pub fn init<R: Rng>(rng: &mut R, blazon: Blazon) -> Self {
+    // TODO FIXME to figure out:
+    // is black paper necessarily night time? therefore do we make the sky night?
+    // maybe the sun is the moon then, and it's white?
+    // but then what would gold be? the attackers and castle lights? could work
+    // we could try some nice combination as shared before too.
+    // love the idea to have a monochrome white, even if it's light time
 
-  // TODO FIXME to figure out:
-  // is black paper necessarily night time? therefore do we make the sky night?
-  // maybe the sun is the moon then, and it's white?
-  // but then what would gold be? the attackers and castle lights? could work
-  // we could try some nice combination as shared before too.
-  // love the idea to have a monochrome white, even if it's light time
+    // lights in attackers and castle if it's night time
 
-  // lights in attackers and castle if it's night time
+    // TODO blue paper
+    // TODO red paper??
 
-  // TODO blue paper
-  // TODO red paper??
+    // colors
+    // 0 : base color for most of the things
+    // 1 : sun and lights
+    // 2 : attacker color
 
-  // colors
-  // 0 : mountains & objects
-  // 1 : sun
-  // 2 : human lights / fire -> MAYBE IT'S THE SAME COLOR!
-  let (mut colors, mut paper) = (vec![BLACK, AMBER, POPPY_RED], WHITE_PAPER);
+    let papers_choices = 6;
+    let i = (rng.gen_range(0.0..papers_choices as f32)
+      * rng.gen_range(0.0..1.0)) as usize;
 
-  if rng.gen_bool(0.7) {
-    colors = vec![WHITE_GEL, GOLD_GEL, RED_GEL];
-    paper = BLACK_PAPER;
+    let (mut inks, paper) = match i {
+      0 => {
+        let mut base = WHITE_GEL;
+        if rng.gen_bool(1. / 200.) {
+          base = GOLD_GEL;
+        }
+        let sun = if rng.gen_bool(0.8) {
+          GOLD_GEL
+        } else {
+          WHITE_GEL
+        };
+        let blazon_color = match blazon {
+          // gels
+          Blazon::Lys => {
+            if rng.gen_bool(0.6) {
+              GOLD_GEL
+            } else if rng.gen_bool(0.7) {
+              WHITE_GEL
+            } else {
+              BLUE_GEL
+            }
+          }
+          Blazon::Dragon => {
+            if rng.gen_bool(0.9) {
+              RED_GEL
+            } else {
+              ORANGE_GEL
+            }
+          }
+          Blazon::Falcon => {
+            if rng.gen_bool(0.9) {
+              SILVER_GEL
+            } else {
+              GREEN_GEL
+            }
+          }
+        };
+        let colors = vec![base, sun, blazon_color];
+        (colors, BLACK_PAPER)
+      }
+      1 => {
+        let base = if rng.gen_bool(0.8) {
+          BLACK
+        } else if rng.gen_bool(0.5) {
+          INDIGO
+        } else if rng.gen_bool(0.5) {
+          SEIBOKUBLUE
+        } else if rng.gen_bool(0.5) {
+          BLOODY_BREXIT
+        } else if rng.gen_bool(0.5) {
+          INAHO
+        } else {
+          IMPERIAL_PURPLE
+        };
+        let sun = if rng.gen_bool(0.8) {
+          AMBER
+        } else if rng.gen_bool(0.5) {
+          POPPY_RED
+        } else if rng.gen_bool(0.5) {
+          INAHO
+        } else if rng.gen_bool(0.5) {
+          PINK
+        } else {
+          HOPE_PINK
+        };
+        let blazon_color = match blazon {
+          Blazon::Lys => {
+            if rng.gen_bool(0.5) {
+              SEIBOKUBLUE
+            } else if rng.gen_bool(0.5) {
+              INAHO
+            } else if rng.gen_bool(0.5) {
+              FIRE_AND_ICE
+            } else if rng.gen_bool(0.5) {
+              TURQUOISE
+            } else {
+              SARGASSO_SEA
+            }
+          }
+          Blazon::Dragon => {
+            if rng.gen_bool(0.5) {
+              POPPY_RED
+            } else if rng.gen_bool(0.5) {
+              PUMPKIN
+            } else {
+              RED_DRAGON
+            }
+          }
+          Blazon::Falcon => {
+            if rng.gen_bool(0.5) {
+              EVERGREEN
+            } else if rng.gen_bool(0.5) {
+              SOFT_MINT
+            } else if rng.gen_bool(0.5) {
+              SHERWOOD_GREEN
+            } else {
+              AURORA_BOREALIS
+            }
+          }
+        };
+        let colors = vec![base, sun, blazon_color];
+        (colors, WHITE_PAPER)
+      }
+      2 => {
+        let blazon_color = match blazon {
+          Blazon::Lys => {
+            if rng.gen_bool(0.5) {
+              GOLD_GEL
+            } else {
+              WHITE_GEL
+            }
+          }
+          Blazon::Dragon => WHITE_GEL,
+          Blazon::Falcon => WHITE_GEL,
+        };
+        let colors = vec![BLACK, WHITE_GEL, blazon_color];
+        (colors, GREY_PAPER)
+      }
+      3 => {
+        // TODO DARK_BLUE_PAPER
+        let colors = vec![BLACK, WHITE_GEL, WHITE_GEL];
+        (colors, GREY_PAPER)
+      }
+      4 => {
+        // TODO BLUE_PAPER
+        let colors = vec![BLACK, WHITE_GEL, WHITE_GEL];
+        (colors, GREY_PAPER)
+      }
+      _ => {
+        // TODO RED_PAPER
+        let colors = vec![BLACK, WHITE_GEL, WHITE_GEL];
+        (colors, GREY_PAPER)
+      }
+    };
+
+    // going full monochrome
+    let monochrome = if rng.gen_bool(0.05) {
+      inks[1] = inks[0];
+      inks[2] = inks[0];
+      true
+    } else {
+      false
+    };
+
+    Self {
+      inks,
+      paper,
+      monochrome,
+    }
   }
 
-  if rng.gen_bool(0.1) {
-    colors = vec![BLACK, WHITE_GEL, WHITE_GEL];
-    paper = GREY_PAPER;
+  pub fn to_json(&self) -> String {
+    let paper = self.paper;
+    let inks = &self.inks;
+    serde_json::to_string(&PaletteJson {
+      paper,
+      primary: inks[0 % inks.len()],
+      secondary: inks[1 % inks.len()],
+      third: inks[2 % inks.len()],
+    })
+    .unwrap()
   }
+}
 
-  (colors, paper)
+// This is also returned in the SVG to have more metadata for the JS side to render a digital version
+#[derive(Clone, Serialize)]
+struct PaletteJson {
+  primary: Ink,
+  secondary: Ink,
+  third: Ink,
+  paper: Paper,
 }

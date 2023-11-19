@@ -77,7 +77,7 @@ impl Port {
     routes = regular_clip(&routes, paint);
 
     for (_clr, route) in &routes {
-      paint.paint_polyline(route, 1.2);
+      paint.paint_polyline(route, 0.8);
     }
 
     routes
