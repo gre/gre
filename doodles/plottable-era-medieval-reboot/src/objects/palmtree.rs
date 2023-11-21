@@ -36,7 +36,7 @@ impl PalmTree {
       ),
       (p.0 - rng.gen_range(-1.0..1.0) * h * 0.4, p.1 - h),
     ];
-    path = path_subdivide_to_curve(path, 2, 0.66);
+    path = path_subdivide_to_curve(&path, 2, 0.66);
     for _j in 0..5 {
       routes.push((clr, shake(path.clone(), 0.4, rng)));
     }
@@ -48,7 +48,7 @@ impl PalmTree {
         (p.0 + x * 0.5, p.1 - h - rng.gen_range(-1.0..1.0) * h * 0.2),
         (p.0 + x, p.1 - h * rng.gen_range(0.3..1.1)),
       ];
-      path = path_subdivide_to_curve(path, 2, 0.66);
+      path = path_subdivide_to_curve(&path, 2, 0.66);
       routes.push((clr, path));
     }
 

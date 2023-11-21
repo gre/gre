@@ -7,14 +7,11 @@ mod palette;
 mod performance;
 mod svgplot;
 
-use std::f32::consts::PI;
-
 use algo::clipping::clip_routes_with_colors;
 use algo::math1d::mix;
-use algo::shapes::circle_route;
+use algo::polylines::Polylines;
 use fxhash::*;
 use global::GlobalCtx;
-use objects::army::flag::Flag;
 use objects::army::ArmyOnMountain;
 use objects::blazon::get_duel_houses;
 use objects::castle::Castle;
@@ -26,7 +23,6 @@ use objects::sky::MedievalSky;
 use palette::Palette;
 use palette::GOLD_GEL;
 use rand::prelude::*;
-use serde::Serialize;
 use svgplot::*;
 use wasm_bindgen::prelude::*;
 mod epictitle;
@@ -40,14 +36,6 @@ use performance::*;
  * LICENSE CC BY-NC-ND 4.0
  * Author: greweb – 2023 – Plottable Era: (II) Medieval
  */
-
-#[derive(Clone, Serialize)]
-// Feature tells characteristics of a given art variant. It is returned in the .SVG file
-pub struct Feature {
-  pub inks: String,      // which inks are used
-  pub inks_count: usize, // how much inks are used
-  pub paper: String,     // which paper is used
-}
 
 #[wasm_bindgen]
 pub fn render(
@@ -69,10 +57,10 @@ pub fn render(
   // Colors
   let (attacker_house, defender_house) = get_duel_houses(&mut rng);
   let palette = Palette::init(&mut rng, attacker_house);
-  let mut ctx = GlobalCtx::rand(&mut rng, width, height, precision, &palette);
+  let mut ctx =
+    GlobalCtx::rand(&mut rng, width, height, precision, palette.clone());
 
   // Make the scene
-
   let mut routes = vec![];
   let mut paint = PaintMask::new(precision, width, height);
 
@@ -82,7 +70,7 @@ pub fn render(
   perf.span_end("init");
 
   perf.span("epic title");
-  let txt = epic_title(&mut rng);
+  let txt = epic_title(&mut rng, &ctx);
   let fontsize = width / 26.0;
   let iterations = 5000;
   let density = 4.0;
@@ -113,44 +101,10 @@ pub fn render(
   perf.span_end("framing");
   let mask_with_framing = paint.clone();
 
-  // playground when developing
+  // sandbox when developing
+  sandbox(&mut rng, &mut paint, &mut routes, width, height);
 
-  /*
-  for _ in 0..100 {
-    let s = rng.gen_range(10.0..50.0);
-    let ang = rng.gen_range(-PI..PI)
-      * rng.gen_range(0.0..1.0)
-      * rng.gen_range(0.0..1.0)
-      * rng.gen_range(0.0..1.0)
-      - PI / 2.0;
-    let o = (
-      rng.gen_range(0.1..0.9) * width,
-      rng.gen_range(0.1..0.9) * height,
-    );
-    let clr = rng.gen_range(0..3);
-    let rev = rng.gen_bool(0.5);
-    let cloth_height_factor = rng.gen_range(0.3..0.6);
-    let cloth_len_factor = rng.gen_range(0.3..1.0);
-    let rts = Flag::init(
-      &mut rng,
-      0,
-      clr,
-      o,
-      s,
-      ang,
-      rev,
-      cloth_height_factor,
-      cloth_len_factor,
-    )
-    .render(&mut paint);
-    routes.extend(rts.clone());
-    for (_, rt) in rts.iter() {
-      paint.paint_polyline(&rt, 1.0);
-    }
-  }
-  */
-
-  // TODO allow crazy case where the yhorizon can be 20-40% but with more boats and possible battles in the sea
+  // TODO ? allow some crazier cases where the yhorizon can be 20-40% but with more boats and possible battles in the sea
   let yhorizon = rng.gen_range(0.4..0.7) * height;
 
   //  mountains
@@ -183,7 +137,7 @@ pub fn render(
 
   let army: ArmyOnMountain = ArmyOnMountain::init(attacker_house);
 
-  for mountain in mountains.mountains.iter() {
+  for (i, mountain) in mountains.mountains.iter().enumerate() {
     if mountain.has_beach {
       perf.span("beach");
       let beach = Beach::init(
@@ -203,7 +157,7 @@ pub fn render(
 
     perf.span("attackers");
     routes.extend(
-      army.render(&mut ctx, &mut rng, &mut paint, &mountain, &mountains),
+      army.render(&mut ctx, &mut rng, &mut paint, &mountain, &mountains, i),
     );
     perf.span_end("attackers");
 
@@ -251,7 +205,6 @@ pub fn render(
 
   perf.span("reflect_shapes");
   let probability_par_color = vec![0.08, 0.1, 0.2];
-
   routes.extend(sea.reflect_shapes(
     &mut rng,
     &mut paint,
@@ -268,16 +221,8 @@ pub fn render(
 
   routes.extend(decoration_routes);
 
-  let inks = inks_stats(&routes, &palette.inks);
-
-  let feature = Feature {
-    inks: inks.join(", "),
-    inks_count: inks.len(),
-    paper: palette.paper.0.to_string(),
-  };
-
+  let feature = ctx.to_feature(&routes);
   let feature_json = serde_json::to_string(&feature).unwrap();
-
   let palette_json: String = palette.to_json();
 
   let layers =
@@ -296,4 +241,37 @@ pub fn render(
   );
 
   svg
+}
+
+fn sandbox<R: Rng>(
+  rng: &mut R,
+  paint: &mut PaintMask,
+  routes: &mut Polylines,
+  width: f32,
+  height: f32,
+) {
+  /*
+  for _ in 0..50 {
+    let s = rng.gen_range(10.0..50.0);
+    let ang = rng.gen_range(-3.0..3.)
+      * rng.gen_range(0.0..1.0)
+      * rng.gen_range(0.0..1.0)
+      * rng.gen_range(0.0..1.0);
+    // - std::f32::consts::PI / 2.0;
+    let o = (
+      rng.gen_range(0.1..0.9) * width,
+      rng.gen_range(0.1..0.9) * height,
+    );
+    let clr = rng.gen_range(0..3);
+    let xflip = rng.gen_bool(0.5);
+    // let cloth_height_factor = rng.gen_range(0.3..0.6);
+    // let cloth_len_factor = rng.gen_range(0.3..1.0);
+    let rts = objects::army::belier::Belier::init(rng, clr, o, s, ang, xflip)
+      .render(paint);
+    routes.extend(rts.clone());
+    for (_, rt) in rts.iter() {
+      paint.paint_polyline(&rt, 1.0);
+    }
+  }
+  */
 }

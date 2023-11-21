@@ -7,30 +7,18 @@ use rand::prelude::*;
 
 pub struct Sword {
   pub origin: (f32, f32),
-  pub size: f32,
-  pub angle: f32,
-  pub clr: usize,
+  pub routes: Vec<(usize, Vec<(f32, f32)>)>,
+  pub polys: Vec<Vec<(f32, f32)>>,
 }
 
 impl Sword {
-  pub fn init(origin: (f32, f32), size: f32, angle: f32, clr: usize) -> Self {
-    Self {
-      origin,
-      size,
-      angle,
-      clr,
-    }
-  }
-
-  pub fn render<R: Rng>(
-    &self,
+  pub fn init<R: Rng>(
     rng: &mut R,
-    paint: &mut PaintMask,
-  ) -> Vec<(usize, Vec<(f32, f32)>)> {
-    let size = self.size;
-    let origin = self.origin;
-    let angle = self.angle;
-    let clr = self.clr;
+    origin: (f32, f32),
+    size: f32,
+    angle: f32,
+    clr: usize,
+  ) -> Self {
     let mut routes: Vec<Vec<(f32, f32)>> = vec![];
     let mut polys = vec![];
 
@@ -78,10 +66,21 @@ impl Sword {
     polys.push(poly3);
     routes.push(route);
 
+    // FIXME aren't we doing it twice?!
+
     let routes = routes
       .iter()
       .map(|route| (clr, route_translate_rotate(&route, origin, angle)))
       .collect::<Vec<_>>();
-    regular_clip_polys(&routes, paint, &polys)
+
+    Self {
+      origin,
+      routes,
+      polys,
+    }
+  }
+
+  pub fn render(&self, paint: &mut PaintMask) -> Vec<(usize, Vec<(f32, f32)>)> {
+    regular_clip_polys(&self.routes, paint, &self.polys)
   }
 }

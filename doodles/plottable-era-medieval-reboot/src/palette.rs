@@ -1,10 +1,8 @@
 use crate::objects::blazon::Blazon;
 use crate::svgplot::Ink;
 use crate::svgplot::Paper;
-use core::panic;
 use rand::prelude::*;
 use serde::Serialize;
-use serde_json::json;
 
 pub static GOLD_GEL: Ink = Ink("Gold Gel", "#D8B240", "#FFE38C", 0.6);
 pub static RED_GEL: Ink = Ink("Red Gel", "#BF738C", "#D880A6", 0.6);
@@ -23,6 +21,8 @@ pub static SHERWOOD_GREEN: Ink =
   Ink("Sherwood Green", "#337239", "#194D19", 0.35);
 pub static EVERGREEN: Ink = Ink("Evergreen", "#4D6633", "#263319", 0.35);
 pub static SOFT_MINT: Ink = Ink("Soft Mint", "#33E0CC", "#19B299", 0.35);
+pub static SPRING_GREEN: Ink = Ink("Spring Green", "#783", "#350", 0.35);
+pub static MOONSTONE: Ink = Ink("Moonstone", "#bbb", "#ddd", 0.35);
 pub static TURQUOISE: Ink = Ink("Turquoise", "#00B4E6", "#005A8C", 0.35);
 pub static SARGASSO_SEA: Ink = Ink("Sargasso Sea", "#162695", "#111962", 0.35);
 pub static INDIGO: Ink = Ink("Indigo", "#667599", "#334D66", 0.35);
@@ -49,6 +49,7 @@ pub static GREY_PAPER: Paper = Paper("Grey", "#959fa8", true);
  * Author: greweb – 2023 – Plottable Era: (II) Medieval
  */
 
+#[derive(Clone)]
 pub struct Palette {
   pub inks: Vec<Ink>,
   pub paper: Paper,
@@ -72,6 +73,8 @@ impl Palette {
     // 0 : base color for most of the things
     // 1 : sun and lights
     // 2 : attacker color
+
+    // TODO rework with reprensenting things as array and pow of probability for the distribution so we really master the ordering.
 
     let papers_choices = 6;
     let i = (rng.gen_range(0.0..papers_choices as f32)
@@ -120,60 +123,66 @@ impl Palette {
       1 => {
         let base = if rng.gen_bool(0.8) {
           BLACK
-        } else if rng.gen_bool(0.5) {
+        } else if rng.gen_bool(0.4) {
+          MOONSTONE
+        } else if rng.gen_bool(0.4) {
           INDIGO
-        } else if rng.gen_bool(0.5) {
+        } else if rng.gen_bool(0.4) {
           SEIBOKUBLUE
-        } else if rng.gen_bool(0.5) {
+        } else if rng.gen_bool(0.4) {
           BLOODY_BREXIT
-        } else if rng.gen_bool(0.5) {
+        } else if rng.gen_bool(0.4) {
           INAHO
         } else {
           IMPERIAL_PURPLE
         };
         let sun = if rng.gen_bool(0.8) {
           AMBER
-        } else if rng.gen_bool(0.5) {
+        } else if rng.gen_bool(0.4) {
           POPPY_RED
-        } else if rng.gen_bool(0.5) {
+        } else if rng.gen_bool(0.4) {
           INAHO
-        } else if rng.gen_bool(0.5) {
+        } else if rng.gen_bool(0.4) {
           PINK
         } else {
           HOPE_PINK
         };
         let blazon_color = match blazon {
           Blazon::Lys => {
-            if rng.gen_bool(0.5) {
+            if rng.gen_bool(0.66) {
               SEIBOKUBLUE
-            } else if rng.gen_bool(0.5) {
+            } else if rng.gen_bool(0.4) {
               INAHO
-            } else if rng.gen_bool(0.5) {
+            } else if rng.gen_bool(0.4) {
               FIRE_AND_ICE
-            } else if rng.gen_bool(0.5) {
+            } else if rng.gen_bool(0.4) {
               TURQUOISE
             } else {
               SARGASSO_SEA
             }
           }
           Blazon::Dragon => {
-            if rng.gen_bool(0.5) {
+            if rng.gen_bool(0.66) {
               POPPY_RED
-            } else if rng.gen_bool(0.5) {
+            } else if rng.gen_bool(0.66) {
               PUMPKIN
             } else {
               RED_DRAGON
             }
           }
           Blazon::Falcon => {
-            if rng.gen_bool(0.5) {
-              EVERGREEN
-            } else if rng.gen_bool(0.5) {
+            if rng.gen_bool(0.66) {
+              SPRING_GREEN
+            } else if rng.gen_bool(0.4) {
               SOFT_MINT
-            } else if rng.gen_bool(0.5) {
-              SHERWOOD_GREEN
-            } else {
+            } else if rng.gen_bool(0.4) {
+              EVERGREEN
+            } else if rng.gen_bool(0.4) {
+              EVERGREEN
+            } else if rng.gen_bool(0.66) {
               AURORA_BOREALIS
+            } else {
+              SHERWOOD_GREEN
             }
           }
         };
@@ -183,7 +192,7 @@ impl Palette {
       2 => {
         let blazon_color = match blazon {
           Blazon::Lys => {
-            if rng.gen_bool(0.5) {
+            if rng.gen_bool(0.66) {
               GOLD_GEL
             } else {
               WHITE_GEL

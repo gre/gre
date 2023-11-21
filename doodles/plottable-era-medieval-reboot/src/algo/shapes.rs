@@ -66,6 +66,36 @@ pub fn spiral_optimized(
   route
 }
 
+pub fn spiral_optimized_with_initial_angle(
+  x: f32,
+  y: f32,
+  radius: f32,
+  initial: f32,
+  dr: f32,
+  approx: f32,
+  reverse: bool,
+) -> Vec<(f32, f32)> {
+  let two_pi = 2.0 * PI;
+  let mut route = Vec::new();
+  let mut r = radius;
+  let mut a = initial;
+  let m = if reverse { -1. } else { 1. };
+  loop {
+    let p = (x + r * a.cos(), y + r * a.sin());
+    let l = route.len();
+    if l == 0 || euclidian_dist(route[l - 1], p) > approx {
+      route.push(p);
+    }
+    let da = 0.2 / (r + 8.0); // bigger radius is more we have to do angle iterations
+    a = (two_pi + a + da * m) % two_pi;
+    r -= dr * da / two_pi;
+    if r < 0.05 {
+      break;
+    }
+  }
+  route
+}
+
 pub fn yarnballs<R: Rng>(
   rng: &mut R,
   o: (f32, f32),
@@ -88,7 +118,7 @@ pub fn yarnballs<R: Rng>(
     (6. * r) as usize,
     (8. + density * (r).powf(pow)) as usize,
   );
-  let route = path_subdivide_to_curve(samples, 2, 0.7);
+  let route = path_subdivide_to_curve(&samples, 2, 0.7);
   route
     .iter()
     .map(|(x, y)| (2.0 * r * (x - 0.5) + o.0, 2.0 * r * (y - 0.5) + o.1))

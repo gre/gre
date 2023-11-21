@@ -1,8 +1,6 @@
+use super::{horse::Horse, warrior::Warrior};
 use crate::{algo::paintmask::PaintMask, objects::blazon::Blazon};
 use rand::prelude::*;
-use std::f32::consts::PI;
-
-use super::{horse::Horse, sword::Sword, warrior::Warrior};
 
 /**
  * LICENSE CC BY-NC-ND 4.0
@@ -12,9 +10,9 @@ use super::{horse::Horse, sword::Sword, warrior::Warrior};
 pub struct Rider {
   pub horse: Horse,
   pub warrior: Warrior,
-  pub sword: Sword,
 }
 
+// TODO Warrior to be a param
 impl Rider {
   pub fn init<R: Rng>(
     rng: &mut R,
@@ -22,16 +20,12 @@ impl Rider {
     size: f32,
     angle: f32,
     xflip: bool,
-    blazon: Blazon,
     mainclr: usize,
     blazonclr: usize,
     decorationratio: f32,
     foot_offset: f32,
+    warrior: Warrior,
   ) -> Self {
-    let warrior = Warrior::init(
-      rng, origin, size, angle, xflip, blazon, mainclr, blazonclr, true,
-    );
-
     let horse = Horse::init(
       origin,
       size,
@@ -43,15 +37,7 @@ impl Rider {
       foot_offset,
     );
 
-    let xdir = if xflip { -1.0 } else { 1.0 };
-    let swordang = PI / 2.0 - xdir * rng.gen_range(0.0..2.0);
-    let sword = Sword::init(warrior.human.elbow_left, size, swordang, mainclr);
-
-    Self {
-      warrior,
-      horse,
-      sword,
-    }
+    Self { warrior, horse }
   }
 
   pub fn render<R: Rng>(
@@ -60,13 +46,11 @@ impl Rider {
     mask: &mut PaintMask,
   ) -> Vec<(usize, Vec<(f32, f32)>)> {
     let warrior = &self.warrior;
-    let sword = &self.sword;
     let horse = &self.horse;
 
     let mut routes = vec![];
 
     routes.extend(warrior.render_foreground_only(mask));
-    routes.extend(sword.render(rng, mask));
     routes.extend(horse.render(rng, mask));
     routes.extend(warrior.render_background_only(mask));
 

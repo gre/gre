@@ -1,7 +1,14 @@
 use self::{
-  archer::bowman, belfry::belfry, convoywalk::ConvoyWalk, monk::Monk,
-  rider::Rider, swordwarrior::SwordWarrior, trebuchet::Trebuchet,
+  archer::bowman,
+  belfry::belfry,
+  belier::Belier,
+  car4l::Renault4L,
+  convoywalk::ConvoyWalk,
+  monk::Monk,
+  rider::Rider,
+  trebuchet::Trebuchet,
   tunnelstructure::TunnelStructure,
+  warrior::{Warrior, WarriorHead, WarriorObject},
 };
 use super::{
   blazon::Blazon,
@@ -30,21 +37,25 @@ pub mod archer;
 pub mod arrow;
 pub mod axe;
 pub mod belfry;
+pub mod belier;
+pub mod belierhead;
 pub mod boat;
 pub mod boatarmy;
 pub mod body;
+pub mod car4l;
 pub mod catapult;
+pub mod club;
 pub mod convoywalk;
 pub mod flag;
 pub mod head;
 pub mod helmet;
 pub mod horse;
+pub mod longbow;
 pub mod monk;
 pub mod rider;
 pub mod shield;
 pub mod spear;
 pub mod sword;
-pub mod swordwarrior;
 pub mod trebuchet;
 pub mod trojanhorse;
 pub mod tunnelstructure;
@@ -76,14 +87,64 @@ impl ArmyOnMountain {
     paint: &mut PaintMask,
     mountain: &Mountain,
     mountains: &MountainsV2,
+    index: usize,
   ) -> Vec<(usize, Vec<(f32, f32)>)> {
+    let ridge = mountain.ridge.clone();
+    let first = ridge[0];
+    let last = ridge[ridge.len() - 1];
+    let width = mountain.width;
+    let yhorizon = mountain.yhorizon;
     let blazon = self.blazon;
     let mut routes = vec![];
 
     let mainclr = 0;
     let blazonclr = 2;
 
+    let mut noarmy = false;
+
     if ctx.specials.contains(&Special::TrojanHorse) {
+      noarmy = true;
+    }
+
+    if ctx.specials.contains(&Special::Montmirail) && index == 0 {
+      let x = mix(first.0, last.0, rng.gen_range(0.2..0.8));
+      let y = mix(lookup_ridge(&ridge, x), yhorizon, rng.gen_range(0.0..0.7));
+      let origin = (x, y);
+      let size = rng.gen_range(0.05..0.1) * width;
+      let car = Renault4L::init(rng, 1, origin, size, 0.0);
+      let jacquouille = Warrior::init(
+        rng,
+        (x - 1.5 * size, y),
+        0.8 * size,
+        0.0,
+        false,
+        blazon,
+        mainclr,
+        blazonclr,
+        WarriorHead::NAKED,
+        None,
+        Some(WarriorObject::Club),
+      );
+      routes.extend(jacquouille.render(paint));
+      let godefroy = Warrior::init(
+        rng,
+        (x - 1.2 * size, y),
+        size,
+        0.0,
+        false,
+        blazon,
+        mainclr,
+        blazonclr,
+        WarriorHead::HELMET,
+        None,
+        Some(WarriorObject::Sword),
+      );
+      routes.extend(godefroy.render(paint));
+      routes.extend(car.render(paint));
+      noarmy = true;
+    }
+
+    if noarmy {
       return routes;
     }
 
@@ -127,12 +188,6 @@ impl ArmyOnMountain {
       let trebuchet_tries = (rng.gen_range(-4.0f32..4.0)
         * rng.gen_range(0.0..1.0))
       .max(0.0) as usize;
-      let ridge = mountain.ridge.clone();
-      let width = mountain.width;
-      let yhorizon = mountain.yhorizon;
-
-      let first = ridge[0];
-      let last = ridge[ridge.len() - 1];
 
       let trees_range: std::ops::Range<f32> = 0.35..0.5;
       let trees_sampling = if rng.gen_bool(0.3) {
@@ -269,6 +324,14 @@ impl ArmyOnMountain {
           let bridge_opening = rng.gen_range(0.0f32..2.0).min(1.0);
 
           if rng.gen_bool(0.5) {
+            let triangle_structure = rng.gen_bool(0.7);
+            let s = height;
+            let o = (x, y - 0.3 * height);
+            let machine =
+              Belier::init(rng, clr, o, s, 0.0, xflip, triangle_structure);
+            routes.extend(machine.render(paint));
+            // TODO army of warriors
+          } else if rng.gen_bool(0.5) {
             routes.extend(belfry(
               rng,
               paint,
@@ -308,10 +371,8 @@ impl ArmyOnMountain {
         {
           let origin = (x, y);
           let size = 0.04 * width;
-          let decorationratio = 0.3;
           let xflip = x > castle.position.0;
-          let foot_offset = 1.0;
-          let rider = Rider::init(
+          let warrior = Warrior::init(
             rng,
             origin,
             size,
@@ -320,19 +381,26 @@ impl ArmyOnMountain {
             blazon,
             mainclr,
             blazonclr,
-            decorationratio,
-            foot_offset,
+            WarriorHead::HELMET,
+            Some(WarriorObject::Shield),
+            Some(WarriorObject::LongSword),
           );
 
+          let decorationratio = 0.3;
+          let foot_offset = 1.0;
+          let rider = Rider::init(
+            rng,
+            origin,
+            size,
+            angle,
+            xflip,
+            mainclr,
+            blazonclr,
+            decorationratio,
+            foot_offset,
+            warrior,
+          );
           routes.extend(rider.render(rng, paint));
-
-          /*
-          let is_leader = rng.gen_bool(0.1);
-          routes.extend(horse_with_rider(
-            rng, paint, origin, angle, size, xflip, mainclr, blazonclr,
-            is_leader, blazon,
-          ));
-          */
 
           let area = VCircle::new(x, y - 0.3 * size, 0.5 * size);
           debug_circle.push(area);
@@ -351,10 +419,17 @@ impl ArmyOnMountain {
           let origin = (x, y);
           let size = 0.04 * width;
           let xflip = x > castle.position.0;
-          let swordwarrior = SwordWarrior::init(
-            rng, origin, size, 0.0, xflip, blazon, clr, blazonclr,
+          let headshape = WarriorHead::HELMET;
+          let leftobj = Some(WarriorObject::Shield);
+          let rightobj = Some(WarriorObject::Sword);
+          let warrior = Warrior::init(
+            rng, origin, size, 0.0, xflip, blazon, clr, blazonclr, headshape,
+            leftobj, rightobj,
           );
-          routes.extend(swordwarrior.render(rng, paint));
+
+          // todo in one case it is riding a horse or it's not.
+
+          routes.extend(warrior.render(paint));
 
           let area = VCircle::new(x, y - 0.3 * size, 0.5 * size);
           debug_circle.push(area);

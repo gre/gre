@@ -138,7 +138,7 @@ impl FrontMountains {
         let topy = mix(0.0, o.1, rng.gen_range(0.5..0.8));
         let d = (ctx.width * rng.gen_range(0.3..0.7), topy);
         let path = vec![o, (o.0, mix(o.1, topy, rng.gen_range(0.6..0.8))), d];
-        let path = path_subdivide_to_curve(path, 2, 0.7);
+        let path = path_subdivide_to_curve(&path, 2, 0.7);
         let size = rng.gen_range(2.0..5.0);
         let particles = rng.gen_range(10..30);
         let strokes = rng.gen_range(1..5);

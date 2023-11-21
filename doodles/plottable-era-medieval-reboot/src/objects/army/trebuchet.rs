@@ -391,10 +391,10 @@ impl Trebuchet {
       let left = ropes[0];
       ropes[1].1 -= rng.gen_range(0.1..0.2) * height;
       let right = ropes[2];
-      ropes = path_subdivide_to_curve_it(ropes, 0.8);
+      ropes = path_subdivide_to_curve_it(&ropes, 0.8);
       ropes = shake(ropes, 0.1 * height, rng);
-      ropes = path_subdivide_to_curve_it(ropes, 0.75);
-      ropes = path_subdivide_to_curve_it(ropes, 0.7);
+      ropes = path_subdivide_to_curve_it(&ropes, 0.75);
+      ropes = path_subdivide_to_curve_it(&ropes, 0.7);
 
       ropes[0] = left;
       let l = ropes.len();

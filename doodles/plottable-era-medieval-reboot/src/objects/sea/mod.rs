@@ -139,7 +139,7 @@ impl Sea {
     // this mask is used to find location to pack things
     let mut sea_mask = self.sea_mask.clone();
 
-    let mut should_set_excalibur = rng.gen_bool(0.1);
+    let mut should_set_excalibur = rng.gen_bool(0.1) && ctx.specials.is_empty();
 
     let tries = 10;
     sea_shapes.extend(

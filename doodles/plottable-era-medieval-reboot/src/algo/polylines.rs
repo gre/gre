@@ -7,12 +7,12 @@ pub type Polyline = Vec<(f32, f32)>;
 pub type Polylines = Vec<(usize, Polyline)>;
 
 pub fn path_subdivide_to_curve_it(
-  path: Vec<(f32, f32)>,
+  path: &Vec<(f32, f32)>,
   interpolation: f32,
 ) -> Vec<(f32, f32)> {
   let l = path.len();
   if l < 3 {
-    return path;
+    return path.clone();
   }
   let mut route = Vec::new();
   let mut first = path[0];
@@ -40,13 +40,13 @@ pub fn path_subdivide_to_curve_it(
 }
 
 pub fn path_subdivide_to_curve(
-  path: Vec<(f32, f32)>,
+  path: &Vec<(f32, f32)>,
   n: usize,
   interpolation: f32,
 ) -> Vec<(f32, f32)> {
-  let mut route = path;
+  let mut route = path.clone();
   for _i in 0..n {
-    route = path_subdivide_to_curve_it(route, interpolation);
+    route = path_subdivide_to_curve_it(&route, interpolation);
   }
   route
 }

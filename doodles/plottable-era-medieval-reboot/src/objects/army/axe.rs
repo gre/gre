@@ -32,7 +32,7 @@ impl Axe {
 
     // stick
     let rt = vec![(-dx, -dy), (-dx, dy), (dx, dy), (dx, -dy), (-dx, -dy)];
-    let rt = route_translate_rotate(&rt, origin, angle);
+    let rt = route_translate_rotate(&rt, origin, -angle);
     routes.push((clr, rt.clone()));
     polys.push(rt);
 
@@ -53,7 +53,7 @@ impl Axe {
     rt.push((c.0, a.1));
     rt.push(a);
     rt.push(rt[0]);
-    let rt = route_translate_rotate(&rt, origin, angle);
+    let rt = route_translate_rotate(&rt, origin, -angle);
     routesbg.push((clr, rt.clone()));
     polysbg.push(rt);
 

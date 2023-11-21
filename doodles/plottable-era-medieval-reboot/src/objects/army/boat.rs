@@ -85,7 +85,7 @@ impl Boat {
     route.push((x1, 0.0));
     route.push((x2, 0.0));
     route.push((w / 2.0 + dy_edge, yright + dy_edge));
-    route = path_subdivide_to_curve(route, 2, 0.8);
+    route = path_subdivide_to_curve(&route, 2, 0.8);
     routes.push((clr, route));
 
     // boat in between
@@ -95,7 +95,7 @@ impl Boat {
     route.push((x1, y));
     route.push((x2, y));
     route.push((w / 2.0, yright));
-    route = path_subdivide_to_curve(route, 2, 0.8);
+    route = path_subdivide_to_curve(&route, 2, 0.8);
     // TODO route will be used to clip people
     routes.push((clr, route));
 
@@ -106,7 +106,7 @@ impl Boat {
     route.push((x1, y));
     route.push((x2, y));
     route.push((w / 2.0 - dy_edge, yright - dy_edge));
-    route = path_subdivide_to_curve(route, 2, 0.8);
+    route = path_subdivide_to_curve(&route, 2, 0.8);
     // TODO route will be used to clip people
     routes.push((clr, route.clone()));
 

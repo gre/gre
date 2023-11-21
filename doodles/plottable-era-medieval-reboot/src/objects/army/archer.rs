@@ -92,7 +92,7 @@ fn long_bow(
   route.push((-dx, -dy));
   route.push((0.0, 0.0));
   route.push((-dx, dy));
-  let bow = path_subdivide_to_curve(route, 2, 0.8);
+  let bow = path_subdivide_to_curve(&route, 2, 0.8);
 
   routes.push(grow_path_zigzag(bow, angle, bow_w, 0.3));
 

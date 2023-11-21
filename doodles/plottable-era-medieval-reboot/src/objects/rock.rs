@@ -76,7 +76,7 @@ impl Rock {
         let o = (origin.0, y - rng.gen_range(0.5..0.7) * s);
         let a = -PI / 2.0;
         let clr = rng.gen_range(0..2);
-        Some(Sword::init(o, s, a, clr))
+        Some(Sword::init(rng, o, s, a, clr))
       } else {
         None
       }
@@ -109,7 +109,7 @@ impl Rock {
     }
 
     if let Some(sword) = &self.sword {
-      let rts = sword.render(rng, paint);
+      let rts = sword.render(paint);
       // halo around the sword
       for (_, route) in &rts {
         paint.paint_polyline(route, 2.0);

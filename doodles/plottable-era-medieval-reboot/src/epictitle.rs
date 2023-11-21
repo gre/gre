@@ -4,8 +4,10 @@
  */
 use rand::prelude::*;
 
+use crate::global::GlobalCtx;
+
 // medieval name generator
-pub fn epic_title<R: Rng>(rng: &mut R) -> String {
+pub fn epic_title<R: Rng>(rng: &mut R, ctx: &GlobalCtx) -> String {
   let city_start = vec![
     "An", "Cul", "Dun", "Nor", "Ship", "Tre", "Win", "Mere", "Pol", "Tarn",
     "Lin", "Man", "Baa", "Bra", "Bri", "Istan", "Bor", "Ast", "Ach", "Axe",
@@ -17,8 +19,13 @@ pub fn epic_title<R: Rng>(rng: &mut R) -> String {
     "borough", "by", "cott", "field", "gate", "ing", "tun", "wick", "worth",
     "caster", "burgh", "ver", "bon",
   ];
-  let mut city = city_start[rng.gen_range(0..city_start.len())].to_string();
-  city += city_suffixes[rng.gen_range(0..city_suffixes.len())];
+  let city = if let Some(name) = ctx.overrides_city_name() {
+    name
+  } else {
+    let mut city = city_start[rng.gen_range(0..city_start.len())].to_string();
+    city += city_suffixes[rng.gen_range(0..city_suffixes.len())];
+    city
+  };
 
   let events = vec![
     "Battle",

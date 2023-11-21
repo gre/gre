@@ -36,7 +36,7 @@ pub fn eagle<R: Rng>(
     let ybase = bodyh * yp;
     let route = shake(
       path_subdivide_to_curve(
-        vec![
+        &vec![
           (-rng.gen_range(0.4..0.6) * bodyw, 1.5 * ybase),
           (-0.3 * bodyw, ybase),
           (0.2 * bodyw, ybase),
@@ -79,7 +79,7 @@ pub fn eagle<R: Rng>(
       rng.gen_range(0.8..1.1) * wing2m * (if wing2up { -1.0 } else { 1.0 });
     let route = shake(
       path_subdivide_to_curve(
-        vec![
+        &vec![
           (
             xbase * spread1 + dx1 + wingw * offset1,
             -wingh * 0.5 * wing1,

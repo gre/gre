@@ -1,16 +1,13 @@
-use crate::{
-  algo::{
-    clipping::{regular_clip, regular_clip_polys},
-    math1d::mix,
-    paintmask::PaintMask,
-    polygon::make_wireframe_from_vertexes,
-    polylines::{
-      grow_as_rectangle, path_subdivide_to_curve, route_scale_translate_rotate,
-      Polyline, Polylines,
-    },
-    wormsfilling::WormsFilling,
+use crate::algo::{
+  clipping::{regular_clip, regular_clip_polys},
+  math1d::mix,
+  paintmask::PaintMask,
+  polygon::make_wireframe_from_vertexes,
+  polylines::{
+    grow_as_rectangle, path_subdivide_to_curve, route_scale_translate_rotate,
+    Polyline, Polylines,
   },
-  objects::blazon::Blazon,
+  wormsfilling::WormsFilling,
 };
 use rand::prelude::*;
 
@@ -114,7 +111,7 @@ impl Horse {
     route.push((x2, 0.0));
     route.push((x3 + 0.05 * size, yright + dy_edge + 0.15 * size));
     route = route_scale_translate_rotate(&route, scale, origin, angle);
-    route = path_subdivide_to_curve(route, splits, 0.8);
+    route = path_subdivide_to_curve(&route, splits, 0.8);
     let body_bottom = route;
     // horse body top
     let mut route = Vec::new();
@@ -124,7 +121,7 @@ impl Horse {
     route.push((x2, y));
     route.push((x3 - 0.05 * size, yright - dy_edge));
     route = route_scale_translate_rotate(&route, scale, origin, angle);
-    route = path_subdivide_to_curve(route, splits, 0.8);
+    route = path_subdivide_to_curve(&route, splits, 0.8);
     let body_top = route;
     highlighted.push(body_top.clone());
 
