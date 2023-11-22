@@ -1,12 +1,11 @@
 SKY:
 - clouds rework. variety with Linear Clouds.
-- stars shapes
 - rethink sun position
 
 CASTLE:
 - fix the mountain shaping & castle position
 - rework castle. prepare some new castle items to be placed on stream
-  - flags
+  - flags (use defendersclr)
   - defenders on the walls
   - watch towers
   - stairs
@@ -49,6 +48,7 @@ MOUNTAIN:
 SEA:
 - boat spawner to spawn add variety.
 - mat de bateau
+- render the rocks with worms filling technique
 
 FRONT MOUNTAIN:
 - better animals spawning. can spawn on front too.
@@ -73,4 +73,3 @@ IDEAS:
 - SPECIAL lockness event. 
 - SPECIAL "zombie"/ghul mode. with the red moon. ref to zelda?
 - IDEA: sky parametric equations with worms filling.
-

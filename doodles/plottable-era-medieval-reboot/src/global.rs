@@ -66,6 +66,8 @@ pub struct GlobalCtx {
   pub balls: Vec<Ball>,
   pub trails: Vec<Trail>,
   pub projectilesclr: usize,
+  pub defendersclr: usize,
+  pub attackersclr: usize,
 }
 
 impl GlobalCtx {
@@ -78,6 +80,16 @@ impl GlobalCtx {
     defenders: &Blazon,
     attackers: &Blazon,
   ) -> Self {
+    let attackersclr = 2;
+    let mut defendersclr = 0;
+    let c = &palette.inks;
+    if c[1] != c[2] {
+      // there may be an opportunity to use sun color for the defenders if it makes sense...
+      if palette.is_acceptable_color_for_blazon(c[1], defenders.clone()) {
+        defendersclr = 1;
+      }
+    }
+
     let mut specials = HashSet::new();
 
     if rng.gen_bool(0.04) && matches!(attackers, Blazon::Dragon)
@@ -87,7 +99,7 @@ impl GlobalCtx {
     } else if rng.gen_bool(0.01) {
       specials.insert(Special::TrojanHorse);
     } else if rng.gen_bool(0.01) {
-      let c = palette.inks[1];
+      let c = c[1];
       if c == GOLD_GEL || c == AMBER {
         specials.insert(Special::Montmirail);
       }
@@ -122,6 +134,8 @@ impl GlobalCtx {
       balls: vec![],
       trails: vec![],
       projectilesclr: 1, // FIXME IDK YET.. if rng.gen_bool(0.5) { 1 } else { 0 },
+      defendersclr,
+      attackersclr,
     }
   }
 
