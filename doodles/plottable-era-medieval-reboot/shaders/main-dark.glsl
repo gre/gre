@@ -26,6 +26,6 @@ void main() {
   (c1 + c2 + c3) * (1. + lighting * gain) +
   grainAmp * grain +/*developed by @greweb*/
   baseColor +
-  background * smoothstep(0.5, 1.0, v.r * v.g);
+  background * smoothstep(0.5, 1.0, v.r * v.g * v.b);
   gl_FragColor = vec4(c, 1.0);
 }
