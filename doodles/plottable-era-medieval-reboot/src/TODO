@@ -1,28 +1,14 @@
-
-URGENT: BATTLEFIELD
-- add folks on the machines.
-- y ordering of battlefield + split human rendering in 2 first human.render_foreground_only, then possible other object (including machines!), then background. there might be the same principle on the castle?
-- axe warrior.
-- in the army, we need a leader. they will either have a flag OR a weapon that is bigger and colored with the team color.
-- some % of people will hold a flag.
-- shield to react on the blazon
-- blazon & their impact + flags
-  - on shield
-  - on boat/belier head
-  - on flag.
-- palisade
-- creatures from projs: Armadillos, Fowl, Bad Dog.
-
-URGENT: SKY
-- clouds rework. variety with Linear Clouds + Worms Filling Cloud. (Using a gradient of values)
+SKY:
+- clouds rework. variety with Linear Clouds + Worms Filling Cloud. (Using a gradient of values).
 - stars shapes
 - work on sky background
   - noise field (nuit étoilée), like my storms. using all colors?
   - rains like in Heist.
   - full spiral around the sun.
   - parametric equations with worms filling.
+- rethink sun position
 
-URGENT: CASTLE
+CASTLE:
 - fix the mountain shaping & castle position
 - rework castle. prepare some new castle items to be placed on stream
   - flags
@@ -33,52 +19,59 @@ URGENT: CASTLE
   - make vertical flag. from the flag clothes.
   - drawbridge
 
-HIGH:
-- merge Monk into Human
-- do something with Cage.
-- boat spawner to spawn add variety.
-- dragon canon. throw fireball with lot of particle in direction to the castle.
-- muraille qui traverse la montagne. on utilisera le facteur de destruction (trous dans la muraille / explosions avec des morceaux en l'air)
-- spear warrior
-- giant people ("boss"). also when the size is high enough (level of detail), renders people with better than just wireframe. using dist func?
-- projectiles
-- rock should we fill them in case of white paper?
-- make a catapult
-- people on the machines
-- cords with people climbing. (not just ladders, it can be with an angle)
-- scale on the castle + defenders
-- hut areas / campfire
-- archer on top of an attacker tower. 
-- attacker supposed to climp on the belfry
-- better battlefield org. how to make a column of people , maybe the shields to be clipped before? sort by y?
-- BUG when lowering precision at 0.1 there are some crash. let's run a lot of results to identify where.
-
-MEDIUM:
+BATTLEFIELD:
+- machines / caravans
+  - merge Monk into Human. we need a concept of HoldingObject::Foreign
+  - add folks on the machines.
+  - do something with Cage. army transporting someone.
+  - have a horse caravan version. where we can put relique / cage..
+  - attacker supposed to climp on the belfry
+- organize ArmyOnMountain fight. divide the terrain. rework the code to add more kind of items and people.
+  - we would use an area map.
+  - make them aligned into areas. for instance i want to see alignment of archers and alignement of shields.
+  - make a neutral area. which could allow to spawn forest and wild animals.
+  - y ordering of battlefield + split human rendering in 2 first human.render_foreground_only, then possible other object (including machines!), then background. there might be the same principle on the castle?
+  - in the army, we need a leader. they will either have a flag OR a weapon that is bigger and colored with the team color.
+- blazon & their impact + flags
+  - on shield
+  - on boat/belier head
 - alone horse in battlefield
-- add post processing anim. add an invisible polygon to make a texture in the web side (replace to activate).
-  - on sea (like (I) Primitive)
-  - on the fires to make the glow & have some sort of moving effect
-- wolfes
-- Random event on rock:
-  - a nest
-  - a weapon
-  - an observer/lost person
-- Random event on the front. maybe a rock from very bottom that makes it "front front"
+- ADD: dragon canon. throw fireball with lot of particle in direction to the castle.
+- ADD: lanciers
+- ADD: Catapult
+- ADD: ladders and cords with people climbing.
+- ADD: campfire near huts. (it's an area)
+
+GENERAL:
+- BUG when lowering precision at 0.1 there are some crash. let's run a lot of results to identify where.
+- work on projectiles. add fire & smoke.
+  - polish the particle. they are sometimes starting off screen. also they need to be oriented to the castle. so maybe we need to store abstracted data and resolve at the end of the scene.
+- Work on Features
+
+MOUNTAIN:
+- ADD: palisade / wall. 'palisade medieval / great wall' to google. traverse la montagne + facteur de destruction (trous dans la muraille / explosions avec des morceaux en l'air)
+
+SEA:
+- boat spawner to spawn add variety.
+
+FRONT MOUNTAIN:
+- better animals spawning. can spawn on front too.
+- ADD random event on the front. maybe a rock from very bottom that makes it "front front"
   - a warrior watching the scene, raising hands. with weapon.
   - flags
   - axe
 
-==== on stream ====
-
-- organize the ArmyOnMountain fight. divide the terrain. rework the code to add more kind of items and people.
-  - we would use an area map.
-  - make a neutral area. which could allow to spawn forest and wild animals.
-
-- work on the destruction. fire. smoke.
-
-Work on the lore on rare "events":
-- lockness event. 
-- polish the particle. they are sometimes starting off screen. also they need to be oriented to the castle. so maybe we need to store abstracted data and resolve at the end of the scene.
-- "zombie"/ghul mode. with the red moon. ref to zelda?
-- for these specials. have special titles too.
-- dragon?! (lot of work, but what if i reuse my snake code)
+IDEAS:
+- giant people ("boss"). also when the size is high enough (level of detail), renders people with better than just wireframe. using dist func?
+- rock should we fill them in case of white paper?
+- archer on top of an attacker tower. 
+- ? for these specials. have special titles too.
+- ADD post processing anim. add an invisible polygon to make a texture in the web side (replace to activate).
+  - on sea (like (I) Primitive)
+  - on the fires to make the glow & have some sort of moving effect
+- ADD Random event on rock:
+  - a nest
+  - a weapon
+  - an observer/lost person
+- SPECIAL lockness event. 
+- SPECIAL "zombie"/ghul mode. with the red moon. ref to zelda?

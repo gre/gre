@@ -16,6 +16,7 @@ use self::{
   tunnelstructure::TunnelStructure,
 };
 use super::{
+  animals::{armadillo::Armadillo, dog::Dog, fowl::Fowl},
   blazon::Blazon,
   mountains::{Mountain, MountainsV2},
   tree::Tree,
@@ -247,6 +248,46 @@ impl ArmyOnMountain {
         paint.paint_polyline(rt, 1.0);
       }
       routes.extend(tree_rts);
+
+      // Animals TODO: only near forest and when there is not people.
+      let clr = 0;
+      let animals_count = rng.gen_range(0..10);
+      let mut animals_rts = vec![];
+      for _i in 0..animals_count {
+        let x = mix(first.0, last.0, rng.gen_range(0.0..1.0));
+        let y = mix(lookup_ridge(&ridge, x), yhorizon, rng.gen_range(0.0..1.0));
+        if y < yhorizon - 0.05 * paint.height
+        // away enough from the beach
+        {
+          let origin = (x, y);
+          let rot = 0.0;
+          let rts = if rng.gen_bool(0.2) {
+            let size = rng.gen_range(0.5..1.0) * 0.01 * width;
+            let obj = Armadillo::init(rng, clr, origin, size, rot);
+            obj.render(paint)
+          } else if rng.gen_bool(0.4) {
+            let size = rng.gen_range(0.01..0.03) * width;
+            let obj = Fowl::init(rng, clr, origin, size, rot);
+            obj.render(paint)
+          } else {
+            let size = rng.gen_range(0.015..0.035) * width;
+            let reversex = rng.gen_bool(0.5);
+            let obj = Dog::init(rng, clr, origin, size, reversex, true);
+            obj.render(paint)
+          };
+          animals_rts.extend(rts);
+          /*
+          let area = VCircle::new(x, y - 0.3 * size, 0.5 * size);
+          debug_circle.push(area);
+          exclusion_mask.paint_circle(area.x, area.y, area.r);
+          */
+        }
+      }
+      // small halo
+      for (_, rt) in animals_rts.iter() {
+        paint.paint_polyline(rt, 1.0);
+      }
+      routes.extend(animals_rts);
 
       // relic convoy
       if rng.gen_bool(0.05) {

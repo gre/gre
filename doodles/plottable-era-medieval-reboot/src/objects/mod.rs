@@ -1,3 +1,4 @@
+pub mod animals;
 pub mod army;
 pub mod blazon;
 pub mod castle;

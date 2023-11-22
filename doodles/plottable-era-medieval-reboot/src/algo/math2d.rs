@@ -119,3 +119,25 @@ pub fn sample_2d_candidates_f32<R: Rng>(
   candidates.truncate(samples);
   return candidates;
 }
+
+pub fn polar_sort_from_center(pts: &Vec<(f32, f32)>) -> Vec<(f32, f32)> {
+  let mut sumx = 0.0;
+  let mut sumy = 0.0;
+  for &p in pts.iter() {
+    sumx += p.0;
+    sumy += p.1;
+  }
+  let l = pts.len();
+  let center = (sumx / (l as f32), sumy / (l as f32));
+  let mut points = pts
+    .iter()
+    .map(|p| {
+      let dy = p.1 - center.1;
+      let dx = p.0 - center.0;
+      let a = dy.atan2(dx);
+      (p, a)
+    })
+    .collect::<Vec<_>>();
+  points.sort_by(|a, b| a.1.partial_cmp(&b.1).unwrap());
+  points.iter().map(|p| *(p.0)).collect()
+}
