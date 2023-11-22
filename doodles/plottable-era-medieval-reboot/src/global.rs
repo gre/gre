@@ -7,7 +7,10 @@ use crate::{
     blazon::Blazon,
     projectile::{ball::Ball, trail::Trail},
   },
-  palette::{Palette, AMBER, GOLD_GEL},
+  palette::{
+    Palette, AMBER, BLACK_PAPER, BLUE_PAPER, DARK_BLUE_PAPER, GOLD_GEL,
+    RED_PAPER,
+  },
   svgplot::inks_stats,
 };
 use rand::prelude::*;
@@ -30,10 +33,10 @@ pub struct Feature {
 #[derive(PartialEq, Eq, Hash)]
 pub enum Special {
   TrojanHorse,
-  Lockness, // TODO
+  _Lockness, // TODO
   Excalibur,
-  Ghuls, // TODO
-  Giant, // TODO
+  _Ghuls, // TODO
+  _Giant, // TODO
   Montmirail,
   Dragon(usize),
   Chinese,
@@ -96,8 +99,12 @@ impl GlobalCtx {
     let colors = &palette.inks;
 
     let destruction_map = WeightMap::new(width, height, precision, 0.0);
-    let mut night_time = paper.2;
-    if colors[0] == colors[1] {
+    let mut night_time = rng.gen_bool(0.2) && paper == BLUE_PAPER
+      || rng.gen_bool(0.5) && paper == RED_PAPER
+      || rng.gen_bool(0.5) && paper == BLACK_PAPER
+      || paper == DARK_BLUE_PAPER;
+    colors[1];
+    if night_time && colors[0] == colors[1] {
       // in monochrome, we allow the night_time to get disabled
       if night_time {
         night_time = rng.gen_bool(0.5);

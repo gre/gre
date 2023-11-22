@@ -41,8 +41,9 @@ pub static BLOODY_BREXIT: Ink =
 pub static WHITE_PAPER: Paper = Paper("White", "#fff", false);
 pub static BLACK_PAPER: Paper = Paper("Black", "#202020", true);
 pub static GREY_PAPER: Paper = Paper("Grey", "#959fa8", true);
-// TODO add DARK_BLUE_PAPER
-// TODO add BLUE_PAPER
+pub static BLUE_PAPER: Paper = Paper("Blue", "#4cbadc", true);
+pub static DARK_BLUE_PAPER: Paper = Paper("Blue", "#191932", true);
+pub static RED_PAPER: Paper = Paper("Red", "#aa0000", true);
 
 /**
  * LICENSE CC BY-NC-ND 4.0
@@ -205,26 +206,48 @@ impl Palette {
         (colors, GREY_PAPER)
       }
       3 => {
-        // TODO DARK_BLUE_PAPER
-        let colors = vec![BLACK, WHITE_GEL, WHITE_GEL];
-        (colors, GREY_PAPER)
+        let blazon_color = match blazon {
+          Blazon::Lys => GOLD_GEL,
+          _ => WHITE_GEL,
+        };
+        let colors = vec![WHITE_GEL, WHITE_GEL, blazon_color];
+        (colors, DARK_BLUE_PAPER)
       }
       4 => {
-        // TODO BLUE_PAPER
-        let colors = vec![BLACK, WHITE_GEL, WHITE_GEL];
-        (colors, GREY_PAPER)
+        let blazon_color = match blazon {
+          Blazon::Lys => WHITE_GEL,
+          _ => BLACK,
+        };
+        let colors = vec![BLACK, WHITE_GEL, blazon_color];
+        (colors, BLUE_PAPER)
       }
       _ => {
-        // TODO RED_PAPER
-        let colors = vec![BLACK, WHITE_GEL, WHITE_GEL];
-        (colors, GREY_PAPER)
+        let sun = if rng.gen_bool(0.3) {
+          GOLD_GEL
+        } else {
+          WHITE_GEL
+        };
+
+        let blazon_color = match blazon {
+          Blazon::Lys => GOLD_GEL,
+          _ => WHITE_GEL,
+        };
+        let colors = vec![BLACK, sun, blazon_color];
+        (colors, RED_PAPER)
       }
     };
 
     // going full monochrome
     let monochrome = if rng.gen_bool(0.05) {
-      inks[1] = inks[0];
-      inks[2] = inks[0];
+      let r = inks[if rng.gen_bool(0.8) {
+        0
+      } else if rng.gen_bool(0.6) {
+        1
+      } else {
+        2
+      }];
+      inks[1] = r;
+      inks[2] = r;
       true
     } else {
       false

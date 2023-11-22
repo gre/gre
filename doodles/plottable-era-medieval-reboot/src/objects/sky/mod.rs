@@ -1,16 +1,23 @@
-mod clouds;
-mod eagle;
-mod sun;
+pub mod clouds;
+pub mod eagle;
+pub mod moon;
+pub mod rain;
+pub mod star;
+pub mod sun;
 
-use rand::prelude::*;
-use std::f32::consts::PI;
-
+use self::{
+  clouds::cloud_in_circle, eagle::eagle, moon::Moon, rain::Rain, star::Star,
+  sun::Sun,
+};
 use crate::{
-  algo::{packing::VCircle, paintmask::PaintMask},
+  algo::{
+    packing::{self, packing, VCircle},
+    paintmask::PaintMask,
+  },
   global::GlobalCtx,
 };
-
-use self::{clouds::cloud_in_circle, eagle::eagle, sun::sun};
+use rand::prelude::*;
+use std::f32::consts::PI;
 
 /**
  * LICENSE CC BY-NC-ND 4.0
@@ -27,11 +34,12 @@ pub struct MedievalSky {
   pub width: f32,
   pub height: f32,
   pub pad: f32,
+  pub night_time: bool,
 }
 
 impl MedievalSky {
   pub fn rand<R: Rng>(
-    _ctx: &mut GlobalCtx,
+    ctx: &mut GlobalCtx,
     rng: &mut R,
     width: f32,
     height: f32,
@@ -63,6 +71,7 @@ impl MedievalSky {
       pad,
       width,
       height,
+      night_time: ctx.night_time,
     }
   }
   pub fn render<R: Rng>(
@@ -80,6 +89,7 @@ impl MedievalSky {
       width,
       height,
       pad,
+      night_time,
     } = *self;
     let mut routes = vec![];
 
@@ -130,10 +140,76 @@ impl MedievalSky {
         base_dr,
         minr,
       ));
+
+      // TODO cloud side function of y
+      // TODO use WeightMap
     }
 
+    let should_sun_spiral = !night_time && rng.gen_bool(0.7);
+    let should_rain = !night_time && !should_sun_spiral && rng.gen_bool(0.8);
+    let should_have_stars = night_time && rng.gen_bool(0.8);
+
     // sun
-    routes.extend(sun(paint, sun_color, sun_circle.pos(), sun_circle.r, 0.5));
+    let dr = 0.5;
+    if night_time {
+      let phase = rng.gen_range(0.35..0.65);
+      let moon =
+        Moon::init(sun_color, sun_circle.pos(), sun_circle.r, dr, phase);
+      routes.extend(moon.render(paint));
+    } else {
+      let spiralrays = if should_sun_spiral {
+        Some(rng.gen_range(1.0..4.0))
+      } else {
+        None
+      };
+      let sun =
+        Sun::init(sun_color, sun_circle.pos(), sun_circle.r, dr, spiralrays);
+      routes.extend(sun.render(paint));
+    }
+
+    if should_have_stars {
+      let count = 300;
+      let pad = 0.01 * width;
+      let min = pad + 0.003 * width;
+      let max = min + 0.01 * width;
+      let starbranches = 2 * rng.gen_range(5..9);
+      let circles = packing(
+        rng,
+        5000,
+        count,
+        1,
+        pad,
+        (0.0, 0.0, width, height),
+        &|_| true,
+        min,
+        max,
+      );
+      for c in circles {
+        let star = Star::init(rng, sun_color, c.pos(), c.r, starbranches);
+        routes.extend(star.render(paint));
+      }
+    }
+
+    if should_rain {
+      let clr = rng.gen_range(0..2);
+      let width = paint.width;
+      let height = paint.height;
+      let fromlen = rng.gen_range(0.001..0.01) * width;
+      let tolen = 2.0 * fromlen;
+      let angle = PI / 2.0
+        + rng.gen_range(-2.0..2.0)
+          * rng.gen_range(0.0..1.0)
+          * rng.gen_range(0.0..1.0);
+      let perlinfreq = rng.gen_range(0.0..10.0) * rng.gen_range(0.0..1.0);
+      let perlinamp = rng.gen_range(0.0..3.0) * rng.gen_range(0.0..1.0);
+      let layers = rng.gen_range(3..6);
+      let iterations = rng.gen_range(4000..8000);
+      let rain = Rain::init(
+        rng, clr, layers, iterations, width, height, fromlen, tolen, angle,
+        perlinfreq, perlinamp,
+      );
+      routes.extend(rain.render(paint));
+    }
 
     routes
   }

@@ -50,6 +50,7 @@ impl PaintMask {
 
   pub fn grow(&mut self, growpad: f32) {
     let wi = (self.width / self.precision) as usize;
+    let hi = (self.height / self.precision) as usize;
 
     let precision = self.precision;
     let width = self.width;
@@ -79,17 +80,17 @@ impl PaintMask {
       if x >= width {
         break;
       }
-      let xi = (x / precision) as usize;
+      let xi = ((x / precision) as usize).min(wi - 1);
       let mut y = 0.0;
       loop {
         if y >= height {
           break;
         }
-        let index = xi + (y / precision) as usize * wi;
+        let index = xi + ((y / precision) as usize).min(hi - 1) * wi;
         if data[index] {
           for &(dx, dy) in pos.iter() {
-            let x = x + dx;
-            let y = y + dy;
+            let x = (x + dx).max(0.0).min(width - precision);
+            let y = (y + dy).max(0.0).min(height - precision);
             let i = (x / precision) as usize + (y / precision) as usize * wi;
             self.mask[i] = true;
           }

@@ -1,11 +1,6 @@
 SKY:
-- clouds rework. variety with Linear Clouds + Worms Filling Cloud. (Using a gradient of values).
+- clouds rework. variety with Linear Clouds.
 - stars shapes
-- work on sky background
-  - noise field (nuit étoilée), like my storms. using all colors?
-  - rains like in Heist.
-  - full spiral around the sun.
-  - parametric equations with worms filling.
 - rethink sun position
 
 CASTLE:
@@ -43,6 +38,7 @@ BATTLEFIELD:
 - ADD: campfire near huts. (it's an area)
 
 GENERAL:
+- BUG: Blue Paper + BLACK WHITE BLACK => bad 3rd color
 - BUG when lowering precision at 0.1 there are some crash. let's run a lot of results to identify where.
 - work on projectiles. add fire & smoke.
   - polish the particle. they are sometimes starting off screen. also they need to be oriented to the castle. so maybe we need to store abstracted data and resolve at the end of the scene.
@@ -53,6 +49,7 @@ MOUNTAIN:
 
 SEA:
 - boat spawner to spawn add variety.
+- mat de bateau
 
 FRONT MOUNTAIN:
 - better animals spawning. can spawn on front too.
@@ -62,6 +59,7 @@ FRONT MOUNTAIN:
   - axe
 
 IDEAS:
+- for most object i think we need to allow them to go gold. in rare case.
 - giant people ("boss"). also when the size is high enough (level of detail), renders people with better than just wireframe. using dist func?
 - rock should we fill them in case of white paper?
 - archer on top of an attacker tower. 
@@ -75,3 +73,5 @@ IDEAS:
   - an observer/lost person
 - SPECIAL lockness event. 
 - SPECIAL "zombie"/ghul mode. with the red moon. ref to zelda?
+- IDEA: sky parametric equations with worms filling.
+

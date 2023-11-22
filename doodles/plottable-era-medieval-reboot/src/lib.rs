@@ -23,6 +23,7 @@ use objects::mountains::front::FrontMountains;
 use objects::mountains::*;
 use objects::sea::beach::Beach;
 use objects::sea::Sea;
+use objects::sky::star::Star;
 use objects::sky::MedievalSky;
 use palette::Palette;
 use palette::GOLD_GEL;
@@ -287,8 +288,12 @@ pub fn render(
   let feature_json = serde_json::to_string(&feature).unwrap();
   let palette_json: String = palette.to_json();
 
-  let layers =
-    make_layers_from_routes_colors(&routes, &palette.inks, mask_mode);
+  let layers = make_layers_from_routes_colors(
+    &routes,
+    &palette.inks,
+    mask_mode,
+    2.0 * precision,
+  );
 
   let svg = make_document(
     hash.as_str(),
@@ -347,7 +352,7 @@ fn sandbox<R: Rng>(
   */
 
   /*
-  for _ in 0..50 {
+  for _ in 0..500 {
     let h = rng.gen_range(10.0..20.0);
     let w = h * rng.gen_range(1.5..2.0);
     let ang = rng.gen_range(-3.0..3.)
@@ -365,9 +370,7 @@ fn sandbox<R: Rng>(
     // let xflip = rng.gen_bool(0.5);
     // let cloth_height_factor = rng.gen_range(0.3..0.6);
     // let cloth_len_factor = rng.gen_range(0.3..1.0);
-    let rts =
-      objects::castle::chinesedoor::ChineseDoor::init(rng, clr, o, w, h, ang)
-        .render(paint);
+    let rts = Star::init(rng, clr, o, 20.0).render(paint);
     routes.extend(rts.clone());
     for (_, rt) in rts.iter() {
       paint.paint_polyline(&rt, 1.0);

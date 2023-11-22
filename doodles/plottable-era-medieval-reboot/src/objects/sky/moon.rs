@@ -10,21 +10,21 @@ use crate::algo::{
  * Author: greweb – 2023 – Plottable Era: (II) Medieval
  */
 
-pub struct Sun {
+pub struct Moon {
   pub routes: Polylines,
-  pub spiralrays: Option<f32>,
+  pub phase: f32,
   pub origin: (f32, f32),
   pub radius: f32,
   pub clr: usize,
 }
 
-impl Sun {
+impl Moon {
   pub fn init(
     clr: usize,
     origin: (f32, f32),
     radius: f32,
     dr: f32,
-    spiralrays: Option<f32>,
+    phase: f32,
   ) -> Self {
     let routes = vec![
       (clr, spiral_optimized(origin.0, origin.1, radius, dr, 0.1)),
@@ -37,7 +37,7 @@ impl Sun {
       routes,
       origin,
       radius,
-      spiralrays,
+      phase,
       clr,
     }
   }
@@ -45,28 +45,20 @@ impl Sun {
   pub fn render(&self, paint: &mut PaintMask) -> Polylines {
     let origin = self.origin;
     let radius = self.radius;
-    let mut routes = regular_clip(&self.routes, paint);
-    paint.paint_circle(origin.0, origin.1, radius);
-    if let Some(dr) = self.spiralrays {
-      let rt = spiral_optimized(
-        origin.0,
-        origin.1,
-        paint.height.max(paint.width) / 2.0,
-        dr,
-        0.3,
-      );
-      let rts = vec![(self.clr, rt)];
-      /*
-      // exact clipping to avoid glitch with the 2d array
-      let is_outside = |p: (f32, f32)| {
-        let dx = p.0 - origin.0;
-        let dy = p.1 - origin.1;
-        dx * dx + dy * dy < radius * radius
-      };
-      let rts = clip_routes_with_colors(&rts, &is_outside, 0.3, 3);
-      */
-      routes.extend(regular_clip(&rts, paint));
+
+    let mut clone = paint.clone();
+    clone.paint_circle(
+      origin.0 + (self.phase - 0.5) * radius * 4.0,
+      origin.1,
+      radius,
+    );
+
+    let routes = regular_clip(&self.routes, &mut clone);
+
+    for (_, r) in &routes {
+      paint.paint_polyline(r, 2.0);
     }
+
     routes
   }
 }

@@ -127,6 +127,7 @@ pub fn make_layers_from_routes_colors(
   routes: &Vec<(usize, Vec<(f32, f32)>)>,
   colors: &Vec<Ink>,
   mask_mode: bool,
+  manhattan_skip_threshold: f32,
 ) -> Vec<String> {
   let mask_colors = vec!["#0FF", "#F0F", "#FF0"];
   make_layers(
@@ -140,15 +141,23 @@ pub fn make_layers_from_routes_colors(
           c.3,
           routes
             .iter()
-            .filter_map(
-              |(ci, routes)| {
-                if *ci == i {
-                  Some(routes.clone())
-                } else {
-                  None
+            .filter_map(|(ci, routes)| {
+              if *ci != i || routes.len() < 2 {
+                return None;
+              }
+              // if manhattan dist is below the threshold we skip the stroke.
+              // we don't plot want to plot "dots" that are relicate from clipping.
+              let mut last = routes[0];
+              let mut d = 0.0;
+              for &p in &routes[1..] {
+                d += (p.0 - last.0).abs() + (p.1 - last.1).abs();
+                if d > manhattan_skip_threshold {
+                  return Some(routes.clone());
                 }
-              },
-            )
+                last = p;
+              }
+              None
+            })
             .collect(),
         )
       })

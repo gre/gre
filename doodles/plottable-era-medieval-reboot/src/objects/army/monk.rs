@@ -25,7 +25,7 @@ impl Monk {
     angle: f32,
     xflip: bool,
     mainclr: usize,
-    carrying: bool,
+    _carrying: bool,
   ) -> Self {
     let acos = angle.cos();
     let asin = angle.sin();

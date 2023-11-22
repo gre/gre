@@ -55,7 +55,7 @@ impl PalmTree {
     routes = regular_clip(&routes, paint);
 
     for (_clr, route) in &routes {
-      paint.paint_polyline(route, 0.08 * h);
+      paint.paint_polyline(route, 0.1 * h);
     }
 
     routes
