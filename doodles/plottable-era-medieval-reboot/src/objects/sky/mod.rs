@@ -168,11 +168,11 @@ impl MedievalSky {
     }
 
     if should_have_stars {
-      let count = 300;
-      let pad = 0.01 * width;
-      let min = pad + 0.003 * width;
-      let max = min + 0.01 * width;
-      let starbranches = 2 * rng.gen_range(5..9);
+      let count = rng.gen_range(50..500);
+      let pad = rng.gen_range(0.0..0.02) * width;
+      let min = pad + rng.gen_range(0.005..0.01) * width;
+      let max = min + 0.001 * width;
+      let starbranches = 2 * rng.gen_range(5..8);
       let circles = packing(
         rng,
         5000,
@@ -180,12 +180,15 @@ impl MedievalSky {
         1,
         pad,
         (0.0, 0.0, width, height),
-        &|_| true,
+        &|c| !paint.is_painted(c.pos()),
         min,
         max,
       );
+      let mind = rng.gen_range(0.3..0.8);
       for c in circles {
-        let star = Star::init(rng, sun_color, c.pos(), c.r, starbranches);
+        let r = c.r * rng.gen_range(mind..1.0);
+        let star = Star::init(rng, sun_color, c.pos(), r, starbranches);
+
         routes.extend(star.render(paint));
       }
     }
@@ -205,8 +208,8 @@ impl MedievalSky {
       let layers = rng.gen_range(3..6);
       let iterations = rng.gen_range(4000..8000);
       let rain = Rain::init(
-        rng, clr, layers, iterations, width, height, fromlen, tolen, angle,
-        perlinfreq, perlinamp,
+        rng, paint, clr, layers, iterations, width, height, fromlen, tolen,
+        angle, perlinfreq, perlinamp,
       );
       routes.extend(rain.render(paint));
     }

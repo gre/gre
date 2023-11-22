@@ -55,7 +55,7 @@ pub fn render(
 ) -> String {
   let mut perf = PerfRecords::start(debug);
 
-  perf.span("init");
+  perf.span("init", &vec![]);
   let mut rng = rng_from_hash(&hash);
   let mut font = load_font(&fontdata);
 
@@ -79,9 +79,9 @@ pub fn render(
   let mut decoration_routes = vec![];
   let framingw = 0.05 * width;
 
-  perf.span_end("init");
+  perf.span_end("init", &routes);
 
-  perf.span("epic title");
+  perf.span("epic title", &decoration_routes);
   let txt = epic_title(&mut rng, &ctx);
   let fontsize = width / 26.0;
   let iterations = 5000;
@@ -102,15 +102,15 @@ pub fn render(
     density,
     growpad,
   ));
-  perf.span_end("epic title");
+  perf.span_end("epic title", &decoration_routes);
 
-  perf.span("framing");
+  perf.span("framing", &decoration_routes);
   let golden_frame = palette.inks[1] == GOLD_GEL && rng.gen_bool(0.3);
   let clr = if golden_frame { 1 } else { 0 };
   decoration_routes.extend(medieval_frame(
     &mut rng, &mut paint, width, height, pad, framingw, clr,
   ));
-  perf.span_end("framing");
+  perf.span_end("framing", &decoration_routes);
   let mask_with_framing = paint.clone();
 
   // sandbox when developing
@@ -121,7 +121,7 @@ pub fn render(
   for s in &ctx.specials {
     match s {
       Special::Dragon(n) => {
-        perf.span("dragon");
+        perf.span("dragon", &routes);
         for i in 0..*n {
           let mut rt = vec![];
           let c = (0.5 * width, 0.3 * height);
@@ -161,7 +161,7 @@ pub fn render(
             .render(&mut paint),
           );
         }
-        perf.span_end("dragon");
+        perf.span_end("dragon", &routes);
       }
       _ => {}
     }
@@ -171,7 +171,7 @@ pub fn render(
   let yhorizon = rng.gen_range(0.4..0.7) * height;
 
   //  mountains
-  perf.span("mountains_front");
+  perf.span("mountains_front", &routes);
   // TODO better peaky shapes. not too annoying. can sometimes disappear
   let ystart = mix(yhorizon, height, rng.gen_range(0.0..1.0));
   let ybase = height - pad;
@@ -183,26 +183,26 @@ pub fn render(
     width,
   };
   routes.extend(mountains.render(&mut ctx, &mut rng, &mut paint));
-  perf.span_end("mountains_front");
+  perf.span_end("mountains_front", &routes);
 
-  perf.span("sea");
+  perf.span("sea", &vec![]);
   let boat_color = 0;
   let sea = Sea::from(&paint, yhorizon, boat_color, attacker_house);
   let sea_routes = sea.render(&mut ctx, &mut rng, &mut paint);
-  perf.span_end("sea");
+  perf.span_end("sea", &sea_routes);
 
-  perf.span("mountains");
+  perf.span("mountains", &routes);
   let ymax = mix(0.0, yhorizon, 0.6);
   let count = rng.gen_range(2..8);
   let mountains =
     MountainsV2::rand(&mut rng, 0, width, height, yhorizon, ymax, count);
-  perf.span_end("mountains");
+  perf.span_end("mountains", &routes);
 
   let army: ArmyOnMountain = ArmyOnMountain::init(attacker_house);
 
   for (i, mountain) in mountains.mountains.iter().enumerate() {
     if mountain.has_beach {
-      perf.span("beach");
+      perf.span("beach", &routes);
       let beach = Beach::init(
         &mut ctx,
         &mut rng,
@@ -215,21 +215,21 @@ pub fn render(
         attacker_house,
       );
       routes.extend(beach.render(&mut ctx, &mut rng, &mut paint));
-      perf.span_end("beach");
+      perf.span_end("beach", &routes);
     }
 
-    perf.span("attackers");
+    perf.span("attackers", &routes);
     routes.extend(
       army.render(&mut ctx, &mut rng, &mut paint, &mountain, &mountains, i),
     );
-    perf.span_end("attackers");
+    perf.span_end("attackers", &routes);
 
-    perf.span("mountains");
+    perf.span("mountains", &routes);
     routes.extend(mountain.render(&mut paint));
-    perf.span_end("mountains");
+    perf.span_end("mountains", &routes);
 
     if let Some(castle) = &mountain.castle {
-      perf.span("castle");
+      perf.span("castle", &routes);
       // TODO the randomness is to be done inside a Castle::rand()
       let castle = Castle {
         pos: castle.position,
@@ -249,11 +249,11 @@ pub fn render(
         blazon: defender_house,
       };
       routes.extend(castle.render(&mut ctx, &mut rng, &mut paint));
-      perf.span_end("castle");
+      perf.span_end("castle", &routes);
     }
   }
 
-  perf.span("sky");
+  perf.span("sky", &routes);
   let sky = MedievalSky::rand(&mut ctx, &mut rng, width, height, pad);
   // prevent sky to glitch inside the sea
   let is_below_horizon = |(_x, y): (f32, f32)| y > yhorizon;
@@ -264,9 +264,9 @@ pub fn render(
     5,
   );
   routes.extend(sky_routes);
-  perf.span_end("sky");
+  perf.span_end("sky", &routes);
 
-  perf.span("reflect_shapes");
+  perf.span("reflect_shapes", &routes);
   let probability_par_color = vec![0.08, 0.1, 0.2];
   routes.extend(sea.reflect_shapes(
     &mut rng,
@@ -274,13 +274,13 @@ pub fn render(
     &routes,
     probability_par_color,
   ));
-  perf.span_end("reflect_shapes");
+  perf.span_end("reflect_shapes", &routes);
 
   routes.extend(sea_routes);
 
-  perf.span("projectiles");
+  perf.span("projectiles", &routes);
   ctx.render_projectiles(&mut rng, &mut routes, &mask_with_framing);
-  perf.span_end("projectiles");
+  perf.span_end("projectiles", &routes);
 
   routes.extend(decoration_routes);
 

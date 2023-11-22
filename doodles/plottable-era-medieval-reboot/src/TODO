@@ -38,7 +38,6 @@ BATTLEFIELD:
 - ADD: campfire near huts. (it's an area)
 
 GENERAL:
-- BUG: Blue Paper + BLACK WHITE BLACK => bad 3rd color
 - BUG when lowering precision at 0.1 there are some crash. let's run a lot of results to identify where.
 - work on projectiles. add fire & smoke.
   - polish the particle. they are sometimes starting off screen. also they need to be oriented to the castle. so maybe we need to store abstracted data and resolve at the end of the scene.

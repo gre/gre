@@ -17,6 +17,7 @@ pub struct Rain {
 impl Rain {
   pub fn init<R: Rng>(
     rng: &mut R,
+    paint: &PaintMask,
     clr: usize,
     layers: usize,
     iterations: usize,
@@ -41,7 +42,7 @@ impl Rain {
         1,
         0.0,
         (0.0, 0.0, width, height),
-        &|_| true,
+        &|c| !paint.is_painted(c.pos()),
         min,
         max,
       ));
