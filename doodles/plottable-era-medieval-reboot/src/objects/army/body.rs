@@ -1,11 +1,11 @@
-use crate::algo::{
-  clipping::regular_clip, paintmask::PaintMask, polylines::Polylines,
-};
+use crate::algo::{clipping::regular_clip, math1d::mix, paintmask::PaintMask};
 use rand::prelude::*;
 use std::f32::consts::PI;
 
+use super::human::HoldableObject;
+
 #[derive(Clone, Copy)]
-pub struct HumanJointAngles {
+pub struct HumanPosture {
   pub body_angle: f32,
   pub head_angle: f32,
   // shoulders (left, right)
@@ -27,9 +27,68 @@ pub struct HumanJointAngles {
   pub right_leg_bend: f32,
 }
 
+impl HumanPosture {
+  pub fn from_holding<R: Rng>(
+    rng: &mut R,
+    xflip: bool,
+    lefthand: Option<HoldableObject>,
+    righthand: Option<HoldableObject>,
+  ) -> Self {
+    let xdir = if xflip { -1.0 } else { 1.0 };
+    let shoulder_right_angle = -PI / 2.0
+      + match righthand {
+        Some(HoldableObject::LongBow(phase)) => {
+          mix(PI / 4.0, PI / 2.0, phase) * xdir
+        }
+        Some(HoldableObject::LongSword) | Some(HoldableObject::Sword) => {
+          xdir * 4.0
+        }
+        _ => rng.gen_range(-1.0..1.0),
+      };
+    let elbow_right_angle = match righthand {
+      Some(HoldableObject::Paddle(a)) => a,
+      _ => {
+        shoulder_right_angle
+          + rng.gen_range(-0.5..0.5) * rng.gen_range(0.0..1.0)
+      }
+    };
+
+    let shoulder_left_angle = rng.gen_range(3.0 * PI / 4.0..PI);
+
+    let left_arm_bend = match lefthand {
+      Some(HoldableObject::Shield) => 0.5,
+      _ => 1.0,
+    };
+
+    let right_arm_bend = match righthand {
+      Some(HoldableObject::Axe) => 1.0,
+      Some(HoldableObject::Club) => rng.gen_range(0.5..1.0),
+      Some(HoldableObject::LongBow(_)) => 1.0,
+      _ => 0.4,
+    };
+
+    Self {
+      body_angle: -PI / 2.0,
+      head_angle: -PI / 2.0,
+      shoulder_right_angle,
+      shoulder_left_angle,
+      elbow_right_angle,
+      elbow_left_angle: PI / 2.0 + 0.3,
+      hip_right_angle: PI / 2.0 - 0.5,
+      hip_left_angle: PI / 2.0 + 0.5,
+      knee_right_angle: PI / 2.0,
+      knee_left_angle: PI / 2.0,
+      left_arm_bend,
+      right_arm_bend,
+      left_leg_bend: 1.0,
+      right_leg_bend: 1.0,
+    }
+  }
+}
+
 #[derive(Clone, Copy)]
 pub struct HumanBody {
-  pub joints: HumanJointAngles,
+  pub posture: HumanPosture,
   pub origin: (f32, f32),
   pub height: f32,
   pub hip: (f32, f32),
@@ -47,13 +106,13 @@ pub struct HumanBody {
 
 impl HumanBody {
   pub fn head_pos_angle(&self) -> ((f32, f32), f32) {
-    (self.head, self.joints.head_angle)
+    (self.head, self.posture.head_angle)
   }
   pub fn hand_left_pos_angle(&self) -> ((f32, f32), f32) {
-    (self.elbow_left, self.joints.elbow_left_angle)
+    (self.elbow_left, self.posture.elbow_left_angle)
   }
   pub fn hand_right_pos_angle(&self) -> ((f32, f32), f32) {
-    (self.elbow_right, self.joints.elbow_right_angle)
+    (self.elbow_right, self.posture.elbow_right_angle)
   }
   /*
   pub fn foot_left_pos_angle(&self) -> ((f32, f32), f32) {
@@ -67,11 +126,7 @@ impl HumanBody {
   }
   */
 
-  pub fn new(
-    origin: (f32, f32),
-    height: f32,
-    joints: HumanJointAngles,
-  ) -> Self {
+  pub fn new(origin: (f32, f32), height: f32, joints: HumanPosture) -> Self {
     let h = height;
     let j = joints;
     let mut hip = origin;
@@ -106,7 +161,7 @@ impl HumanBody {
 
     Self {
       origin,
-      joints,
+      posture: joints,
       height,
       hip,
       shoulder,

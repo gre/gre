@@ -14,7 +14,7 @@ pub struct Ball {
 }
 
 impl Ball {
-  pub fn init<R: Rng>(rng: &mut R, origin: (f32, f32), r: f32) -> Self {
+  pub fn init<R: Rng>(_rng: &mut R, origin: (f32, f32), r: f32) -> Self {
     Self { origin, r }
   }
 

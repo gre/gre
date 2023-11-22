@@ -104,11 +104,7 @@ impl Tree {
       inner_crop_polys,
     }
   }
-  pub fn render<R: Rng>(
-    &self,
-    rng: &mut R,
-    paint: &mut PaintMask,
-  ) -> Polylines {
+  pub fn render(&self, paint: &mut PaintMask) -> Polylines {
     for poly in self.inner_crop_polys.iter() {
       paint.paint_polygon(poly);
     }

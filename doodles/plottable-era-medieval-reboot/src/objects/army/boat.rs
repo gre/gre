@@ -3,13 +3,16 @@ use crate::{
     clipping::regular_clip,
     paintmask::PaintMask,
     polylines::{
-      path_subdivide_to_curve, route_scale_translate_rotate, Polylines,
+      path_subdivide_to_curve, route_scale_translate_rotate,
+      scale_translate_rotate, Polylines,
     },
   },
   objects::blazon::Blazon,
 };
 use rand::prelude::*;
 use std::f32::consts::PI;
+
+use super::belierhead::BelierHead;
 
 /**
  * LICENSE CC BY-NC-ND 4.0
@@ -61,6 +64,8 @@ impl Boat {
     mask: &mut PaintMask,
     clr: usize,
   ) -> Polylines {
+    // TODO move these to init
+
     let x1 = self.x1;
     let x2 = self.x2;
 
@@ -70,6 +75,7 @@ impl Boat {
     let w = self.w;
     let xflip = self.xflip;
 
+    let mut out = vec![];
     let mut routes = vec![];
 
     let xdir = if xflip { -1.0 } else { 1.0 };
@@ -111,15 +117,13 @@ impl Boat {
     routes.push((clr, route.clone()));
 
     // make a boat head
-    let o = (w / 2.0, yright);
-    let mut route = vec![];
-    for _i in 0..8 {
-      let angle = rng.gen_range(-PI..PI);
-      let amp = rng.gen_range(0.1..0.2) * size;
-      route.push((o.0 + amp * angle.cos(), o.1 + amp * angle.sin()));
-    }
-    route.push(route[0]);
-    routes.push((clr, route));
+    let o =
+      scale_translate_rotate((w / 2.0, yright), (xdir, 1.), origin, angle);
+    let s = 0.5 * size;
+    let a = angle - PI / 4.0;
+
+    let h = BelierHead::init(rng, clr, o, s, a, xflip);
+    out.extend(h.render(mask));
 
     routes = routes
       .iter()
@@ -130,14 +134,13 @@ impl Boat {
         )
       })
       .collect();
-
     routes = regular_clip(&routes, mask);
-
     // FIXME probably better than this clipping. but good for now
     for (_clr, route) in &routes {
       mask.paint_polyline(route, 0.1 * size);
     }
+    out.extend(routes);
 
-    routes
+    out
   }
 }

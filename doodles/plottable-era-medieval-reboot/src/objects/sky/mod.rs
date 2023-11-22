@@ -31,7 +31,7 @@ pub struct MedievalSky {
 
 impl MedievalSky {
   pub fn rand<R: Rng>(
-    ctx: &mut GlobalCtx,
+    _ctx: &mut GlobalCtx,
     rng: &mut R,
     width: f32,
     height: f32,

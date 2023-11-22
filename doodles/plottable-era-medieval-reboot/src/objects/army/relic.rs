@@ -20,7 +20,7 @@ pub struct Relic {
 
 impl Relic {
   pub fn init<R: Rng>(
-    rng: &mut R,
+    _rng: &mut R,
     origin: (f32, f32),
     size: f32,
     angle: f32,

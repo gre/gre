@@ -6,8 +6,9 @@ use self::{chapel::Chapel, wall::CastleWall, walltower::CastleWallTower};
 use super::blazon::Blazon;
 
 pub mod chapel;
+pub mod chinesedoor;
+pub mod chineseroof;
 pub mod decorations;
-pub mod relic;
 pub mod wall;
 pub mod walltower;
 
@@ -40,7 +41,7 @@ pub struct Castle {
 impl Castle {
   pub fn render<R: Rng>(
     &self,
-    ctx: &mut GlobalCtx,
+    _ctx: &mut GlobalCtx,
     rng: &mut R,
     paint: &mut PaintMask,
   ) -> Vec<(usize, Vec<(f32, f32)>)> {

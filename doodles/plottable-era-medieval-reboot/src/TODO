@@ -1,8 +1,8 @@
 
 URGENT: BATTLEFIELD
-- add folks on the machines
-- axe warrior
-- boat taking in param an array of warriors
+- add folks on the machines.
+- y ordering of battlefield + split human rendering in 2 first human.render_foreground_only, then possible other object (including machines!), then background. there might be the same principle on the castle?
+- axe warrior.
 - in the army, we need a leader. they will either have a flag OR a weapon that is bigger and colored with the team color.
 - some % of people will hold a flag.
 - shield to react on the blazon
@@ -34,6 +34,11 @@ URGENT: CASTLE
   - drawbridge
 
 HIGH:
+- merge Monk into Human
+- do something with Cage.
+- boat spawner to spawn add variety.
+- dragon canon. throw fireball with lot of particle in direction to the castle.
+- muraille qui traverse la montagne. on utilisera le facteur de destruction (trous dans la muraille / explosions avec des morceaux en l'air)
 - spear warrior
 - giant people ("boss"). also when the size is high enough (level of detail), renders people with better than just wireframe. using dist func?
 - projectiles

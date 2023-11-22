@@ -1,4 +1,4 @@
-use super::body::{HumanBody, HumanJointAngles};
+use super::body::{HumanBody, HumanPosture};
 use crate::algo::{
   clipping::regular_clip, math2d::lerp_point, paintmask::PaintMask,
   polylines::route_xreverse_translate_rotate,
@@ -33,7 +33,7 @@ impl Monk {
 
     let humansize = size * 0.5;
     // TODO carrying will be this. but we need non carrying positions.
-    let joints = HumanJointAngles {
+    let joints = HumanPosture {
       body_angle: -PI / 2.0,
       head_angle: -PI / 2.0,
       shoulder_right_angle: rng.gen_range(0.0..PI / 4.0),

@@ -1,10 +1,7 @@
 use std::f32::consts::PI;
 
 use crate::algo::{
-  clipping::regular_clip,
-  paintmask::PaintMask,
-  polygon::make_wireframe_from_vertexes,
-  polylines::{path_to_fibers, Polylines},
+  clipping::regular_clip, paintmask::PaintMask, polylines::Polylines,
 };
 use rand::prelude::*;
 
@@ -26,7 +23,7 @@ pub struct ConvoyWalk {
 
 impl ConvoyWalk {
   pub fn init<R: Rng>(
-    rng: &mut R,
+    _rng: &mut R,
     origin: (f32, f32),
     size: f32,
     angle: f32,

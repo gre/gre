@@ -1,11 +1,8 @@
 use super::belierhead::BelierHead;
-use crate::{
-  algo::{
-    clipping::regular_clip,
-    paintmask::PaintMask,
-    polylines::{route_translate_rotate, Polylines},
-  },
-  objects::blazon::Blazon,
+use crate::algo::{
+  clipping::regular_clip,
+  paintmask::PaintMask,
+  polylines::{route_translate_rotate, Polylines},
 };
 use rand::prelude::*;
 

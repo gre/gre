@@ -21,12 +21,15 @@ impl Axe {
     origin: (f32, f32),
     size: f32,
     angle: f32,
+    (xflip, yflip): (bool, bool),
   ) -> Self {
     let mut routes = vec![];
     let mut routesbg = vec![];
     let mut polysbg = vec![];
     let mut polys = vec![];
 
+    let xdir = if xflip { -1.0 } else { 1.0 };
+    let ydir = if yflip { -1.0 } else { 1.0 };
     let dx = size * 0.05;
     let dy = size * 0.5;
 
@@ -53,6 +56,10 @@ impl Axe {
     rt.push((c.0, a.1));
     rt.push(a);
     rt.push(rt[0]);
+    let rt = rt
+      .iter()
+      .map(|o| (o.0 * xdir, o.1 * ydir))
+      .collect::<Vec<_>>();
     let rt = route_translate_rotate(&rt, origin, -angle);
     routesbg.push((clr, rt.clone()));
     polysbg.push(rt);

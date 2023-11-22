@@ -24,8 +24,9 @@ impl Flag {
     flagtoright: bool,
     cloth_height_factor: f32,
     cloth_len_factor: f32,
+    spike: bool,
   ) -> Self {
-    let spear = Spear::init(clr, origin, size, angle);
+    let spear = Spear::init(clr, origin, size, angle, spike);
     let acos = angle.cos();
     let asin = angle.sin();
     let dir = if flagtoright { -PI / 2.0 } else { PI / 2.0 };

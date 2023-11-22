@@ -1,11 +1,7 @@
 use super::decorations::merlon;
 use crate::algo::{
-  clipping::clip_routes_with_colors,
-  math1d::mix,
-  paintmask::PaintMask,
-  polygon::{polygon_includes_point, polygons_includes_point},
-  shapes::arc,
-  wormsfilling::WormsFilling,
+  clipping::clip_routes_with_colors, math1d::mix, paintmask::PaintMask,
+  polygon::polygon_includes_point, shapes::arc,
 };
 use rand::prelude::*;
 use std::f32::consts::PI;

@@ -1,18 +1,22 @@
+use std::f32::consts::PI;
+
 use self::{
-  archer::bowman,
   belfry::belfry,
   belier::Belier,
+  body::HumanPosture,
   car4l::Renault4L,
   convoywalk::ConvoyWalk,
+  flag::Flag,
+  human::{HeadShape, HoldableObject, Human},
+  hut::Hut,
   monk::Monk,
+  relic::Relic,
   rider::Rider,
   trebuchet::Trebuchet,
   tunnelstructure::TunnelStructure,
-  warrior::{Warrior, WarriorHead, WarriorObject},
 };
 use super::{
   blazon::Blazon,
-  castle::relic::Relic,
   mountains::{Mountain, MountainsV2},
   tree::Tree,
 };
@@ -33,7 +37,6 @@ use rand::prelude::*;
  * LICENSE CC BY-NC-ND 4.0
  * Author: greweb – 2023 – Plottable Era: (II) Medieval
  */
-pub mod archer;
 pub mod arrow;
 pub mod axe;
 pub mod belfry;
@@ -42,16 +45,23 @@ pub mod belierhead;
 pub mod boat;
 pub mod boatarmy;
 pub mod body;
+pub mod cage;
 pub mod car4l;
 pub mod catapult;
 pub mod club;
 pub mod convoywalk;
+pub mod dragonhead;
 pub mod flag;
+pub mod flyingdragon;
 pub mod head;
 pub mod helmet;
 pub mod horse;
+pub mod human;
+pub mod hut;
 pub mod longbow;
 pub mod monk;
+pub mod paddle;
+pub mod relic;
 pub mod rider;
 pub mod shield;
 pub mod spear;
@@ -59,7 +69,6 @@ pub mod sword;
 pub mod trebuchet;
 pub mod trojanhorse;
 pub mod tunnelstructure;
-pub mod warrior;
 pub mod wheeledplatform;
 
 // we could use this multiple times if we have multiple mountains
@@ -112,7 +121,10 @@ impl ArmyOnMountain {
       let origin = (x, y);
       let size = rng.gen_range(0.05..0.1) * width;
       let car = Renault4L::init(rng, 1, origin, size, 0.0);
-      let jacquouille = Warrior::init(
+      let leftobj = None;
+      let rightobj = Some(HoldableObject::Club);
+      let posture = HumanPosture::from_holding(rng, false, leftobj, rightobj);
+      let jacquouille = Human::init(
         rng,
         (x - 1.5 * size, y),
         0.8 * size,
@@ -121,12 +133,15 @@ impl ArmyOnMountain {
         blazon,
         mainclr,
         blazonclr,
-        WarriorHead::NAKED,
-        None,
-        Some(WarriorObject::Club),
+        posture,
+        HeadShape::NAKED,
+        leftobj,
+        rightobj,
       );
       routes.extend(jacquouille.render(paint));
-      let godefroy = Warrior::init(
+      let rightobj = Some(HoldableObject::Sword);
+      let posture = HumanPosture::from_holding(rng, false, leftobj, rightobj);
+      let godefroy = Human::init(
         rng,
         (x - 1.2 * size, y),
         size,
@@ -135,9 +150,10 @@ impl ArmyOnMountain {
         blazon,
         mainclr,
         blazonclr,
-        WarriorHead::HELMET,
+        posture,
+        HeadShape::HELMET,
         None,
-        Some(WarriorObject::Sword),
+        Some(HoldableObject::Sword),
       );
       routes.extend(godefroy.render(paint));
       routes.extend(car.render(paint));
@@ -218,7 +234,7 @@ impl ArmyOnMountain {
             bush_width_ratio,
             trunk_fill_each,
           );
-          let rts = tree.render(rng, paint);
+          let rts = tree.render(paint);
           tree_rts.extend(rts);
 
           let area = VCircle::new(x, y - 0.3 * size, 0.5 * size);
@@ -372,18 +388,14 @@ impl ArmyOnMountain {
           let origin = (x, y);
           let size = 0.04 * width;
           let xflip = x > castle.position.0;
-          let warrior = Warrior::init(
-            rng,
-            origin,
-            size,
-            angle,
-            xflip,
-            blazon,
-            mainclr,
-            blazonclr,
-            WarriorHead::HELMET,
-            Some(WarriorObject::Shield),
-            Some(WarriorObject::LongSword),
+          let headshape = HeadShape::HELMET;
+          let leftobj = Some(HoldableObject::Shield);
+          let rightobj = Some(HoldableObject::LongSword);
+          let posture =
+            HumanPosture::from_holding(rng, false, leftobj, rightobj);
+          let warrior = Human::init(
+            rng, origin, size, angle, xflip, blazon, mainclr, blazonclr,
+            posture, headshape, leftobj, rightobj,
           );
 
           let decorationratio = 0.3;
@@ -419,12 +431,21 @@ impl ArmyOnMountain {
           let origin = (x, y);
           let size = 0.04 * width;
           let xflip = x > castle.position.0;
-          let headshape = WarriorHead::HELMET;
-          let leftobj = Some(WarriorObject::Shield);
-          let rightobj = Some(WarriorObject::Sword);
-          let warrior = Warrior::init(
-            rng, origin, size, 0.0, xflip, blazon, clr, blazonclr, headshape,
-            leftobj, rightobj,
+          let headshape = HeadShape::HELMET;
+          let leftobj = Some(HoldableObject::Shield);
+          let mut rightobj = match blazon {
+            Blazon::Lys => Some(HoldableObject::Sword),
+            Blazon::Falcon => Some(HoldableObject::Club),
+            Blazon::Dragon => Some(HoldableObject::Axe),
+          };
+          if rng.gen_bool(0.1) {
+            rightobj = Some(HoldableObject::Flag);
+          }
+          let posture =
+            HumanPosture::from_holding(rng, false, leftobj, rightobj);
+          let warrior = Human::init(
+            rng, origin, size, 0.0, xflip, blazon, clr, blazonclr, posture,
+            headshape, leftobj, rightobj,
           );
 
           // todo in one case it is riding a horse or it's not.
@@ -448,12 +469,57 @@ impl ArmyOnMountain {
           let origin = (x, y);
           let size = 0.04 * width;
           let xflip = x > castle.position.0;
-          routes.extend(bowman(rng, paint, clr, origin, size, xflip));
+          let phase = rng.gen_range(0.0..1.0);
+          let headshape = HeadShape::NAKED;
+          let leftobj = None;
+          let rightobj = Some(HoldableObject::LongBow(phase));
+          let posture =
+            HumanPosture::from_holding(rng, xflip, leftobj, rightobj);
+          let human = Human::init(
+            rng, origin, size, 0.0, xflip, blazon, clr, blazonclr, posture,
+            headshape, leftobj, rightobj,
+          );
+          routes.extend(human.render(paint));
 
           let area = VCircle::new(x, y - 0.3 * size, 0.5 * size);
           debug_circle.push(area);
           exclusion_mask.paint_circle(area.x, area.y, area.r);
         }
+      }
+
+      // huts
+
+      // TODO sort by y order (as well as all other things)
+      // TODO better spawning
+      for _ in 0..rng.gen_range(0..4) {
+        let x = mix(first.0, last.0, rng.gen_range(0.1..0.9));
+        let y = mix(lookup_ridge(&ridge, x), yhorizon, rng.gen_range(0.0..1.0));
+        let size = rng.gen_range(0.05..0.08) * width;
+        let angle = 0.0;
+        let hut = Hut::init(rng, mainclr, (x, y), size, angle);
+        routes.extend(hut.render(paint));
+
+        let flagtoright = rng.gen_bool(0.5);
+        let cloth_height_factor = rng.gen_range(0.2..0.5);
+        let cloth_len_factor = rng.gen_range(0.3..0.8);
+        let dy = rng.gen_range(0.7..0.8) * size;
+        let flag = Flag::init(
+          rng,
+          mainclr,
+          blazonclr,
+          (x, y - dy),
+          size,
+          angle - PI / 2.0,
+          flagtoright,
+          cloth_height_factor,
+          cloth_len_factor,
+          false,
+        );
+        let rt = flag.render(paint);
+        for (_, r) in rt.iter() {
+          paint.paint_polyline(&r, 0.8);
+        }
+        routes.extend(rt);
       }
     }
     // TODO we also are going to spawn some projectiles.

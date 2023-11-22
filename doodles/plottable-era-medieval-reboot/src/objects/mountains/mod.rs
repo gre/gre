@@ -36,11 +36,7 @@ pub struct Mountain {
 }
 
 impl Mountain {
-  pub fn render<R: Rng>(
-    &self,
-    rng: &mut R,
-    paint: &mut PaintMask,
-  ) -> Polylines {
+  pub fn render(&self, paint: &mut PaintMask) -> Polylines {
     let out = regular_clip(&self.routes, paint);
     let yhorizon = self.yhorizon;
     paint.paint_columns_left_to_right(&|x| {
@@ -95,7 +91,6 @@ impl MountainsV2 {
       };
       let amp1 = rng.gen_range(0.0..4.0) * rng.gen_range(0.0..1.0);
       let amp2 = rng.gen_range(0.0..4.0) * rng.gen_range(0.0..1.0);
-      let amp3 = rng.gen_range(0.0..4.0) * rng.gen_range(0.0..1.0);
       let center = rng.gen_range(0.2..0.8) * width;
 
       let stopy = mix(yhorizon, ymax, 0.2 + 0.8 * jf);
@@ -105,13 +100,11 @@ impl MountainsV2 {
       let mut miny = base_y;
       let mut maxy = 0.0;
       let mut first = true;
-      let mut layers = 0;
 
       loop {
         if miny < stopy {
           break;
         }
-        layers += 1;
 
         let mut route = Vec::new();
         let mut x = mountainpadding;
@@ -120,7 +113,7 @@ impl MountainsV2 {
           if x > width - mountainpadding {
             break;
           }
-          let mut xv = (h - base_y / height) * (x - center);
+          let xv = (h - base_y / height) * (x - center);
 
           let amp = height * ampfactor;
           let mut y = base_y;
@@ -269,12 +262,13 @@ impl MountainsV2 {
         // TODO we could vary this based on the mountain shape
         let castle_width = rng.gen_range(0.2..0.35) * width;
 
+        /*
         let leftx = castle_position.0 - castle_width / 2.0;
         let righty = castle_position.0 + castle_width / 2.0;
-
+        */
         // TODO: shape the mountain to flatten the area...
 
-        let mut castle_moats = (false, false);
+        let castle_moats = (false, false);
 
         Some(CastleGrounding {
           position: castle_position,

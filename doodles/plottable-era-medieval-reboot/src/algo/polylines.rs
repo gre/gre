@@ -66,15 +66,6 @@ pub fn shake<R: Rng>(
     .collect()
 }
 
-pub fn route_rotate(route: &Vec<(f32, f32)>, angle: f32) -> Vec<(f32, f32)> {
-  let acos = angle.cos();
-  let asin = angle.sin();
-  route
-    .iter()
-    .map(|&(x, y)| (x * acos + y * asin, y * acos - x * asin))
-    .collect()
-}
-
 pub fn route_translate_rotate(
   route: &Vec<(f32, f32)>,
   origin: (f32, f32),
@@ -103,6 +94,20 @@ pub fn translate_rotate(
   (
     x * acos + y * asin + origin.0,
     y * acos - x * asin + origin.1,
+  )
+}
+
+pub fn scale_translate_rotate(
+  (x, y): (f32, f32),
+  scale: (f32, f32),
+  origin: (f32, f32),
+  angle: f32,
+) -> (f32, f32) {
+  let acos = angle.cos();
+  let asin = angle.sin();
+  (
+    scale.0 * (x * acos + y * asin) + origin.0,
+    scale.1 * (y * acos - x * asin) + origin.1,
   )
 }
 
@@ -149,7 +154,6 @@ pub fn grow_path_zigzag(
   width: f32,
   line_dist: f32,
 ) -> Vec<(f32, f32)> {
-  let mut route: Vec<(f32, f32)> = Vec::new();
   let dx = angle.cos();
   let dy = angle.sin();
   let incr_dx = -dy;
@@ -308,4 +312,28 @@ pub fn path_to_fibers(
   }
 
   fibers
+}
+
+// an algo that step into a path each time it reaches a certain distance
+pub fn step_polyline(path: &Polyline, step: f32) -> Polyline {
+  let plen = path.len();
+  let mut route = vec![];
+  if plen < 1 {
+    return route;
+  }
+  let mut lastp = path[0];
+  route.push(lastp);
+  let mut i = 0;
+  while i < plen - 1 {
+    let b = path[i + 1];
+    let dist = euclidian_dist(lastp, b);
+    if dist < step {
+      i += 1;
+    } else if dist >= step {
+      let p = lerp_point(lastp, b, step / dist);
+      route.push(p);
+      lastp = p;
+    }
+  }
+  route
 }

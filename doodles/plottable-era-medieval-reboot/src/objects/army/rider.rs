@@ -1,5 +1,5 @@
-use super::{horse::Horse, warrior::Warrior};
-use crate::{algo::paintmask::PaintMask, objects::blazon::Blazon};
+use super::{horse::Horse, human::Human};
+use crate::algo::paintmask::PaintMask;
 use rand::prelude::*;
 
 /**
@@ -9,13 +9,13 @@ use rand::prelude::*;
 
 pub struct Rider {
   pub horse: Horse,
-  pub warrior: Warrior,
+  pub warrior: Human,
 }
 
 // TODO Warrior to be a param
 impl Rider {
   pub fn init<R: Rng>(
-    rng: &mut R,
+    _rng: &mut R,
     origin: (f32, f32),
     size: f32,
     angle: f32,
@@ -24,7 +24,7 @@ impl Rider {
     blazonclr: usize,
     decorationratio: f32,
     foot_offset: f32,
-    warrior: Warrior,
+    warrior: Human,
   ) -> Self {
     let horse = Horse::init(
       origin,

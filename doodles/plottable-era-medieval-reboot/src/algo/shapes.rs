@@ -22,6 +22,22 @@ pub fn circle_route(
   return route;
 }
 
+pub fn circle_route_angleoff(
+  center: (f32, f32),
+  r: f32,
+  count: usize,
+  angleoff: f32,
+) -> Vec<(f32, f32)> {
+  let mut route = Vec::new();
+  for i in 0..(count + 1) {
+    let a = angleoff + 2. * PI * (i as f32) / (count as f32);
+    let x = center.0 + r * a.cos();
+    let y = center.1 + r * a.sin();
+    route.push((x, y));
+  }
+  return route;
+}
+
 pub fn arc(
   center: (f32, f32),
   r: f32,

@@ -35,7 +35,7 @@ pub struct Beach {
 
 impl Beach {
   pub fn init<R: Rng>(
-    ctx: &mut GlobalCtx,
+    _ctx: &mut GlobalCtx,
     rng: &mut R,
     paint: &mut PaintMask,
     yhorizon: f32,

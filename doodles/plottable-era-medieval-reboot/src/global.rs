@@ -3,8 +3,11 @@ use crate::{
     clipping::regular_clip, paintmask::PaintMask, polylines::Polylines,
     wormsfilling::WeightMap,
   },
-  objects::projectile::{ball::Ball, trail::Trail},
-  palette::{self, Palette, AMBER, GOLD_GEL},
+  objects::{
+    blazon::Blazon,
+    projectile::{ball::Ball, trail::Trail},
+  },
+  palette::{Palette, AMBER, GOLD_GEL},
   svgplot::inks_stats,
 };
 use rand::prelude::*;
@@ -32,6 +35,8 @@ pub enum Special {
   Ghuls, // TODO
   Giant, // TODO
   Montmirail,
+  Dragon(usize),
+  Chinese,
 }
 
 pub struct GlobalCtx {
@@ -67,15 +72,24 @@ impl GlobalCtx {
     height: f32,
     precision: f32,
     palette: Palette,
+    defenders: &Blazon,
+    attackers: &Blazon,
   ) -> Self {
     let mut specials = HashSet::new();
-    if rng.gen_bool(0.01) {
+
+    if rng.gen_bool(0.04) && matches!(attackers, Blazon::Dragon)
+      || rng.gen_bool(0.01) && matches!(attackers, Blazon::Lys)
+    {
+      specials.insert(Special::Dragon(rng.gen_range(1..3)));
+    } else if rng.gen_bool(0.01) {
       specials.insert(Special::TrojanHorse);
     } else if rng.gen_bool(0.01) {
       let c = palette.inks[1];
       if c == GOLD_GEL || c == AMBER {
         specials.insert(Special::Montmirail);
       }
+    } else if rng.gen_bool(0.05) && matches!(defenders, Blazon::Dragon) {
+      specials.insert(Special::Chinese);
     }
 
     let paper = palette.paper;

@@ -1,17 +1,9 @@
-use super::{
-  body::{HumanBody, HumanJointAngles},
-  head::head_square,
-};
 use crate::algo::{
-  clipping::regular_clip,
   math1d::mix,
-  paintmask::PaintMask,
   polylines::{
     grow_path_zigzag, path_subdivide_to_curve, route_translate_rotate,
   },
 };
-use rand::prelude::*;
-use std::f32::consts::PI;
 
 /**
  * LICENSE CC BY-NC-ND 4.0

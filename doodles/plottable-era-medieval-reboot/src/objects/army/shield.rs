@@ -1,7 +1,7 @@
 use crate::{
   algo::{
     clipping::regular_clip_polys, paintmask::PaintMask,
-    polygon::polygons_includes_point, polylines::route_translate_rotate,
+    polylines::route_translate_rotate,
   },
   objects::blazon::Blazon,
 };
@@ -20,7 +20,7 @@ impl Shield {
     size: f32,
     angle: f32,
     xflip: bool,
-    blazon: Blazon, // TODO
+    _blazon: Blazon, // TODO
   ) -> Self {
     let mx = if xflip { -1.0 } else { 1.0 };
     let mut routes = Vec::new();
@@ -69,10 +69,5 @@ impl Shield {
 
   pub fn render(&self, paint: &mut PaintMask) -> Vec<(usize, Vec<(f32, f32)>)> {
     regular_clip_polys(&self.routes, paint, &self.polygons)
-  }
-
-  #[deprecated = "we should use a paint instead"]
-  pub fn includes_point(&self, point: (f32, f32)) -> bool {
-    polygons_includes_point(&self.polygons, point)
   }
 }

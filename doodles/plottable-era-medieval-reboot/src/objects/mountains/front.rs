@@ -3,9 +3,10 @@ use crate::{
     clipping::clip_routes_with_colors, math1d::mix, paintmask::PaintMask,
     polylines::path_subdivide_to_curve,
   },
-  global::GlobalCtx,
+  global::{GlobalCtx, Special},
   objects::{
     army::trebuchet::Trebuchet,
+    castle::chinesedoor::ChineseDoor,
     projectile::{ball::Ball, trail::Trail},
   },
 };
@@ -37,6 +38,7 @@ impl FrontMountains {
     // TODO we may split the idea of front vs back mountains
 
     let mut routes = vec![];
+
     let perlin = Perlin::new(rng.gen());
     // mini mountains
     let count = rng.gen_range(2..12);
@@ -85,6 +87,20 @@ impl FrontMountains {
 
       routes.extend(rts);
       curves.push(curve);
+    }
+
+    if ctx.specials.contains(&Special::Chinese) {
+      // FIXME BUGGY positioning. we want it on the mountain. need to do proper lookup like in the other mountains
+
+      let o = (
+        rng.gen_range(0.4..0.6) * width,
+        rng.gen_range(0.8..0.9) * paint.height,
+      );
+      let h = rng.gen_range(0.1..0.15) * width;
+      let w = h * rng.gen_range(1.5..2.0);
+      let angle = 0.0;
+      let door = ChineseDoor::init(rng, clr, o, w, h, angle);
+      routes.extend(door.render(paint));
     }
 
     let mut trebuchet_candidates = vec![];

@@ -1,14 +1,11 @@
-use crate::{
-  algo::{
-    clipping::regular_clip,
-    math2d::lerp_point,
-    paintmask::PaintMask,
-    polylines::{
-      path_subdivide_to_curve_it, route_translate_rotate, shake, Polylines,
-    },
-    shapes::{circle_route, spiral_optimized_with_initial_angle},
+use crate::algo::{
+  clipping::regular_clip,
+  math2d::lerp_point,
+  paintmask::PaintMask,
+  polylines::{
+    path_subdivide_to_curve_it, route_translate_rotate, shake, Polylines,
   },
-  objects::blazon::Blazon,
+  shapes::{circle_route, spiral_optimized_with_initial_angle},
 };
 use rand::prelude::*;
 use std::f32::consts::PI;

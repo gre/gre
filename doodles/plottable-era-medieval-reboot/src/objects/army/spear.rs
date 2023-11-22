@@ -10,7 +10,13 @@ pub struct Spear {
 }
 
 impl Spear {
-  pub fn init(clr: usize, origin: (f32, f32), size: f32, angle: f32) -> Self {
+  pub fn init(
+    clr: usize,
+    origin: (f32, f32),
+    size: f32,
+    angle: f32,
+    spike: bool,
+  ) -> Self {
     let mut routes = vec![];
     let mut polys = vec![];
 
@@ -27,14 +33,16 @@ impl Spear {
     polys.push(stick.clone());
     routes.push((clr, stick));
 
-    let mut head = Vec::new();
-    head.push((spear_len / 2.0, -blade_w / 2.0));
-    head.push((spear_len / 2.0 + blade_len, 0.0));
-    head.push((spear_len / 2.0, blade_w / 2.0));
-    head.push(head[0]);
-    let head = route_translate_rotate(&head, origin, -angle);
-    polys.push(head.clone());
-    routes.push((clr, head));
+    if spike {
+      let mut head: Vec<(f32, f32)> = Vec::new();
+      head.push((spear_len / 2.0, -blade_w / 2.0));
+      head.push((spear_len / 2.0 + blade_len, 0.0));
+      head.push((spear_len / 2.0, blade_w / 2.0));
+      head.push(head[0]);
+      let head = route_translate_rotate(&head, origin, -angle);
+      polys.push(head.clone());
+      routes.push((clr, head));
+    }
 
     Self { routes, polys }
   }

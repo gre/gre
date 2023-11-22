@@ -1,7 +1,13 @@
+use std::f32::consts::PI;
+
 use super::{
-  army::boatarmy::BoatArmy,
+  army::{
+    boatarmy::BoatArmy,
+    body::HumanPosture,
+    human::{HeadShape, HoldableObject, Human},
+  },
   blazon::Blazon,
-  rock::{self, Rock},
+  rock::Rock,
 };
 use crate::{
   algo::{
@@ -35,8 +41,8 @@ trait SeaShape<R: Rng> {
 }
 
 impl<R: Rng> SeaShape<R> for Rock {
-  fn render_sea_shape(&self, rng: &mut R, paint: &mut PaintMask) -> Polylines {
-    self.render(rng, paint)
+  fn render_sea_shape(&self, _rng: &mut R, paint: &mut PaintMask) -> Polylines {
+    self.render(paint)
   }
   fn get_y_order(&self) -> f32 {
     self.origin.1
@@ -130,7 +136,7 @@ impl Sea {
     let boats_count = if no_boats {
       0
     } else {
-      (rng.gen_range(0.0f32..20.0) * rng.gen_range(-0.5..1.0)).max(0.0) as usize
+      (rng.gen_range(0.0f32..20.0) * rng.gen_range(-0.3..1.0)).max(0.0) as usize
     };
 
     // Place rocks
@@ -217,6 +223,43 @@ impl Sea {
               } else {
                 rng.gen_bool(0.5)
               };
+
+              // TODO boat need to have people with spears / swords / archers only
+              // TODO also flags
+
+              let spawn_human = |rng: &mut R, o, size, angle, xflip| {
+                let headshape = HeadShape::HELMET;
+                let lefthandobj = Some(HoldableObject::Shield);
+                // TODO paddle angle to be organized between people on the boat and sometimes it can be up.
+                let a = if xflip {
+                  -PI * rng.gen_range(0.6..0.7)
+                } else {
+                  -PI * rng.gen_range(0.3..0.4)
+                };
+                let righthandobj = Some(HoldableObject::Paddle(a));
+                let posture = HumanPosture::from_holding(
+                  rng,
+                  false,
+                  lefthandobj,
+                  righthandobj,
+                );
+
+                let human = Human::init(
+                  rng,
+                  o,
+                  size,
+                  angle,
+                  xflip,
+                  self.blazon,
+                  0,
+                  self.boat_color,
+                  posture,
+                  headshape,
+                  lefthandobj,
+                  righthandobj,
+                );
+                human
+              };
               let boat = BoatArmy::init(
                 rng,
                 self.boat_color,
@@ -226,6 +269,7 @@ impl Sea {
                 w,
                 xflip,
                 self.blazon,
+                &spawn_human,
               );
               // routes.extend(boat.render(rng, paint));
               //}

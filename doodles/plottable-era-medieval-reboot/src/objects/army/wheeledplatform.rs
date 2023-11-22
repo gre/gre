@@ -1,12 +1,9 @@
 use crate::algo::{
   clipping::regular_clip,
   paintmask::PaintMask,
-  polylines::{
-    route_rotate, route_translate_rotate, translate_rotate, Polylines,
-  },
+  polylines::{route_translate_rotate, translate_rotate, Polylines},
   shapes::{circle_route, spiral_optimized},
 };
-use rand::prelude::*;
 
 /**
  * LICENSE CC BY-NC-ND 4.0
