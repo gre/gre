@@ -3,8 +3,11 @@ use crate::algo::{
   math1d::mix,
   paintmask::PaintMask,
   polylines::{path_subdivide_to_curve, route_translate_rotate, Polylines},
+  renderable::Renderable,
 };
 use rand::prelude::*;
+
+use super::flag::Flag;
 
 /**
  * LICENSE CC BY-NC-ND 4.0
@@ -14,6 +17,8 @@ use rand::prelude::*;
 pub struct Hut {
   pub routes: Polylines,
   pub polys: Vec<Vec<(f32, f32)>>,
+  pub flag: Option<Flag>,
+  pub origin: (f32, f32),
 }
 
 impl Hut {
@@ -23,6 +28,7 @@ impl Hut {
     origin: (f32, f32),
     size: f32,
     angle: f32,
+    flag: Option<Flag>,
   ) -> Self {
     let mut routes = vec![];
     let mut polys = vec![];
@@ -45,14 +51,35 @@ impl Hut {
     routes.push((clr, route.clone()));
     polys.push(route);
 
-    Self { routes, polys }
+    Self {
+      routes,
+      polys,
+      flag,
+      origin,
+    }
   }
 
   pub fn render(&self, paint: &mut PaintMask) -> Polylines {
-    let routes = regular_clip(&self.routes, paint);
+    let mut routes = regular_clip(&self.routes, paint);
     for poly in &self.polys {
       paint.paint_polygon(poly);
     }
+    if let Some(flag) = &self.flag {
+      let rt = flag.render(paint);
+      for (_, r) in rt.iter() {
+        paint.paint_polyline(&r, 0.8);
+      }
+      routes.extend(rt);
+    }
     routes
+  }
+}
+
+impl<R: Rng> Renderable<R> for Hut {
+  fn render(&self, _rng: &mut R, paint: &mut PaintMask) -> Polylines {
+    self.render(paint)
+  }
+  fn yorder(&self) -> f32 {
+    self.origin.1
   }
 }

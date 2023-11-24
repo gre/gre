@@ -2,6 +2,7 @@ use std::f32::consts::PI;
 
 use crate::algo::{
   clipping::regular_clip, paintmask::PaintMask, polylines::Polylines,
+  renderable::Renderable,
 };
 use rand::prelude::*;
 
@@ -19,6 +20,7 @@ pub struct ConvoyWalk {
   pub right: (f32, f32),
   pub wheelp: (f32, f32),
   pub wheelr: f32,
+  pub origin: (f32, f32),
 }
 
 impl ConvoyWalk {
@@ -89,6 +91,7 @@ impl ConvoyWalk {
       right,
       wheelp,
       wheelr,
+      origin,
     }
   }
 
@@ -107,5 +110,14 @@ impl ConvoyWalk {
     }
 
     routes
+  }
+}
+
+impl<R: Rng> Renderable<R> for ConvoyWalk {
+  fn render(&self, _rng: &mut R, paint: &mut PaintMask) -> Polylines {
+    self.render(paint)
+  }
+  fn yorder(&self) -> f32 {
+    self.origin.1
   }
 }

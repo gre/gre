@@ -2,6 +2,7 @@ use rand::prelude::*;
 
 use crate::algo::{
   clipping::regular_clip, paintmask::PaintMask, polylines::Polylines,
+  renderable::Renderable,
 };
 
 /**
@@ -13,11 +14,12 @@ use crate::algo::{
 pub struct Port {
   pub origin: (f32, f32),
   pub size: f32,
+  pub clr: usize,
 }
 
 impl Port {
-  pub fn init(origin: (f32, f32), size: f32) -> Self {
-    Self { origin, size }
+  pub fn init(clr: usize, origin: (f32, f32), size: f32) -> Self {
+    Self { origin, size, clr }
   }
 
   pub fn render<R: Rng>(
@@ -81,5 +83,15 @@ impl Port {
     }
 
     routes
+  }
+}
+
+impl<R: Rng> Renderable<R> for Port {
+  fn render(&self, rng: &mut R, paint: &mut PaintMask) -> Polylines {
+    self.render(rng, paint, self.clr)
+  }
+
+  fn yorder(&self) -> f32 {
+    self.origin.1 + self.size / 2.0
   }
 }

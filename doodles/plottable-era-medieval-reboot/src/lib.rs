@@ -9,6 +9,7 @@ mod svgplot;
 
 use algo::clipping::clip_routes_with_colors;
 use algo::math1d::mix;
+use algo::packing::packing;
 use algo::polylines::path_subdivide_to_curve;
 use algo::polylines::shake;
 use algo::polylines::Polylines;
@@ -23,7 +24,6 @@ use objects::mountains::front::FrontMountains;
 use objects::mountains::*;
 use objects::sea::beach::Beach;
 use objects::sea::Sea;
-use objects::sky::star::Star;
 use objects::sky::MedievalSky;
 use palette::Palette;
 use palette::GOLD_GEL;
@@ -111,19 +111,44 @@ pub fn render(
     &mut rng, &mut paint, width, height, pad, framingw, clr,
   ));
   perf.span_end("framing", &decoration_routes);
-  let mask_with_framing = paint.clone();
 
   // sandbox when developing
   sandbox(&mut rng, &mut paint, &mut routes, width, height);
 
   // Front elements
-  // maybe we locate the object positions to position it more nicely?
   for s in &ctx.specials {
     match s {
       Special::Dragon(n) => {
         perf.span("dragon", &routes);
         for i in 0..*n {
+          let bx = pad + framingw + 0.1 * width;
+          let by = pad + framingw + 0.2 * height;
+          let count = rng.gen_range(2..10);
+          let mut circles = packing(
+            &mut rng,
+            500,
+            count,
+            1,
+            0.05 * width,
+            (bx, by, width - bx, height - by),
+            &|_| true,
+            0.01 * width,
+            0.1 * width,
+          );
+          circles.sort_by(|a, b| b.y.partial_cmp(&a.y).unwrap());
+
           let mut rt = vec![];
+          for c in circles {
+            rt.push((c.x, c.y));
+          }
+
+          while rt.len() < 2 {
+            rt.push((
+              rng.gen_range(0.3..0.7) * paint.width,
+              rng.gen_range(0.2..0.5) * paint.height,
+            ));
+          }
+          /*
           let c = (0.5 * width, 0.3 * height);
           // TODO less chaotic path. maybe doing a random zig zag?
           // TODO dragon throwing fireballs
@@ -133,13 +158,15 @@ pub fn render(
               c.1 + rng.gen_range(-0.2..0.2) * paint.height,
             ))
           }
-          rt = path_subdivide_to_curve(&rt, 1, 0.66);
-          rt = shake(rt, 0.1 * paint.width, &mut rng);
+          */
+          for _ in 0..rng.gen_range(1..3) {
+            rt = path_subdivide_to_curve(&rt, 1, 0.66);
+            let s = rng.gen_range(0.0..0.1) * paint.width;
+            rt = shake(rt, s, &mut rng);
+          }
           rt = path_subdivide_to_curve(&rt, 1, 0.7);
-          rt = shake(rt, 0.1 * paint.width, &mut rng);
-          rt = path_subdivide_to_curve(&rt, 1, 0.7);
-          rt = shake(rt, 0.1 * paint.width, &mut rng);
           rt = path_subdivide_to_curve(&rt, 1, 0.8);
+
           let size = rng.gen_range(0.04..0.08) * width;
           let step = rng.gen_range(1.0..2.0);
           let count =
@@ -167,8 +194,11 @@ pub fn render(
     }
   }
 
+  let mask_with_framing = paint.clone();
+
   // TODO ? allow some crazier cases where the yhorizon can be 20-40% but with more boats and possible battles in the sea
-  let yhorizon = rng.gen_range(0.4..0.7) * height;
+  // only if there are lot of things planned for the sea
+  let yhorizon = rng.gen_range(0.5..0.7) * height;
 
   //  mountains
   perf.span("mountains_front", &routes);
@@ -253,8 +283,28 @@ pub fn render(
     }
   }
 
+  perf.span("sky masks", &routes);
+  let mut skysafemask = paint.clone();
+  skysafemask.unpaint_borders(pad + framingw);
+  skysafemask.paint_fn(|(_x, y)| y > yhorizon);
+  skysafemask.dilate_manhattan(rng.gen_range(0.0..0.1) * width);
+  let mut skysafemask1 = skysafemask.clone();
+  skysafemask1.paint_borders(pad + framingw);
+  skysafemask.dilate_manhattan(rng.gen_range(0.0..0.2) * width);
+  let mut skysafemask2 = skysafemask.clone();
+  skysafemask2.paint_borders(pad + framingw);
+  perf.span_end("sky masks", &routes);
+
   perf.span("sky", &routes);
-  let sky = MedievalSky::rand(&mut ctx, &mut rng, width, height, pad);
+  let sky = MedievalSky::rand(
+    &mut ctx,
+    &mut rng,
+    &skysafemask1,
+    &skysafemask2,
+    width,
+    height,
+    pad,
+  );
   // prevent sky to glitch inside the sea
   let is_below_horizon = |(_x, y): (f32, f32)| y > yhorizon;
   let sky_routes = clip_routes_with_colors(
@@ -311,11 +361,11 @@ pub fn render(
 }
 
 fn sandbox<R: Rng>(
-  rng: &mut R,
-  paint: &mut PaintMask,
-  routes: &mut Polylines,
-  width: f32,
-  height: f32,
+  _rng: &mut R,
+  _paint: &mut PaintMask,
+  _routes: &mut Polylines,
+  _width: f32,
+  _height: f32,
 ) {
   /*
   for _ in 0..50 {

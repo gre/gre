@@ -3,6 +3,7 @@ use crate::algo::{
   math1d::mix,
   paintmask::PaintMask,
   polylines::{path_subdivide_to_curve_it, shake, Polylines},
+  renderable::Renderable,
   shapes::circle_route,
 };
 use rand::prelude::*;
@@ -17,6 +18,7 @@ pub struct Trebuchet {
   routes: Polylines,
   height: f32,
   basket_position: (f32, f32),
+  origin: (f32, f32),
 }
 
 impl Trebuchet {
@@ -424,6 +426,7 @@ impl Trebuchet {
       routes,
       height,
       basket_position,
+      origin,
     }
   }
 
@@ -439,5 +442,14 @@ impl Trebuchet {
     }
 
     routes
+  }
+}
+
+impl<R: Rng> Renderable<R> for Trebuchet {
+  fn render(&self, _rng: &mut R, paint: &mut PaintMask) -> Polylines {
+    self.render(paint)
+  }
+  fn yorder(&self) -> f32 {
+    self.origin.1
   }
 }

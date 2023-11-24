@@ -4,6 +4,7 @@ use crate::algo::{
   math2d::{lerp_point, polar_sort_from_center},
   paintmask::PaintMask,
   polylines::{path_subdivide_to_curve, shake, Polylines},
+  renderable::Renderable,
 };
 use rand::prelude::*;
 
@@ -14,6 +15,7 @@ use rand::prelude::*;
 
 pub struct Dog {
   pub routes: Polylines,
+  pub origin: (f32, f32),
 }
 
 impl Dog {
@@ -120,7 +122,7 @@ impl Dog {
       })
       .collect();
 
-    Self { routes }
+    Self { routes, origin }
   }
 
   pub fn render(&self, paint: &mut PaintMask) -> Polylines {
@@ -129,5 +131,14 @@ impl Dog {
       paint.paint_polygon(poly); // TODO it would be best to have proper polygons
     }
     routes
+  }
+}
+
+impl<R: Rng> Renderable<R> for Dog {
+  fn render(&self, _rng: &mut R, paint: &mut PaintMask) -> Polylines {
+    self.render(paint)
+  }
+  fn yorder(&self) -> f32 {
+    self.origin.1
   }
 }

@@ -6,6 +6,7 @@ use crate::algo::{
   paintmask::PaintMask,
   polygon::make_wireframe_from_vertexes,
   polylines::{path_to_fibers, Polylines},
+  renderable::Renderable,
 };
 use rand::prelude::*;
 
@@ -120,5 +121,14 @@ impl Tree {
     }
 
     routes
+  }
+}
+
+impl<R: Rng> Renderable<R> for Tree {
+  fn render(&self, _rng: &mut R, paint: &mut PaintMask) -> Polylines {
+    self.render(paint)
+  }
+  fn yorder(&self) -> f32 {
+    self.origin.1
   }
 }

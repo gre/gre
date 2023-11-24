@@ -48,56 +48,66 @@ impl PaintMask {
     self.mask[x + y * wi]
   }
 
-  pub fn grow(&mut self, growpad: f32) {
-    let wi = (self.width / self.precision) as usize;
-    let hi = (self.height / self.precision) as usize;
-
+  pub fn manhattan_distance(&self) -> Vec<usize> {
     let precision = self.precision;
-    let width = self.width;
-    let height = self.height;
-    let data: Vec<bool> = self.mask.iter().cloned().collect();
-    let mut pos = Vec::new();
-    let mut x = -growpad;
-    loop {
-      if x >= growpad {
-        break;
-      }
-      let mut y = -growpad;
-      loop {
-        if y >= growpad {
-          break;
-        }
-        if x * x + y * y < growpad * growpad {
-          pos.push((x, y));
-        }
-        y += precision;
-      }
-      x += precision;
-    }
-
-    let mut x = 0.0;
-    loop {
-      if x >= width {
-        break;
-      }
-      let xi = ((x / precision) as usize).min(wi - 1);
-      let mut y = 0.0;
-      loop {
-        if y >= height {
-          break;
-        }
-        let index = xi + ((y / precision) as usize).min(hi - 1) * wi;
-        if data[index] {
-          for &(dx, dy) in pos.iter() {
-            let x = (x + dx).max(0.0).min(width - precision);
-            let y = (y + dy).max(0.0).min(height - precision);
-            let i = (x / precision) as usize + (y / precision) as usize * wi;
-            self.mask[i] = true;
+    let width = (self.width / precision) as usize;
+    let height = (self.height / precision) as usize;
+    let mut distances = vec![usize::MAX; self.mask.len()];
+    // Forward pass
+    for y in 0..height {
+      for x in 0..width {
+        let idx = x + y * width;
+        if self.mask[idx] {
+          distances[idx] = 0;
+        } else {
+          if x > 0 {
+            let i = x - 1 + y * width;
+            distances[idx] = distances[idx].min(distances[i] + 1);
+          }
+          if y > 0 {
+            let i = x + (y - 1) * width;
+            distances[idx] = distances[idx].min(distances[i] + 1);
           }
         }
-        y += precision;
       }
-      x += precision;
+    }
+    // Backward pass
+    for y in (0..height).rev() {
+      for x in (0..width).rev() {
+        let idx = x + y * width;
+        if x < width - 1 {
+          let i = x + 1 + y * width;
+          distances[idx] = distances[idx].min(distances[i] + 1);
+        }
+        if y < height - 1 {
+          let i = x + (y + 1) * width;
+          distances[idx] = distances[idx].min(distances[i] + 1);
+        }
+      }
+    }
+    distances
+  }
+
+  pub fn dilate_manhattan(&mut self, radius: f32) {
+    let radius_scaled = (radius / self.precision) as usize;
+    let distances = self.manhattan_distance();
+    self.assign_data_lower_than_threshold(&distances, radius_scaled);
+  }
+
+  pub fn assign_data_lower_than_threshold(
+    &mut self,
+    data: &Vec<usize>,
+    threshold: usize,
+  ) {
+    let wi = (self.width / self.precision) as usize;
+    let hi = (self.height / self.precision) as usize;
+    for y in 0..hi {
+      for x in 0..wi {
+        let i = x + y * wi;
+        if data[i] <= threshold {
+          self.mask[i] = true;
+        }
+      }
     }
   }
 
@@ -254,6 +264,17 @@ impl PaintMask {
     maxx: f32,
     maxy: f32,
   ) {
+    self.paint_rectangle_v(minx, miny, maxx, maxy, true);
+  }
+
+  pub fn paint_rectangle_v(
+    &mut self,
+    minx: f32,
+    miny: f32,
+    maxx: f32,
+    maxy: f32,
+    v: bool,
+  ) {
     let precision = self.precision;
     let width = self.width;
     let minx = ((minx).max(0.).min(self.width) / precision) as usize;
@@ -265,7 +286,7 @@ impl PaintMask {
     let wi = (width / precision) as usize;
     for x in minx..maxx {
       for y in miny..maxy {
-        self.mask[x + y * wi] = true;
+        self.mask[x + y * wi] = v;
       }
     }
   }
@@ -275,6 +296,25 @@ impl PaintMask {
     self.paint_rectangle(0., 0., pad, self.height);
     self.paint_rectangle(0., self.height - pad, self.width, self.height);
     self.paint_rectangle(self.width - pad, 0., self.width, self.height);
+  }
+
+  pub fn unpaint_borders(&mut self, pad: f32) {
+    self.paint_rectangle_v(0., 0., self.width, pad, false);
+    self.paint_rectangle_v(0., 0., pad, self.height, false);
+    self.paint_rectangle_v(
+      0.,
+      self.height - pad,
+      self.width,
+      self.height,
+      false,
+    );
+    self.paint_rectangle_v(
+      self.width - pad,
+      0.,
+      self.width,
+      self.height,
+      false,
+    );
   }
 
   pub fn paint_vcircle(&mut self, c: &VCircle) {

@@ -13,6 +13,11 @@ use crate::{
 use noise::*;
 use rand::prelude::*;
 
+/**
+ * LICENSE CC BY-NC-ND 4.0
+ * Author: greweb – 2023 – Plottable Era: (II) Medieval
+ */
+
 pub struct FrontMountains {
   pub clr: usize,
   pub ybase: f32,
@@ -43,7 +48,7 @@ impl FrontMountains {
     // mini mountains
     let count = rng.gen_range(2..12);
     let h = ybase - ystart;
-    let xincr = 1.0;
+    let xincr = 2.0;
 
     let mut curves = vec![];
 

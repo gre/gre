@@ -2,11 +2,14 @@ use crate::algo::{
   clipping::regular_clip,
   paintmask::PaintMask,
   polylines::{grow_as_rectangle, route_translate_rotate, Polylines},
+  renderable::Renderable,
 };
+use rand::prelude::*;
 
 pub struct Spear {
   pub routes: Polylines,
   pub polys: Vec<Vec<(f32, f32)>>,
+  pub origin: (f32, f32),
 }
 
 impl Spear {
@@ -44,7 +47,11 @@ impl Spear {
       routes.push((clr, head));
     }
 
-    Self { routes, polys }
+    Self {
+      routes,
+      polys,
+      origin,
+    }
   }
 
   pub fn render(&self, paint: &mut PaintMask) -> Polylines {
@@ -53,5 +60,14 @@ impl Spear {
       paint.paint_polygon(poly);
     }
     routes
+  }
+}
+
+impl<R: Rng> Renderable<R> for Spear {
+  fn render(&self, _rng: &mut R, paint: &mut PaintMask) -> Polylines {
+    self.render(paint)
+  }
+  fn yorder(&self) -> f32 {
+    self.origin.1
   }
 }

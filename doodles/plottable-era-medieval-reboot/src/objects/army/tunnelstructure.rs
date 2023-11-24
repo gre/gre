@@ -8,6 +8,7 @@ use crate::algo::{
   paintmask::PaintMask,
   polygon::make_tri_wireframe_from_vertexes,
   polylines::{route_translate_rotate, Polylines},
+  renderable::Renderable,
 };
 
 use super::wheeledplatform::WheeledPlatform;
@@ -26,6 +27,7 @@ pub struct TunnelStructure {
   pub routes: Polylines,
   pub wheelplat: WheeledPlatform,
   pub clr: usize,
+  pub origin: (f32, f32),
 }
 
 impl TunnelStructure {
@@ -73,18 +75,19 @@ impl TunnelStructure {
     o.0 += a.cos() * h / 2.0;
     o.1 += a.sin() * h / 2.0;
     let wheelplat =
-      WheeledPlatform::init(o, wh, w, angle, wheel_pad, wheel_count);
+      WheeledPlatform::init(o, wh, w, angle, wheel_pad, wheel_count, clr);
 
     Self {
       routes,
       wheelplat,
       clr,
+      origin,
     }
   }
 
   pub fn render(&self, paint: &mut PaintMask) -> Polylines {
     let mut out = vec![];
-    out.extend(self.wheelplat.render(paint, self.clr));
+    out.extend(self.wheelplat.render(paint));
 
     let rts = regular_clip(&self.routes, paint);
     out.extend(rts);
@@ -94,5 +97,14 @@ impl TunnelStructure {
     }
 
     out
+  }
+}
+
+impl<R: Rng> Renderable<R> for TunnelStructure {
+  fn render(&self, rng: &mut R, paint: &mut PaintMask) -> Polylines {
+    self.render(paint)
+  }
+  fn yorder(&self) -> f32 {
+    self.origin.1
   }
 }

@@ -2,7 +2,7 @@ use std::f32::consts::PI;
 
 use crate::algo::{
   clipping::regular_clip, paintmask::PaintMask, polygon::polygons_find_miny,
-  polylines::Polylines,
+  polylines::Polylines, renderable::Renderable, wormsfilling::WormsFilling,
 };
 use rand::prelude::*;
 
@@ -20,6 +20,7 @@ pub struct Rock {
   pub polys: Vec<Vec<(f32, f32)>>,
   pub inner_crop_polys: Vec<Vec<(f32, f32)>>,
   pub sword: Option<Sword>,
+  pub clr: usize,
 }
 
 impl Rock {
@@ -47,7 +48,7 @@ impl Rock {
       );
       let mut poly = vec![];
       let mut inner_crop_poly = vec![];
-      let count = rng.gen_range(5..10);
+      let count = rng.gen_range(5..15);
       let ampmin = amp * rng.gen_range(0.3..0.8);
       let ampmax = rng.gen_range(ampmin..amp);
       for j in 0..count {
@@ -59,7 +60,7 @@ impl Rock {
         let y = (o.1 + m * a.sin()).min(origin.1);
         poly.push((x, y));
 
-        let m = m * rng.gen_range(0.3..0.9);
+        let m = m * rng.gen_range(0.2..0.8);
         let x = o.0 + m * a.cos();
         let y = (o.1 + m * a.sin()).min(origin.1);
         inner_crop_poly.push((x, y));
@@ -91,15 +92,33 @@ impl Rock {
       polys,
       inner_crop_polys,
       sword,
+      clr,
     }
   }
-  pub fn render(&self, paint: &mut PaintMask) -> Polylines {
+  pub fn render<R: Rng>(
+    &self,
+    rng: &mut R,
+    paint: &mut PaintMask,
+  ) -> Polylines {
     for poly in self.inner_crop_polys.iter() {
       paint.paint_polygon(poly);
     }
 
-    let mut routes = regular_clip(&self.routes, paint);
-
+    let routes = regular_clip(&self.routes, paint);
+    let filling = WormsFilling::rand(rng);
+    let mut drawing = paint.clone_empty();
+    for (_, rt) in routes.iter() {
+      let w = 0.4
+        + rng.gen_range(0.0..3.0)
+          * rng.gen_range(0.0..1.0)
+          * rng.gen_range(0.0..1.0);
+      drawing.paint_polyline(rt, w);
+      paint.paint_polyline(rt, w + 0.5);
+    }
+    let bound = drawing.painted_boundaries();
+    let its = rng.gen_range(50..1000);
+    let mut routes =
+      filling.fill_in_paint(rng, &drawing, self.clr, 1.5, bound, its);
     for poly in self.polys.iter() {
       paint.paint_polygon(poly);
     }
@@ -114,5 +133,14 @@ impl Rock {
     }
 
     routes
+  }
+}
+
+impl<R: Rng> Renderable<R> for Rock {
+  fn render(&self, rng: &mut R, paint: &mut PaintMask) -> Polylines {
+    self.render(rng, paint)
+  }
+  fn yorder(&self) -> f32 {
+    self.origin.1
   }
 }

@@ -11,10 +11,12 @@ use self::{
 };
 use crate::{
   algo::{
-    packing::{self, packing, VCircle},
+    clipping::regular_clip,
+    packing::{packing, VCircle},
     paintmask::PaintMask,
+    shapes::circle_route,
   },
-  global::GlobalCtx,
+  global::{GlobalCtx, Special},
 };
 use rand::prelude::*;
 use std::f32::consts::PI;
@@ -25,6 +27,7 @@ use std::f32::consts::PI;
  */
 
 pub struct MedievalSky {
+  pub clouds: Vec<VCircle>,
   pub sun_color: usize,
   pub cloud_color: usize,
   pub eagle_color: usize,
@@ -34,32 +37,100 @@ pub struct MedievalSky {
   pub width: f32,
   pub height: f32,
   pub pad: f32,
-  pub night_time: bool,
+  pub should_moon: bool,
+  pub should_sun_spiral: bool,
+  pub should_rain: bool,
+  pub should_cloud_rays: bool,
+  pub stars: Vec<Star>,
 }
 
 impl MedievalSky {
   pub fn rand<R: Rng>(
     ctx: &mut GlobalCtx,
     rng: &mut R,
+    skysafemask1: &PaintMask,
+    skysafemask2: &PaintMask,
     width: f32,
     height: f32,
     pad: f32,
   ) -> Self {
     let sun_circle = VCircle::new(
       width * rng.gen_range(0.4..0.6),
-      height * rng.gen_range(0.1..0.4),
+      height * rng.gen_range(0.1..0.3),
       width * rng.gen_range(0.07..0.1),
     );
 
-    let desired_clouds = (rng.gen_range(-0.3f32..1.0)
-      * rng.gen_range(0.2..1.0)
-      * rng.gen_range(0.0..80.0))
-    .max(0.0) as usize;
+    let desired_clouds =
+      (rng.gen_range(-0.3f32..1.0) * rng.gen_range(0.0..5.0)).max(0.0) as usize;
 
-    let desired_eagles = (rng.gen_range(-0.2f32..1.0)
-      * rng.gen_range(0.2..1.0)
-      * rng.gen_range(0.0..20.0))
-    .max(0.0) as usize;
+    let bound1 = skysafemask1.painted_boundaries();
+    let bound2 = skysafemask2.painted_boundaries();
+    let does_overlap = |c: &VCircle| {
+      !skysafemask2.is_painted(c.pos())
+        && circle_route(c.pos(), c.r, 8)
+          .iter()
+          .all(|p| !skysafemask2.is_painted(*p))
+    };
+    let min_scale = 0.08 * width;
+    let max_scale = 0.12 * width;
+    let clouds = packing(
+      rng,
+      1000,
+      desired_clouds,
+      1,
+      0.0,
+      bound2,
+      &does_overlap,
+      min_scale,
+      max_scale,
+    );
+
+    let desired_eagles = if ctx.specials.contains(&Special::EaglesAttack) {
+      rng.gen_range(60..100)
+    } else {
+      (rng.gen_range(-0.2f32..1.0)
+        * rng.gen_range(0.2..1.0)
+        * rng.gen_range(0.0..20.0))
+      .max(0.0) as usize
+    };
+
+    let should_sun_spiral = !ctx.night_time && rng.gen_bool(0.6);
+    let should_rain =
+      !ctx.night_time && !should_sun_spiral && rng.gen_bool(0.4);
+    let should_have_stars = ctx.night_time && rng.gen_bool(0.8);
+    let should_moon = ctx.night_time;
+
+    let mut stars = vec![];
+    if should_have_stars {
+      let count =
+        10 + (rng.gen_range(0.0..300.0) * rng.gen_range(0.0..1.0)) as usize;
+      let pad = rng.gen_range(0.0..0.02) * width;
+      let min = pad + rng.gen_range(0.005..0.01) * width;
+      let max = min + 0.001 * width;
+      let starbranches = 2 * rng.gen_range(5..8);
+      let circles = packing(
+        rng,
+        5000,
+        count,
+        1,
+        pad,
+        bound1,
+        &|c| !skysafemask1.is_painted(c.pos()),
+        min,
+        max,
+      );
+      let mind = rng.gen_range(0.3..0.8);
+      for c in circles {
+        let r = c.r * rng.gen_range(mind..1.0);
+        let star = Star::init(rng, 1, c.pos(), r, starbranches);
+        stars.push(star);
+      }
+    }
+
+    let should_cloud_rays = !should_rain
+      && !should_sun_spiral
+      && stars.is_empty()
+      && rng.gen_bool(0.8);
 
     MedievalSky {
       sun_color: 1,
@@ -71,7 +142,12 @@ impl MedievalSky {
       pad,
       width,
       height,
-      night_time: ctx.night_time,
+      clouds,
+      should_moon,
+      should_sun_spiral,
+      should_rain,
+      should_cloud_rays,
+      stars,
     }
   }
   pub fn render<R: Rng>(
@@ -79,18 +155,20 @@ impl MedievalSky {
     rng: &mut R,
     paint: &mut PaintMask,
   ) -> Vec<(usize, Vec<(f32, f32)>)> {
-    let MedievalSky {
-      sun_color,
-      cloud_color,
-      eagle_color,
-      sun_circle,
-      desired_clouds,
-      desired_eagles,
-      width,
-      height,
-      pad,
-      night_time,
-    } = *self;
+    let sun_color = self.sun_color;
+    let cloud_color = self.cloud_color;
+    let eagle_color = self.eagle_color;
+    let sun_circle = self.sun_circle;
+    let desired_eagles = self.desired_eagles;
+    let pad = self.pad;
+    let width = self.width;
+    let height = self.height;
+    let should_moon = self.should_moon;
+    let should_sun_spiral = self.should_sun_spiral;
+    let should_rain = self.should_rain;
+    let should_cloud_rays = self.should_cloud_rays;
+    let stars = &self.stars;
+
     let mut routes = vec![];
 
     // TODO we can use a packing in the available space to place the items below the yhorizon.
@@ -123,36 +201,48 @@ impl MedievalSky {
     }
 
     // clouds
-    for _i in 0..desired_clouds {
-      let circle = VCircle::new(
-        rng.gen_range(0.0..1.0) * width,
-        rng.gen_range(0.0..1.0) * rng.gen_range(0.0..0.5) * height,
-        (0.02 + 0.1 * rng.gen_range(0.0..1.0) * rng.gen_range(0.0..1.0))
-          * height,
-      );
-      let base_dr = rng.gen_range(1.0..2.0);
-      let minr = 0.5 + rng.gen_range(0.0..circle.r) * rng.gen_range(0.0..0.3);
-      routes.extend(cloud_in_circle(
-        rng,
-        paint,
-        cloud_color,
-        &circle,
-        base_dr,
-        minr,
-      ));
-
-      // TODO cloud side function of y
-      // TODO use WeightMap
+    let mut cloud_paint = paint.clone_empty();
+    for circle in &self.clouds {
+      let mut sub = vec![];
+      for _ in 0..rng.gen_range(1..16) {
+        sub.push(VCircle::new(
+          circle.x
+            + circle.r * rng.gen_range(-1.0..1.0) * rng.gen_range(0.5..1.0),
+          circle.y
+            + circle.r * rng.gen_range(-1.0..1.0) * rng.gen_range(0.0..1.0),
+          circle.r * rng.gen_range(0.3..1.0),
+        ));
+      }
+      sub.sort_by(|a, b| a.r.partial_cmp(&b.r).unwrap());
+      for c in sub {
+        let base_dr = rng.gen_range(1.0..2.0);
+        let minr = 0.5 + rng.gen_range(0.0..circle.r) * rng.gen_range(0.0..0.3);
+        routes.extend(cloud_in_circle(
+          rng,
+          paint,
+          cloud_color,
+          &c,
+          base_dr,
+          minr,
+        ));
+        let maxr = rng.gen_range(0.0..16.0) * rng.gen_range(0.0..1.0);
+        cloud_paint.paint_circle(
+          c.x + c.r * rng.gen_range(-maxr..maxr) * rng.gen_range(0.5..1.0),
+          c.y + c.r * rng.gen_range(-1.0..1.0) * rng.gen_range(0.0..1.0),
+          c.r
+            * (1.0
+              + rng.gen_range(0.0..maxr)
+                * rng.gen_range(0.0..1.0)
+                * rng.gen_range(0.0..1.0)),
+        );
+      }
     }
-
-    let should_sun_spiral = !night_time && rng.gen_bool(0.7);
-    let should_rain = !night_time && !should_sun_spiral && rng.gen_bool(0.8);
-    let should_have_stars = night_time && rng.gen_bool(0.8);
 
     // sun
     let dr = 0.5;
-    if night_time {
-      let phase = rng.gen_range(0.35..0.65);
+    if should_moon {
+      let phase = 0.5
+        + rng.gen_range(0.02..0.3) * if rng.gen_bool(0.5) { 1.0 } else { -1.0 };
       let moon =
         Moon::init(sun_color, sun_circle.pos(), sun_circle.r, dr, phase);
       routes.extend(moon.render(paint));
@@ -167,30 +257,22 @@ impl MedievalSky {
       routes.extend(sun.render(paint));
     }
 
-    if should_have_stars {
-      let count = rng.gen_range(50..500);
-      let pad = rng.gen_range(0.0..0.02) * width;
-      let min = pad + rng.gen_range(0.005..0.01) * width;
-      let max = min + 0.001 * width;
-      let starbranches = 2 * rng.gen_range(5..8);
-      let circles = packing(
-        rng,
-        5000,
-        count,
-        1,
-        pad,
-        (0.0, 0.0, width, height),
-        &|c| !paint.is_painted(c.pos()),
-        min,
-        max,
-      );
-      let mind = rng.gen_range(0.3..0.8);
-      for c in circles {
-        let r = c.r * rng.gen_range(mind..1.0);
-        let star = Star::init(rng, sun_color, c.pos(), r, starbranches);
+    for star in stars {
+      routes.extend(star.render(paint));
+    }
 
-        routes.extend(star.render(paint));
+    if should_cloud_rays {
+      cloud_paint.reverse();
+      cloud_paint.paint(paint);
+      let mut rts = vec![];
+      let mut y = 0.0;
+      let incr = rng.gen_range(0.006..0.012) * width;
+      let clr = if rng.gen_bool(0.3) { 0 } else { 1 };
+      while y < height {
+        rts.push((clr, vec![(0.0, y), (width, y)]));
+        y += incr;
       }
+      routes.extend(regular_clip(&rts, &cloud_paint));
     }
 
     if should_rain {

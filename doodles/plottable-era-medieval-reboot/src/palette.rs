@@ -91,7 +91,7 @@ impl Palette {
       0 => {
         let base = if rng.gen_bool(0.8) {
           BLACK
-        } else if rng.gen_bool(0.4) {
+        } else if rng.gen_bool(0.1) {
           MOONSTONE
         } else if rng.gen_bool(0.4) {
           INDIGO
@@ -125,6 +125,8 @@ impl Palette {
               FIRE_AND_ICE
             } else if rng.gen_bool(0.4) {
               TURQUOISE
+            } else if rng.gen_bool(0.3) {
+              MOONSTONE
             } else {
               SARGASSO_SEA
             }

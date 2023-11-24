@@ -1,5 +1,7 @@
 use super::{horse::Horse, human::Human};
-use crate::algo::paintmask::PaintMask;
+use crate::algo::{
+  paintmask::PaintMask, polylines::Polylines, renderable::Renderable,
+};
 use rand::prelude::*;
 
 /**
@@ -59,5 +61,14 @@ impl Rider {
       mask.paint_polyline(route, 1.0);
     }
     routes
+  }
+}
+
+impl<R: Rng> Renderable<R> for Rider {
+  fn render(&self, rng: &mut R, paint: &mut PaintMask) -> Polylines {
+    self.render(rng, paint)
+  }
+  fn yorder(&self) -> f32 {
+    self.horse.origin.1
   }
 }

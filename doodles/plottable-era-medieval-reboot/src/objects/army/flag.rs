@@ -4,6 +4,7 @@ use crate::algo::{
   math1d::mix,
   paintmask::PaintMask,
   polylines::{path_to_fibers, Polylines},
+  renderable::Renderable,
 };
 use rand::prelude::*;
 use std::f32::consts::PI;
@@ -157,5 +158,14 @@ impl FlagCloth {
       paint.paint_polyline(poly, 0.5 * self.filling);
     }
     routes
+  }
+}
+
+impl<R: Rng> Renderable<R> for Flag {
+  fn render(&self, _rng: &mut R, paint: &mut PaintMask) -> Polylines {
+    self.render(paint)
+  }
+  fn yorder(&self) -> f32 {
+    self.spear.origin.1
   }
 }

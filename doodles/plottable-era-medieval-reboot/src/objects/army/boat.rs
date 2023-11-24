@@ -31,6 +31,7 @@ pub struct Boat {
   pub w: f32,
   pub xflip: bool,
   pub blazon: Blazon,
+  pub clr: usize,
 }
 
 impl Boat {
@@ -42,6 +43,7 @@ impl Boat {
     w: f32,
     xflip: bool,
     blazon: Blazon,
+    clr: usize,
   ) -> Self {
     let x1 = -w * rng.gen_range(0.3..0.45);
     let x2 = w * rng.gen_range(0.3..0.4);
@@ -55,6 +57,7 @@ impl Boat {
       w,
       xflip,
       blazon,
+      clr,
     }
   }
 
@@ -142,5 +145,14 @@ impl Boat {
     out.extend(routes);
 
     out
+  }
+}
+
+impl<R: Rng> super::Renderable<R> for Boat {
+  fn render(&self, rng: &mut R, mask: &mut PaintMask) -> Polylines {
+    self.render(rng, mask, self.clr)
+  }
+  fn yorder(&self) -> f32 {
+    self.origin.1
   }
 }

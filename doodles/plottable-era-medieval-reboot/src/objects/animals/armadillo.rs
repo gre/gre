@@ -6,6 +6,7 @@ use crate::algo::{
   math2d::{lerp_point, p_r},
   paintmask::PaintMask,
   polylines::{path_subdivide_to_curve, shake, Polylines},
+  renderable::Renderable,
 };
 use rand::prelude::*;
 
@@ -16,6 +17,7 @@ use rand::prelude::*;
 
 pub struct Armadillo {
   pub routes: Polylines,
+  pub origin: (f32, f32),
 }
 
 impl Armadillo {
@@ -182,7 +184,7 @@ impl Armadillo {
       })
       .collect();
 
-    Self { routes }
+    Self { routes, origin }
   }
 
   pub fn render(&self, paint: &mut PaintMask) -> Polylines {
@@ -191,5 +193,14 @@ impl Armadillo {
       paint.paint_polygon(poly); // TODO it would be best to have proper polygons
     }
     routes
+  }
+}
+
+impl<R: Rng> Renderable<R> for Armadillo {
+  fn render(&self, _rng: &mut R, paint: &mut PaintMask) -> Polylines {
+    self.render(paint)
+  }
+  fn yorder(&self) -> f32 {
+    self.origin.1
   }
 }

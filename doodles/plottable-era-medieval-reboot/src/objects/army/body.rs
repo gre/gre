@@ -64,6 +64,7 @@ impl HumanPosture {
       Some(HoldableObject::Axe) => 1.0,
       Some(HoldableObject::Club) => rng.gen_range(0.5..1.0),
       Some(HoldableObject::LongBow(_)) => 1.0,
+      Some(HoldableObject::Foreign) => 1.0,
       _ => 0.4,
     };
 

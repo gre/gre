@@ -3,7 +3,6 @@ use std::f32::consts::PI;
 
 use super::{
   math2d::{euclidian_dist, sample_2d_candidates_f32},
-  packing::VCircle,
   polylines::{path_subdivide_to_curve, Polyline},
 };
 
@@ -65,11 +64,12 @@ pub fn spiral_optimized(
   let two_pi = 2.0 * PI;
   let mut route = Vec::new();
   let mut r = radius;
+  let mut last = (0., 0.);
   let mut a = 0f32;
   loop {
     let p = (x + r * a.cos(), y + r * a.sin());
-    let l = route.len();
-    if l == 0 || euclidian_dist(route[l - 1], p) > approx {
+    if route.is_empty() || euclidian_dist(last, p) > approx {
+      last = p;
       route.push(p);
     }
     let da = 0.2 / (r + 8.0); // bigger radius is more we have to do angle iterations

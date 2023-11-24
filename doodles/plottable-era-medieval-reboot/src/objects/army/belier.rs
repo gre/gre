@@ -3,6 +3,7 @@ use crate::algo::{
   clipping::regular_clip,
   paintmask::PaintMask,
   polylines::{route_translate_rotate, Polylines},
+  renderable::Renderable,
 };
 use rand::prelude::*;
 
@@ -13,6 +14,8 @@ pub struct Belier {
   pub polys: Vec<Vec<(f32, f32)>>,
   pub head: BelierHead,
   pub size: f32,
+  pub origin: (f32, f32),
+  pub xflip: bool,
 }
 
 impl Belier {
@@ -74,7 +77,23 @@ impl Belier {
       polys,
       head,
       size,
+      origin,
+      xflip,
     }
+  }
+
+  pub fn human_positions(&self) -> Vec<(f32, f32)> {
+    let mut out = vec![];
+    let n = 6;
+    let dx = if self.xflip { 0.1 } else { -0.1 };
+    let w = 0.7;
+    for i in 0..n {
+      let f = i as f32 / (n as f32 - 1.) - 0.5;
+      let x = self.origin.0 + (f * w + dx) * self.size;
+      let y = self.origin.1 + self.size * 0.2 + ((i % 2) as f32 - 0.5) * 2.;
+      out.push((x, y));
+    }
+    out
   }
 
   pub fn render(&self, paint: &mut PaintMask) -> Polylines {
@@ -92,5 +111,14 @@ impl Belier {
       paint.paint_polyline(route, 0.02 * self.size);
     }
     out
+  }
+}
+
+impl<R: Rng> Renderable<R> for Belier {
+  fn render(&self, _rng: &mut R, paint: &mut PaintMask) -> Polylines {
+    self.render(paint)
+  }
+  fn yorder(&self) -> f32 {
+    self.origin.1 + self.size * 0.2
   }
 }

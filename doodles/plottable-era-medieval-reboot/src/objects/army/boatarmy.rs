@@ -1,6 +1,6 @@
 use super::{boat::Boat, human::Human};
 use crate::{
-  algo::{paintmask::PaintMask, polylines::Polylines},
+  algo::{paintmask::PaintMask, polylines::Polylines, renderable::Renderable},
   objects::blazon::Blazon,
 };
 use rand::prelude::*;
@@ -44,7 +44,7 @@ impl BoatArmy {
     spawn_human: &SpawnHuman,
   ) -> Self {
     let mut humans = vec![];
-    let boat = Boat::init(rng, origin, size, angle, w, xflip, blazon);
+    let boat = Boat::init(rng, origin, size, angle, w, xflip, blazon, clr);
 
     let xdir = if xflip { -1.0 } else { 1.0 };
     let acos = angle.cos();
@@ -98,5 +98,14 @@ impl BoatArmy {
     }
 
     routes
+  }
+}
+
+impl<R: Rng> Renderable<R> for BoatArmy {
+  fn render(&self, rng: &mut R, paint: &mut PaintMask) -> Polylines {
+    self.render(rng, paint)
+  }
+  fn yorder(&self) -> f32 {
+    self.origin.1
   }
 }

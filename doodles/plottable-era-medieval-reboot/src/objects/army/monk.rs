@@ -1,7 +1,10 @@
 use super::body::{HumanBody, HumanPosture};
 use crate::algo::{
-  clipping::regular_clip, math2d::lerp_point, paintmask::PaintMask,
-  polylines::route_xreverse_translate_rotate,
+  clipping::regular_clip,
+  math2d::lerp_point,
+  paintmask::PaintMask,
+  polylines::{route_xreverse_translate_rotate, Polylines},
+  renderable::Renderable,
 };
 use rand::prelude::*;
 use std::f32::consts::PI;
@@ -155,4 +158,13 @@ fn rect(
   }
 
   routes
+}
+
+impl<R: Rng> Renderable<R> for Monk {
+  fn render(&self, _rng: &mut R, paint: &mut PaintMask) -> Polylines {
+    self.render(paint)
+  }
+  fn yorder(&self) -> f32 {
+    self.human.origin.1
+  }
 }

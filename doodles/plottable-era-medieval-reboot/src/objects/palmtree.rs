@@ -2,6 +2,7 @@ use crate::algo::{
   clipping::regular_clip,
   paintmask::PaintMask,
   polylines::{path_subdivide_to_curve, shake, Polylines},
+  renderable::Renderable,
 };
 use rand::prelude::*;
 
@@ -10,14 +11,16 @@ use rand::prelude::*;
  * Author: greweb – 2023 – Plottable Era: (II) Medieval
  */
 
+#[derive(Clone, Copy)]
 pub struct PalmTree {
   pub origin: (f32, f32),
   pub size: f32,
+  pub clr: usize,
 }
 
 impl PalmTree {
-  pub fn init(origin: (f32, f32), size: f32) -> Self {
-    Self { origin, size }
+  pub fn init(clr: usize, origin: (f32, f32), size: f32) -> Self {
+    Self { origin, size, clr }
   }
   pub fn render<R: Rng>(
     &self,
@@ -59,5 +62,14 @@ impl PalmTree {
     }
 
     routes
+  }
+}
+
+impl<R: Rng> Renderable<R> for PalmTree {
+  fn render(&self, rng: &mut R, paint: &mut PaintMask) -> Polylines {
+    self.render(rng, paint, self.clr)
+  }
+  fn yorder(&self) -> f32 {
+    self.origin.1
   }
 }

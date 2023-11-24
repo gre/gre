@@ -2,8 +2,10 @@ use crate::algo::{
   clipping::regular_clip,
   paintmask::PaintMask,
   polylines::{route_translate_rotate, translate_rotate, Polylines},
+  renderable::Renderable,
   shapes::{circle_route, spiral_optimized},
 };
+use rand::prelude::*;
 
 /**
  * LICENSE CC BY-NC-ND 4.0
@@ -20,6 +22,7 @@ pub struct WheeledPlatform {
   pub wheel_count: usize,
   pub plank_filling: f32,
   pub wheel_filling: f32,
+  pub clr: usize,
 }
 
 impl WheeledPlatform {
@@ -30,6 +33,7 @@ impl WheeledPlatform {
     angle: f32,
     wheel_pad: f32,
     wheel_count: usize,
+    clr: usize,
   ) -> Self {
     let plank_ratio = 0.5;
     let plank_filling = 1.0;
@@ -44,10 +48,12 @@ impl WheeledPlatform {
       wheel_count,
       plank_filling,
       wheel_filling,
+      clr,
     }
   }
 
-  pub fn render(&self, paint: &mut PaintMask, clr: usize) -> Polylines {
+  pub fn render(&self, paint: &mut PaintMask) -> Polylines {
+    let clr = self.clr;
     let mut routes = Polylines::new();
     let origin = self.origin;
     let h = self.h;
@@ -108,4 +114,13 @@ pub fn wheel(
   routes = regular_clip(&routes, paint);
   paint.paint_circle(p.0, p.1, r);
   routes
+}
+
+impl<R: Rng> Renderable<R> for WheeledPlatform {
+  fn render(&self, _rng: &mut R, paint: &mut PaintMask) -> Polylines {
+    self.render(paint)
+  }
+  fn yorder(&self) -> f32 {
+    self.origin.1
+  }
 }

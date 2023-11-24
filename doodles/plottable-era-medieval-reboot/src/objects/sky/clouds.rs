@@ -24,7 +24,7 @@ pub fn cloud_in_circle<R: Rng>(
 
   let heightmul = rng.gen_range(0.2..0.6);
 
-  let count = rng.gen_range(40..120);
+  let count = rng.gen_range(10..150);
   for _i in 0..count {
     let radius = circle.r * rng.gen_range(0.3..0.5) * rng.gen_range(0.2..1.0);
     let angle = rng.gen_range(0.0..2.0 * PI);
@@ -33,7 +33,11 @@ pub fn cloud_in_circle<R: Rng>(
       + angle.sin() * (circle.r - radius) * rng.gen_range(0.5..1.0) * heightmul;
     let circle = VCircle::new(x, y, radius);
 
-    let should_crop = |p| circles.iter().any(|c| c.includes(p));
+    let should_crop = |p| {
+      circles
+        .iter()
+        .any(|c| VCircle::new(c.x, c.y, c.r + 0.2).includes(p))
+    };
 
     let mut input_routes = vec![];
     let mut r = radius;
@@ -42,7 +46,7 @@ pub fn cloud_in_circle<R: Rng>(
       if r < minr {
         break;
       }
-      let count = (r * 2.0 + 10.0) as usize;
+      let count = (r * 1.0 + 10.0) as usize;
       let amp = rng.gen_range(0.5 * PI..1.2 * PI);
       let ang = angle
         + PI

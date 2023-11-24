@@ -2,7 +2,7 @@ use std::f32::consts::PI;
 
 use crate::algo::{
   clipping::regular_clip, math1d::mix, packing::VCircle, paintmask::PaintMask,
-  pathsampler::PathSampler, shapes::circle_route, wormsfilling::WormsFilling,
+  pathlookup::PathLookup, shapes::circle_route, wormsfilling::WormsFilling,
 };
 use rand::prelude::*;
 
@@ -30,7 +30,7 @@ impl Trail {
   ) -> Self {
     let mut trailmask = referencemask.clone_empty();
 
-    let sampler = PathSampler::init(path_to_object.clone());
+    let sampler = PathLookup::init(path_to_object.clone());
 
     let mut circles = vec![];
     let circles_count = rng.gen_range(0..particles);

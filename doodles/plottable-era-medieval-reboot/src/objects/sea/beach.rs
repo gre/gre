@@ -1,20 +1,21 @@
-use noise::*;
-use rand::prelude::*;
-
+use super::port::Port;
 use crate::{
   algo::{
-    clipping::regular_clip, paintmask::PaintMask, polylines::Polylines,
+    clipping::regular_clip,
+    paintmask::PaintMask,
+    polylines::Polylines,
+    renderable::{Container, Renderable},
     wormsfilling::WormsFilling,
   },
   global::{GlobalCtx, Special},
   objects::{
-    army::{boat::Boat, trojanhorse::trojanhorse},
+    army::{boat::Boat, trojanhorse::TrojanHorse},
     blazon::Blazon,
     palmtree::PalmTree,
   },
 };
-
-use super::port::Port;
+use noise::*;
+use rand::prelude::*;
 
 /**
  * LICENSE CC BY-NC-ND 4.0
@@ -26,7 +27,6 @@ pub struct Beach {
   trees: Vec<PalmTree>,
   port: Option<Port>,
   clr: usize,
-  treeclr: usize,
   portclr: usize,
   attacker_blazon: Blazon,
   port_boats_count: usize,
@@ -58,7 +58,7 @@ impl Beach {
         origin.0 + size / 2.0,
         origin.1 + 10.0,
       );
-      Some(Port::init(origin, size))
+      Some(Port::init(portclr, origin, size))
     } else {
       None
     };
@@ -68,7 +68,7 @@ impl Beach {
       if !avoiding_area.is_painted(origin) {
         let size = rng.gen_range(0.03..0.04) * width;
         avoiding_area.paint_circle(origin.0, origin.1, 0.5 * size);
-        trees.push(PalmTree::init(origin, size));
+        trees.push(PalmTree::init(treeclr, origin, size));
       }
     }
     Self {
@@ -76,7 +76,6 @@ impl Beach {
       trees,
       port,
       clr,
-      treeclr,
       portclr,
       attacker_blazon,
       port_boats_count,
@@ -91,15 +90,16 @@ impl Beach {
     paint: &mut PaintMask,
   ) -> Polylines {
     let width = self.width;
-    let mut routes = vec![];
+
+    let mut container = Container::new();
 
     for tree in &self.trees {
-      routes.extend(tree.render(rng, paint, self.treeclr));
+      container.add(tree.clone());
     }
     let boatsize: f32 = rng.gen_range(4.0..5.0);
     let (xc, boaty, boatw, distribwidth, angamp) = if let Some(port) = self.port
     {
-      routes.extend(port.render(rng, paint, self.portclr));
+      container.add(port);
       (
         port.origin.0
           + rng.gen_range(-0.2..0.2) * rng.gen_range(0.0..1.0) * port.size,
@@ -127,21 +127,26 @@ impl Beach {
         boaty + (i as f32 + rng.gen_range(0.0..1.0)) * 0.3 * boatsize,
       );
       let ang = rng.gen_range(-1.0..1.0) * angamp;
-      let boat = Boat::init(rng, origin, boatsize, ang, w, xflip, blazon);
-      routes.extend(boat.render(rng, paint, self.portclr));
+      let boat =
+        Boat::init(rng, origin, boatsize, ang, w, xflip, blazon, self.portclr);
+      container.add(boat);
     }
 
     if ctx.specials.contains(&Special::TrojanHorse) {
-      // TODO in that case there should be a lot of people on the beach.
+      // TODO ? in that case there should be a lot of people on the beach.
       let origin = (
-        width * rng.gen_range(0.2..0.8),
-        self.yhorizon
-          - rng.gen_range(0.0..0.02) * rng.gen_range(0.0..1.0) * paint.height,
+        width * rng.gen_range(0.3..0.7),
+        self.yhorizon - rng.gen_range(0.0..0.04) * paint.height,
       );
       let xflip = rng.gen_bool(0.5);
       let size = rng.gen_range(0.1..0.2) * paint.height;
-      routes.extend(trojanhorse(rng, paint, origin, size, xflip, 1));
+      let h = TrojanHorse::init(rng, origin, size, xflip, 1);
+      container.add(h);
     }
+
+    let mut routes = vec![];
+
+    routes.extend(container.render(rng, paint));
 
     routes.extend(beach_rendering(rng, paint, self.clr, self.yhorizon, width));
 

@@ -15,7 +15,8 @@ use crate::{
     math1d::mix,
     paintmask::PaintMask,
     passage::Passage,
-    polylines::{slice_polylines, Polylines},
+    polylines::slice_polylines,
+    renderable::Renderable,
   },
   global::{GlobalCtx, Special},
 };
@@ -33,29 +34,6 @@ pub struct Sea {
   boat_color: usize,
   yhorizon: f32,
   blazon: Blazon,
-}
-
-trait SeaShape<R: Rng> {
-  fn render_sea_shape(&self, rng: &mut R, paint: &mut PaintMask) -> Polylines;
-  fn get_y_order(&self) -> f32;
-}
-
-impl<R: Rng> SeaShape<R> for Rock {
-  fn render_sea_shape(&self, _rng: &mut R, paint: &mut PaintMask) -> Polylines {
-    self.render(paint)
-  }
-  fn get_y_order(&self) -> f32 {
-    self.origin.1
-  }
-}
-
-impl<R: Rng> SeaShape<R> for BoatArmy {
-  fn render_sea_shape(&self, rng: &mut R, paint: &mut PaintMask) -> Polylines {
-    self.render(rng, paint)
-  }
-  fn get_y_order(&self) -> f32 {
-    self.origin.1
-  }
 }
 
 impl Sea {
@@ -140,7 +118,7 @@ impl Sea {
     };
 
     // Place rocks
-    let mut sea_shapes: Vec<Box<dyn SeaShape<R>>> = vec![];
+    let mut sea_shapes: Vec<Box<dyn Renderable<R>>> = vec![];
 
     // this mask is used to find location to pack things
     let mut sea_mask = self.sea_mask.clone();
@@ -186,7 +164,7 @@ impl Sea {
               if rock.sword.is_some() {
                 ctx.specials.insert(Special::Excalibur);
               }
-              let b: Box<dyn SeaShape<R>> = Box::new(rock);
+              let b: Box<dyn Renderable<R>> = Box::new(rock);
               return Some(b);
             }
           }
@@ -274,7 +252,7 @@ impl Sea {
               // routes.extend(boat.render(rng, paint));
               //}
 
-              let b: Box<dyn SeaShape<R>> = Box::new(boat);
+              let b: Box<dyn Renderable<R>> = Box::new(boat);
               return Some(b);
             }
           }
@@ -285,12 +263,12 @@ impl Sea {
 
     // Render
 
-    sea_shapes
-      .sort_by(|a, b| b.get_y_order().partial_cmp(&a.get_y_order()).unwrap());
+    // TODO move to a Container
+    sea_shapes.sort_by(|a, b| b.yorder().partial_cmp(&a.yorder()).unwrap());
 
     let mut routes = vec![];
     for s in sea_shapes {
-      routes.extend(s.render_sea_shape(rng, paint));
+      routes.extend(s.render(rng, paint));
     }
     routes
   }

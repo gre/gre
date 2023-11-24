@@ -11,7 +11,10 @@ use super::{
   sword::Sword,
 };
 use crate::{
-  algo::{clipping::regular_clip, paintmask::PaintMask},
+  algo::{
+    clipping::regular_clip, paintmask::PaintMask, polylines::Polylines,
+    renderable::Renderable,
+  },
   objects::blazon::Blazon,
 };
 use rand::prelude::*;
@@ -42,6 +45,7 @@ pub struct Human {
 
 #[derive(Clone, Copy, PartialEq)]
 pub enum HoldableObject {
+  Foreign,
   Shield,
   Axe,
   Sword,
@@ -105,13 +109,21 @@ impl Human {
       if let Some(obj) = side {
         match obj {
           HoldableObject::Shield => {
-            let shield =
-              Shield::init(rng, mainclr, pos, size * 0.6, angle, xflip, blazon);
+            let shield = Shield::init(
+              rng,
+              mainclr,
+              blazonclr,
+              pos,
+              size * 0.6,
+              angle,
+              xflip,
+              blazon,
+            );
             shields.push(shield);
           }
           HoldableObject::Axe => {
             let axeang = handangle - PI / 2.0; // - xdir * rng.gen_range(0.0..1.0);
-            let s = 0.4 * size;
+            let s = 0.5 * size;
             let a = axeang - PI / 2.0;
             let handle = 0.3 * xdir;
             let dx = a.cos() * s * handle;
@@ -162,6 +174,7 @@ impl Human {
             let paddle = Paddle::init(rng, mainclr, pos, size, a);
             paddles.push(paddle);
           }
+          HoldableObject::Foreign => {}
         }
       }
     }
@@ -255,5 +268,16 @@ impl Human {
       mask.paint_polyline(route, 1.0);
     }
     routes
+  }
+}
+
+// TODO we need to expand human into a container that can yield the 2 parts
+// but we need to figure out the polyline halo effect...
+impl<R: Rng> Renderable<R> for Human {
+  fn render(&self, _rng: &mut R, paint: &mut PaintMask) -> Polylines {
+    self.render(paint)
+  }
+  fn yorder(&self) -> f32 {
+    self.human.origin.1
   }
 }

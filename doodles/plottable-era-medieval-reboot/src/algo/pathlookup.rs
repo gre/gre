@@ -6,14 +6,14 @@ use super::math2d::{euclidian_dist, lerp_point};
  * Author: greweb – 2023 – Plottable Era: (II) Medieval
  */
 
-pub struct PathSampler {
+pub struct PathLookup {
   path: Vec<(f32, f32)>,
   local_length: Vec<f32>,
   partial_length: Vec<f32>,
   length: f32,
 }
 
-impl PathSampler {
+impl PathLookup {
   pub fn init(path: Vec<(f32, f32)>) -> Self {
     let mut length = 0.0;
     let mut partial_length = vec![];

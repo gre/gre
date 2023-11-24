@@ -3,11 +3,13 @@ use crate::algo::{
   paintmask::PaintMask,
   polygon::polygon_includes_point,
   polylines::{route_scale_translate_rotate, shake, Polylines},
+  renderable::Renderable,
   shapes::{circle_route, spiral_optimized},
 };
 use rand::prelude::*;
 
 pub struct Renault4L {
+  pub origin: (f32, f32),
   pub routesbg: Polylines,
   pub routes: Polylines,
   pub polysbg: Vec<Vec<(f32, f32)>>,
@@ -113,6 +115,7 @@ impl Renault4L {
       polysbg,
       polys,
       size,
+      origin,
     }
   }
 
@@ -130,5 +133,14 @@ impl Renault4L {
       paint.paint_polyline(route, 0.05 * self.size);
     }
     out
+  }
+}
+
+impl<R: Rng> Renderable<R> for Renault4L {
+  fn render(&self, _rng: &mut R, paint: &mut PaintMask) -> Polylines {
+    self.render(paint)
+  }
+  fn yorder(&self) -> f32 {
+    self.origin.1
   }
 }

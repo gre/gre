@@ -1,6 +1,4 @@
 SKY:
-- clouds rework. variety with Linear Clouds.
-- rethink sun position
 
 CASTLE:
 - fix the mountain shaping & castle position
@@ -14,6 +12,10 @@ CASTLE:
   - drawbridge
 
 BATTLEFIELD:
+- yordering
+  - human to emit two renderables..
+  - debug all the y positions of objects to see if they are correctly on their feet.
+- when finding human pos, we need to look between the 2 ridges
 - machines / caravans
   - merge Monk into Human. we need a concept of HoldingObject::Foreign
   - add folks on the machines.
@@ -24,10 +26,9 @@ BATTLEFIELD:
   - we would use an area map.
   - make them aligned into areas. for instance i want to see alignment of archers and alignement of shields.
   - make a neutral area. which could allow to spawn forest and wild animals.
-  - y ordering of battlefield + split human rendering in 2 first human.render_foreground_only, then possible other object (including machines!), then background. there might be the same principle on the castle?
   - in the army, we need a leader. they will either have a flag OR a weapon that is bigger and colored with the team color.
 - blazon & their impact + flags
-  - on shield
+  - on shield SHAPE.
   - on boat/belier head
 - alone horse in battlefield
 - ADD: dragon canon. throw fireball with lot of particle in direction to the castle.
@@ -44,6 +45,7 @@ GENERAL:
 
 MOUNTAIN:
 - ADD: palisade / wall. 'palisade medieval / great wall' to google. traverse la montagne + facteur de destruction (trous dans la muraille / explosions avec des morceaux en l'air)
+- peuplier tree
 
 SEA:
 - boat spawner to spawn add variety.

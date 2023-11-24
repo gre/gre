@@ -24,6 +24,7 @@ pub fn medieval_frame<R: Rng>(
 
   let p = innerp;
   let m = pad;
+  let wmul = rng.gen_range(0.9..1.2);
   let (pattern, strokew): (Box<dyn BandPattern>, f32) =
     match rng.gen_range(0..5) {
       0 => (Box::new(lrect::MedievalBandLRectPattern::new()), 0.08 * p),
@@ -39,6 +40,7 @@ pub fn medieval_frame<R: Rng>(
         0.08 * p,
       ),
     };
+  let iterations = 6000;
   routes.extend(framing(
     rng,
     mask,
@@ -47,9 +49,9 @@ pub fn medieval_frame<R: Rng>(
     pattern.as_ref(),
     p,
     m,
-    strokew,
+    strokew * wmul,
     3.0,
-    6000,
+    iterations,
   ));
 
   routes

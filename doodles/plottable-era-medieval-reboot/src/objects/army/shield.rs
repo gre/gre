@@ -16,6 +16,7 @@ impl Shield {
   pub fn init<R: Rng>(
     rng: &mut R,
     clr: usize,
+    blazonclr: usize,
     origin: (f32, f32),
     size: f32,
     angle: f32,
@@ -49,10 +50,11 @@ impl Shield {
     let polygons = vec![route.clone()];
     routes.push((clr, route));
 
+    // TODO either a > or a square, or a circle,... many possibilities
     let tick = rng.gen_range(0.2..0.3);
     let y = rng.gen_range(-0.2..0.0) * dy;
     routes.push((
-      clr,
+      blazonclr,
       route_translate_rotate(
         &vec![
           (0.0, -tick * dy + y),

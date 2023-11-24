@@ -2,6 +2,7 @@ use crate::algo::{
   clipping::regular_clip,
   paintmask::PaintMask,
   polylines::{route_translate_rotate, translate_rotate, Polylines},
+  renderable::Renderable,
 };
 use rand::prelude::*;
 
@@ -11,6 +12,7 @@ pub struct ChineseDoor {
   pub routes: Polylines,
   pub polys: Vec<Vec<(f32, f32)>>,
   pub roof: ChineseRoof,
+  pub origin: (f32, f32),
 }
 
 impl ChineseDoor {
@@ -50,6 +52,7 @@ impl ChineseDoor {
       routes,
       polys,
       roof,
+      origin,
     }
   }
 
@@ -64,5 +67,14 @@ impl ChineseDoor {
     }
 
     out
+  }
+}
+
+impl<R: Rng> Renderable<R> for ChineseDoor {
+  fn render(&self, _rng: &mut R, paint: &mut PaintMask) -> Polylines {
+    self.render(paint)
+  }
+  fn yorder(&self) -> f32 {
+    self.origin.1
   }
 }

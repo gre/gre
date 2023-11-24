@@ -63,7 +63,7 @@ pub fn draw_font_with_worms_filling<R: Rng>(
     iterations,
   ));
 
-  drawing.grow(growpad);
+  drawing.dilate_manhattan(growpad);
 
   // we don't need collision
   // routes = regular_clip(&routes, paint);

@@ -9,7 +9,7 @@ use crate::{
   },
   palette::{
     Palette, AMBER, BLACK_PAPER, BLUE_PAPER, DARK_BLUE_PAPER, GOLD_GEL,
-    RED_PAPER,
+    GREY_PAPER, RED_PAPER,
   },
   svgplot::inks_stats,
 };
@@ -28,18 +28,22 @@ pub struct Feature {
   pub inks: String,      // which inks are used
   pub inks_count: usize, // how much inks are used
   pub paper: String,     // which paper is used
+  pub specials: String,  // which specials are used
+  pub day_time: String,
 }
 
 #[derive(PartialEq, Eq, Hash)]
 pub enum Special {
   TrojanHorse,
-  _Lockness, // TODO
+  // Lockness, // TODO
   Excalibur,
-  _Ghuls, // TODO
-  _Giant, // TODO
+  // Ghuls, // TODO
+  // Giant, // TODO
   Montmirail,
   Dragon(usize),
   Chinese,
+  Barricades,
+  EaglesAttack,
 }
 
 pub struct GlobalCtx {
@@ -80,6 +84,9 @@ impl GlobalCtx {
     defenders: &Blazon,
     attackers: &Blazon,
   ) -> Self {
+    let paper = palette.paper;
+    let colors = &palette.inks;
+
     let attackersclr = 2;
     let mut defendersclr = 0;
     let c = &palette.inks;
@@ -92,10 +99,20 @@ impl GlobalCtx {
 
     let mut specials = HashSet::new();
 
-    if rng.gen_bool(0.04) && matches!(attackers, Blazon::Dragon)
-      || rng.gen_bool(0.01) && matches!(attackers, Blazon::Lys)
+    if rng.gen_bool(0.02) {
+      specials.insert(Special::Barricades);
+    } else if rng.gen_bool(0.01) && matches!(attackers, Blazon::Falcon) {
+      specials.insert(Special::EaglesAttack);
+    }
+
+    let dragon_proba_mul = if paper == RED_PAPER { 1.0 } else { 0.1 };
+
+    if rng.gen_bool(0.4 * dragon_proba_mul)
+      && matches!(attackers, Blazon::Dragon)
+      || rng.gen_bool(0.1 * dragon_proba_mul)
+        && matches!(attackers, Blazon::Lys)
     {
-      specials.insert(Special::Dragon(rng.gen_range(1..3)));
+      specials.insert(Special::Dragon(rng.gen_range(1..4)));
     } else if rng.gen_bool(0.01) {
       specials.insert(Special::TrojanHorse);
     } else if rng.gen_bool(0.01) {
@@ -107,14 +124,12 @@ impl GlobalCtx {
       specials.insert(Special::Chinese);
     }
 
-    let paper = palette.paper;
-    let colors = &palette.inks;
-
     let destruction_map = WeightMap::new(width, height, precision, 0.0);
-    let mut night_time = rng.gen_bool(0.2) && paper == BLUE_PAPER
-      || rng.gen_bool(0.5) && paper == RED_PAPER
+    let mut night_time = paper == DARK_BLUE_PAPER
       || rng.gen_bool(0.5) && paper == BLACK_PAPER
-      || paper == DARK_BLUE_PAPER;
+      || rng.gen_bool(0.4) && paper == RED_PAPER
+      || rng.gen_bool(0.3) && paper == BLUE_PAPER
+      || rng.gen_bool(0.2) && paper == GREY_PAPER;
     colors[1];
     if night_time && colors[0] == colors[1] {
       // in monochrome, we allow the night_time to get disabled
@@ -156,6 +171,25 @@ impl GlobalCtx {
       inks: inks.join(", "),
       inks_count: inks.len(),
       paper: palette.paper.0.to_string(),
+      day_time: if self.night_time {
+        "Night".to_string()
+      } else {
+        "Day".to_string()
+      },
+      specials: self
+        .specials
+        .iter()
+        .map(|s| match s {
+          Special::TrojanHorse => "TrojanHorse".to_string(),
+          Special::Montmirail => "Montmirail".to_string(),
+          Special::Chinese => "Chinese".to_string(),
+          Special::Dragon(_) => "Dragon".to_string(),
+          Special::Excalibur => "Excalibur".to_string(),
+          Special::Barricades => "Barricades".to_string(),
+          Special::EaglesAttack => "EaglesAttack".to_string(),
+        })
+        .collect::<Vec<String>>()
+        .join(", "),
     };
 
     feature

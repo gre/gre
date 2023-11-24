@@ -16,6 +16,7 @@ pub struct Sun {
   pub origin: (f32, f32),
   pub radius: f32,
   pub clr: usize,
+  pub prec: f32,
 }
 
 impl Sun {
@@ -26,8 +27,9 @@ impl Sun {
     dr: f32,
     spiralrays: Option<f32>,
   ) -> Self {
+    let prec = 0.5;
     let routes = vec![
-      (clr, spiral_optimized(origin.0, origin.1, radius, dr, 0.1)),
+      (clr, spiral_optimized(origin.0, origin.1, radius, dr, prec)),
       (
         clr,
         circle_route(origin, radius, (radius * 2. + 8.) as usize),
@@ -39,6 +41,7 @@ impl Sun {
       radius,
       spiralrays,
       clr,
+      prec,
     }
   }
 
@@ -53,7 +56,7 @@ impl Sun {
         origin.1,
         paint.height.max(paint.width) / 2.0,
         dr,
-        0.3,
+        self.prec,
       );
       let rts = vec![(self.clr, rt)];
       /*

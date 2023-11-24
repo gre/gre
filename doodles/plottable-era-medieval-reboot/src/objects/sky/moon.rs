@@ -27,7 +27,7 @@ impl Moon {
     phase: f32,
   ) -> Self {
     let routes = vec![
-      (clr, spiral_optimized(origin.0, origin.1, radius, dr, 0.1)),
+      (clr, spiral_optimized(origin.0, origin.1, radius, dr, 1.0)),
       (
         clr,
         circle_route(origin, radius, (radius * 2. + 8.) as usize),

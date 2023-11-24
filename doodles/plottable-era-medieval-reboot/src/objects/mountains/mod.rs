@@ -11,6 +11,7 @@ use noise::*;
 use rand::prelude::*;
 
 pub mod front;
+pub mod wall;
 
 /**
  * LICENSE CC BY-NC-ND 4.0
@@ -72,7 +73,7 @@ impl MountainsV2 {
     let mut height_map: Vec<f32> = Vec::new();
 
     let mut passage = Passage::new(0.5, width, height);
-    let precision = 0.1;
+    let precision = 0.5;
 
     let mut mountains = vec![];
 

@@ -4,6 +4,7 @@ use crate::algo::{
   math2d::p_r,
   paintmask::PaintMask,
   polylines::{path_subdivide_to_curve, shake, Polylines},
+  renderable::Renderable,
 };
 use rand::prelude::*;
 use std::f32::consts::PI;
@@ -15,6 +16,7 @@ use std::f32::consts::PI;
 
 pub struct Fowl {
   pub routes: Polylines,
+  pub origin: (f32, f32),
 }
 
 impl Fowl {
@@ -88,7 +90,7 @@ impl Fowl {
       })
       .collect();
 
-    Self { routes }
+    Self { routes, origin }
   }
 
   pub fn render(&self, paint: &mut PaintMask) -> Polylines {
@@ -97,5 +99,14 @@ impl Fowl {
       paint.paint_polygon(poly); // TODO it would be best to have proper polygons
     }
     routes
+  }
+}
+
+impl<R: Rng> Renderable<R> for Fowl {
+  fn render(&self, _rng: &mut R, paint: &mut PaintMask) -> Polylines {
+    self.render(paint)
+  }
+  fn yorder(&self) -> f32 {
+    self.origin.1
   }
 }
