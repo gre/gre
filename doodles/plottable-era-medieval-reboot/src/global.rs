@@ -44,6 +44,7 @@ pub enum Special {
   Chinese,
   Barricades,
   EaglesAttack,
+  Trebuchets,
 }
 
 pub struct GlobalCtx {
@@ -103,6 +104,8 @@ impl GlobalCtx {
       specials.insert(Special::Barricades);
     } else if rng.gen_bool(0.01) && matches!(attackers, Blazon::Falcon) {
       specials.insert(Special::EaglesAttack);
+    } else if rng.gen_bool(0.02) {
+      specials.insert(Special::Trebuchets);
     }
 
     let dragon_proba_mul = if paper == RED_PAPER { 1.0 } else { 0.1 };
@@ -187,6 +190,7 @@ impl GlobalCtx {
           Special::Excalibur => "Excalibur".to_string(),
           Special::Barricades => "Barricades".to_string(),
           Special::EaglesAttack => "EaglesAttack".to_string(),
+          Special::Trebuchets => "Trebuchets".to_string(),
         })
         .collect::<Vec<String>>()
         .join(", "),

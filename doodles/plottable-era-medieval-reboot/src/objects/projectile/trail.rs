@@ -122,6 +122,10 @@ impl Trail {
 
     routes = regular_clip(&routes, paint);
 
+    for (_, route) in &routes {
+      paint.paint_polyline(route, 1.0);
+    }
+
     paint.paint(&self.trailmask);
 
     routes

@@ -25,6 +25,16 @@ pub struct CastleGrounding {
   pub moats: (bool, bool),
 }
 
+impl CastleGrounding {
+  pub fn get_random_target<R: Rng>(&self, rng: &mut R) -> (f32, f32) {
+    let (x, y) = self.position;
+    (
+      x + rng.gen_range(-0.5..0.5) * self.width,
+      y + rng.gen_range(-1.0..0.0) * self.width,
+    )
+  }
+}
+
 pub struct Mountain {
   // meta info for the objects we will need to draw inside mountains
   pub castle: Option<CastleGrounding>,
@@ -90,8 +100,9 @@ impl MountainsV2 {
       } else {
         2.0 + (rng.gen_range(-1f32..8.0) * rng.gen_range(0.0..1.0)).max(0.0)
       };
-      let amp1 = rng.gen_range(0.0..4.0) * rng.gen_range(0.0..1.0);
-      let amp2 = rng.gen_range(0.0..4.0) * rng.gen_range(0.0..1.0);
+      let amp1 = rng.gen_range(-1.0f32..4.0).max(0.0) * rng.gen_range(0.0..1.0);
+      let amp2 = rng.gen_range(-1.0f32..4.0).max(0.0) * rng.gen_range(0.0..1.0);
+      let amp3 = rng.gen_range(-1.0f32..2.0).max(0.0) * rng.gen_range(0.0..1.0);
       let center = rng.gen_range(0.2..0.8) * width;
 
       let stopy = mix(yhorizon, ymax, 0.2 + 0.8 * jf);
@@ -145,17 +156,6 @@ impl MountainsV2 {
                   ]),
             ]) as f32;
 
-          /*
-          y += 0.05
-            * amp
-            * perlin.get([
-              //
-              6.6 + seed * 1.3,
-              8.3 + xv as f64 * 0.027,
-              8.1 + y as f64 * 0.051,
-            ]) as f32;
-
-
           y += amp
             * amp3
             * perlin
@@ -166,7 +166,8 @@ impl MountainsV2 {
                 seed / 7.7 + 6.66,
               ])
               .powf(2.0) as f32;
-            */
+          /*
+           */
 
           if y < miny {
             miny = y;
@@ -242,21 +243,19 @@ impl MountainsV2 {
         let smoothed_ridge = moving_average_2d(&ridge, smooth);
 
         // take an interesting high point
-        let mut castle_position = smoothed_ridge[0];
-        let borderypush = height * 0.5;
-        let xmin = 0.2 * width;
-        let xmax = 0.8 * width;
+        let mut castle_position = (width / 2.0, height);
+        let borderypush = 0.3 * height;
         for p in smoothed_ridge.iter() {
           // formula to avoid borders
-          let x = p.1;
-          let bordering = 2.0 * (p.0 / width - 0.5);
-          let y = x + borderypush * bordering * bordering;
-          if y < castle_position.1 && xmin < x && x < xmax {
+          let bordering = 2.0 * (p.0 / width - 0.5).abs();
+          let y = p.1 + borderypush * bordering * bordering;
+          if y < castle_position.1 && width * 0.2 < p.0 && p.0 < width * 0.8 {
             castle_position = *p;
           }
         }
 
         if castle_position.1 > yhorizon {
+          // TODO in that case, we skip completely the castle?
           castle_position.1 = yhorizon;
         }
 

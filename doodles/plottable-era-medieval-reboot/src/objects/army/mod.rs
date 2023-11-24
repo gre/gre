@@ -300,7 +300,12 @@ impl ArmyOnMountain {
       if let Some(castle) = first_castle {
         let trebuchet_tries = (rng.gen_range(-4.0f32..4.0)
           * rng.gen_range(0.0..1.0))
-        .max(0.0) as usize;
+        .max(0.0) as usize
+          + if ctx.specials.contains(&Special::Trebuchets) {
+            10
+          } else {
+            0
+          };
 
         let trees_range: std::ops::Range<f32> = 0.35..0.5;
         let trees_sampling = if rng.gen_bool(0.3) {
@@ -415,6 +420,10 @@ impl ArmyOnMountain {
                 xflip,
                 clr,
               );
+
+              let target = castle.get_random_target(rng);
+              trebuchet.throw_projectiles(rng, ctx, paint, target);
+
               renderables.add(trebuchet);
 
               let area = VCircle::new(x, y - 0.3 * height, height);
@@ -446,8 +455,9 @@ impl ArmyOnMountain {
             let bridge_opening = rng.gen_range(0.0f32..2.0).min(1.0);
 
             if rng.gen_bool(0.5) {
+              // FIXME terrible positioning atm
               let triangle_structure = rng.gen_bool(0.7);
-              let s = rng.gen_range(0.12..0.15) * width;
+              let s = rng.gen_range(0.1..0.13) * width;
 
               let o = (x, y - 0.3 * h);
               let machine =

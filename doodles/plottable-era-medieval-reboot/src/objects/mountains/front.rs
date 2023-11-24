@@ -1,14 +1,9 @@
 use crate::{
   algo::{
     clipping::clip_routes_with_colors, math1d::mix, paintmask::PaintMask,
-    polylines::path_subdivide_to_curve,
   },
   global::{GlobalCtx, Special},
-  objects::{
-    army::trebuchet::Trebuchet,
-    castle::chinesedoor::ChineseDoor,
-    projectile::{ball::Ball, trail::Trail},
-  },
+  objects::{army::trebuchet::Trebuchet, castle::chinesedoor::ChineseDoor},
 };
 use noise::*;
 use rand::prelude::*;
@@ -153,29 +148,10 @@ impl FrontMountains {
         Trebuchet::init(rng, o, height, action_percent, xflip, clr);
       routes.extend(trebuchet.render(&mut paint_before));
 
-      if rng.gen_bool(0.3) {
-        // TODO add a method on trebuchet directly that can be reused. it will take a "target" and go % way to it
-        let o = trebuchet.get_basket_position();
-        let topy = mix(0.0, o.1, rng.gen_range(0.5..0.8));
-        let d = (ctx.width * rng.gen_range(0.3..0.7), topy);
-        let path = vec![o, (o.0, mix(o.1, topy, rng.gen_range(0.6..0.8))), d];
-        let path = path_subdivide_to_curve(&path, 2, 0.7);
-        let size = rng.gen_range(2.0..5.0);
-        let particles = rng.gen_range(10..30);
-        let strokes = rng.gen_range(1..5);
-        let ball = Ball::init(rng, d, size);
-        let trailmaxpercent = 1.0;
-        let trail = Trail::init(
-          rng,
-          &paint,
-          path,
-          size,
-          trailmaxpercent,
-          particles,
-          strokes,
-        );
-        ctx.throw_ball(ball, trail);
-      }
+      let o = trebuchet.get_basket_position();
+      let topy = mix(0.0, o.1, rng.gen_range(0.5..0.8));
+      let target = (ctx.width * rng.gen_range(0.3..0.7), topy);
+      trebuchet.throw_projectiles(rng, ctx, paint, target);
     }
 
     paint.paint(&paint_before);

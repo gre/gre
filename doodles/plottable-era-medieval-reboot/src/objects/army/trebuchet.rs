@@ -1,10 +1,16 @@
-use crate::algo::{
-  clipping::regular_clip,
-  math1d::mix,
-  paintmask::PaintMask,
-  polylines::{path_subdivide_to_curve_it, shake, Polylines},
-  renderable::Renderable,
-  shapes::circle_route,
+use crate::{
+  algo::{
+    clipping::regular_clip,
+    math1d::mix,
+    paintmask::PaintMask,
+    polylines::{
+      path_subdivide_to_curve, path_subdivide_to_curve_it, shake, Polylines,
+    },
+    renderable::Renderable,
+    shapes::circle_route,
+  },
+  global::GlobalCtx,
+  objects::projectile::{ball::Ball, trail::Trail},
 };
 use rand::prelude::*;
 use std::f32::consts::PI;
@@ -19,6 +25,7 @@ pub struct Trebuchet {
   height: f32,
   basket_position: (f32, f32),
   origin: (f32, f32),
+  action_percent: f32,
 }
 
 impl Trebuchet {
@@ -427,6 +434,7 @@ impl Trebuchet {
       height,
       basket_position,
       origin,
+      action_percent,
     }
   }
 
@@ -442,6 +450,36 @@ impl Trebuchet {
     }
 
     routes
+  }
+
+  pub fn throw_projectiles<R: Rng>(
+    &self,
+    rng: &mut R,
+    ctx: &mut GlobalCtx,
+    paint: &PaintMask,
+    target: (f32, f32),
+  ) {
+    // we may use action_percent more precisely for the projectile position
+    let threshold = 0.8;
+    if self.action_percent < threshold {
+      return;
+    }
+    let o = self.get_basket_position();
+    // FIXME we need to calc a trajectory, do a % of it, keep a certain length of trail,...
+    let path = vec![
+      o,
+      (o.0, mix(o.1, target.1, rng.gen_range(0.6..0.8))),
+      target,
+    ];
+    let path = path_subdivide_to_curve(&path, 2, 0.7);
+    let size = rng.gen_range(2.0..3.0);
+    let particles = rng.gen_range(10..30);
+    let strokes = rng.gen_range(1..5);
+    let ball = Ball::init(rng, target, size);
+    let trailmaxpercent = 1.0;
+    let trail =
+      Trail::init(rng, &paint, path, size, trailmaxpercent, particles, strokes);
+    ctx.throw_ball(ball, trail);
   }
 }
 

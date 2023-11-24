@@ -1,5 +1,7 @@
 use crate::algo::{
-  clipping::regular_clip, paintmask::PaintMask, shapes::yarnballs,
+  clipping::regular_clip,
+  paintmask::PaintMask,
+  shapes::{circle_route, spiral_optimized},
 };
 use rand::prelude::*;
 
@@ -28,8 +30,12 @@ impl Ball {
     let r = self.r;
     let mut routes = vec![];
     let density = 2.0;
-    // TODO do the random spiral instead?
-    routes.push((clr, yarnballs(rng, origin, r, density)));
+    let dr = rng.gen_range(0.4..0.7);
+
+    routes.push((clr, circle_route(origin, r, (r * density) as usize + 10)));
+    routes.push((clr, spiral_optimized(origin.0, origin.1, r, dr, 0.1)));
+
+    // routes.push((clr, yarnballs(rng, origin, r, density)));
     //routes.push((0, yarnballs(rng, origin, r, density * 0.8)));
     //routes.push((2, yarnballs(rng, origin, r, density * 0.2)));
     routes = regular_clip(&routes, paint);
