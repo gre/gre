@@ -9,10 +9,12 @@ mod svgplot;
 
 use algo::clipping::clip_routes_with_colors;
 use algo::math1d::mix;
+use algo::math1d::smoothstep;
 use algo::packing::packing;
 use algo::polylines::path_subdivide_to_curve;
 use algo::polylines::shake;
 use algo::polylines::Polylines;
+use algo::wormsfilling::WeightMap;
 use fxhash::*;
 use global::GlobalCtx;
 use global::Special;
@@ -337,6 +339,8 @@ pub fn render(
 
   routes.extend(decoration_routes);
 
+  //  routes.extend(debug_weight_map(&ctx.destruction_map, 2, 0.0, 1.0));
+
   ctx.cleanup();
   let feature = ctx.to_feature(&routes);
   let feature_json = serde_json::to_string(&feature).unwrap();
@@ -478,4 +482,46 @@ fn sandbox<R: Rng>(
     }
   }
   */
+}
+
+fn debug_weight_map(
+  weightmap: &WeightMap,
+  clr: usize,
+  from: f32,
+  to: f32,
+) -> Polylines {
+  let mut routes = vec![];
+
+  let mut x = 0.0;
+  while x < weightmap.width {
+    let mut y = 0.0;
+    while y < weightmap.height {
+      let w = weightmap.get_weight((x, y));
+      let v = smoothstep(from, to, w);
+      if v > 0.0 {
+        let xc = x + 0.5 * weightmap.precision;
+        let yc = y + 0.5 * weightmap.precision;
+        let s = v * 0.5 * weightmap.precision;
+
+        let mut r = s;
+        while r > 0.0 {
+          routes.push((
+            clr,
+            vec![
+              (xc - r, yc - r),
+              (xc + r, yc - r),
+              (xc + r, yc + r),
+              (xc - r, yc + r),
+              (xc - r, yc - r),
+            ],
+          ));
+          r -= 0.2;
+        }
+      }
+      y += weightmap.precision;
+    }
+    x += weightmap.precision;
+  }
+
+  routes
 }

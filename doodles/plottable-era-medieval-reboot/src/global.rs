@@ -1,5 +1,5 @@
 use crate::{
-  algo::{polylines::Polylines, wormsfilling::WeightMap},
+  algo::{math1d::smoothstep, polylines::Polylines, wormsfilling::WeightMap},
   objects::{blazon::Blazon, projectile::Projectiles},
   palette::{
     Palette, AMBER, BLACK_PAPER, BLUE_PAPER, DARK_BLUE_PAPER, GOLD_GEL,
@@ -7,6 +7,7 @@ use crate::{
   },
   svgplot::inks_stats,
 };
+use noise::*;
 use rand::prelude::*;
 use serde::Serialize;
 use std::collections::HashSet;
@@ -109,9 +110,9 @@ impl GlobalCtx {
       specials.insert(Special::Cyclopes);
     }
 
-    let dragon_proba_mul = if paper == RED_PAPER { 1.0 } else { 0.1 };
+    let dragon_proba_mul = if paper == RED_PAPER { 1.0 } else { 0.2 };
 
-    if rng.gen_bool(0.4 * dragon_proba_mul)
+    if rng.gen_bool(0.5 * dragon_proba_mul)
       && matches!(attackers, Blazon::Dragon)
       || rng.gen_bool(0.1 * dragon_proba_mul)
         && matches!(attackers, Blazon::Lys)
@@ -128,7 +129,8 @@ impl GlobalCtx {
       specials.insert(Special::Chinese);
     }
 
-    let destruction_map = WeightMap::new(width, height, precision, 0.0);
+    let destruction_map = gen_destruction_map(rng, width, height, 3.0);
+
     let mut night_time = paper == DARK_BLUE_PAPER
       || rng.gen_bool(0.5) && paper == BLACK_PAPER
       || rng.gen_bool(0.4) && paper == RED_PAPER
@@ -208,41 +210,43 @@ impl GlobalCtx {
 
     feature
   }
+}
 
-  /*
-  // TODO move this into a sub object "projectiles"
-  pub fn throw_ball(&mut self, ball: Ball, trail: Trail) {
-    self.balls.push(ball);
-    self.trails.push(trail);
-  }
+fn gen_destruction_map<R: Rng>(
+  rng: &mut R,
+  width: f32,
+  height: f32,
+  precision: f32,
+) -> WeightMap {
+  let mut destruction_map = WeightMap::new(width, height, precision, 0.0);
+  let perlin = Perlin::new(rng.gen());
 
-  pub fn render_projectiles<R: Rng>(
-    &self,
-    rng: &mut R,
-    existing_routes: &mut Polylines,
-    preserve_area: &PaintMask,
-  ) {
-    let mut removing_area = preserve_area.clone();
+  let s1 = rng.gen_range(0.0..999.0);
+  let s2 = rng.gen_range(0.0..999.0);
+  let f1 = rng.gen_range(1.0..4.0) * rng.gen_range(0.1..1.0);
+  let f2 = rng.gen_range(8.0..12.0);
 
-    let mut routes = vec![];
+  let thres = rng.gen_range(-1.0..1.0);
+  let sat = rng.gen_range(1.5..2.0);
+  let fulldestruction = rng.gen_range(-1.0f32..2.0).max(0.0);
+  let warp = rng.gen_range(0.0..20.0) * rng.gen_range(0.0..1.0);
 
-    let clr = self.projectilesclr;
+  let w = width as f64;
+  destruction_map.fill_fn(&|(x, y)| {
+    let xf = x as f64 / w;
+    let yf = y as f64 / w;
+    let x = f1 * xf;
+    let y = f1 * yf;
+    let n1 = perlin.get([x, y, s1]);
+    let x = f2 * xf;
+    let y = f2 * yf;
+    let n2 = perlin.get([x, y, s2 + warp * n1]);
+    let n1 = n1 as f32;
+    let n2 = n2 as f32;
+    let v = sat * smoothstep(-0.2, 0.2, n1 + thres) * n2
+      + fulldestruction * smoothstep(0.5, 0.6, n1 + thres);
+    v.max(0.0).min(1.0)
+  });
 
-    for ball in self.balls.iter() {
-      routes.extend(ball.render(rng, &mut removing_area, clr));
-    }
-    for trail in self.trails.iter() {
-      routes.extend(trail.render(rng, &mut removing_area, clr));
-    }
-
-    routes = regular_clip(&routes, preserve_area);
-
-    let mut mask = preserve_area.clone();
-    mask.reverse();
-    mask.intersects(&removing_area);
-    *existing_routes = regular_clip(existing_routes, &mask);
-
-    existing_routes.extend(routes);
-  }
-  */
+  destruction_map
 }

@@ -156,9 +156,9 @@ pub struct WeightMap {
   living_threshold: f32,
   w: usize,
   h: usize,
-  width: f32,
-  height: f32,
-  precision: f32,
+  pub width: f32,
+  pub height: f32,
+  pub precision: f32,
 }
 impl WeightMap {
   pub fn new(
