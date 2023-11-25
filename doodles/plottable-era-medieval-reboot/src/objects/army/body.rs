@@ -1,4 +1,7 @@
-use crate::algo::{clipping::regular_clip, math1d::mix, paintmask::PaintMask};
+use crate::algo::{
+  clipping::regular_clip, math1d::mix, paintmask::PaintMask,
+  polylines::grow_as_rectangle,
+};
 use rand::prelude::*;
 use std::f32::consts::PI;
 
@@ -43,28 +46,47 @@ impl HumanPosture {
         Some(HoldableObject::LongSword) | Some(HoldableObject::Sword) => {
           xdir * 4.0
         }
-        _ => rng.gen_range(-1.0..1.0),
+        Some(HoldableObject::RaisingUnknown) => xdir * (PI / 2.0) * 0.3,
+        None => xdir * PI * 0.8,
+        _ => {
+          xdir
+            * (PI / 2.0)
+            * (1.0 + rng.gen_range(-1.0..1.0) * rng.gen_range(0.5..1.0))
+        }
       };
     let elbow_right_angle = match righthand {
       Some(HoldableObject::Paddle(a)) => a,
       _ => {
         shoulder_right_angle
-          + rng.gen_range(-0.5..0.5) * rng.gen_range(0.0..1.0)
+          + rng.gen_range(-0.5..0.5) * rng.gen_range(0.5..1.0)
       }
     };
 
-    let shoulder_left_angle = rng.gen_range(3.0 * PI / 4.0..PI);
+    let shoulder_left_angle = -PI / 2.0
+      + match lefthand {
+        None => -xdir * PI * 0.8,
+        _ => {
+          -xdir
+            * (PI / 2.0)
+            * (1.0 + rng.gen_range(-1.0..1.0) * rng.gen_range(0.5..1.0))
+        }
+      };
+
+    let elbow_left_angle =
+      shoulder_left_angle + rng.gen_range(-0.5..0.5) * rng.gen_range(0.0..1.0);
 
     let left_arm_bend = match lefthand {
-      Some(HoldableObject::Shield) => 0.5,
+      Some(HoldableObject::Shield) => 0.2,
       _ => 1.0,
     };
 
     let right_arm_bend = match righthand {
+      Some(HoldableObject::Shield) => 0.2,
       Some(HoldableObject::Axe) => 1.0,
       Some(HoldableObject::Club) => rng.gen_range(0.5..1.0),
       Some(HoldableObject::LongBow(_)) => 1.0,
-      Some(HoldableObject::Foreign) => 1.0,
+      Some(HoldableObject::RaisingUnknown) => 1.0,
+      None => 0.8,
       _ => 0.4,
     };
 
@@ -74,7 +96,37 @@ impl HumanPosture {
       shoulder_right_angle,
       shoulder_left_angle,
       elbow_right_angle,
-      elbow_left_angle: PI / 2.0 + 0.3,
+      elbow_left_angle,
+      hip_right_angle: PI / 2.0 - 0.5,
+      hip_left_angle: PI / 2.0 + 0.5,
+      knee_right_angle: PI / 2.0,
+      knee_left_angle: PI / 2.0,
+      left_arm_bend,
+      right_arm_bend,
+      left_leg_bend: 1.0,
+      right_leg_bend: 1.0,
+    }
+  }
+
+  pub fn hand_risen<R: Rng>(rng: &mut R) -> Self {
+    let shoulder_right_angle = -PI / 2.0 + 1.0;
+    let elbow_right_angle =
+      shoulder_right_angle + rng.gen_range(-0.5..0.5) * rng.gen_range(0.0..1.0);
+
+    let shoulder_left_angle = -PI / 2.0 - 1.0;
+    let elbow_left_angle =
+      shoulder_left_angle + rng.gen_range(-0.5..0.5) * rng.gen_range(0.0..1.0);
+
+    let left_arm_bend = 1.0;
+    let right_arm_bend = 1.0;
+
+    Self {
+      body_angle: -PI / 2.0,
+      head_angle: -PI / 2.0,
+      shoulder_right_angle,
+      shoulder_left_angle,
+      elbow_right_angle,
+      elbow_left_angle,
       hip_right_angle: PI / 2.0 - 0.5,
       hip_left_angle: PI / 2.0 + 0.5,
       knee_right_angle: PI / 2.0,
@@ -102,6 +154,8 @@ pub struct HumanBody {
   pub hip_left: (f32, f32),
   pub knee_right: (f32, f32),
   pub knee_left: (f32, f32),
+  pub foot_right: (f32, f32),
+  pub foot_left: (f32, f32),
   pub head: (f32, f32),
 }
 
@@ -160,6 +214,12 @@ impl HumanBody {
 
     let head = proj_point(shoulder, j.head_angle, 0.3 * h);
 
+    let footd = 0.08 * h;
+    let foot_left =
+      proj_point(knee_left, joints.knee_left_angle + PI / 2.0, footd);
+    let foot_right =
+      proj_point(knee_right, joints.knee_right_angle - PI / 2.0, footd);
+
     Self {
       origin,
       posture: joints,
@@ -174,6 +234,8 @@ impl HumanBody {
       hip_left,
       knee_right,
       knee_left,
+      foot_right,
+      foot_left,
       head,
     }
   }
@@ -194,15 +256,22 @@ impl HumanBody {
     let hip_left = self.hip_left;
     let knee_right = self.knee_right;
     let knee_left = self.knee_left;
+    let foot_right = self.foot_right;
+    let foot_left = self.foot_left;
     let head = self.head;
 
     routes.push((clr, vec![hip, shoulder, head]));
 
+    let w = 0.06 * self.height;
+    if w > 0.5 {
+      routes.push((clr, grow_as_rectangle(hip, shoulder, w)));
+    }
+
     routes.push((clr, vec![shoulder, shoulder_right, elbow_right]));
     routes.push((clr, vec![shoulder, shoulder_left, elbow_left]));
 
-    routes.push((clr, vec![hip, hip_right, knee_right]));
-    routes.push((clr, vec![hip, hip_left, knee_left]));
+    routes.push((clr, vec![hip, hip_right, knee_right, foot_right]));
+    routes.push((clr, vec![hip, hip_left, knee_left, foot_left]));
 
     regular_clip(&routes, paint)
   }

@@ -2,6 +2,7 @@ use crate::algo::{
   clipping::regular_clip_polys,
   paintmask::PaintMask,
   polylines::{grow_as_rectangle, grow_stroke_zigzag, route_translate_rotate},
+  renderable::Renderable,
 };
 use rand::prelude::*;
 
@@ -82,5 +83,18 @@ impl Sword {
 
   pub fn render(&self, paint: &mut PaintMask) -> Vec<(usize, Vec<(f32, f32)>)> {
     regular_clip_polys(&self.routes, paint, &self.polys)
+  }
+}
+
+impl<R: Rng> Renderable<R> for Sword {
+  fn render(
+    &self,
+    _rng: &mut R,
+    paint: &mut PaintMask,
+  ) -> Vec<(usize, Vec<(f32, f32)>)> {
+    self.render(paint)
+  }
+  fn yorder(&self) -> f32 {
+    self.origin.1
   }
 }

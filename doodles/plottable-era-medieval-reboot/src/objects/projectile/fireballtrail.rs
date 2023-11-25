@@ -11,14 +11,15 @@ use rand::prelude::*;
  * Author: greweb – 2023 – Plottable Era: (II) Medieval
  */
 
-pub struct Trail {
+pub struct FireballTrail {
   pub trailmask: PaintMask,
   pub particles: usize,
   pub bound: (f32, f32, f32, f32),
   pub circles: Vec<VCircle>,
+  pub clr: usize,
 }
 
-impl Trail {
+impl FireballTrail {
   pub fn init<R: Rng>(
     rng: &mut R,
     referencemask: &PaintMask,
@@ -27,6 +28,7 @@ impl Trail {
     trailmaxpercent: f32,
     particles: usize,
     strokes: usize,
+    clr: usize,
   ) -> Self {
     let mut trailmask = referencemask.clone_empty();
 
@@ -58,7 +60,7 @@ impl Trail {
       trailmask.paint_circle(x, y, r);
     }
 
-    let strokew = 0.7;
+    let strokew = 0.8;
     for _ in 0..strokes {
       let v = mix(l, 0.0, rng.gen_range(0.0..trailmaxpercent));
       let offset = rng.gen_range(-0.5..0.5) * object_size;
@@ -73,6 +75,7 @@ impl Trail {
       particles,
       bound,
       circles,
+      clr,
     }
   }
 
@@ -80,8 +83,8 @@ impl Trail {
     &self,
     rng: &mut R,
     paint: &mut PaintMask,
-    clr: usize,
   ) -> Vec<(usize, Vec<(f32, f32)>)> {
+    let clr = self.clr;
     let mut routes = vec![];
 
     let its = self.particles as f32 * rng.gen_range(1.0..2.0);
@@ -100,30 +103,10 @@ impl Trail {
       routes.push((clr, circle_route((c.x, c.y), c.r, 20)));
     }
 
-    /*
-    routes.extend(filling.fill_in_paint(
-      rng,
-      &self.trailmask,
-      0,
-      1.5,
-      self.bound,
-      (its * 0.8) as usize,
-    ));
-
-    routes.extend(filling.fill_in_paint(
-      rng,
-      &self.trailmask,
-      2,
-      1.5,
-      self.bound,
-      (its * 0.2) as usize,
-    ));
-    */
-
     routes = regular_clip(&routes, paint);
 
     for (_, route) in &routes {
-      paint.paint_polyline(route, 1.0);
+      paint.paint_polyline(route, 2.0);
     }
 
     paint.paint(&self.trailmask);

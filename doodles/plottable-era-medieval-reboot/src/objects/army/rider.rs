@@ -52,9 +52,9 @@ impl Rider {
 
     let mut routes = vec![];
 
-    routes.extend(warrior.render_foreground_only(mask));
+    routes.extend(warrior.render_foreground_only(rng, mask));
     routes.extend(horse.render(rng, mask));
-    routes.extend(warrior.render_background_only(mask));
+    routes.extend(warrior.render_background_only(rng, mask));
 
     // add halo around
     for (_, route) in routes.iter() {

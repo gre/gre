@@ -6,32 +6,32 @@ use crate::algo::{
 };
 use rand::prelude::*;
 
-use super::army::sword::Sword;
-
 /**
  * LICENSE CC BY-NC-ND 4.0
  * Author: greweb – 2023 – Plottable Era: (II) Medieval
  */
 
-pub struct Rock {
+pub struct Rock<R: Rng> {
   pub origin: (f32, f32),
   pub size: f32,
   pub routes: Polylines,
   pub polys: Vec<Vec<(f32, f32)>>,
   pub inner_crop_polys: Vec<Vec<(f32, f32)>>,
-  pub sword: Option<Sword>,
+  pub top: Option<Box<dyn Renderable<R>>>,
   pub clr: usize,
 }
 
-impl Rock {
-  pub fn init<R: Rng>(
+impl<R: Rng> Rock<R> {
+  pub fn init<
+    F: FnMut(&mut R, (f32, f32), f32, f32) -> Option<Box<dyn Renderable<R>>>,
+  >(
     rng: &mut R,
     origin: (f32, f32),
     size: f32,
     clr: usize,
     count_poly: usize,
     elevation: f32,
-    excalibur: bool,
+    spawn_top: &mut F,
   ) -> Self {
     let mut routes = vec![];
     let mut polys = vec![];
@@ -54,7 +54,7 @@ impl Rock {
       for j in 0..count {
         let a =
           (j as f32 + rng.gen_range(-0.5..0.5)) * 2.0 * PI / (count as f32);
-        // FIXME yes there is a bug xD we're remultiply by amp. but the generator worked with that assumption so it's hard to fix now...
+        // NB: yes there is a bug xD we're remultiply by amp. but the generator worked with that assumption so it's hard to fix now...
         let m = amp * rng.gen_range(ampmin..ampmax);
         let x = o.0 + m * a.cos();
         let y = (o.1 + m * a.sin()).min(origin.1);
@@ -71,16 +71,12 @@ impl Rock {
       inner_crop_polys.push(inner_crop_poly);
     }
 
-    let sword = if excalibur {
-      if let Some(y) = polygons_find_miny(&polys, origin.0) {
-        let s = 2.0 * size;
-        let o = (origin.0, y - rng.gen_range(0.5..0.7) * s);
-        let a = -PI / 2.0;
-        let clr = rng.gen_range(0..2);
-        Some(Sword::init(rng, o, s, a, clr))
-      } else {
-        None
-      }
+    let top = if let Some(y) = polygons_find_miny(&polys, origin.0) {
+      let s = 2.0 * size;
+      let o = (origin.0, y - rng.gen_range(0.5..0.7) * s);
+      let a = -PI / 2.0;
+      let r = spawn_top(rng, o, s, a);
+      r
     } else {
       None
     };
@@ -91,15 +87,11 @@ impl Rock {
       routes,
       polys,
       inner_crop_polys,
-      sword,
+      top,
       clr,
     }
   }
-  pub fn render<R: Rng>(
-    &self,
-    rng: &mut R,
-    paint: &mut PaintMask,
-  ) -> Polylines {
+  pub fn render(&self, rng: &mut R, paint: &mut PaintMask) -> Polylines {
     for poly in self.inner_crop_polys.iter() {
       paint.paint_polygon(poly);
     }
@@ -123,8 +115,8 @@ impl Rock {
       paint.paint_polygon(poly);
     }
 
-    if let Some(sword) = &self.sword {
-      let rts = sword.render(paint);
+    if let Some(o) = &self.top {
+      let rts = o.as_ref().render(rng, paint);
       // halo around the sword
       for (_, route) in &rts {
         paint.paint_polyline(route, 2.0);
@@ -132,11 +124,15 @@ impl Rock {
       routes.extend(rts);
     }
 
+    for poly in self.polys.iter() {
+      paint.paint_polyline(poly, 1.2);
+    }
+
     routes
   }
 }
 
-impl<R: Rng> Renderable<R> for Rock {
+impl<R: Rng> Renderable<R> for Rock<R> {
   fn render(&self, rng: &mut R, paint: &mut PaintMask) -> Polylines {
     self.render(rng, paint)
   }

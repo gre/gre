@@ -19,6 +19,7 @@ use super::{
   animals::{armadillo::Armadillo, dog::Dog, fowl::Fowl},
   blazon::Blazon,
   mountains::{wall::MountainWall, Mountain, MountainsV2},
+  projectile::attack::AttackOrigin,
   tree::Tree,
 };
 use crate::{
@@ -421,8 +422,7 @@ impl ArmyOnMountain {
                 clr,
               );
 
-              let target = castle.get_random_target(rng);
-              trebuchet.throw_projectiles(rng, ctx, paint, target);
+              trebuchet.throw_projectiles(ctx);
 
               renderables.add(trebuchet);
 
@@ -466,8 +466,8 @@ impl ArmyOnMountain {
               for pos in machine.human_positions() {
                 let size = 0.5 * s;
                 let headshape = HeadShape::NAKED;
-                let leftobj = Some(HoldableObject::Foreign);
-                let rightobj = Some(HoldableObject::Foreign);
+                let leftobj = Some(HoldableObject::RaisingUnknown);
+                let rightobj = Some(HoldableObject::RaisingUnknown);
                 let posture =
                   HumanPosture::from_holding(rng, false, leftobj, rightobj);
                 let warrior = Human::init(
@@ -609,18 +609,69 @@ impl ArmyOnMountain {
             let headshape = HeadShape::NAKED;
             let leftobj = None;
             let rightobj = Some(HoldableObject::LongBow(phase));
-            // TODO archer should spawn some arrows
             let posture =
               HumanPosture::from_holding(rng, xflip, leftobj, rightobj);
             let human = Human::init(
               rng, origin, size, 0.0, xflip, blazon, clr, blazonclr, posture,
               headshape, leftobj, rightobj,
             );
+
+            ctx.projectiles.add_attack(AttackOrigin::Arrow(
+              human.body.hand_right_pos_angle().0,
+            ));
+
             renderables.add(human);
 
             let area = VCircle::new(x, y - 0.3 * size, 0.5 * size);
             debug_circle.push(area);
             exclusion_mask.paint_circle(area.x, area.y, area.r);
+          }
+        }
+
+        if ctx.specials.contains(&Special::Cyclopes) {
+          let sampling = rng.gen_range(0..3);
+          for _i in 0..sampling {
+            let x = mix(first.0, last.0, rng.gen_range(0.1..0.9));
+            let y =
+              mix(lookup_ridge(&ridge, x), yhorizon, rng.gen_range(0.0..1.0));
+            if y < yhorizon && !exclusion_mask.is_painted((x, y)) {
+              let origin = (x, y);
+              let size = rng.gen_range(0.1..0.2) * width;
+              let xflip = x > castle.position.0;
+              let lasering = rng.gen_bool(0.4);
+              let headshape = HeadShape::CYCLOPE;
+              let leftobj = None;
+              let rightobj = if lasering {
+                if rng.gen_bool(0.5) {
+                  None
+                } else {
+                  Some(HoldableObject::Club)
+                }
+              } else {
+                Some(HoldableObject::Club)
+              };
+              let clr = rng.gen_range(0..2);
+              let posture =
+                HumanPosture::from_holding(rng, xflip, leftobj, rightobj);
+              let human = Human::init(
+                rng, origin, size, 0.0, xflip, blazon, clr, clr, posture,
+                headshape, leftobj, rightobj,
+              )
+              .with_worms_filling_defaults();
+
+              ctx.nb_cyclopes += 1;
+
+              if lasering {
+                let o = human.eye_pos();
+                ctx.projectiles.add_attack(AttackOrigin::Laser(o));
+              }
+
+              renderables.add(human);
+
+              let area = VCircle::new(x, y - 0.3 * size, 0.5 * size);
+              debug_circle.push(area);
+              exclusion_mask.paint_circle(area.x, area.y, area.r);
+            }
           }
         }
 

@@ -83,13 +83,13 @@ impl BoatArmy {
     let mut routes = vec![];
 
     for front in humans.iter() {
-      routes.extend(front.render_foreground_only(mask));
+      routes.extend(front.render_foreground_only(rng, mask));
     }
 
     routes.extend(boat.render(rng, mask, clr));
 
     for human in humans.iter() {
-      routes.extend(human.render_background_only(mask));
+      routes.extend(human.render_background_only(rng, mask));
     }
 
     // we also create a halo cropping around castle

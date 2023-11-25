@@ -25,16 +25,6 @@ pub struct CastleGrounding {
   pub moats: (bool, bool),
 }
 
-impl CastleGrounding {
-  pub fn get_random_target<R: Rng>(&self, rng: &mut R) -> (f32, f32) {
-    let (x, y) = self.position;
-    (
-      x + rng.gen_range(-0.5..0.5) * self.width,
-      y + rng.gen_range(-1.0..0.0) * self.width,
-    )
-  }
-}
-
 pub struct Mountain {
   // meta info for the objects we will need to draw inside mountains
   pub castle: Option<CastleGrounding>,

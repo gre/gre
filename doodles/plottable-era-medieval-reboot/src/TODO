@@ -1,4 +1,3 @@
-SKY:
 
 CASTLE:
 - fix the mountain shaping & castle position
@@ -12,10 +11,10 @@ CASTLE:
   - drawbridge
 
 BATTLEFIELD:
+- Shield have bad clipping?
+- rework human pos: we need to look between the 2 ridges
 - yordering
   - human to emit two renderables..
-  - debug all the y positions of objects to see if they are correctly on their feet.
-- when finding human pos, we need to look between the 2 ridges
 - machines / caravans
   - merge Monk into Human. we need a concept of HoldingObject::Foreign
   - add folks on the machines.
@@ -38,23 +37,23 @@ BATTLEFIELD:
 - ADD: campfire near huts. (it's an area)
 
 GENERAL:
-- BUG when lowering precision at 0.1 there are some crash. let's run a lot of results to identify where.
-- work on projectiles. add fire & smoke.
-  - polish the particle. they are sometimes starting off screen. also they need to be oriented to the castle. so maybe we need to store abstracted data and resolve at the end of the scene.
 - Work on Features
 
 MOUNTAIN:
 - if we can allow castle to be on a mountain and have a mountain next to it where attackers are?
-- ADD: palisade / wall. 'palisade medieval / great wall' to google. traverse la montagne + facteur de destruction (trous dans la muraille / explosions avec des morceaux en l'air)
-- peuplier tree
+
+WORK ON DESTRUCTION:
+- facteur de destruction (trous dans la muraille / explosions avec des morceaux en l'air.
+- fire & smoke
 
 SEA:
 - boat spawner to spawn add variety.
 - mat de bateau
-- render the rocks with worms filling technique
 
 FRONT MOUNTAIN:
-- better animals spawning. can spawn on front too.
+- rework spawning. 
+- animals?
+- random obj and materials?
 - ADD random event on the front. maybe a rock from very bottom that makes it "front front"
   - a warrior watching the scene, raising hands. with weapon.
   - flags
@@ -73,6 +72,7 @@ IDEAS:
   - a nest
   - a weapon
   - an observer/lost person
+- SPECIAL merlin
 - SPECIAL lockness event. 
 - SPECIAL "zombie"/ghul mode. with the red moon. ref to zelda?
 - IDEA: sky parametric equations with worms filling.

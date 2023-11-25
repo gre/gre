@@ -3,7 +3,7 @@ use super::{
   body::{HumanBody, HumanPosture},
   club::Club,
   flag::Flag,
-  head::head_square,
+  head::{head_cyclope, head_square},
   helmet::Helmet,
   longbow::long_bow,
   paddle::Paddle,
@@ -12,8 +12,9 @@ use super::{
 };
 use crate::{
   algo::{
-    clipping::regular_clip, paintmask::PaintMask, polylines::Polylines,
-    renderable::Renderable,
+    clipping::regular_clip, math2d::p_r, paintmask::PaintMask,
+    polylines::Polylines, renderable::Renderable,
+    wormsfilling::worms_fill_strokes,
   },
   objects::blazon::Blazon,
 };
@@ -26,7 +27,7 @@ use std::f32::consts::PI;
  */
 
 pub struct Human {
-  pub human: HumanBody,
+  pub body: HumanBody,
   pub shields: Vec<Shield>,
   pub axes: Vec<Axe>,
   pub swords: Vec<Sword>,
@@ -36,16 +37,17 @@ pub struct Human {
   pub helmet: Option<Helmet>,
   pub mainclr: usize,
   pub blazonclr: usize,
-
+  pub wormsfillingrendering: Option<f32>,
   pub weapon_routes: Vec<(usize, Vec<(f32, f32)>)>,
-
   pub head_routes: Vec<(usize, Vec<(f32, f32)>)>,
   pub head_polys: Vec<Vec<(f32, f32)>>,
+  pub size: f32,
+  pub xflip: bool,
 }
 
 #[derive(Clone, Copy, PartialEq)]
 pub enum HoldableObject {
-  Foreign,
+  RaisingUnknown,
   Shield,
   Axe,
   Sword,
@@ -61,6 +63,7 @@ pub enum HoldableObject {
 pub enum HeadShape {
   NAKED,
   HELMET,
+  CYCLOPE,
 }
 
 impl Human {
@@ -75,8 +78,8 @@ impl Human {
     blazonclr: usize,
     posture: HumanPosture,
     headshape: HeadShape,
-    lefthandobj: Option<HoldableObject>,
-    righthandobj: Option<HoldableObject>,
+    lefthand: Option<HoldableObject>,
+    righthand: Option<HoldableObject>,
   ) -> Self {
     let acos = angle.cos();
     let asin = angle.sin();
@@ -103,8 +106,8 @@ impl Human {
     let mut weapon_routes = vec![];
 
     for (side, (pos, handangle)) in vec![
-      (lefthandobj, human.hand_left_pos_angle()),
-      (righthandobj, human.hand_right_pos_angle()),
+      (lefthand, human.hand_left_pos_angle()),
+      (righthand, human.hand_right_pos_angle()),
     ] {
       if let Some(obj) = side {
         match obj {
@@ -123,7 +126,7 @@ impl Human {
           }
           HoldableObject::Axe => {
             let axeang = handangle - PI / 2.0; // - xdir * rng.gen_range(0.0..1.0);
-            let s = 0.5 * size;
+            let s = 0.4 * size;
             let a = axeang - PI / 2.0;
             let handle = 0.3 * xdir;
             let dx = a.cos() * s * handle;
@@ -174,7 +177,7 @@ impl Human {
             let paddle = Paddle::init(rng, mainclr, pos, size, a);
             paddles.push(paddle);
           }
-          HoldableObject::Foreign => {}
+          HoldableObject::RaisingUnknown => {}
         }
       }
     }
@@ -192,10 +195,17 @@ impl Human {
           head_polys.push(r.clone());
         }
       }
+      HeadShape::CYCLOPE => {
+        let h = head_cyclope(mainclr, headpos, headangle, humansize, xflip);
+        head_routes.extend(h.clone());
+        for (_, r) in h {
+          head_polys.push(r.clone());
+        }
+      }
     }
 
     Self {
-      human,
+      body: human,
       shields,
       axes,
       swords,
@@ -208,11 +218,43 @@ impl Human {
       head_routes,
       head_polys,
       weapon_routes,
+      wormsfillingrendering: None,
+      size,
+      xflip,
     }
   }
 
-  pub fn render_foreground_only(
+  pub fn with_worms_filling_defaults(mut self) -> Self {
+    self.wormsfillingrendering = Some(0.022 * self.size);
+    self
+  }
+
+  pub fn eye_pos(&self) -> (f32, f32) {
+    let ((x, y), a) = self.body.head_pos_angle();
+    let size = self.body.height;
+    let xmul = if self.xflip { -1.0 } else { 1.0 };
+    let (dx, dy) = p_r((-0.25 * size, -0.1 * size * xmul), a);
+    (x + dx, y + dy)
+  }
+
+  fn rendering_pass<R: Rng>(
     &self,
+    rng: &mut R,
+    paint: &PaintMask,
+    routes: &Polylines,
+  ) -> Polylines {
+    if let Some(w) = self.wormsfillingrendering {
+      let density = 3.5;
+      let its = (self.body.height * 10.0 + 100.0) as usize;
+      worms_fill_strokes(rng, paint, its, w, density, routes)
+    } else {
+      routes.clone()
+    }
+  }
+
+  pub fn render_foreground_only<R: Rng>(
+    &self,
+    rng: &mut R,
     mask: &mut PaintMask,
   ) -> Vec<(usize, Vec<(f32, f32)>)> {
     let mut routes = vec![];
@@ -232,14 +274,15 @@ impl Human {
       routes.extend(flag.render(mask));
     }
     routes.extend(regular_clip(&self.weapon_routes, mask));
-    routes
+    self.rendering_pass(rng, mask, &routes)
   }
 
-  pub fn render_background_only(
+  pub fn render_background_only<R: Rng>(
     &self,
+    rng: &mut R,
     mask: &mut PaintMask,
   ) -> Vec<(usize, Vec<(f32, f32)>)> {
-    let human = &self.human;
+    let human = &self.body;
     let helmet = &self.helmet;
     let mainclr = self.mainclr;
     let mut routes = vec![];
@@ -256,16 +299,21 @@ impl Human {
     }
 
     routes.extend(human.render(mask, mainclr));
-    routes
+    self.rendering_pass(rng, mask, &routes)
   }
 
   // a standalone rendering version when it's not rendered riding something.
-  pub fn render(&self, mask: &mut PaintMask) -> Vec<(usize, Vec<(f32, f32)>)> {
+  pub fn render<R: Rng>(
+    &self,
+    rng: &mut R,
+    mask: &mut PaintMask,
+  ) -> Vec<(usize, Vec<(f32, f32)>)> {
     let mut routes = vec![];
-    routes.extend(self.render_foreground_only(mask));
-    routes.extend(self.render_background_only(mask));
+    routes.extend(self.render_foreground_only(rng, mask));
+    routes.extend(self.render_background_only(rng, mask));
+    let strokew = (self.body.height * 0.2).max(3.0 * mask.precision).min(1.6);
     for (_, route) in routes.iter() {
-      mask.paint_polyline(route, 1.0);
+      mask.paint_polyline(route, strokew);
     }
     routes
   }
@@ -274,10 +322,10 @@ impl Human {
 // TODO we need to expand human into a container that can yield the 2 parts
 // but we need to figure out the polyline halo effect...
 impl<R: Rng> Renderable<R> for Human {
-  fn render(&self, _rng: &mut R, paint: &mut PaintMask) -> Polylines {
-    self.render(paint)
+  fn render(&self, rng: &mut R, paint: &mut PaintMask) -> Polylines {
+    self.render(rng, paint)
   }
   fn yorder(&self) -> f32 {
-    self.human.origin.1
+    self.body.origin.1
   }
 }

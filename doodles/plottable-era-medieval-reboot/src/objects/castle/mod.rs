@@ -3,7 +3,7 @@ use rand::prelude::*;
 
 use self::{chapel::Chapel, wall::CastleWall, walltower::CastleWallTower};
 
-use super::blazon::Blazon;
+use super::{blazon::Blazon, projectile::attack::DefenseTarget};
 
 pub mod chapel;
 pub mod chinesedoor;
@@ -41,7 +41,7 @@ pub struct Castle {
 impl Castle {
   pub fn render<R: Rng>(
     &self,
-    _ctx: &mut GlobalCtx,
+    ctx: &mut GlobalCtx,
     rng: &mut R,
     paint: &mut PaintMask,
   ) -> Vec<(usize, Vec<(f32, f32)>)> {
@@ -59,6 +59,15 @@ impl Castle {
     let towerwidth = scale * rng.gen_range(3.0..6.0);
     let maint_height = scale * rng.gen_range(14.0..32.0);
     let maint_width = scale * rng.gen_range(4.0..8.0);
+
+    for _ in 0..5 {
+      ctx.projectiles.add_defense(DefenseTarget::Building((
+        pos.0 + rng.gen_range(-0.5..0.5) * width * rng.gen_range(0.0..1.0),
+        pos.1
+          - 0.5 * wallh
+          - rng.gen_range(-0.5..0.5) * wallh * rng.gen_range(0.0..1.0),
+      )));
+    }
 
     for (p, skip) in vec![
       (

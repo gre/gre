@@ -1,12 +1,6 @@
 use crate::{
-  algo::{
-    clipping::regular_clip, paintmask::PaintMask, polylines::Polylines,
-    wormsfilling::WeightMap,
-  },
-  objects::{
-    blazon::Blazon,
-    projectile::{ball::Ball, trail::Trail},
-  },
+  algo::{polylines::Polylines, wormsfilling::WeightMap},
+  objects::{blazon::Blazon, projectile::Projectiles},
   palette::{
     Palette, AMBER, BLACK_PAPER, BLUE_PAPER, DARK_BLUE_PAPER, GOLD_GEL,
     GREY_PAPER, RED_PAPER,
@@ -42,9 +36,11 @@ pub enum Special {
   Montmirail,
   Dragon(usize),
   Chinese,
+  Sauroned,
   Barricades,
   EaglesAttack,
   Trebuchets,
+  Cyclopes,
 }
 
 pub struct GlobalCtx {
@@ -67,12 +63,15 @@ pub struct GlobalCtx {
   */
   pub destruction_map: WeightMap,
 
-  // projectile management
-  pub balls: Vec<Ball>,
-  pub trails: Vec<Trail>,
-  pub projectilesclr: usize,
+  pub attackers: Blazon,
+  pub defenders: Blazon,
   pub defendersclr: usize,
   pub attackersclr: usize,
+
+  pub projectiles: Projectiles,
+
+  // stats that we need to cleanup at the end & for the features
+  pub nb_cyclopes: usize,
 }
 
 impl GlobalCtx {
@@ -106,6 +105,8 @@ impl GlobalCtx {
       specials.insert(Special::EaglesAttack);
     } else if rng.gen_bool(0.02) {
       specials.insert(Special::Trebuchets);
+    } else if rng.gen_bool(0.02) {
+      specials.insert(Special::Cyclopes);
     }
 
     let dragon_proba_mul = if paper == RED_PAPER { 1.0 } else { 0.1 };
@@ -149,11 +150,12 @@ impl GlobalCtx {
       specials,
       night_time,
       destruction_map,
-      balls: vec![],
-      trails: vec![],
-      projectilesclr: 1, // FIXME IDK YET.. if rng.gen_bool(0.5) { 1 } else { 0 },
+      projectiles: Projectiles::new(),
+      attackers: attackers.clone(),
+      defenders: defenders.clone(),
       defendersclr,
       attackersclr,
+      nb_cyclopes: 0,
     }
   }
 
@@ -164,6 +166,12 @@ impl GlobalCtx {
       return Some("Montmirail".to_string());
     }
     None
+  }
+
+  pub fn cleanup(&mut self) {
+    if self.specials.contains(&Special::Cyclopes) && self.nb_cyclopes == 0 {
+      self.specials.remove(&Special::Cyclopes);
+    }
   }
 
   pub fn to_feature(&self, routes: &Polylines) -> Feature {
@@ -191,6 +199,8 @@ impl GlobalCtx {
           Special::Barricades => "Barricades".to_string(),
           Special::EaglesAttack => "EaglesAttack".to_string(),
           Special::Trebuchets => "Trebuchets".to_string(),
+          Special::Cyclopes => "Cyclopes".to_string(),
+          Special::Sauroned => "Sauroned".to_string(),
         })
         .collect::<Vec<String>>()
         .join(", "),
@@ -199,6 +209,7 @@ impl GlobalCtx {
     feature
   }
 
+  /*
   // TODO move this into a sub object "projectiles"
   pub fn throw_ball(&mut self, ball: Ball, trail: Trail) {
     self.balls.push(ball);
@@ -233,4 +244,5 @@ impl GlobalCtx {
 
     existing_routes.extend(routes);
   }
+  */
 }

@@ -2,8 +2,11 @@ use crate::algo::paintmask::*;
 use crate::algo::rdp::*;
 use noise::*;
 use rand::prelude::*;
+use std::collections::HashMap;
 use std::collections::HashSet;
 use std::f32::consts::PI;
+
+use super::polylines::Polylines;
 
 /**
  * LICENSE CC BY-NC-ND 4.0
@@ -357,4 +360,32 @@ impl WeightMap {
 
     route
   }
+}
+
+pub fn worms_fill_strokes<R: Rng>(
+  rng: &mut R,
+  paint_ref: &PaintMask,
+  its: usize,
+  w: f32,
+  density: f32,
+  routes: &Polylines,
+) -> Polylines {
+  let filling = WormsFilling::rand(rng);
+  let mut hash: HashMap<usize, PaintMask> = HashMap::new();
+  for (clr, rt) in routes.iter() {
+    if let Some(drawing) = hash.get_mut(clr) {
+      drawing.paint_polyline(rt, w);
+    } else {
+      let mut drawing = paint_ref.clone_empty();
+      drawing.paint_polyline(rt, w);
+      hash.insert(*clr, drawing);
+    }
+  }
+  let mut rts = vec![];
+  for (clr, drawing) in hash.iter() {
+    let bound = drawing.painted_boundaries();
+    let routes = filling.fill_in_paint(rng, drawing, *clr, density, bound, its);
+    rts.extend(routes);
+  }
+  rts
 }

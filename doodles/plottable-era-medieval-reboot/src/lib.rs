@@ -329,11 +329,15 @@ pub fn render(
   routes.extend(sea_routes);
 
   perf.span("projectiles", &routes);
-  ctx.render_projectiles(&mut rng, &mut routes, &mask_with_framing);
+  ctx.projectiles.resolve(&mut rng, &paint);
+  ctx
+    .projectiles
+    .render(&mut rng, &mut routes, &mask_with_framing);
   perf.span_end("projectiles", &routes);
 
   routes.extend(decoration_routes);
 
+  ctx.cleanup();
   let feature = ctx.to_feature(&routes);
   let feature_json = serde_json::to_string(&feature).unwrap();
   let palette_json: String = palette.to_json();
@@ -421,6 +425,53 @@ fn sandbox<R: Rng>(
     // let cloth_height_factor = rng.gen_range(0.3..0.6);
     // let cloth_len_factor = rng.gen_range(0.3..1.0);
     let rts = Star::init(rng, clr, o, 20.0).render(paint);
+    routes.extend(rts.clone());
+    for (_, rt) in rts.iter() {
+      paint.paint_polyline(&rt, 1.0);
+    }
+  }
+  */
+
+  /*
+  for _ in 0..10 {
+    // let h = rng.gen_range(10.0..20.0);
+    // let w = h * rng.gen_range(1.5..2.0);
+    let ang = rng.gen_range(-3.0..3.)
+      * rng.gen_range(0.0..1.0)
+      * rng.gen_range(0.0..1.0)
+      * rng.gen_range(0.0..1.0)
+      * rng.gen_range(0.0..1.0)
+      * rng.gen_range(0.0..1.0);
+    // - std::f32::consts::PI / 2.0;
+    let o = (
+      rng.gen_range(0.1..0.9) * width,
+      rng.gen_range(0.1..0.9) * height,
+    );
+    //let clr = rng.gen_range(0..3);
+    let xflip = rng.gen_bool(0.5);
+    // let cloth_height_factor = rng.gen_range(0.3..0.6);
+    // let cloth_len_factor = rng.gen_range(0.3..1.0);
+    let lefthand = Some(objects::army::human::HoldableObject::Flag);
+    let righthand: Option<objects::army::human::HoldableObject> = None;
+    let head = HeadShape::NAKED;
+    let posture = HumanPosture::from_holding(rng, xflip, lefthand, righthand);
+    let s = rng.gen_range(5.0..30.0);
+    let mut human = Human::init(
+      rng,
+      o,
+      s,
+      ang,
+      xflip,
+      objects::blazon::Blazon::Dragon,
+      0,
+      2,
+      posture,
+      head,
+      lefthand,
+      righthand,
+    )
+    .with_worms_filling_defaults();
+    let rts = human.render(rng, paint);
     routes.extend(rts.clone());
     for (_, rt) in rts.iter() {
       paint.paint_polyline(&rt, 1.0);

@@ -29,15 +29,15 @@ impl Shield {
     let dy = 0.4 * size;
     let mut route = vec![];
     let mut route2 = vec![];
+    // todo s1 and s2 to be associated to the blazon somehow
+    let s1 = rng.gen_range(0.0..1.0);
+    let s2 = rng.gen_range(0.0..1.0);
     for v in vec![
       (0.0, -dy),
       (mx * 0.5 * dx, -dy),
-      (
-        mx * dx,
-        -(1.0 - rng.gen_range(0.0..1.0) * rng.gen_range(0.0..1.0)) * dy,
-      ),
+      (mx * dx, -(1.0 - s1 * s1) * dy),
       (mx * dx, 0.0),
-      (mx * dx, rng.gen_range(0.0..1.0) * dy),
+      (mx * dx, s2 * dy),
       (0.0, dy),
     ] {
       route.push(v);

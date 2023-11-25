@@ -13,19 +13,25 @@ use rand::prelude::*;
 pub struct Ball {
   pub origin: (f32, f32),
   pub r: f32,
+  pub clr: usize,
 }
 
 impl Ball {
-  pub fn init<R: Rng>(_rng: &mut R, origin: (f32, f32), r: f32) -> Self {
-    Self { origin, r }
+  pub fn init<R: Rng>(
+    _rng: &mut R,
+    origin: (f32, f32),
+    r: f32,
+    clr: usize,
+  ) -> Self {
+    Self { origin, r, clr }
   }
 
   pub fn render<R: Rng>(
     &self,
     rng: &mut R,
     paint: &mut PaintMask,
-    clr: usize,
   ) -> Vec<(usize, Vec<(f32, f32)>)> {
+    let clr = self.clr;
     let origin = self.origin;
     let r = self.r;
     let mut routes = vec![];

@@ -3,7 +3,14 @@ use crate::{
     clipping::clip_routes_with_colors, math1d::mix, paintmask::PaintMask,
   },
   global::{GlobalCtx, Special},
-  objects::{army::trebuchet::Trebuchet, castle::chinesedoor::ChineseDoor},
+  objects::{
+    army::{
+      body::HumanPosture,
+      human::{HeadShape, HoldableObject, Human},
+      trebuchet::Trebuchet,
+    },
+    castle::chinesedoor::ChineseDoor,
+  },
 };
 use noise::*;
 use rand::prelude::*;
@@ -33,14 +40,9 @@ impl FrontMountains {
     let width = self.width;
 
     let mut paint_before = paint.clone();
-
-    // TODO rework the implementation
-    // TODO we may split the idea of front vs back mountains
-
     let mut routes = vec![];
 
     let perlin = Perlin::new(rng.gen());
-    // mini mountains
     let count = rng.gen_range(2..12);
     let h = ybase - ystart;
     let xincr = 2.0;
@@ -89,6 +91,11 @@ impl FrontMountains {
       curves.push(curve);
     }
 
+    // TODO full rework of positioning.
+    // add people
+    // add rand objects...
+    // use the Container
+
     if ctx.specials.contains(&Special::Chinese) {
       // FIXME BUGGY positioning. we want it on the mountain. need to do proper lookup like in the other mountains
 
@@ -104,7 +111,7 @@ impl FrontMountains {
     }
 
     let mut trebuchet_candidates = vec![];
-    let trebuchet_pad = width * 0.1;
+    let trebuchet_pad = width * 0.2;
     let trebuchet_ythreshold = paint.height * 0.9;
 
     let mut ridge = vec![];
@@ -126,13 +133,52 @@ impl FrontMountains {
         && i % trebuchet_mod == 0
         && trebuchet_pad < p.0
         && p.0 < width - trebuchet_pad
-        && rng.gen_bool(0.2)
+        && (ctx.specials.contains(&Special::Trebuchets) || rng.gen_bool(0.2))
       {
         // TODO some small glich, we need to push down if we have mountain curve that makes trebuchet off the screen
-        let y = mix(max, ybase, rng.gen_range(0.0..0.6));
+        let y = mix(max, ybase, rng.gen_range(0.2..0.6));
         trebuchet_candidates.push((p.0, y));
       }
     }
+
+    // TODO we need to make a Front Front Mountains with this guy!
+    /*
+    {
+      // human test
+      let o = (width / 2.0, rng.gen_range(0.8..0.9) * paint.height);
+      let size = rng.gen_range(0.1..0.2) * width;
+      let angle = 0.0;
+      let xflip = rng.gen_bool(0.5);
+      let blazon = ctx.attackers;
+      let mainclr = 0;
+      let blazonclr = 2;
+      let objs = (0..2)
+        .map(|_| {
+          let items = vec![
+            None,
+            Some(HoldableObject::Flag),
+            Some(HoldableObject::Axe),
+            Some(HoldableObject::Shield),
+            Some(HoldableObject::Sword),
+            Some(HoldableObject::Club),
+            Some(HoldableObject::LongBow(rng.gen_range(0.0..1.0))),
+          ];
+          let i = items.len() as f32 * rng.gen_range(0.0f32..1.0).powf(1.2);
+          items[i as usize % items.len()]
+        })
+        .collect::<Vec<_>>();
+      let lefthand = objs[0];
+      let righthand = objs[1];
+      let headshape = HeadShape::NAKED;
+      let posture = HumanPosture::hand_risen(rng);
+      let human = Human::init(
+        rng, o, size, angle, xflip, blazon, mainclr, blazonclr, posture,
+        headshape, lefthand, righthand,
+      )
+      .with_worms_filling_defaults();
+      routes.extend(human.render(rng, &mut paint_before));
+    }
+    */
 
     trebuchet_candidates.shuffle(rng);
 
@@ -140,18 +186,14 @@ impl FrontMountains {
       (rng.gen_range(-1.0f32..3.5) * rng.gen_range(0.5..1.0)).max(0.0) as usize;
 
     for &o in trebuchet_candidates.iter().take(trebuchets_max) {
-      let height = rng.gen_range(0.1..0.15) * width;
+      let height = rng.gen_range(0.14..0.2) * width;
       let action_percent = rng.gen_range(0.0..1.0);
       let xflip = rng.gen_bool(0.5);
       let clr = 0;
       let trebuchet =
         Trebuchet::init(rng, o, height, action_percent, xflip, clr);
       routes.extend(trebuchet.render(&mut paint_before));
-
-      let o = trebuchet.get_basket_position();
-      let topy = mix(0.0, o.1, rng.gen_range(0.5..0.8));
-      let target = (ctx.width * rng.gen_range(0.3..0.7), topy);
-      trebuchet.throw_projectiles(rng, ctx, paint, target);
+      trebuchet.throw_projectiles(ctx);
     }
 
     paint.paint(&paint_before);

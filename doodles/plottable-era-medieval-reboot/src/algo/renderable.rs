@@ -38,6 +38,12 @@ impl<R: Rng> Ord for RenderableYOrd<R> {
   }
 }
 
+pub fn as_box_renderable<R: Rng, T: Renderable<R> + 'static>(
+  item: T,
+) -> Box<dyn Renderable<R>> {
+  Box::new(item) as Box<dyn Renderable<R>>
+}
+
 pub struct Container<R: Rng> {
   elements: Vec<RenderableYOrd<R>>,
 }

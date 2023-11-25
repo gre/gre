@@ -6,7 +6,6 @@ use crate::algo::{
 
 pub struct Arrow {
   pub routes: Polylines,
-  size: f32,
 }
 
 impl Arrow {
@@ -38,13 +37,13 @@ impl Arrow {
     let feather = route_translate_rotate(&feather, origin, angle);
     routes.push((clr, feather));
 
-    Self { routes, size }
+    Self { routes }
   }
 
   pub fn render(&self, paint: &mut PaintMask) -> Polylines {
     let routes = regular_clip(&self.routes, paint);
     for (_, route) in self.routes.iter() {
-      paint.paint_polyline(route, self.size * 0.05);
+      paint.paint_polyline(route, 1.2);
     }
     routes
   }

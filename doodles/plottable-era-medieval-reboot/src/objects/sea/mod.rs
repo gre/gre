@@ -5,6 +5,7 @@ use super::{
     boatarmy::BoatArmy,
     body::HumanPosture,
     human::{HeadShape, HoldableObject, Human},
+    sword::Sword,
   },
   blazon::Blazon,
   rock::Rock,
@@ -16,13 +17,15 @@ use crate::{
     paintmask::PaintMask,
     passage::Passage,
     polylines::slice_polylines,
-    renderable::Renderable,
+    renderable::{as_box_renderable, Renderable},
   },
   global::{GlobalCtx, Special},
+  objects::sea::sauron::SauronEye,
 };
 use rand::prelude::*;
 pub mod beach;
 pub mod port;
+pub mod sauron;
 
 /**
  * LICENSE CC BY-NC-ND 4.0
@@ -143,13 +146,15 @@ impl Sea {
               let maxy = y;
               sea_mask.paint_rectangle(minx, miny, maxx, maxy);
               let origin = (x, y);
-              let count_poly = rng.gen_range(4..20);
-              let elevation = rng.gen_range(1.5..3.0);
+              let elevation =
+                1.5 + rng.gen_range(0.0..5.0) * rng.gen_range(0.0..1.0);
+              let count_poly =
+                (rng.gen_range(0.8..1.2) * (elevation * 5. + 3.)) as usize;
 
               let rockclr = if rng.gen_bool(0.02) { 1 } else { 0 };
 
               let excalibur = if should_set_excalibur
-                && size > 0.06 * width
+                && elevation > 4.0
                 && (0.3..0.7).contains(&(x / width))
               {
                 should_set_excalibur = false;
@@ -158,12 +163,31 @@ impl Sea {
                 false
               };
 
+              let mut spawn = |rng: &mut R, o: (f32, f32), s, a| {
+                if !(0.3..0.7).contains(&(o.0 / width)) {
+                  return None;
+                }
+                if excalibur {
+                  ctx.specials.insert(Special::Excalibur);
+                  let clr = rng.gen_range(0..2);
+                  Some(as_box_renderable(Sword::init(rng, o, s, a, clr)))
+                } else {
+                  let dy = origin.1 - o.1;
+                  if rng.gen_bool(0.08) && dy > 0.3 * width {
+                    let sauron = SauronEye::init(rng, paint, rockclr, 1, o, s);
+                    ctx.specials.insert(Special::Sauroned);
+                    return Some(as_box_renderable(sauron));
+                  } else if dy > 0.15 * width {
+                    // opportunity for some other random stuff
+                  }
+                  None
+                }
+              };
+
               let rock = Rock::init(
-                rng, origin, size, rockclr, count_poly, elevation, excalibur,
+                rng, origin, size, rockclr, count_poly, elevation, &mut spawn,
               );
-              if rock.sword.is_some() {
-                ctx.specials.insert(Special::Excalibur);
-              }
+
               let b: Box<dyn Renderable<R>> = Box::new(rock);
               return Some(b);
             }

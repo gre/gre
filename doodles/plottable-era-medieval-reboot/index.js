@@ -15,7 +15,7 @@ Promise.all([
   const height = 297;
   const pad = 5;
   const precision = 0.2;
-  const debug = true;
+  const debug = new URLSearchParams(window.location.search).has("debug");
 
   // Generate the SVG
 

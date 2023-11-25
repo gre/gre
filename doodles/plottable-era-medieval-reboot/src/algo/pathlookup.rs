@@ -1,6 +1,9 @@
 use std::{f32::consts::PI, ops::Range};
 
-use super::math2d::{euclidian_dist, lerp_point};
+use super::{
+  math2d::{euclidian_dist, lerp_point},
+  polylines::Polyline,
+};
 /**
  * LICENSE CC BY-NC-ND 4.0
  * Author: greweb – 2023 – Plottable Era: (II) Medieval
@@ -75,6 +78,27 @@ impl PathLookup {
       }
     }
     return path[path.len() - 1];
+  }
+
+  pub fn slice_before(&self, l: f32) -> Polyline {
+    let mut out = vec![];
+    let path = &self.path;
+    if l < 0.0 {
+      return out;
+    }
+    for i in 0..path.len() - 1 {
+      let pl = self.partial_length[i + 1];
+      let a = path[i];
+      out.push(a);
+      if l < pl {
+        let b = path[i + 1];
+        let m = (pl - l) / self.local_length[i];
+        out.push(lerp_point(b, a, m));
+        return out;
+      }
+    }
+    out.push(path[path.len() - 1]);
+    out
   }
 
   pub fn lookup_angle(&self, l: f32) -> f32 {
