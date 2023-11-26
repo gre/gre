@@ -5,7 +5,9 @@ pub fn rng_from_hash(hash: &String) -> StdRng {
     .into_vec()
     .unwrap();
   let mut bs = [0; 32];
-  bs.copy_from_slice(&v);
+  for (i, &byte) in v.iter().enumerate().take(bs.len()) {
+    bs[i] = byte;
+  }
   let rng = StdRng::from_seed(bs);
   return rng;
 }

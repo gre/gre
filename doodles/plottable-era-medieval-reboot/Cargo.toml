@@ -18,6 +18,9 @@ bs58 = "0.5"
 fontdue = "0.8"
 noise = "0.8"
 
+[dev-dependencies]
+rayon = "1.8"
+
 [profile.release]
 # Tell `rustc` to optimize for small code size.
 opt-level = "s"

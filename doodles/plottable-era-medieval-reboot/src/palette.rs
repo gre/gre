@@ -82,13 +82,52 @@ impl Palette {
       // we give importance to first index to be used in distribution
       * rng.gen_range(0.4..1.0)
       * rng.gen_range(0.0..1.0)
-      // reequlibrate the distribution on the 2 first choices
-      + rng.gen_range(0.0..0.8))
+      // re-equilibrate the distribution on the 2 first choices
+      + rng.gen_range(0.0..0.7))
     .floor() as usize
       % papers_choices;
 
     let (mut inks, paper) = match i {
       0 => {
+        let mut base = WHITE_GEL;
+        if rng.gen_bool(1. / 200.) {
+          base = GOLD_GEL;
+        }
+        let sun = if rng.gen_bool(0.8) {
+          GOLD_GEL
+        } else {
+          WHITE_GEL
+        };
+        let blazon_color = match blazon {
+          // gels
+          Blazon::Lys => {
+            if rng.gen_bool(0.6) {
+              GOLD_GEL
+            } else if rng.gen_bool(0.7) {
+              WHITE_GEL
+            } else {
+              BLUE_GEL
+            }
+          }
+          Blazon::Dragon => {
+            if rng.gen_bool(0.9) {
+              RED_GEL
+            } else {
+              ORANGE_GEL
+            }
+          }
+          Blazon::Falcon => {
+            if rng.gen_bool(0.9) {
+              SILVER_GEL
+            } else {
+              GREEN_GEL
+            }
+          }
+        };
+        let colors = vec![base, sun, blazon_color];
+        (colors, BLACK_PAPER)
+      }
+      1 => {
         let base = if rng.gen_bool(0.8) {
           BLACK
         } else if rng.gen_bool(0.1) {
@@ -158,45 +197,6 @@ impl Palette {
         };
         let colors = vec![base, sun, blazon_color];
         (colors, WHITE_PAPER)
-      }
-      1 => {
-        let mut base = WHITE_GEL;
-        if rng.gen_bool(1. / 200.) {
-          base = GOLD_GEL;
-        }
-        let sun = if rng.gen_bool(0.8) {
-          GOLD_GEL
-        } else {
-          WHITE_GEL
-        };
-        let blazon_color = match blazon {
-          // gels
-          Blazon::Lys => {
-            if rng.gen_bool(0.6) {
-              GOLD_GEL
-            } else if rng.gen_bool(0.7) {
-              WHITE_GEL
-            } else {
-              BLUE_GEL
-            }
-          }
-          Blazon::Dragon => {
-            if rng.gen_bool(0.9) {
-              RED_GEL
-            } else {
-              ORANGE_GEL
-            }
-          }
-          Blazon::Falcon => {
-            if rng.gen_bool(0.9) {
-              SILVER_GEL
-            } else {
-              GREEN_GEL
-            }
-          }
-        };
-        let colors = vec![base, sun, blazon_color];
-        (colors, BLACK_PAPER)
       }
       2 => {
         let blazon_color = match blazon {

@@ -110,7 +110,7 @@ impl GlobalCtx {
       specials.insert(Special::Cyclopes);
     }
 
-    let dragon_proba_mul = if paper == RED_PAPER { 1.0 } else { 0.2 };
+    let dragon_proba_mul = if paper == RED_PAPER { 1.0 } else { 0.1 };
 
     if rng.gen_bool(0.5 * dragon_proba_mul)
       && matches!(attackers, Blazon::Dragon)

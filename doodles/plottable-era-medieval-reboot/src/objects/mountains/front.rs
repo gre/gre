@@ -3,14 +3,7 @@ use crate::{
     clipping::clip_routes_with_colors, math1d::mix, paintmask::PaintMask,
   },
   global::{GlobalCtx, Special},
-  objects::{
-    army::{
-      body::HumanPosture,
-      human::{HeadShape, HoldableObject, Human},
-      trebuchet::Trebuchet,
-    },
-    castle::chinesedoor::ChineseDoor,
-  },
+  objects::{army::trebuchet::Trebuchet, castle::chinesedoor::ChineseDoor},
 };
 use noise::*;
 use rand::prelude::*;

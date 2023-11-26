@@ -1,5 +1,6 @@
 use greweb::*;
 use rand::prelude::*;
+use rayon::prelude::*;
 use std::collections::HashMap;
 
 fn main() {
@@ -13,35 +14,42 @@ fn main() {
   let mut values = HashMap::new();
   let fontdata = std::fs::read(&"./static/PrinceValiant.ttf").unwrap();
 
-  for _i in 0..n {
-    let mut rng = rand::thread_rng();
-    let alphabet: Vec<char> =
-      "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ"
-        .chars()
+  let jsons = (0..n)
+    .into_par_iter()
+    .map(|_| {
+      let mut rng = rand::thread_rng();
+      let alphabet: Vec<char> =
+        "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ"
+          .chars()
+          .collect();
+      let chars: String = (0..49)
+        .map(|_i| alphabet[rng.gen_range(0..alphabet.len())])
         .collect();
-    let chars: String = (0..49)
-      .map(|_i| alphabet[rng.gen_range(0..alphabet.len())])
-      .collect();
-    let hash = format!("oo{}", chars);
-    println!("{}", hash);
-    let code = render(
-      hash,
-      210.0,
-      297.0,
-      5.0,
-      1.0, // lower precision for faster computation
-      fontdata.clone(),
-      false,
-      false,
-    );
-    let start = code.find("data-traits='").unwrap() + 13;
-    let end = code[start..].find("'").unwrap() + start;
-    let traits = &code[start..end];
-    let json = serde_json::from_str::<serde_json::Value>(traits)
-      .unwrap()
-      .as_object()
-      .unwrap()
-      .clone();
+      let hash = format!("oo{}", chars);
+      println!("{}", hash);
+      let code = render(
+        hash,
+        210.0,
+        297.0,
+        5.0,
+        1.0, // lower precision for faster computation
+        fontdata.clone(),
+        false,
+        false,
+      );
+      let start = code.find("data-traits='").unwrap() + 13;
+      let end = code[start..].find("'").unwrap() + start;
+      let traits = &code[start..end];
+      let json = serde_json::from_str::<serde_json::Value>(traits)
+        .unwrap()
+        .as_object()
+        .unwrap()
+        .clone();
+      json
+    })
+    .collect::<Vec<_>>();
+
+  for json in jsons {
     for (k, v) in json {
       if !values.contains_key(&k) {
         values.insert(k.clone(), vec![]);
