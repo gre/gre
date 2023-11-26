@@ -1003,7 +1003,7 @@ const users = all.split("\n").map((user) => user.split(" "));
 const root = document.createElement("div")
 const input = document.createElement("input")
 input.type = "text"
-input.placeholder = "Enter your Twitter username"
+input.placeholder = "Enter your Instagram username"
 input.style.width = "100%"
 input.style.marginBottom = "50px"
 input.style.fontSize = "2em"
