@@ -14,8 +14,8 @@ serde_json = "1.0"
 getrandom = { version = "0.2", features = ["js"] }
 instant = { version = "0.1", features = [ "wasm-bindgen" ] }
 rand = "0.8"
-bs58 = "0.2"
-fontdue = "0.7"
+bs58 = "0.5"
+fontdue = "0.8"
 noise = "0.8"
 
 [profile.release]
