@@ -253,7 +253,6 @@ impl Trebuchet {
     if route.len() > 1 {
       routes.push((clr, route));
     }
-    // TODO contouring of the counterweight
 
     if rng.gen_bool(0.5) {
       // triangle structure on the counterweight
@@ -409,23 +408,6 @@ impl Trebuchet {
     }
 
     routes.push((clr, ropes));
-
-    /*
-    for _i in 0..rng.gen_range(1..5) {
-      let p = (
-        origin.0
-          + (if xflip { 1. } else { -1. })
-            * if rng.gen_bool(0.3) {
-              rng.gen_range(1.0 * height..1.8 * height)
-            } else {
-              rng.gen_range(-1.0 * height..-0.3 * height)
-            },
-        origin.1,
-      );
-      // TODO
-      // routes.extend(trebuchet_people(rng, paint, xflip, p, 0.2 * height, clr));
-    }
-    */
 
     Self {
       routes,

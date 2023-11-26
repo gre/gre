@@ -14,7 +14,6 @@ pub struct Rider {
   pub warrior: Human,
 }
 
-// TODO Warrior to be a param
 impl Rider {
   pub fn init<R: Rng>(
     _rng: &mut R,

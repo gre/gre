@@ -75,14 +75,9 @@ pub mod trojanhorse;
 pub mod tunnelstructure;
 pub mod wheeledplatform;
 
-// we could use this multiple times if we have multiple mountains
 pub struct ArmyOnMountain {
   pub debug: bool,
   pub blazon: Blazon,
-  // TODO idea: we could split the area in 2 parts for attackers defenders.
-
-  // TODO we need to build a camp area for the attackers. or maybe it's in the front mountain?
-  // if the castle is in one side it make sense it would be on other side
 }
 
 impl ArmyOnMountain {
@@ -211,17 +206,14 @@ impl ArmyOnMountain {
       if path.len() > 1 && (path[path.len() - 1].0 - path[0].0).abs() > minw {
         let path = moving_average_2d(&path, path.len() / 10);
         let baseh = rng.gen_range(0.05..0.08) * width;
-        // TODO work on variety. walled version + some diff doors and towers.
         let wall =
           MountainWall::init(ctx, rng, blazonclr, mainclr, &path, baseh);
         renderables.extend(wall.container);
       }
     }
 
-    // Animals TODO: only near forest and when there is not people.
     let clr = 0;
     let animals_count = rng.gen_range(0..10);
-    // let mut animals_rts = vec![];
     for _i in 0..animals_count {
       let x = mix(first.0, last.0, rng.gen_range(0.0..1.0));
       let y = mix(lookup_ridge(&ridge, x), yhorizon, rng.gen_range(0.0..1.0));
@@ -230,7 +222,6 @@ impl ArmyOnMountain {
       {
         let origin = (x, y);
         let rot = 0.0;
-        // let rts =
         if rng.gen_bool(0.2) {
           let size = rng.gen_range(0.5..1.0) * 0.01 * width;
           let obj = Armadillo::init(rng, clr, origin, size, rot);
@@ -278,8 +269,6 @@ impl ArmyOnMountain {
         perlin.get([5.0, 0.4 * x, 0.4 * y]) as f32
       };
 
-      // TODO intersection of two noises to make more collocated areas?
-
       let archer_noise_range = 0.1f32..0.5;
       let warriors_noise_range = -0.2f32..0.2;
       let riders_noise_range: std::ops::Range<f32> = -0.5f32..-0.1;
@@ -290,8 +279,6 @@ impl ArmyOnMountain {
         (rng.gen_range(0.0f32..200.) * rng.gen_range(0.0..1.0)) as usize;
       let archers_sampling =
         (rng.gen_range(0.0f32..500.) * rng.gen_range(0.0..1.0)) as usize;
-
-      // TODO orient the bodies depending on the terrain
 
       // we track a bunch of circle to avoid spawning people too close to each other
       let mut exclusion_mask = paint.clone_empty();
@@ -369,7 +356,6 @@ impl ArmyOnMountain {
 
           let mut monks = vec![];
 
-          // TODO on top of these positions, add even more monks around the relic...
           for p in vec![convoy.left, convoy.right] {
             let p = (p.0, p.1 + relicsize * 0.4);
             let monk = Monk::init(rng, p, relicsize, 0.0, false, 0, true);
@@ -429,8 +415,6 @@ impl ArmyOnMountain {
               let area = VCircle::new(x, y - 0.3 * height, height);
               debug_circle.push(area);
               exclusion_mask.paint_circle(area.x, area.y, area.r);
-
-              // TODO people managing the trebuchet
             }
           }
         }
@@ -478,8 +462,6 @@ impl ArmyOnMountain {
               }
 
               renderables.add(machine);
-
-              // TODO army of warriors
             } else if rng.gen_bool(0.5) {
               renderables.add(Belfry::init(
                 rng,
@@ -496,18 +478,8 @@ impl ArmyOnMountain {
               let machine = TunnelStructure::init(rng, clr, origin, 0.0, h, w);
               renderables.add(machine);
             }
-
-            // TODO army of warriors behind the belfry
           }
         }
-
-        // TODO we could figure out a global zone on which the teams are going to spawn. based on a noise.
-
-        // TODO regroup riders, warriors, archers in a single loop
-        // and we will just look what (x,y) can be and have a "max count" for each category of items.
-        // we could also organize some sort of density map if we want.
-
-        // TODO angle to follow a bit the terrain.
 
         for _i in 0..riders_sampling {
           let angle = 0.0;
@@ -676,9 +648,6 @@ impl ArmyOnMountain {
         }
 
         // huts
-
-        // TODO sort by y order (as well as all other things)
-        // TODO better spawning
         for _ in 0..rng.gen_range(0..4) {
           let x = mix(first.0, last.0, rng.gen_range(0.1..0.9));
           let y =
@@ -707,8 +676,6 @@ impl ArmyOnMountain {
         }
       }
     }
-
-    // TODO random weapons clipped in the ground on the battlefield.
 
     let mut routes = vec![];
 

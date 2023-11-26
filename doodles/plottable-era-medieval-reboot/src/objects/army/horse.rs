@@ -136,7 +136,6 @@ impl Horse {
     }
 
     // HORSE FOOT
-    // TODO small rework using path_to_fibers to make a better foot
     let footw = 0.04 * size;
     for (footw, a, b) in vec![
       // make horse left feet

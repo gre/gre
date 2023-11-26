@@ -56,7 +56,7 @@ pub enum HoldableObject {
   Flag,
   LongBow(/*phase: */ f32),
   Paddle(/* ang */ f32),
-  // TODO Lance
+  // TODO Lance,
 }
 
 #[derive(Clone, Copy, PartialEq)]
@@ -86,9 +86,6 @@ impl Human {
     let xdir = if xflip { -1.0 } else { 1.0 };
 
     let humansize = size * 0.5;
-    // TODO more various and interesting foot positions
-    // TODO postures should be provided by HumanJointAngles and passed in param
-    // when we have gesture, we will test bow and axe
     let y = rng.gen_range(-0.1 * size..0.0);
     let p = (0.0, y);
     let p = (p.0 * acos + p.1 * asin, p.1 * acos - p.0 * asin);

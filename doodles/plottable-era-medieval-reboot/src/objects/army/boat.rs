@@ -19,9 +19,6 @@ use super::belierhead::BelierHead;
  * Author: greweb – 2023 – Plottable Era: (II) Medieval
  */
 
-// TODO boat need to have people with spears / swords / archers only
-// TODO also flags
-
 pub struct Boat {
   pub x1: f32,
   pub x2: f32,
@@ -67,8 +64,6 @@ impl Boat {
     mask: &mut PaintMask,
     clr: usize,
   ) -> Polylines {
-    // TODO move these to init
-
     let x1 = self.x1;
     let x2 = self.x2;
 

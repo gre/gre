@@ -52,9 +52,6 @@ pub struct MountainsV2 {
   pub mountains: Vec<Mountain>,
 }
 
-// TODO the castle position is sometimes weird.
-// TODO the castle is still too small at the moment.
-
 impl MountainsV2 {
   pub fn rand<R: Rng>(
     rng: &mut R,

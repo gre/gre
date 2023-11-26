@@ -96,8 +96,6 @@ impl DragonHead {
     let is_outside = |p: (f32, f32)| !polygon_includes_point(&mainshape, p);
     routesbg.extend(clip_routes_with_colors(&texture, &is_outside, 1.0, 3));
 
-    // TODO try to use stroke rendering with worms filling.
-
     Self {
       routes,
       routesbg,

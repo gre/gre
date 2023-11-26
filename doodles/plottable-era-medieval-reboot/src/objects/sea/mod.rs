@@ -302,7 +302,6 @@ impl Sea {
 fn reflect_shapes<R: Rng>(
   rng: &mut R,
   reflectables: &Vec<(usize, Vec<(f32, f32)>)>,
-  // TODO use passage to not have too much density
   passage: &mut Passage,
   probability_per_color: Vec<f32>,
   stroke_len_base: f32,

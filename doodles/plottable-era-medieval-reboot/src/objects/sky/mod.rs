@@ -171,14 +171,6 @@ impl MedievalSky {
 
     let mut routes = vec![];
 
-    // TODO we can use a packing in the available space to place the items below the yhorizon.
-    // that we we avoid too much collisions with the castle.
-    // then we pipe into a perlin noise to have interesting patterns
-    //
-    // TODO we also should add some straight lines for the sky too like in Era (1)
-    // we probably should follow the same noise pattern as the clouds
-    // so we can place them consistently together...
-
     // eagles
     for _i in 0..desired_eagles {
       let sz = rng.gen_range(0.008..0.02) * height;

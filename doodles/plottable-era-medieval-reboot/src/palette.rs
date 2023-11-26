@@ -56,31 +56,17 @@ pub struct Palette {
   pub paper: Paper,
   pub monochrome: bool,
 }
+
+//~~~ COLORS ~~~//
+// 0 : base color for most of the things
+// 1 : sun and lights
+// 2 : attacker color
 impl Palette {
   pub fn init<R: Rng>(rng: &mut R, blazon: Blazon) -> Self {
-    // TODO FIXME to figure out:
-    // is black paper necessarily night time? therefore do we make the sky night?
-    // maybe the sun is the moon then, and it's white?
-    // but then what would gold be? the attackers and castle lights? could work
-    // we could try some nice combination as shared before too.
-    // love the idea to have a monochrome white, even if it's light time
-
-    // lights in attackers and castle if it's night time
-
-    // TODO blue paper
-    // TODO red paper??
-
-    // colors
-    // 0 : base color for most of the things
-    // 1 : sun and lights
-    // 2 : attacker color
-
-    // TODO rework with reprensenting things as array and pow of probability for the distribution so we really master the ordering.
-
     let papers_choices = 6;
     let i = (rng.gen_range(0.0..papers_choices as f32)
       // we give importance to first index to be used in distribution
-      * rng.gen_range(0.4..1.0)
+      * rng.gen_range(0.5..1.0)
       * rng.gen_range(0.0..1.0)
       // re-equilibrate the distribution on the 2 first choices
       + rng.gen_range(0.0..0.7))

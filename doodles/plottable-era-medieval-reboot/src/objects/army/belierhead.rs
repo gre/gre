@@ -32,7 +32,7 @@ impl BelierHead {
     xflip: bool,
   ) -> Self {
     let flipx = |p: (f32, f32)| {
-      // TODO we should use the angle to flip the x correctly but not a problem for now.
+      // NB we should use the angle to flip the x correctly but not a problem for now.
       let mut dx = p.0 - origin.0;
       if xflip {
         dx = -dx;

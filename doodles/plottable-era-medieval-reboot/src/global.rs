@@ -32,8 +32,6 @@ pub enum Special {
   TrojanHorse,
   // Lockness, // TODO
   Excalibur,
-  // Ghuls, // TODO
-  // Giant, // TODO
   Montmirail,
   Dragon(usize),
   Chinese,
@@ -52,17 +50,12 @@ pub struct GlobalCtx {
   pub specials: HashSet<Special>,
   pub night_time: bool,
 
-  /*
-    TODO
-    Global object: Destructed area weigh map.
-    On the whole scene. Impacts all places.
-    Slice the object and emit particles that can produce some fire.
-    Dead battle field.
-    Bushes, near castle.
-    Rocks. In the sea.
-    Axes.
-  */
   pub destruction_map: WeightMap,
+
+  // -1.0..0.0: defenders
+  // 0.0..1.0: neutral
+  // 1.0..2.0: attackers
+  pub battlefield_map: WeightMap,
 
   pub attackers: Blazon,
   pub defenders: Blazon,
@@ -130,6 +123,7 @@ impl GlobalCtx {
     }
 
     let destruction_map = gen_destruction_map(rng, width, height, 3.0);
+    let battlefield_map = gen_battlefield_map(rng, width, height, 3.0);
 
     let mut night_time = paper == DARK_BLUE_PAPER
       || rng.gen_bool(0.5) && paper == BLACK_PAPER
@@ -152,6 +146,7 @@ impl GlobalCtx {
       specials,
       night_time,
       destruction_map,
+      battlefield_map,
       projectiles: Projectiles::new(),
       attackers: attackers.clone(),
       defenders: defenders.clone(),
@@ -210,6 +205,20 @@ impl GlobalCtx {
 
     feature
   }
+}
+
+fn gen_battlefield_map<R: Rng>(
+  rng: &mut R,
+  width: f32,
+  height: f32,
+  precision: f32,
+) -> WeightMap {
+  let mut destruction_map = WeightMap::new(width, height, precision, 0.0);
+  let _perlin = Perlin::new(rng.gen());
+
+  destruction_map.fill_fn(&|(_x, _y)| 2.0);
+
+  destruction_map
 }
 
 fn gen_destruction_map<R: Rng>(

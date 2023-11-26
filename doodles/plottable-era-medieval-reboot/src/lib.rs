@@ -198,13 +198,10 @@ pub fn render(
 
   let mask_with_framing = paint.clone();
 
-  // TODO ? allow some crazier cases where the yhorizon can be 20-40% but with more boats and possible battles in the sea
-  // only if there are lot of things planned for the sea
   let yhorizon = rng.gen_range(0.5..0.7) * height;
 
   //  mountains
   perf.span("mountains_front", &routes);
-  // TODO better peaky shapes. not too annoying. can sometimes disappear
   let ystart = mix(yhorizon, height, rng.gen_range(0.0..1.0));
   let ybase = height - pad;
   let clr = 0;

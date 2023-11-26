@@ -1,3 +1,8 @@
+SCENE SPLITS:
+- rethink a bit the splits (front/sea/mountains/sky)
+  - and allow some rare cases
+    - no sea?
+    - only sea? boat battle? we need better boat like the defender have the relic on one?
 
 CASTLE:
 - fix the mountain shaping & castle position
@@ -9,51 +14,72 @@ CASTLE:
   - lights & decorations
   - make vertical flag. from the flag clothes.
   - drawbridge
+- make the wall also a generic wall on the mountain similar to palisade.
+- bush at bottom of walls
 
 BATTLEFIELD:
 - Shield have bad clipping?
-- rework human pos: we need to look between the 2 ridges
-- yordering
-  - human to emit two renderables..
-- machines / caravans
-  - merge Monk into Human. we need a concept of HoldingObject::Foreign
-  - add folks on the machines.
-  - do something with Cage. army transporting someone.
-  - have a horse caravan version. where we can put relique / cage..
-  - attacker supposed to climp on the belfry
 - organize ArmyOnMountain fight. divide the terrain. rework the code to add more kind of items and people.
+  - rework army on mountain spawn: we need to look between the 2 ridges
   - we would use an area map.
   - make them aligned into areas. for instance i want to see alignment of archers and alignement of shields.
   - make a neutral area. which could allow to spawn forest and wild animals.
   - in the army, we need a leader. they will either have a flag OR a weapon that is bigger and colored with the team color.
+  - hut positionning too
+  - animals in neutral
+  - we have to chose a count of units to spawn "globally". and we will have only one look to try to spawn where they can be.
+  - orient the body depending on terrain angle
+  - align the units using some kind of distance line. (maybe it works well with range on the oriented noise)
+- yordering:
+  - human to emit two renderables..
+- machines / caravans:
+  - add folks on the machines.
+  - do something with Cage. army transporting someone.
+  - have a horse caravan version. where we can put relique / cage..
+  - attacker supposed to climp on the belfry
+  - Belfry improvements.
+  - ADD: Catapult
+  - ADD: dragon canon. throw fireball with lot of particle in direction to the castle.
+- MONKS:
+  - SPECIAL merlin? golden, big, stick
+  - merge Monk into Human. we need a concept of HoldingObject::Foreign
+  - more monks around the relics. it should form a travel line.
 - blazon & their impact + flags
   - on shield SHAPE.
   - on boat/belier head
 - alone horse in battlefield
-- ADD: dragon canon. throw fireball with lot of particle in direction to the castle.
 - ADD: lanciers
-- ADD: Catapult
 - ADD: ladders and cords with people climbing.
-- ADD: campfire near huts. (it's an area)
+- IMPROVE: helmet variety
+- as result of a fight (destruction map), the weapon/flag/... will be on the ground.
+- Palisade/Wall:
+  - work on an entrance
+  - work on a brick wall version 
 
 GENERAL:
 - Work on Features
+- polish the projectile matcher to make it more logical.
 
 MOUNTAIN:
 - if we can allow castle to be on a mountain and have a mountain next to it where attackers are?
 
 WORK ON DESTRUCTION:
+- On the whole scene. Impacts all places.
 - facteur de destruction (trous dans la muraille / explosions avec des morceaux en l'air.
 - fire & smoke
+- Slice the object and emit particles that can produce some fire.
+- Dead battle field. (remains of weapons and flaks in the ground)
 
 SEA:
-- boat spawner to spawn add variety.
-- mat de bateau
+- boats:
+  - boat spawner to spawn add variety + flags.
+  - mat de bateau
 - reflection: reflect the particles?!
 - reflection: dragon
 
 FRONT MOUNTAIN:
 - rework spawning. 
+- camp area.
 - animals?
 - random obj and materials?
 - ADD random event on the front. maybe a rock from very bottom that makes it "front front"
@@ -64,9 +90,10 @@ FRONT MOUNTAIN:
 IDEAS:
 - for most object i think we need to allow them to go gold. in rare case.
 - giant people ("boss"). also when the size is high enough (level of detail), renders people with better than just wireframe. using dist func?
-- rock should we fill them in case of white paper?
 - archer on top of an attacker tower. 
 - ? for these specials. have special titles too.
+- night time illumination: castle lights, attacker torches, firecamp
+  - ADD: campfire near huts (it's an area)
 - ADD post processing anim. add an invisible polygon to make a texture in the web side (replace to activate).
   - on sea (like (I) Primitive)
   - on the fires to make the glow & have some sort of moving effect
@@ -74,7 +101,6 @@ IDEAS:
   - a nest
   - a weapon
   - an observer/lost person
-- SPECIAL merlin
 - SPECIAL lockness event. 
 - SPECIAL "zombie"/ghul mode. with the red moon. ref to zelda?
 - IDEA: sky parametric equations with worms filling.
