@@ -1,3 +1,4 @@
+use super::human::HoldableObject;
 use crate::algo::{
   clipping::regular_clip, math1d::mix, paintmask::PaintMask,
   polylines::grow_as_rectangle,
@@ -5,8 +6,10 @@ use crate::algo::{
 use rand::prelude::*;
 use std::f32::consts::PI;
 
-use super::human::HoldableObject;
-
+/**
+ * LICENSE CC BY-NC-ND 4.0
+ * Author: greweb – 2023 – Plottable Era: (II) Medieval
+ */
 #[derive(Clone, Copy)]
 pub struct HumanPosture {
   pub body_angle: f32,

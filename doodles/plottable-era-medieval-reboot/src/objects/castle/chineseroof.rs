@@ -5,6 +5,10 @@ use crate::algo::{
 };
 use rand::prelude::*;
 
+/**
+ * LICENSE CC BY-NC-ND 4.0
+ * Author: greweb – 2023 – Plottable Era: (II) Medieval
+ */
 pub struct ChineseRoof {
   pub routes: Polylines,
   pub polys: Vec<Vec<(f32, f32)>>,

@@ -1,5 +1,3 @@
-use std::f32::consts::PI;
-
 use super::{
   army::{
     boatarmy::BoatArmy,
@@ -23,6 +21,8 @@ use crate::{
   objects::sea::sauron::SauronEye,
 };
 use rand::prelude::*;
+use std::f32::consts::PI;
+
 pub mod beach;
 pub mod port;
 pub mod sauron;
@@ -218,7 +218,6 @@ impl Sea {
               let maxy = y + w / 10.0;
               sea_mask.paint_rectangle(minx, miny, maxx, maxy);
 
-              //for (x, y, w, size) in boat_positions {
               let angle = rng.gen_range(-0.2..0.2) * rng.gen_range(0.0..1.0);
               let xflip = if rng.gen_bool(0.8) {
                 x > width / 2.0
@@ -273,8 +272,6 @@ impl Sea {
                 self.blazon,
                 &spawn_human,
               );
-              // routes.extend(boat.render(rng, paint));
-              //}
 
               let b: Box<dyn Renderable<R>> = Box::new(boat);
               return Some(b);

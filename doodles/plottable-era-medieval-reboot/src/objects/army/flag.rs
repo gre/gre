@@ -9,6 +9,10 @@ use crate::algo::{
 use rand::prelude::*;
 use std::f32::consts::PI;
 
+/**
+ * LICENSE CC BY-NC-ND 4.0
+ * Author: greweb – 2023 – Plottable Era: (II) Medieval
+ */
 pub struct Flag {
   pub spear: Spear,
   pub cloth: FlagCloth,

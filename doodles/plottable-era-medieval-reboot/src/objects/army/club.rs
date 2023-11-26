@@ -5,6 +5,10 @@ use crate::algo::{
 };
 use rand::prelude::*;
 
+/**
+ * LICENSE CC BY-NC-ND 4.0
+ * Author: greweb – 2023 – Plottable Era: (II) Medieval
+ */
 pub struct Club {
   pub origin: (f32, f32),
   pub routes: Vec<(usize, Vec<(f32, f32)>)>,

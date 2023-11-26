@@ -11,6 +11,7 @@ pub mod chineseroof;
 pub mod decorations;
 pub mod wall;
 pub mod walltower;
+pub mod watchtower;
 
 /**
  * LICENSE CC BY-NC-ND 4.0

@@ -4,6 +4,10 @@ use crate::algo::{
   polylines::{route_translate_rotate, Polylines},
 };
 
+/**
+ * LICENSE CC BY-NC-ND 4.0
+ * Author: greweb – 2023 – Plottable Era: (II) Medieval
+ */
 pub struct Arrow {
   pub routes: Polylines,
 }

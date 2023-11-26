@@ -1,10 +1,9 @@
-use std::f32::consts::PI;
-
 use crate::algo::{
   clipping::regular_clip, paintmask::PaintMask, polygon::polygons_find_miny,
   polylines::Polylines, renderable::Renderable, wormsfilling::WormsFilling,
 };
 use rand::prelude::*;
+use std::f32::consts::PI;
 
 /**
  * LICENSE CC BY-NC-ND 4.0

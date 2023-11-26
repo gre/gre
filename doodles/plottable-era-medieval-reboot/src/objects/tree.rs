@@ -1,5 +1,3 @@
-use std::f32::consts::PI;
-
 use crate::algo::{
   clipping::regular_clip,
   math1d::mix,
@@ -9,6 +7,7 @@ use crate::algo::{
   renderable::Renderable,
 };
 use rand::prelude::*;
+use std::f32::consts::PI;
 
 /**
  * LICENSE CC BY-NC-ND 4.0

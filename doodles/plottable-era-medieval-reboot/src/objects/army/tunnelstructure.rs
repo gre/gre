@@ -19,9 +19,8 @@ use super::wheeledplatform::WheeledPlatform;
  */
 
 /**
-* a triangular structure with warriors going in.
-the structure have some part uncovered so we can see the inside a bit.
-*/
+ * a triangular structure with warriors going in.
+ */
 
 pub struct TunnelStructure {
   pub routes: Polylines,

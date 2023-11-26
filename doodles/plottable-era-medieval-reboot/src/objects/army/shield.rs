@@ -7,6 +7,10 @@ use crate::{
 };
 use rand::prelude::*;
 
+/**
+ * LICENSE CC BY-NC-ND 4.0
+ * Author: greweb – 2023 – Plottable Era: (II) Medieval
+ */
 pub struct Shield {
   routes: Vec<(usize, Vec<(f32, f32)>)>,
   polygons: Vec<Vec<(f32, f32)>>,

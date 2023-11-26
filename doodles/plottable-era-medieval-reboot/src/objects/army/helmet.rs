@@ -4,7 +4,10 @@ use crate::algo::{
 };
 use std::f32::consts::PI;
 
-// TODO implement different helmet types
+/**
+ * LICENSE CC BY-NC-ND 4.0
+ * Author: greweb – 2023 – Plottable Era: (II) Medieval
+ */
 
 pub struct Helmet {
   pub origin: (f32, f32),

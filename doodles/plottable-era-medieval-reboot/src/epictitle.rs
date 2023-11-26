@@ -1,10 +1,10 @@
+use crate::global::GlobalCtx;
+use rand::prelude::*;
+
 /**
  * LICENSE CC BY-NC-ND 4.0
  * Author: greweb – 2023 – Plottable Era: (II) Medieval
  */
-use rand::prelude::*;
-
-use crate::global::GlobalCtx;
 
 // medieval name generator
 pub fn epic_title<R: Rng>(rng: &mut R, ctx: &GlobalCtx) -> String {
