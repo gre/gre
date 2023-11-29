@@ -117,7 +117,7 @@ impl<R: Rng> Renderable<R> for ConvoyWalk {
   fn render(&self, _rng: &mut R, paint: &mut PaintMask) -> Polylines {
     self.render(paint)
   }
-  fn yorder(&self) -> f32 {
+  fn zorder(&self) -> f32 {
     self.origin.1
   }
 }

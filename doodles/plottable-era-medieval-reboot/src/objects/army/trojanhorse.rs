@@ -62,7 +62,7 @@ impl<R: Rng> Renderable<R> for TrojanHorse {
     self.render(rng, paint)
   }
 
-  fn yorder(&self) -> f32 {
+  fn zorder(&self) -> f32 {
     self.platform.origin.1 + self.platform.h / 2.0
   }
 }

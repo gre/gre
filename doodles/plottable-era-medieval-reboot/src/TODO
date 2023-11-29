@@ -3,16 +3,15 @@ SCENE SPLITS:
   - and allow some rare cases
     - no sea?
     - only sea? boat battle? we need better boat like the defender have the relic on one?
+  - reflection could be a bit more compressed when it's smaller area
 
 CASTLE:
 - fix the mountain shaping & castle position
 - rework castle. prepare some new castle items to be placed on stream
-  - flags (use defendersclr)
   - defenders on the walls
   - watch towers
   - stairs
-  - lights & decorations
-  - make vertical flag. from the flag clothes.
+  - lights
   - drawbridge
 - make the wall also a generic wall on the mountain similar to palisade.
 - bush at bottom of walls
@@ -40,6 +39,7 @@ BATTLEFIELD:
   - Belfry improvements.
   - ADD: Catapult
   - ADD: dragon canon. throw fireball with lot of particle in direction to the castle.
+    - one guy with a torch to fire the canon.
 - MONKS:
   - SPECIAL merlin? golden, big, stick
   - merge Monk into Human. we need a concept of HoldingObject::Foreign

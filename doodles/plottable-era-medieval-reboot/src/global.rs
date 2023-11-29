@@ -105,7 +105,7 @@ impl GlobalCtx {
 
     let dragon_proba_mul = if paper == RED_PAPER { 1.0 } else { 0.1 };
 
-    if rng.gen_bool(0.5 * dragon_proba_mul)
+    if rng.gen_bool(0.4 * dragon_proba_mul)
       && matches!(attackers, Blazon::Dragon)
       || rng.gen_bool(0.1 * dragon_proba_mul)
         && matches!(attackers, Blazon::Lys)
@@ -163,6 +163,10 @@ impl GlobalCtx {
       return Some("Montmirail".to_string());
     }
     None
+  }
+
+  pub fn get_golden_color(&self) -> Option<usize> {
+    self.palette.get_golden_color()
   }
 
   pub fn cleanup(&mut self) {

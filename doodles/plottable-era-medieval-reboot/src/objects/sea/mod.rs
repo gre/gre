@@ -285,7 +285,7 @@ impl Sea {
     // Render
 
     // TODO move to a Container
-    sea_shapes.sort_by(|a, b| b.yorder().partial_cmp(&a.yorder()).unwrap());
+    sea_shapes.sort_by(|a, b| b.zorder().partial_cmp(&a.zorder()).unwrap());
 
     let mut routes = vec![];
     for s in sea_shapes {

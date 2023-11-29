@@ -21,6 +21,21 @@ pub fn circle_route(
   return route;
 }
 
+pub fn ovale_route(
+  center: (f32, f32),
+  (rx, ry): (f32, f32),
+  count: usize,
+) -> Vec<(f32, f32)> {
+  let mut route = Vec::new();
+  for i in 0..(count + 1) {
+    let a = 2. * PI * (i as f32) / (count as f32);
+    let x = center.0 + rx * a.cos();
+    let y = center.1 + ry * a.sin();
+    route.push((x, y));
+  }
+  return route;
+}
+
 pub fn circle_route_angleoff(
   center: (f32, f32),
   r: f32,

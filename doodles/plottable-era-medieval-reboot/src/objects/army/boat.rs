@@ -147,7 +147,7 @@ impl<R: Rng> super::Renderable<R> for Boat {
   fn render(&self, rng: &mut R, mask: &mut PaintMask) -> Polylines {
     self.render(rng, mask, self.clr)
   }
-  fn yorder(&self) -> f32 {
+  fn zorder(&self) -> f32 {
     self.origin.1
   }
 }

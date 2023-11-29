@@ -291,7 +291,7 @@ impl<R: Rng> Renderable<R> for Belfry {
     }
     routes
   }
-  fn yorder(&self) -> f32 {
+  fn zorder(&self) -> f32 {
     self.origin.1
   }
 }

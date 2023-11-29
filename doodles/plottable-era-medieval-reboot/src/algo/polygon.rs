@@ -20,6 +20,17 @@ pub fn polygon_bounds(polygon: &Vec<(f32, f32)>) -> (f32, f32, f32, f32) {
   (minx, miny, maxx, maxy)
 }
 
+pub fn polygon_centroid(polygon: &Vec<(f32, f32)>) -> (f32, f32) {
+  let mut sx = 0.0;
+  let mut sy = 0.0;
+  for p in polygon.iter() {
+    sx += p.0;
+    sy += p.1;
+  }
+  let s = polygon.len() as f32;
+  (sx / s, sy / s)
+}
+
 pub fn polygons_includes_point(
   polygons: &Vec<Vec<(f32, f32)>>,
   p: (f32, f32),

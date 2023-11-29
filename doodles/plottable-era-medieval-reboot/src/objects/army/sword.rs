@@ -98,7 +98,7 @@ impl<R: Rng> Renderable<R> for Sword {
   ) -> Vec<(usize, Vec<(f32, f32)>)> {
     self.render(paint)
   }
-  fn yorder(&self) -> f32 {
+  fn zorder(&self) -> f32 {
     self.origin.1
   }
 }

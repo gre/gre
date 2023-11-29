@@ -12,6 +12,7 @@ pub static GREEN_GEL: Ink = Ink("Green Gel", "#00B2A6", "#19CCBF", 0.35);
 pub static SILVER_GEL: Ink = Ink("Silver Gel", "#CCCCCC", "#FFFFFF", 0.6);
 pub static WHITE_GEL: Ink = Ink("White Gel", "#E5E5E5", "#FFFFFF", 0.35);
 pub static BLACK: Ink = Ink("Black", "#1A1A1A", "#000000", 0.35);
+pub static BLACK_BOLD: Ink = Ink("Black (Bold)", "#1A1A1A", "#000000", 0.6);
 pub static SEIBOKUBLUE: Ink =
   Ink("Sailor Sei-boku", "#1060a3", "#153a5d", 0.35);
 pub static INAHO: Ink = Ink("iroshizuku ina-ho", "#ba6", "#7f6a33", 0.35);
@@ -66,10 +67,10 @@ impl Palette {
     let papers_choices = 6;
     let i = (rng.gen_range(0.0..papers_choices as f32)
       // we give importance to first index to be used in distribution
-      * rng.gen_range(0.5..1.0)
+      * rng.gen_range(0.4..1.0)
       * rng.gen_range(0.0..1.0)
       // re-equilibrate the distribution on the 2 first choices
-      + rng.gen_range(0.0..0.7))
+      + rng.gen_range(0.0..0.8))
     .floor() as usize
       % papers_choices;
 
@@ -186,6 +187,22 @@ impl Palette {
       }
       2 => {
         let blazon_color = match blazon {
+          Blazon::Lys => GOLD_GEL,
+          _ => WHITE_GEL,
+        };
+        let colors = vec![WHITE_GEL, WHITE_GEL, blazon_color];
+        (colors, DARK_BLUE_PAPER)
+      }
+      3 => {
+        let blazon_color = match blazon {
+          Blazon::Lys => WHITE_GEL,
+          _ => BLACK,
+        };
+        let colors = vec![BLACK, WHITE_GEL, blazon_color];
+        (colors, BLUE_PAPER)
+      }
+      4 => {
+        let blazon_color = match blazon {
           Blazon::Lys => {
             if rng.gen_bool(0.66) {
               GOLD_GEL
@@ -199,24 +216,8 @@ impl Palette {
         let colors = vec![BLACK, WHITE_GEL, blazon_color];
         (colors, GREY_PAPER)
       }
-      3 => {
-        let blazon_color = match blazon {
-          Blazon::Lys => WHITE_GEL,
-          _ => BLACK,
-        };
-        let colors = vec![BLACK, WHITE_GEL, blazon_color];
-        (colors, BLUE_PAPER)
-      }
-      4 => {
-        let blazon_color = match blazon {
-          Blazon::Lys => GOLD_GEL,
-          _ => WHITE_GEL,
-        };
-        let colors = vec![WHITE_GEL, WHITE_GEL, blazon_color];
-        (colors, DARK_BLUE_PAPER)
-      }
       _ => {
-        let sun = if rng.gen_bool(0.3) {
+        let sun = if rng.gen_bool(0.7) {
           GOLD_GEL
         } else {
           WHITE_GEL
@@ -224,9 +225,15 @@ impl Palette {
 
         let blazon_color = match blazon {
           Blazon::Lys => GOLD_GEL,
+          Blazon::Dragon => BLACK_BOLD,
           _ => WHITE_GEL,
         };
-        let colors = vec![BLACK, sun, blazon_color];
+        let main = if rng.gen_bool(0.3) {
+          BLACK_BOLD
+        } else {
+          WHITE_GEL
+        };
+        let colors = vec![main, sun, blazon_color];
         (colors, RED_PAPER)
       }
     };
@@ -285,6 +292,16 @@ impl Palette {
         || ink == RED_DRAGON
         || ink == PUMPKIN)
         && matches!(blazon, Blazon::Dragon)
+  }
+
+  pub fn get_golden_color(&self) -> Option<usize> {
+    let res = self
+      .inks
+      .iter()
+      .enumerate()
+      .find(|&(_, &clr)| clr == GOLD_GEL || clr == AMBER || clr == INAHO)
+      .map(|(i, _)| i);
+    res
   }
 }
 

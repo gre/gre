@@ -198,7 +198,7 @@ pub fn render(
 
   let mask_with_framing = paint.clone();
 
-  let yhorizon = rng.gen_range(0.5..0.7) * height;
+  let yhorizon = 0.8 * height; // rng.gen_range(0.5..0.8) * height; // TODO rework randomness
 
   //  mountains
   perf.span("mountains_front", &routes);
@@ -259,24 +259,8 @@ pub fn render(
 
     if let Some(castle) = &mountain.castle {
       perf.span("castle", &routes);
-      // TODO the randomness is to be done inside a Castle::rand()
-      let castle = Castle {
-        pos: castle.position,
-        width: castle.width,
-        scale: 1.0,
-        clr: 0,
-        ybase: yhorizon,
-        wallh: rng.gen_range(0.05..0.1) * height,
-        wall: true,
-        left_tower: true,
-        right_tower: true,
-        dark_wall: rng.gen_bool(0.5),
-        chapel: rng.gen_bool(0.5),
-        dark_chapel: rng.gen_bool(0.5),
-        destructed_wall: rng.gen_bool(0.5),
-        portcullis: rng.gen_bool(0.5),
-        blazon: defender_house,
-      };
+      let ymax = pad + framingw + 0.02 * height;
+      let castle = Castle::init(&mut ctx, &mut rng, castle, yhorizon, ymax);
       routes.extend(castle.render(&mut ctx, &mut rng, &mut paint));
       perf.span_end("castle", &routes);
     }

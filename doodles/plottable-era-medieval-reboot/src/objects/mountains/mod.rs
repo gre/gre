@@ -247,7 +247,7 @@ impl MountainsV2 {
         }
 
         // TODO we could vary this based on the mountain shape
-        let castle_width = rng.gen_range(0.2..0.35) * width;
+        let castle_width = rng.gen_range(0.25..0.35) * width;
 
         /*
         let leftx = castle_position.0 - castle_width / 2.0;
@@ -258,8 +258,11 @@ impl MountainsV2 {
         let castle_moats = (false, false);
 
         Some(CastleGrounding {
-          position: castle_position,
-          width: castle_width,
+          //position: castle_position,
+          //width: castle_width,
+          position: (width / 2.0, castle_position.1),
+          width: width,
+          // TODO idea: in rare case, castle to take the whole space.
           moats: castle_moats,
         })
       } else {

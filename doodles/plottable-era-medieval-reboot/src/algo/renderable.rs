@@ -9,7 +9,7 @@ use std::cmp::Ordering;
 
 pub trait Renderable<R: Rng> {
   fn render(&self, rng: &mut R, paint: &mut PaintMask) -> Polylines;
-  fn yorder(&self) -> f32;
+  fn zorder(&self) -> f32;
 }
 
 // FIXME can a Renderable be an implicit Container? like it wants to emit sub renderable... because we want the human shields to be ordered separately.
@@ -20,7 +20,7 @@ struct RenderableYOrd<R: Rng> {
 
 impl<R: Rng> PartialEq for RenderableYOrd<R> {
   fn eq(&self, other: &Self) -> bool {
-    self.inner.yorder() == other.inner.yorder()
+    self.inner.zorder() == other.inner.zorder()
   }
 }
 
@@ -28,7 +28,7 @@ impl<R: Rng> Eq for RenderableYOrd<R> {}
 
 impl<R: Rng> PartialOrd for RenderableYOrd<R> {
   fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-    other.inner.yorder().partial_cmp(&self.inner.yorder())
+    other.inner.zorder().partial_cmp(&self.inner.zorder())
   }
 }
 
@@ -72,12 +72,12 @@ impl<R: Rng> Renderable<R> for Container<R> {
     }
     routes
   }
-  fn yorder(&self) -> f32 {
+  fn zorder(&self) -> f32 {
     self
       .elements
       .iter()
       .max()
-      .map(|o| o.inner.yorder())
+      .map(|o| o.inner.zorder())
       .unwrap_or_default()
   }
 }

@@ -91,7 +91,7 @@ impl<R: Rng> Renderable<R> for Port {
     self.render(rng, paint, self.clr)
   }
 
-  fn yorder(&self) -> f32 {
+  fn zorder(&self) -> f32 {
     self.origin.1 + self.size / 2.0
   }
 }

@@ -47,7 +47,7 @@ impl Arrow {
   pub fn render(&self, paint: &mut PaintMask) -> Polylines {
     let routes = regular_clip(&self.routes, paint);
     for (_, route) in self.routes.iter() {
-      paint.paint_polyline(route, 1.2);
+      paint.paint_polyline(route, 0.8);
     }
     routes
   }

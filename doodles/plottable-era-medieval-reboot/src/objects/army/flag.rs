@@ -26,7 +26,7 @@ impl Flag {
     origin: (f32, f32),
     size: f32,
     angle: f32,
-    flagtoright: bool,
+    flagtoleft: bool,
     cloth_height_factor: f32,
     cloth_len_factor: f32,
     spike: bool,
@@ -34,7 +34,7 @@ impl Flag {
     let spear = Spear::init(clr, origin, size, angle, spike);
     let acos = angle.cos();
     let asin = angle.sin();
-    let dir = if flagtoright { -PI / 2.0 } else { PI / 2.0 };
+    let dir = if flagtoleft { -PI / 2.0 } else { PI / 2.0 };
     let pacos = (angle + dir).cos();
     let pasin = (angle + dir).sin();
 
@@ -169,7 +169,7 @@ impl<R: Rng> Renderable<R> for Flag {
   fn render(&self, _rng: &mut R, paint: &mut PaintMask) -> Polylines {
     self.render(paint)
   }
-  fn yorder(&self) -> f32 {
+  fn zorder(&self) -> f32 {
     self.spear.origin.1
   }
 }

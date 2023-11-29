@@ -1,14 +1,20 @@
 use crate::{algo::paintmask::PaintMask, global::GlobalCtx};
 use rand::prelude::*;
 
-use self::{chapel::Chapel, wall::CastleWall, walltower::CastleWallTower};
+use self::{
+  chapel::Chapel, levels::builder::build_castle, wall::CastleWall,
+  walltower::CastleWallTower,
+};
 
-use super::{blazon::Blazon, projectile::attack::DefenseTarget};
+use super::{
+  blazon::Blazon, mountains::CastleGrounding, projectile::attack::DefenseTarget,
+};
 
 pub mod chapel;
 pub mod chinesedoor;
 pub mod chineseroof;
 pub mod decorations;
+pub mod levels;
 pub mod wall;
 pub mod walltower;
 pub mod watchtower;
@@ -21,12 +27,17 @@ pub mod watchtower;
 pub struct Castle {
   // ybase is where the chapel foundation need to start
   pub ybase: f32,
-  // center of the castle base
+  // where we absolutely need to stop building
+  pub ymax: f32,
+  // position and scaling
   pub pos: (f32, f32),
   pub width: f32,
   pub scale: f32,
+  // stying
   pub clr: usize,
-  // other properties
+  pub blazonclr: usize,
+  pub blazon: Blazon,
+  // features
   pub left_tower: bool,
   pub right_tower: bool,
   pub chapel: bool,
@@ -36,10 +47,41 @@ pub struct Castle {
   pub portcullis: bool,
   pub dark_wall: bool,
   pub wallh: f32,
-  pub blazon: Blazon,
 }
 
 impl Castle {
+  pub fn init<R: Rng>(
+    ctx: &mut GlobalCtx,
+    rng: &mut R,
+    castle: &CastleGrounding,
+    ybase: f32,
+    ymax: f32,
+  ) -> Self {
+    let width = castle.width;
+    let scale = rng.gen_range(0.8..2.0);
+    let wallh = rng.gen_range(0.3..0.8) * width;
+
+    Self {
+      pos: castle.position,
+      width,
+      scale,
+      clr: 0,
+      blazonclr: ctx.defendersclr,
+      ybase,
+      ymax,
+      wallh,
+      wall: true,
+      left_tower: true,
+      right_tower: true,
+      dark_wall: rng.gen_bool(0.5),
+      chapel: rng.gen_bool(0.5),
+      dark_chapel: rng.gen_bool(0.5),
+      destructed_wall: rng.gen_bool(0.5),
+      portcullis: rng.gen_bool(0.5),
+      blazon: ctx.defenders,
+    }
+  }
+
   pub fn render<R: Rng>(
     &self,
     ctx: &mut GlobalCtx,
@@ -49,11 +91,28 @@ impl Castle {
     let pos = self.pos;
     let width = self.width;
     let scale = self.scale;
-    let clr = self.clr;
     let ybase = self.ybase;
+    let ymax = self.ymax;
 
     let mut routes = vec![];
 
+    let mut x = 0.0;
+    while x < width {
+      let w = rng.gen_range(0.05..0.3) * width;
+      let rts =
+        build_castle(rng, ctx, paint, (x, pos.1), w, ybase, ymax, scale);
+      routes.extend(rts);
+      x += w * 1.2;
+    }
+
+    /*
+    let rts =
+      build_castle(rng, ctx, paint, (pos.0, pos.1), width, ybase, ymax, scale);
+    routes.extend(rts);
+    */
+
+    /*
+    let clr = self.clr;
     let wallcenter = pos;
     let wallh = self.wallh;
 
@@ -126,6 +185,7 @@ impl Castle {
     for (_, route) in &routes {
       paint.paint_polyline(route, 1.4);
     }
+    */
 
     routes
   }
