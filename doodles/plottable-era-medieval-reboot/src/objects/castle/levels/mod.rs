@@ -1,23 +1,16 @@
-pub mod bartizan;
-pub mod bell;
 pub mod builder;
-pub mod merlon;
-pub mod pillars;
 pub mod poles;
-pub mod roof;
-pub mod wall;
+pub mod shapes;
 pub mod wallshadows;
 pub mod walltexture;
-pub mod walltransition;
 pub mod windows;
-pub mod zigzaggrid;
 
 use crate::algo::{
   clipping::regular_clip_polys, paintmask::PaintMask, polylines::Polylines,
 };
 use std::cmp::Ordering;
 
-use self::{poles::SpawnablePole, roof::RoofParams};
+use self::{poles::SpawnablePole, shapes::roof::RoofParams};
 
 /**
  * LICENSE CC BY-NC-ND 4.0
@@ -111,7 +104,7 @@ pub struct LevelParams {
   pub light_x_direction: f32,
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Floor {
   // center of the level
   pub pos: (f32, f32),

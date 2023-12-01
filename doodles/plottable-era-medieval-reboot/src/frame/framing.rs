@@ -1,5 +1,8 @@
 use super::bandpattern::BandPattern;
-use crate::algo::{paintmask::PaintMask, wormsfilling::WormsFilling};
+use crate::{
+  algo::{paintmask::PaintMask, wormsfilling::WormsFilling},
+  global::GlobalCtx,
+};
 use rand::prelude::*;
 use std::f32::consts::PI;
 
@@ -9,17 +12,18 @@ use std::f32::consts::PI;
  */
 pub fn framing<R: Rng>(
   rng: &mut R,
+  ctx: &GlobalCtx,
   paint: &mut PaintMask,
   clr: usize,
   bound: (f32, f32, f32, f32),
   // pattern that will be colored for the framing
-  pattern: &dyn BandPattern,
+  pattern: Option<(Box<dyn BandPattern>, f32)>,
   // padding inside the frame
   padding: f32,
   // marging to exclude external
   margin: f32,
   // stroke width for the pattern
-  strokew: f32,
+  wmul: f32,
   // density of the coloring
   density: f32,
   // nb of iteration of coloring logic
@@ -27,100 +31,107 @@ pub fn framing<R: Rng>(
 ) -> Vec<(usize, Vec<(f32, f32)>)> {
   let mut routes = vec![];
 
-  // outer
-  routes.push((
-    clr,
-    vec![
-      (bound.0 + strokew, bound.1 + strokew),
-      (bound.2 - strokew, bound.1 + strokew),
-      (bound.2 - strokew, bound.3 - strokew),
-      (bound.0 + strokew, bound.3 - strokew),
-      (bound.0 + strokew, bound.1 + strokew),
-    ],
-  ));
-  // inner
-  routes.push((
-    clr,
-    vec![
-      (bound.0 + padding - strokew, bound.1 + padding - strokew),
-      (bound.2 - padding + strokew, bound.1 + padding - strokew),
-      (bound.2 - padding + strokew, bound.3 - padding + strokew),
-      (bound.0 + padding - strokew, bound.3 - padding + strokew),
-      (bound.0 + padding - strokew, bound.1 + padding - strokew),
-    ],
-  ));
+  if let Some((pattern, sw)) = pattern {
+    let strokew = sw * wmul;
+    // outer
+    routes.push((
+      clr,
+      vec![
+        (bound.0 + strokew, bound.1 + strokew),
+        (bound.2 - strokew, bound.1 + strokew),
+        (bound.2 - strokew, bound.3 - strokew),
+        (bound.0 + strokew, bound.3 - strokew),
+        (bound.0 + strokew, bound.1 + strokew),
+      ],
+    ));
+    // inner
+    routes.push((
+      clr,
+      vec![
+        (bound.0 + padding - strokew, bound.1 + padding - strokew),
+        (bound.2 - padding + strokew, bound.1 + padding - strokew),
+        (bound.2 - padding + strokew, bound.3 - padding + strokew),
+        (bound.0 + padding - strokew, bound.3 - padding + strokew),
+        (bound.0 + padding - strokew, bound.1 + padding - strokew),
+      ],
+    ));
 
-  let hp = padding / 2.;
-  let bandw = hp - strokew;
+    let hp = padding / 2.;
+    let bandw = hp - strokew;
 
-  // top
-  routes.extend(pattern.render_band(
-    clr,
-    (bound.0 + padding, bound.1 + hp),
-    (bound.2 - padding, bound.1 + hp),
-    bandw,
-  ));
-  // topleft
-  routes.extend(pattern.render_corner(
-    clr,
-    (bound.0 + hp, bound.1 + hp),
-    0.0,
-    bandw,
-  ));
+    // top
+    routes.extend(pattern.render_band(
+      clr,
+      (bound.0 + padding, bound.1 + hp),
+      (bound.2 - padding, bound.1 + hp),
+      bandw,
+    ));
+    // topleft
+    routes.extend(pattern.render_corner(
+      clr,
+      (bound.0 + hp, bound.1 + hp),
+      0.0,
+      bandw,
+    ));
 
-  // right
-  routes.extend(pattern.render_band(
-    clr,
-    (bound.2 - hp, bound.1 + padding),
-    (bound.2 - hp, bound.3 - padding),
-    bandw,
-  ));
-  // topright
-  routes.extend(pattern.render_corner(
-    clr,
-    (bound.2 - hp, bound.1 + hp),
-    -0.5 * PI,
-    bandw,
-  ));
+    // right
+    routes.extend(pattern.render_band(
+      clr,
+      (bound.2 - hp, bound.1 + padding),
+      (bound.2 - hp, bound.3 - padding),
+      bandw,
+    ));
+    // topright
+    routes.extend(pattern.render_corner(
+      clr,
+      (bound.2 - hp, bound.1 + hp),
+      -0.5 * PI,
+      bandw,
+    ));
 
-  // bottom
-  routes.extend(pattern.render_band(
-    clr,
-    (bound.2 - padding, bound.3 - hp),
-    (bound.0 + padding, bound.3 - hp),
-    bandw,
-  ));
-  // bottomright
-  routes.extend(pattern.render_corner(
-    clr,
-    (bound.2 - hp, bound.3 - hp),
-    -PI,
-    bandw,
-  ));
+    // bottom
+    routes.extend(pattern.render_band(
+      clr,
+      (bound.2 - padding, bound.3 - hp),
+      (bound.0 + padding, bound.3 - hp),
+      bandw,
+    ));
+    // bottomright
+    routes.extend(pattern.render_corner(
+      clr,
+      (bound.2 - hp, bound.3 - hp),
+      -PI,
+      bandw,
+    ));
 
-  // left
-  routes.extend(pattern.render_band(
-    clr,
-    (bound.0 + hp, bound.3 - padding),
-    (bound.0 + hp, bound.1 + padding),
-    bandw,
-  ));
-  // bottomleft
-  routes.extend(pattern.render_corner(
-    clr,
-    (bound.0 + hp, bound.3 - hp),
-    -1.5 * PI,
-    bandw,
-  ));
+    // left
+    routes.extend(pattern.render_band(
+      clr,
+      (bound.0 + hp, bound.3 - padding),
+      (bound.0 + hp, bound.1 + padding),
+      bandw,
+    ));
+    // bottomleft
+    routes.extend(pattern.render_corner(
+      clr,
+      (bound.0 + hp, bound.3 - hp),
+      -1.5 * PI,
+      bandw,
+    ));
 
-  // strokes -> fill -> strokes. will create nice textures!
-  let mut drawings = paint.clone_empty();
-  for (_clr, route) in routes.iter() {
-    drawings.paint_polyline(route, strokew);
+    // strokes -> fill -> strokes. will create nice textures!
+    let mut drawings = paint.clone_empty();
+    for (_clr, route) in routes.iter() {
+      drawings.paint_polyline(route, strokew);
+    }
+    let mut filling = WormsFilling::rand(rng);
+    let ink = ctx.palette.inks[clr];
+    let p = ink.3 * rng.gen_range(1.0..1.5);
+    filling.precision = p;
+    filling.step = p;
+    routes =
+      filling.fill_in_paint(rng, &drawings, clr, density, bound, iterations);
   }
-  let filling = WormsFilling::rand(rng);
-  let routes =
-    filling.fill_in_paint(rng, &drawings, clr, density, bound, iterations);
 
   // we paint the mask for the paint to include our frame.
 

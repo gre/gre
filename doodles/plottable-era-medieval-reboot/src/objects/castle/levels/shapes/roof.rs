@@ -1,4 +1,4 @@
-use super::{
+use super::super::{
   poles::PoleKind, Floor, Level, LevelParams, RenderItem, SpawnablePole,
 };
 use crate::{
@@ -189,7 +189,7 @@ impl Level for Roof {
     self.items.clone()
   }
 
-  fn possible_pole_positions(&self) -> Vec<super::SpawnablePole> {
+  fn possible_pole_positions(&self) -> Vec<SpawnablePole> {
     self.pole_positions.clone()
   }
 }

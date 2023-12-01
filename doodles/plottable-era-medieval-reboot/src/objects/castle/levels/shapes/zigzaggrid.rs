@@ -1,4 +1,4 @@
-use super::{Floor, Level, LevelParams, RenderItem};
+use super::super::{Floor, Level, LevelParams, RenderItem};
 use rand::prelude::*;
 
 /**

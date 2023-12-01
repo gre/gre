@@ -1,4 +1,4 @@
-use super::{Floor, Level, LevelParams, RenderItem, SpawnableHuman};
+use super::super::{Floor, Level, LevelParams, RenderItem, SpawnableHuman};
 use rand::prelude::*;
 
 /**

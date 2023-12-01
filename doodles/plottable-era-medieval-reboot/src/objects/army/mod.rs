@@ -618,7 +618,7 @@ impl ArmyOnMountain {
               let origin = (x, y);
               let size = rng.gen_range(0.1..0.2) * width;
               let xflip = x > castle.position.0;
-              let lasering = rng.gen_bool(0.4);
+              let lasering = rng.gen_bool(0.6);
               let headshape = HeadShape::CYCLOPE;
               let leftobj = None;
               let rightobj = if lasering {

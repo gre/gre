@@ -1,5 +1,7 @@
-use super::{wallshadows::wall_shadow, Floor, Level, LevelParams, RenderItem};
-use crate::algo::math2d::lerp_point;
+use super::super::{
+  wallshadows::wall_shadow, Floor, Level, LevelParams, RenderItem,
+};
+use crate::algo::{math1d::mix, math2d::lerp_point};
 use rand::prelude::*;
 
 /**
@@ -28,14 +30,25 @@ impl WallTransition {
     let o = params.floor.pos;
     let splits = params.floor.splits.clone();
     let s = params.scaleref;
-    let should_draw_shadows = !is_transition_to_roof && rng.gen_bool(0.3);
-    let should_draw_base = should_draw_shadows || rng.gen_bool(0.2);
     let reducing = rng.gen_bool(0.7);
+    let should_draw_shadows = (reducing || rng.gen_bool(0.2))
+      && !is_transition_to_roof
+      && rng.gen_bool(0.3);
+    let should_draw_base = should_draw_shadows || rng.gen_bool(0.2);
+    let side: f32 = if rng.gen_bool(0.7) {
+      0.0
+    } else {
+      if rng.gen_bool(0.5) {
+        -1.0
+      } else {
+        1.0
+      }
+    };
     let h = params.preferrable_height.max(1.2 * s).min(
-      if is_transition_to_roof || !reducing || rng.gen_bool(0.5) {
+      if is_transition_to_roof || rng.gen_bool(0.2) {
         3.0
       } else {
-        14.0
+        rng.gen_range(5.0..10.0)
       } * s,
     );
     let grow = if is_transition_to_roof {
@@ -48,18 +61,27 @@ impl WallTransition {
     let mut polygons = vec![];
     let newroofw = (w + grow).max(0.0);
     let hw = w / 2.;
-    let hw2 = newroofw / 2.;
+    let hw2 = newroofw / 2.0;
     let y1 = o.1;
     let y2 = o.1 - h;
+    let p1 = (o.0 - hw, y1);
+    let p2 = (o.0 + hw, y1);
+    let righthw2 = mix(hw2, hw, side.max(0.));
+    let p3 = (o.0 + righthw2, y2);
+    let lefthw2 = mix(hw2, hw, (-side).min(0.));
+    let p4 = (o.0 - lefthw2, y2);
+
     let roof_base = if newroofw > 0.0 {
-      Some(Floor::new((o.0, y2), w + grow, splits, false))
+      Some(Floor::new(
+        lerp_point(p3, p4, 0.5),
+        (p4.0 - p3.0).abs(),
+        splits,
+        false,
+      ))
     } else {
       None
     };
-    let p1 = (o.0 - hw, y1);
-    let p2 = (o.0 + hw, y1);
-    let p3 = (o.0 + hw2, y2);
-    let p4 = (o.0 - hw2, y2);
+
     let poly = vec![p4, p1, p2, p3];
     if should_draw_base {
       routes.push((clr, poly.clone()));

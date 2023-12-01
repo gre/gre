@@ -1,10 +1,11 @@
 use crate::{
   algo::{
-    clipping::regular_clip,
+    clipping::{clip_routes_with_colors, regular_clip},
     math1d::mix,
     math2d::{lookup_ridge, strictly_in_boundaries},
     paintmask::PaintMask,
     passage::Passage,
+    polygon::polygon_includes_point,
     polylines::Polylines,
   },
   global::GlobalCtx,
@@ -22,9 +23,13 @@ pub mod wall;
 
 #[derive(Clone)]
 pub struct CastleGrounding {
-  pub ridge: Vec<(f32, f32)>,
+  // pub ridge: Vec<(f32, f32)>,
   pub position: (f32, f32),
   pub width: f32,
+  // (from,to) positions of the path to climb possible moats (on left and/or right of castle)
+  pub moats: Vec<((f32, f32), (f32, f32))>,
+  pub main_door_pos: Option<(f32, f32)>,
+  pub scale: f32,
 }
 
 pub struct Mountain {
@@ -87,7 +92,7 @@ impl MountainsV2 {
       let mut routes: Polylines = Vec::new();
       let mut local_height_map: Vec<f32> = Vec::new();
 
-      let h: f32 = rng.gen_range(3.0..5.0);
+      let h: f32 = rng.gen_range(2.0..6.0);
       let ampfactor = mix(0.01, 0.1, jf) * rng.gen_range(0.5..1.0);
       let ynoisefactor = rng.gen_range(0.01..0.1);
       let yincr = if j == 0 {
@@ -95,8 +100,8 @@ impl MountainsV2 {
       } else {
         2.0 + (rng.gen_range(-1f32..8.0) * rng.gen_range(0.0..1.0)).max(0.0)
       };
-      let amp1 = rng.gen_range(-1.0f32..5.0).max(0.0) * rng.gen_range(0.3..1.0);
-      let amp2 = rng.gen_range(-1.0f32..3.0).max(0.0) * rng.gen_range(0.3..1.0);
+      let amp1 = rng.gen_range(-2.0f32..5.0).max(0.0) * rng.gen_range(0.3..1.0);
+      let amp2 = rng.gen_range(-1.0f32..4.0).max(0.0) * rng.gen_range(0.3..1.0);
       let amp3 = rng.gen_range(-1.0f32..2.0).max(0.0) * rng.gen_range(0.3..1.0);
       let center = rng.gen_range(0.2..0.8) * width;
 
@@ -127,12 +132,14 @@ impl MountainsV2 {
 
           y += amp2
             * amp
-            * perlin.get([
-              //
-              8.311 + xv as f64 * 0.00511,
-              88.1 + y as f64 * ynoisefactor,
-              seed * 97.311,
-            ]) as f32;
+            * perlin
+              .get([
+                //
+                8.311 + xv as f64 * 0.00511,
+                88.1 + y as f64 * ynoisefactor,
+                seed * 97.311,
+              ])
+              .max(0.0) as f32;
 
           y += amp1
             * amp
@@ -229,40 +236,18 @@ impl MountainsV2 {
         .enumerate()
         .map(|(i, &y)| (i as f32 * precision, y))
         .collect();
+      let mut modified_ridge = ridge.clone();
 
       let castle = if j == count - 1 {
-        // find a location for the castle
-        // shape the mountain when needed
-
-        //let smooth = (width * 0.1) as usize;
-        //let smoothed_ridge = moving_average_2d(&ridge, smooth);
-
-        /*
-        // take an interesting high point
-        let mut castle_position = (width / 2.0, height);
-
-        let borderypush = 0.3 * height;
-        for p in smoothed_ridge.iter() {
-          // formula to avoid borders
-          let bordering = 2.0 * (p.0 / width - 0.5).abs();
-          let y = p.1 + borderypush * bordering * bordering;
-          if y < castle_position.1 && width * 0.2 < p.0 && p.0 < width * 0.8 {
-            castle_position = *p;
-          }
-        }
-        */
-
-        // TODO try to find the flattest area possible that is high enough.
-
-        let mut candidates = vec![];
-
+        //  find the flattest area possible that is high enough.
         let tries = rng.gen_range(1..20);
+        let mut candidates = vec![];
         for _ in 0..tries {
           // allow a crazy case where the width would be beyond the screen & we literally have a huge castle
           let castle_width = if ctx.full_castle {
             width * 1.5
           } else {
-            rng.gen_range(0.2..0.8) * width
+            (0.2 + rng.gen_range(0.0..0.6) * rng.gen_range(0.5..1.0)) * width
           };
           let xcastlepos = rng.gen_range(0.2..0.8) * width;
 
@@ -283,41 +268,118 @@ impl MountainsV2 {
               maxy = p.1;
             }
           }
-
           let castle_position = (xcastlepos, miny);
-
           candidates.push((castle_position, castle_width, maxy - miny));
         }
 
-        candidates.sort_by(|a, b| {
-          let a = a.2;
-          let b = b.2;
-          if a < b {
-            std::cmp::Ordering::Less
-          } else if a > b {
-            std::cmp::Ordering::Greater
-          } else {
-            std::cmp::Ordering::Equal
-          }
-        });
+        if let Some(&(castlepos, castlewidth, _)) = candidates
+          .iter()
+          .min_by(|a, b| a.2.partial_cmp(&b.2).unwrap())
+        {
+          let mut moats = vec![];
 
-        if let Some(&(position, width, _)) = candidates.iter().min_by(|a, b| {
-          let a = a.2;
-          let b = b.2;
-          if a < b {
-            std::cmp::Ordering::Less
-          } else if a > b {
-            std::cmp::Ordering::Greater
-          } else {
-            std::cmp::Ordering::Equal
+          let scale = 1.0
+            + rng.gen_range(-0.2..0.5) * rng.gen_range(0.0..1.0)
+            + rng.gen_range(0.0..(2.0 * castlewidth / width));
+
+          let holewidth = scale * rng.gen_range(0.03..0.05) * width;
+          let holeheight = rng.gen_range(0.03..0.07) * width;
+          let maxh = 0.3 * holewidth;
+          let pad = 0.1 * width;
+
+          for (xpos, goright) in vec![
+            (castlepos.0 + castlewidth / 2.0, true),
+            (castlepos.0 - castlewidth / 2.0, false),
+          ] {
+            if xpos < pad || xpos > width - pad {
+              continue;
+            }
+            let xdir = if goright { 1.0 } else { -1.0 };
+            let fromi = (xpos / precision) as usize;
+            let x = xpos + xdir * holewidth;
+            if x < pad || x > width - pad {
+              continue;
+            }
+            let toi = (x / precision) as usize;
+            let l = fromi.abs_diff(toi);
+            let fromp = ridge[fromi];
+            let top = ridge[toi];
+            let mut invalid = false;
+            for d in 0..l {
+              let i = if goright { fromi + d } else { fromi - d };
+              let p = ridge[i];
+              if (p.1 - fromp.1).abs() > maxh {
+                invalid = true;
+                break;
+              }
+            }
+
+            let gap = l / 8;
+            if !invalid && l > gap + 1 {
+              // ok, it's a valid moat, now we will dig in the mountain.
+              let mut route = vec![];
+              route.push((fromp.0, fromp.1 - holeheight));
+
+              let ampcurve = rng.gen_range(0.0..0.6);
+              let mut lastp = fromp;
+              for d in 0..(l - gap) {
+                let i = if goright { fromi + d } else { fromi - d };
+                let (x, y) = ridge[i];
+                let sf = d as f32 / (l - 1) as f32;
+                let dy = holeheight
+                  * (1. - ampcurve * (2. * (sf - 0.5).abs()).powf(2.0));
+                let y = y + dy;
+                route.push((x, y));
+                // move the ridge back down
+                height_map[i] = y;
+                modified_ridge[i] = (x, y);
+                lastp = (x, y);
+              }
+
+              route.push((lastp.0, lastp.1 - holeheight));
+
+              let is_outside = |p| polygon_includes_point(&route, p);
+              routes = clip_routes_with_colors(&routes, &is_outside, 1.0, 3);
+
+              let is_outside = |p: (f32, f32)| lookup_ridge(&ridge, p.0) > p.1;
+              routes.extend(clip_routes_with_colors(
+                &vec![(clr, route)],
+                &is_outside,
+                1.0,
+                3,
+              ));
+
+              moats.push((fromp, top));
+            }
           }
-        }) {
-          // TODO we need to provide to the castle the ridge in order to determine internally where there can be doors
+
+          let main_door_pos =
+            if rng.gen_bool(if moats.len() > 0 { 0.1 } else { 0.8 }) {
+              let xpad = 0.2 * castlewidth;
+              let xfrom = castlepos.0 - castlewidth / 2.0 + xpad;
+              let xto = castlepos.0 + castlewidth / 2.0 - xpad;
+              let xstep = 0.05 * castlewidth;
+              let mut x = xfrom;
+              let mut best: Option<(f32, f32)> = None;
+              while x <= xto {
+                let y = lookup_ridge(&ridge, x);
+                if y < best.map(|p| p.1).unwrap_or(yhorizon) {
+                  best = Some((x, y));
+                }
+                x += xstep;
+              }
+              best
+              // best.map(|p| (p.0, p.1.min(castlepos.1)))
+            } else {
+              None
+            };
 
           Some(CastleGrounding {
-            ridge: ridge.clone(),
-            position,
-            width,
+            position: castlepos,
+            width: castlewidth,
+            moats,
+            main_door_pos,
+            scale,
           })
         } else {
           None
@@ -329,12 +391,18 @@ impl MountainsV2 {
       mountains.push(Mountain {
         clr,
         castle,
-        ridge,
+        ridge: modified_ridge,
         yhorizon,
         routes,
         width,
         has_beach: j == 0,
       });
+
+      // move the ridge up to create some "halo" around mountain. and see more easily the diff layers
+      let push = 2.0;
+      for h in &mut height_map {
+        *h -= push;
+      }
     }
 
     Self { mountains }

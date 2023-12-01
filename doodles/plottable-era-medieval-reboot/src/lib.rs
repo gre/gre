@@ -9,12 +9,10 @@ mod svgplot;
 
 use algo::clipping::clip_routes_with_colors;
 use algo::math1d::mix;
-use algo::math1d::smoothstep;
 use algo::packing::packing;
 use algo::polylines::path_subdivide_to_curve;
 use algo::polylines::shake;
 use algo::polylines::Polylines;
-use algo::wormsfilling::WeightMap;
 use fxhash::*;
 use global::GlobalCtx;
 use global::Special;
@@ -110,7 +108,7 @@ pub fn render(
   let golden_frame = palette.inks[1] == GOLD_GEL && rng.gen_bool(0.3);
   let clr = if golden_frame { 1 } else { 0 };
   decoration_routes.extend(medieval_frame(
-    &mut rng, &mut paint, width, height, pad, framingw, clr,
+    &mut rng, &ctx, &mut paint, width, height, pad, framingw, clr,
   ));
   perf.span_end("framing", &decoration_routes);
 
@@ -122,74 +120,9 @@ pub fn render(
     match s {
       Special::Dragon(n) => {
         perf.span("dragon", &routes);
-        for i in 0..*n {
-          let bx = pad + framingw + 0.2 * width;
-          let by = pad + framingw + 0.2 * height;
-          let count = rng.gen_range(2..10);
-          let mut circles = packing(
-            &mut rng,
-            500,
-            count,
-            1,
-            0.05 * width,
-            (bx, by, width - bx, height - by),
-            &|_| true,
-            0.01 * width,
-            0.1 * width,
-          );
-          circles.sort_by(|a, b| b.y.partial_cmp(&a.y).unwrap());
-
-          let mut rt = vec![];
-          for c in circles {
-            rt.push((c.x, c.y));
-          }
-
-          while rt.len() < 2 {
-            rt.push((
-              rng.gen_range(0.33..0.66) * paint.width,
-              rng.gen_range(0.2..0.5) * paint.height,
-            ));
-          }
-          /*
-          let c = (0.5 * width, 0.3 * height);
-          // TODO less chaotic path. maybe doing a random zig zag?
-          // TODO dragon throwing fireballs
-          for _ in 0..rng.gen_range(3..5) {
-            rt.push((
-              c.0 + rng.gen_range(-0.25..0.25) * paint.width,
-              c.1 + rng.gen_range(-0.2..0.2) * paint.height,
-            ))
-          }
-          */
-          for _ in 0..rng.gen_range(1..3) {
-            rt = path_subdivide_to_curve(&rt, 1, 0.66);
-            let s = rng.gen_range(0.0..0.1) * paint.width;
-            rt = shake(rt, s, &mut rng);
-          }
-          rt = path_subdivide_to_curve(&rt, 1, 0.7);
-          rt = path_subdivide_to_curve(&rt, 1, 0.8);
-
-          let size = rng.gen_range(0.04..0.08) * width;
-          let step = rng.gen_range(1.0..2.0);
-          let count =
-            4 + (rng.gen_range(0.0..20.0) * rng.gen_range(0.0..1.0)) as usize;
-          let angleoff = rng.gen_range(-0.3..0.3)
-            * rng.gen_range(0.0..1.0)
-            * rng.gen_range(0.0..1.0)
-            * rng.gen_range(-0.5f32..1.0).max(0.0);
-          routes.extend(
-            FlyingDragon::init(
-              &mut rng,
-              (i + 2) % 3,
-              &rt,
-              size,
-              step,
-              count,
-              angleoff,
-            )
-            .render(&mut paint),
-          );
-        }
+        routes.extend(dragon(
+          &mut rng, &mut paint, width, height, pad, framingw, *n,
+        ));
         perf.span_end("dragon", &routes);
       }
       _ => {}
@@ -267,7 +200,10 @@ pub fn render(
     if let Some(castle) = &mountain.castle {
       perf.span("castle", &routes);
       let ymax = pad + framingw + 0.02 * height;
-      let castle = Castle::init(&mut ctx, &mut rng, castle, yhorizon, ymax);
+      let extra_towers =
+        rng.gen_range(-1.0f32..20.0 * castle.width / width).max(0.0) as usize;
+      let castle =
+        Castle::init(&mut ctx, &mut rng, castle, yhorizon, ymax, extra_towers);
       routes.extend(castle.render(&mut ctx, &mut rng, &mut paint));
       perf.span_end("castle", &routes);
     }
@@ -472,6 +408,7 @@ fn sandbox<R: Rng>(
   */
 }
 
+/*
 fn debug_weight_map(
   weightmap: &WeightMap,
   clr: usize,
@@ -511,5 +448,68 @@ fn debug_weight_map(
     x += weightmap.precision;
   }
 
+  routes
+}
+*/
+
+fn dragon<R: Rng>(
+  rng: &mut R,
+  paint: &mut PaintMask,
+  width: f32,
+  height: f32,
+  pad: f32,
+  framingw: f32,
+  n: usize,
+) -> Polylines {
+  let mut routes = vec![];
+  for i in 0..n {
+    let bx = pad + framingw + 0.2 * width;
+    let by = pad + framingw + 0.2 * height;
+    let count = rng.gen_range(2..10);
+    let mut circles = packing(
+      rng,
+      500,
+      count,
+      1,
+      0.05 * width,
+      (bx, by, width - bx, height - by),
+      &|_| true,
+      0.01 * width,
+      0.1 * width,
+    );
+    circles.sort_by(|a, b| b.y.partial_cmp(&a.y).unwrap());
+
+    let mut rt = vec![];
+    for c in circles {
+      rt.push((c.x, c.y));
+    }
+
+    while rt.len() < 2 {
+      rt.push((
+        rng.gen_range(0.33..0.66) * paint.width,
+        rng.gen_range(0.2..0.5) * paint.height,
+      ));
+    }
+    for _ in 0..rng.gen_range(1..3) {
+      rt = path_subdivide_to_curve(&rt, 1, 0.66);
+      let s = rng.gen_range(0.0..0.1) * paint.width;
+      rt = shake(rt, s, rng);
+    }
+    rt = path_subdivide_to_curve(&rt, 1, 0.7);
+    rt = path_subdivide_to_curve(&rt, 1, 0.8);
+
+    let size = rng.gen_range(0.04..0.08) * width;
+    let step = rng.gen_range(1.0..2.0);
+    let count =
+      4 + (rng.gen_range(0.0..20.0) * rng.gen_range(0.0..1.0)) as usize;
+    let angleoff = rng.gen_range(-0.3..0.3)
+      * rng.gen_range(0.0..1.0)
+      * rng.gen_range(0.0..1.0)
+      * rng.gen_range(-0.5f32..1.0).max(0.0);
+    routes.extend(
+      FlyingDragon::init(rng, (i + 2) % 3, &rt, size, step, count, angleoff)
+        .render(paint),
+    );
+  }
   routes
 }

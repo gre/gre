@@ -157,7 +157,7 @@ impl MedievalSky {
         * rng.gen_range(0.0..1.0);
 
       let perlin = Perlin::new(rng.gen());
-      let clr = rng.gen_range(0..2);
+      let clr = if rng.gen_bool(0.3) { 0 } else { 1 };
       for c in circles {
         let v = perlin.get([c.x as f64 * f, c.y as f64 * f * 3.0]) as f32
           - smoothstep(pad, bound1.3, c.y) * 0.2

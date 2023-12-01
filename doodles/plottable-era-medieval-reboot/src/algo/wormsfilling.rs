@@ -24,6 +24,7 @@ pub struct WormsFilling {
   pub freq: f32,
   pub seed: f64,
   pub angle_precision: f32,
+  pub precision: f32,
 }
 impl WormsFilling {
   // new
@@ -38,6 +39,7 @@ impl WormsFilling {
     let min_weight = 1.;
     let freq = 0.05;
     let angle_precision = PI / 4.0;
+    let precision = 0.4;
     Self {
       rot,
       step,
@@ -49,6 +51,7 @@ impl WormsFilling {
       freq,
       seed,
       angle_precision,
+      precision,
     }
   }
 
@@ -69,7 +72,7 @@ impl WormsFilling {
       }
     };
     let coloring = |_: &Vec<(f32, f32)>| clr;
-    let precision = 0.4;
+    let precision = self.precision;
     let search_max = rng.gen_range(5..10);
     self.fill(rng, &f, bound, &coloring, precision, iterations, search_max)
   }

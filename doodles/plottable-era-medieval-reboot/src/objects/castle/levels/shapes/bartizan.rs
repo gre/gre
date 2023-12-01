@@ -1,7 +1,7 @@
+use super::super::{Floor, Level, LevelParams, RenderItem};
 use super::{
   roof::{Roof, RoofParams},
   wall::{Wall, WallParams},
-  Floor, Level, LevelParams, RenderItem,
 };
 use crate::{
   algo::{

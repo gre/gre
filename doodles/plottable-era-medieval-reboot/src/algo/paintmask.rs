@@ -1,8 +1,6 @@
 use crate::algo::math2d::*;
 use crate::algo::polygon::*;
 
-use super::packing::VCircle;
-
 /**
  * LICENSE CC BY-NC-ND 4.0
  * Author: greweb – 2023 – Plottable Era: (II) Medieval
@@ -315,10 +313,6 @@ impl PaintMask {
       self.height,
       false,
     );
-  }
-
-  pub fn paint_vcircle(&mut self, c: &VCircle) {
-    self.paint_circle(c.x, c.y, c.r);
   }
 
   pub fn paint_polygon(&mut self, polygon: &Vec<(f32, f32)>) {

@@ -1,7 +1,7 @@
 pub mod bandpattern;
 pub mod framing;
 
-use crate::algo::paintmask::PaintMask;
+use crate::{algo::paintmask::PaintMask, global::GlobalCtx};
 use bandpattern::*;
 use framing::*;
 use rand::prelude::*;
@@ -13,6 +13,7 @@ use rand::prelude::*;
 
 pub fn medieval_frame<R: Rng>(
   rng: &mut R,
+  ctx: &GlobalCtx,
   mask: &mut PaintMask,
   width: f32,
   height: f32,
@@ -25,31 +26,45 @@ pub fn medieval_frame<R: Rng>(
   let p = innerp;
   let m = pad;
   let wmul = rng.gen_range(0.9..1.2);
-  let (pattern, strokew): (Box<dyn BandPattern>, f32) =
-    match rng.gen_range(0..5) {
-      0 => (Box::new(lrect::MedievalBandLRectPattern::new()), 0.08 * p),
-      1 => (
+  let v: Option<(Box<dyn BandPattern>, f32)> =
+    match rng.gen_range(0.0..6.5) as usize {
+      0 => Some((
+        Box::new(lrect::MedievalBandLRectPattern::new()),
+        rng.gen_range(0.06..0.1) * p,
+      )),
+      1 => Some((
         Box::new(feather::MedievalBandFeatherTrianglePattern::new()),
-        0.06 * p,
-      ),
-      2 => (Box::new(fork::MedievalBandForkPattern::new()), 0.06 * p),
-      3 => (Box::new(comb::MedievalBandComb::new()), 0.04 * p),
-      4 => (Box::new(curve::MedievalBandCurvePattern::new()), 0.04 * p),
-      _ => (
-        Box::new(concentric::MedievalBandConcentric::new(2)),
-        0.08 * p,
-      ),
+        rng.gen_range(0.05..0.07) * p,
+      )),
+      2 => Some((
+        Box::new(fork::MedievalBandForkPattern::new()),
+        rng.gen_range(0.05..0.07) * p,
+      )),
+      3 => Some((
+        Box::new(comb::MedievalBandComb::new()),
+        rng.gen_range(0.03..0.06) * p,
+      )),
+      4 => Some((
+        Box::new(curve::MedievalBandCurvePattern::new()),
+        rng.gen_range(0.03..0.06) * p,
+      )),
+      5 => Some((
+        Box::new(concentric::MedievalBandConcentric::new(rng.gen_range(1..4))),
+        rng.gen_range(0.05..0.2) * p,
+      )),
+      _ => None,
     };
   let iterations = 6000;
   routes.extend(framing(
     rng,
+    ctx,
     mask,
     clr,
     (pad, pad, width - pad, height - pad),
-    pattern.as_ref(),
+    v,
     p,
     m,
-    strokew * wmul,
+    wmul,
     3.0,
     iterations,
   ));

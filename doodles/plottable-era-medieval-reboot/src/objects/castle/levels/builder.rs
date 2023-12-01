@@ -1,13 +1,15 @@
 use super::{
-  bartizan::Bartizan,
-  bell::Bell,
-  merlon::Merlon,
-  pillars::Pillars,
   poles::PoleKind,
-  roof::RoofParams,
-  wall::{Wall, WallParams},
-  walltransition::WallTransition,
-  zigzaggrid::ZigZagGrid,
+  shapes::{
+    bartizan::Bartizan,
+    bell::Bell,
+    merlon::Merlon,
+    pillars::Pillars,
+    roof::{Roof, RoofParams},
+    wall::{Wall, WallParams},
+    walltransition::WallTransition,
+    zigzaggrid::ZigZagGrid,
+  },
   Floor, Level, LevelParams, RenderItem,
 };
 use crate::{
@@ -19,7 +21,7 @@ use crate::{
       flag::Flag,
       human::{HeadShape, HoldableObject, Human},
     },
-    castle::{self, levels::roof::Roof},
+    mountains::CastleGrounding,
   },
 };
 use rand::prelude::*;
@@ -31,7 +33,13 @@ use std::{collections::HashMap, f32::consts::PI};
  */
 
 pub struct GlobalCastleProperties {
-  pub scale: f32,
+  pub extra_towers: usize,
+  // ybase is where the chapel foundation need to start
+  pub ybase: f32,
+  // where we absolutely need to stop building
+  pub ymax: f32,
+  //
+  pub grounding: CastleGrounding,
   pub reference_roof_params: RoofParams,
   pub light_x_direction: f32,
   // TODO we could give in param a probabilistic config
@@ -41,33 +49,39 @@ impl GlobalCastleProperties {
   pub fn rand<R: Rng>(
     rng: &mut R,
     ctx: &GlobalCtx,
-    scale: f32,
-    origin: (f32, f32),
+    grounding: &CastleGrounding,
+    ybase: f32,
+    ymax: f32,
+    extra_towers: usize,
   ) -> Self {
     let reference_roof_params = RoofParams::rand(rng, ctx);
-    let dx = origin.0 - ctx.sun_xpercentage_pos * ctx.width;
+    let dx = grounding.position.0 - ctx.sun_xpercentage_pos * ctx.width;
     let light_x_direction = (dx / (0.1 * ctx.width)).max(-1.0).min(1.0);
     Self {
-      scale,
+      grounding: grounding.clone(),
       reference_roof_params,
       light_x_direction,
+      ybase,
+      ymax,
+      extra_towers,
     }
   }
 }
 
 fn rec_build<R: Rng>(
-  toplevels: usize,
+  rec_level: usize,
   rng: &mut R,
   ctx: &mut GlobalCtx,
   paint: &mut PaintMask,
   castleprops: &GlobalCastleProperties,
   origin: (f32, f32),
   width: f32,
-  ybase: f32,
-  ymax: f32,
-  scale: f32,
   objects: &mut HashMap<usize, Box<dyn Renderable<R>>>,
 ) -> Vec<RenderItem> {
+  let ybase = castleprops.ybase;
+  let ymax = castleprops.ymax;
+  let scale = castleprops.grounding.scale;
+
   let mut splits = vec![];
   if width < 20.0 * scale {
     let count = (rng.gen_range(0.0..3.0) * rng.gen_range(0.0..1.0)) as usize;
@@ -78,13 +92,14 @@ fn rec_build<R: Rng>(
 
   let floor = Floor::new(origin, width, splits, false);
 
-  let max_levels = rng.gen_range(3..6);
+  let initial_h = origin.1 - ymax;
+  let max_levels = rng.gen_range(2..16);
+  let grow_factor = 1.0 / (max_levels as f32);
+  let grow_constant = rng.gen_range(0.0..0.2) * initial_h;
 
   let regular_tower_width = 6.0 * scale;
   let minw = 0.6 * regular_tower_width;
   let minh = 4.0 * scale;
-
-  let initial_h = origin.1 - ymax;
 
   let mut params = LevelParams {
     tower_seed: rng.gen(),
@@ -139,7 +154,7 @@ fn rec_build<R: Rng>(
   let mut possible_bg_human_positions = vec![];
   let mut possible_pole_positions = vec![];
 
-  // TODO in future i'm not sure we should be driven by max_levels, we could increase with a random size and determine appropriate time to stop?
+  // TODO should we be driven by max_levels? i think it's better to climb until we can but a probability to stop.
   for l in 0..max_levels {
     // We determine the next possible shape to do
     let is_first = l == 0;
@@ -162,7 +177,7 @@ fn rec_build<R: Rng>(
       .collect::<Vec<_>>();
     if choices.is_empty() {
       // RECURSIVE BUILD UP
-      if toplevels == 0 || rng.gen_bool(0.8) {
+      if rec_level == 0 || rng.gen_bool(0.8) {
         // on floor 1, we can have the opportinity to split into multiple towers
         let percent = rng.gen_range(0.7..0.9);
         let allw = params.floor.width;
@@ -195,36 +210,36 @@ fn rec_build<R: Rng>(
           let m = remains / divs;
           let mut wsum = 0;
           for (weight, zordermul) in splits {
-            let width = m * weight as f32;
-            let pos = params.floor.pos;
-            let origin = (
-              pos.0 - allw / 2.0
-                + (wsum as f32 + weight as f32 / 2.0) * allw / divs,
-              pos.1,
-            );
-            let tower = rec_build(
-              toplevels + 1,
-              rng,
-              ctx,
-              paint,
-              castleprops,
-              origin,
-              width,
-              ybase,
-              ymax,
-              scale,
-              objects,
-            );
-            // we are remapping the zorder in order to integrate in the bigger picture.
-            let tower = tower
-              .into_iter()
-              .map(|mut item| {
-                item.zorder += 10.0 * zordermul;
-                item
-              })
-              .collect::<Vec<_>>();
+            if rng.gen_bool(0.8) {
+              let width = m * weight as f32;
+              let pos = params.floor.pos;
+              let origin = (
+                pos.0 - allw / 2.0
+                  + (wsum as f32 + weight as f32 / 2.0) * allw / divs,
+                pos.1,
+              );
+              let tower = rec_build(
+                rec_level + 1,
+                rng,
+                ctx,
+                paint,
+                castleprops,
+                origin,
+                width,
+                objects,
+              );
+              // we are remapping the zorder in order to integrate in the bigger picture.
+              let tower = tower
+                .into_iter()
+                .map(|mut item| {
+                  item.zorder += 10.0 * zordermul;
+                  item
+                })
+                .collect::<Vec<_>>();
 
-            items.extend(tower);
+              items.extend(tower);
+            }
+
             wsum += weight;
           }
           break;
@@ -243,9 +258,9 @@ fn rec_build<R: Rng>(
     if params.max_height <= minh || params.floor.width <= minw {
       break;
     }
-    params.preferrable_height =
-      ((rng.gen_range(0.8..1.0) / (max_levels as f32 + 1.0)) * initial_h)
-        .min(params.max_height);
+    params.preferrable_height = (grow_constant
+      + grow_factor * (params.floor.pos.1 - ymax))
+      .min(params.max_height);
 
     let level: Box<dyn Level> = match levelkind {
       0 => {
@@ -256,6 +271,18 @@ fn rec_build<R: Rng>(
       1 => {
         let mut wallparams = WallParams::new();
         wallparams.fill_to_lowest_y_allowed = l == 0;
+
+        let is_main_floor = l == 0 && rec_level == 0;
+        if is_main_floor {
+          wallparams.with_door = castleprops.grounding.main_door_pos;
+          for &m in castleprops.grounding.moats.iter() {
+            if m.0 .0 < origin.0 {
+              wallparams.with_left_moat = Some(m);
+            } else {
+              wallparams.with_right_moat = Some(m);
+            }
+          }
+        }
 
         Box::new(Wall::init(rng, paint, &params, &wallparams))
       }
@@ -284,6 +311,17 @@ fn rec_build<R: Rng>(
     } else {
       break;
     }
+  }
+
+  if !params.floor.is_closed {
+    // closing with a simple line
+    let p = params.floor.pos;
+    let w = params.floor.width;
+    items.push(RenderItem::new(
+      vec![(params.clr, vec![(p.0 - w / 2.0, p.1), (p.0 + w / 2.0, p.1)])],
+      vec![],
+      params.level_zorder + 0.5,
+    ))
   }
 
   for spawn in possible_bg_human_positions {
@@ -355,44 +393,61 @@ pub fn build_castle<R: Rng>(
   ctx: &mut GlobalCtx,
   paint: &mut PaintMask,
   castleprops: &GlobalCastleProperties,
-  origin: (f32, f32),
-  width: f32,
-  ybase: f32,
-  ymax: f32,
-  scale: f32,
 ) -> Polylines {
-  let mut objects = HashMap::new();
-  let mut items = rec_build(
-    0,
-    rng,
-    ctx,
-    paint,
-    castleprops,
-    origin,
-    width,
-    ybase,
-    ymax,
-    scale,
-    &mut objects,
-  );
-
-  items.sort();
-
+  let halo = 1.4;
   let mut routes = vec![];
-  for item in &items {
-    routes.extend(item.render(paint));
-    if let Some(id) = item.foreign_id {
-      if let Some(obj) = objects.get(&id) {
-        routes.extend(obj.render(rng, paint));
+
+  // Build the main castle
+  {
+    let mut objects = HashMap::new();
+    let mut items = rec_build(
+      0,
+      rng,
+      ctx,
+      paint,
+      castleprops,
+      castleprops.grounding.position,
+      castleprops.grounding.width,
+      &mut objects,
+    );
+    items.sort();
+    for item in &items {
+      routes.extend(item.render(paint));
+      if let Some(id) = item.foreign_id {
+        if let Some(obj) = objects.get(&id) {
+          routes.extend(obj.render(rng, paint));
+        }
       }
+    }
+    // we also create a halo cropping around castle
+    for (_, route) in &routes {
+      paint.paint_polyline(route, halo);
     }
   }
 
-  // halo around the tower
-  let halo = 1.0;
-  for item in items {
-    for poly in &item.polygons {
-      paint.paint_polyline(poly, halo);
+  // build extra towers
+  for _ in 0..castleprops.extra_towers {
+    let mut objects = HashMap::new();
+    let width = rng.gen_range(0.2..0.5) * castleprops.grounding.width;
+    let mut origin = castleprops.grounding.position;
+    origin.0 +=
+      rng.gen_range(-0.5..0.5) * (castleprops.grounding.width - width);
+    let mut items =
+      rec_build(1, rng, ctx, paint, castleprops, origin, width, &mut objects);
+    items.sort();
+
+    for item in &items {
+      routes.extend(item.render(paint));
+      if let Some(id) = item.foreign_id {
+        if let Some(obj) = objects.get(&id) {
+          routes.extend(obj.render(rng, paint));
+        }
+      }
+    }
+
+    // we also create a halo cropping around castle
+    for (_, route) in &routes {
+      paint.paint_polyline(route, halo);
     }
   }
 
