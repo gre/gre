@@ -279,8 +279,8 @@ impl MountainsV2 {
           let mut moats = vec![];
 
           let scale = 1.0
-            + rng.gen_range(-0.2..0.5) * rng.gen_range(0.0..1.0)
-            + rng.gen_range(0.0..(2.0 * castlewidth / width));
+            + rng.gen_range(-0.2..0.4) * rng.gen_range(0.0..1.0)
+            + rng.gen_range(0.0..(1.0 * castlewidth / width));
 
           let holewidth = scale * rng.gen_range(0.03..0.05) * width;
           let holeheight = rng.gen_range(0.03..0.07) * width;

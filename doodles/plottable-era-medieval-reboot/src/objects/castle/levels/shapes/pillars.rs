@@ -1,5 +1,5 @@
 use super::super::{Floor, Level, LevelParams, RenderItem};
-use crate::algo::math1d::mix;
+use crate::{algo::math1d::mix, objects::army::relic::Relic};
 use rand::prelude::*;
 
 /**
@@ -31,7 +31,10 @@ impl Pillars {
       pillarw + rng.gen_range(-0.1f32..0.2).max(0.0) * params.floor.width;
     let w = params.floor.width - pad * 2.0;
     let neww = mix(w, params.floor.width, rng.gen_range(0.0..1.0));
-    let count = (w / (pillarw * wratio)).max(2.0) as usize;
+    let count =
+      (rng.gen_range(0.5..1.2) * w / (pillarw * wratio)).max(2.0) as usize;
+
+    let with_relic = w > 5.0 * s && rng.gen_bool(0.5);
 
     let y = o.1;
     let y2 = o.1 - h;
@@ -70,6 +73,14 @@ impl Pillars {
 
     // ceil
     routes.push((clr, vec![(o.0 - neww / 2., y2), (o.0 + neww / 2., y2)]));
+
+    if with_relic {
+      let origin = (o.0, y - 0.5 * s);
+      let filling = 2.0;
+      let relic = Relic::init(rng, origin, w, 0.0, filling);
+      let (routes, polygons) = relic.render_routes_polys();
+      items.push(RenderItem::new(routes, polygons, zorder - 0.1));
+    }
 
     items.push(RenderItem::new(routes, polygons, zorder));
 

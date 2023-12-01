@@ -630,7 +630,11 @@ impl ArmyOnMountain {
               } else {
                 Some(HoldableObject::Club)
               };
-              let clr = rng.gen_range(0..2);
+              let clr = if mainclr == 0 {
+                rng.gen_range(0..2)
+              } else {
+                mainclr
+              };
               let posture =
                 HumanPosture::from_holding(rng, xflip, leftobj, rightobj);
               let human = Human::init(

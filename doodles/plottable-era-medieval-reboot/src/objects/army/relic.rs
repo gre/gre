@@ -65,6 +65,10 @@ impl Relic {
     }
   }
 
+  pub fn render_routes_polys(&self) -> (Polylines, Vec<Vec<(f32, f32)>>) {
+    (self.routes.clone(), self.polys.clone())
+  }
+
   pub fn render(&self, paint: &mut PaintMask) -> Polylines {
     let routes = regular_clip(&self.routes, paint);
     for poly in &self.polys {

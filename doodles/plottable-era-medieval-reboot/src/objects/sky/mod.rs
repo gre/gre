@@ -311,7 +311,7 @@ impl MedievalSky {
       let mut rts = vec![];
       let mut y = 0.0;
       let incr = rng.gen_range(0.006..0.012) * width;
-      let clr = if rng.gen_bool(0.3) { 0 } else { 1 };
+      let clr = if rng.gen_bool(0.2) { 0 } else { 1 };
       while y < height {
         rts.push((clr, vec![(0.0, y), (width, y)]));
         y += incr;
@@ -320,7 +320,13 @@ impl MedievalSky {
     }
 
     if should_rain {
-      let clr = rng.gen_range(0..2);
+      let clr = if rng.gen_bool(0.8) {
+        1
+      } else if rng.gen_bool(0.99) {
+        0
+      } else {
+        2
+      };
       let width = paint.width;
       let height = paint.height;
       let fromlen = rng.gen_range(0.001..0.01) * width;
