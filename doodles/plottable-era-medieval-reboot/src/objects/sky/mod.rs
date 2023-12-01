@@ -12,12 +12,15 @@ use self::{
 use crate::{
   algo::{
     clipping::regular_clip,
+    math1d::{mix, smoothstep},
     packing::{packing, VCircle},
     paintmask::PaintMask,
-    shapes::circle_route,
+    polylines::Polylines,
+    shapes::{circle_route, spiral_optimized},
   },
   global::{GlobalCtx, Special},
 };
+use noise::*;
 use rand::prelude::*;
 use std::f32::consts::PI;
 
@@ -42,6 +45,7 @@ pub struct MedievalSky {
   pub should_rain: bool,
   pub should_cloud_rays: bool,
   pub stars: Vec<Star>,
+  pub routes: Polylines,
 }
 
 impl MedievalSky {
@@ -55,7 +59,7 @@ impl MedievalSky {
     pad: f32,
   ) -> Self {
     let sun_circle = VCircle::new(
-      width * rng.gen_range(0.4..0.6),
+      width * ctx.sun_xpercentage_pos,
       height * rng.gen_range(0.1..0.3),
       width * rng.gen_range(0.07..0.1),
     );
@@ -88,7 +92,7 @@ impl MedievalSky {
     let desired_eagles = if ctx.specials.contains(&Special::EaglesAttack) {
       rng.gen_range(60..100)
     } else {
-      (rng.gen_range(-0.2f32..1.0)
+      (rng.gen_range(-1.0f32..1.0)
         * rng.gen_range(0.2..1.0)
         * rng.gen_range(0.0..20.0))
       .max(0.0) as usize
@@ -97,7 +101,12 @@ impl MedievalSky {
     let should_sun_spiral = !ctx.night_time && rng.gen_bool(0.6);
     let should_rain =
       !ctx.night_time && !should_sun_spiral && rng.gen_bool(0.4);
-    let should_have_stars = ctx.night_time && rng.gen_bool(0.8);
+    let should_have_stars = ctx.night_time && rng.gen_bool(0.7);
+    // ref to https://greweb.me/plots/1163
+    let should_uh_oh_sky = !should_sun_spiral
+      && !should_rain
+      && !should_have_stars
+      && rng.gen_bool(0.5);
     let should_moon = ctx.night_time;
 
     let mut stars = vec![];
@@ -127,6 +136,48 @@ impl MedievalSky {
       }
     }
 
+    let mut routes = vec![];
+    if should_uh_oh_sky {
+      let pad = rng.gen_range(0.5..2.0);
+      let min = pad + rng.gen_range(0.8..1.0);
+      let max = min + rng.gen_range(0.5..2.0);
+      let circles = packing(
+        rng,
+        50000,
+        1000,
+        1,
+        pad,
+        bound1,
+        &|c| !skysafemask1.is_painted(c.pos()),
+        min,
+        max,
+      );
+      let f = rng.gen_range(0.0..0.3)
+        * rng.gen_range(0.0..1.0)
+        * rng.gen_range(0.0..1.0);
+
+      let perlin = Perlin::new(rng.gen());
+      let clr = rng.gen_range(0..2);
+      for c in circles {
+        let v = perlin.get([c.x as f64 * f, c.y as f64 * f * 3.0]) as f32
+          - smoothstep(pad, bound1.3, c.y) * 0.2
+          + rng.gen_range(-0.1..0.1);
+        if v > 0.0 {
+          if v > 0.35 {
+            let r = c.r * 1.1;
+            routes.push((clr, spiral_optimized(c.x, c.y, r, 1.3 - v, 0.01)));
+            routes.push((clr, circle_route((c.x, c.y), c.r, 32)));
+          } else {
+            let r = mix(0.2, c.r, smoothstep(0.0, 0.3, v));
+            routes.push((clr, vec![(c.x - r, c.y), (c.x + r, c.y)]));
+            if v > 0.15 {
+              routes.push((clr, vec![(c.x, c.y - r), (c.x, c.y + r)]));
+            }
+          }
+        }
+      }
+    }
+
     let should_cloud_rays = !should_rain
       && !should_sun_spiral
       && stars.is_empty()
@@ -148,6 +199,7 @@ impl MedievalSky {
       should_rain,
       should_cloud_rays,
       stars,
+      routes,
     }
   }
   pub fn render<R: Rng>(
@@ -287,6 +339,8 @@ impl MedievalSky {
       );
       routes.extend(rain.render(paint));
     }
+
+    routes.extend(regular_clip(&self.routes, paint));
 
     routes
   }

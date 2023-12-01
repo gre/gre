@@ -25,6 +25,7 @@ pub struct Feature {
   pub paper: String,     // which paper is used
   pub specials: String,  // which specials are used
   pub day_time: String,
+  pub castle: String,
 }
 
 #[derive(PartialEq, Eq, Hash)]
@@ -49,6 +50,9 @@ pub struct GlobalCtx {
   pub precision: f32,
   pub specials: HashSet<Special>,
   pub night_time: bool,
+  pub full_castle: bool,
+
+  pub sun_xpercentage_pos: f32,
 
   pub destruction_map: WeightMap,
 
@@ -103,7 +107,7 @@ impl GlobalCtx {
       specials.insert(Special::Cyclopes);
     }
 
-    let dragon_proba_mul = if paper == RED_PAPER { 1.0 } else { 0.1 };
+    let dragon_proba_mul = if paper == RED_PAPER { 1.0 } else { 0.08 };
 
     if rng.gen_bool(0.4 * dragon_proba_mul)
       && matches!(attackers, Blazon::Dragon)
@@ -138,11 +142,17 @@ impl GlobalCtx {
       }
     }
 
+    let sun_xpercentage_pos =
+      0.5 + rng.gen_range(-0.3..0.3) * rng.gen_range(0.0..1.0);
+    let full_castle = rng.gen_bool(0.04);
+
     Self {
       palette,
       width,
       height,
       precision,
+      full_castle,
+      sun_xpercentage_pos,
       specials,
       night_time,
       destruction_map,
@@ -187,6 +197,11 @@ impl GlobalCtx {
         "Night".to_string()
       } else {
         "Day".to_string()
+      },
+      castle: if self.full_castle {
+        "Huge".to_string()
+      } else {
+        "Regular".to_string()
       },
       specials: self
         .specials

@@ -70,7 +70,7 @@ impl Palette {
       * rng.gen_range(0.4..1.0)
       * rng.gen_range(0.0..1.0)
       // re-equilibrate the distribution on the 2 first choices
-      + rng.gen_range(0.0..0.8))
+      + rng.gen_range(0.0..1.0))
     .floor() as usize
       % papers_choices;
 

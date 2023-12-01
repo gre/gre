@@ -123,7 +123,7 @@ pub fn render(
       Special::Dragon(n) => {
         perf.span("dragon", &routes);
         for i in 0..*n {
-          let bx = pad + framingw + 0.1 * width;
+          let bx = pad + framingw + 0.2 * width;
           let by = pad + framingw + 0.2 * height;
           let count = rng.gen_range(2..10);
           let mut circles = packing(
@@ -146,7 +146,7 @@ pub fn render(
 
           while rt.len() < 2 {
             rt.push((
-              rng.gen_range(0.3..0.7) * paint.width,
+              rng.gen_range(0.33..0.66) * paint.width,
               rng.gen_range(0.2..0.5) * paint.height,
             ));
           }
@@ -198,7 +198,7 @@ pub fn render(
 
   let mask_with_framing = paint.clone();
 
-  let yhorizon = 0.8 * height; // rng.gen_range(0.5..0.8) * height; // TODO rework randomness
+  let yhorizon = rng.gen_range(0.5..0.8) * height; // TODO rework randomness
 
   //  mountains
   perf.span("mountains_front", &routes);
@@ -223,8 +223,15 @@ pub fn render(
   perf.span("mountains", &routes);
   let ymax = mix(0.0, yhorizon, 0.6);
   let count = rng.gen_range(2..8);
-  let mountains =
-    MountainsV2::rand(&mut rng, 0, width, height, yhorizon, ymax, count);
+  let first_is_second = ctx.palette.inks[0] == ctx.palette.inks[1];
+  let countextra = if rng.gen_bool(if first_is_second { 0.01 } else { 0.2 }) {
+    rng.gen_range(1..10)
+  } else {
+    0
+  };
+  let mountains = MountainsV2::rand(
+    &mut rng, &ctx, 0, width, height, yhorizon, ymax, count, countextra,
+  );
   perf.span_end("mountains", &routes);
 
   let army: ArmyOnMountain = ArmyOnMountain::init(attacker_house);

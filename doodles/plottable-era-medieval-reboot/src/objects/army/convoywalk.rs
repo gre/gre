@@ -26,6 +26,7 @@ pub struct ConvoyWalk {
 impl ConvoyWalk {
   pub fn init<R: Rng>(
     _rng: &mut R,
+    clr: usize,
     origin: (f32, f32),
     size: f32,
     angle: f32,
@@ -33,7 +34,6 @@ impl ConvoyWalk {
     extraratio: f32,
   ) -> Self {
     let mut routes = vec![];
-    let clr = 0;
 
     let spread = (0.5 + extraratio) * size;
     let dx = angle.cos() / 2.0;

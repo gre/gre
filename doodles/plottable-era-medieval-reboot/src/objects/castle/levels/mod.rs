@@ -17,7 +17,7 @@ use crate::algo::{
 };
 use std::cmp::Ordering;
 
-use self::poles::SpawnablePole;
+use self::{poles::SpawnablePole, roof::RoofParams};
 
 /**
  * LICENSE CC BY-NC-ND 4.0
@@ -87,6 +87,8 @@ impl RenderItem {
 pub struct LevelParams {
   // seed global for the tower.
   pub tower_seed: u32,
+  // reference for the roof shape
+  pub reference_roof_params: RoofParams,
   // index of the level
   pub level: usize,
   // a reference scale that is shared on the castle

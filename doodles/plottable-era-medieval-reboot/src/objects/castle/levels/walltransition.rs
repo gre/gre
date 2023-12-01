@@ -14,7 +14,7 @@ pub struct WallTransition {
 
 impl WallTransition {
   pub fn max_allowed_width(scale: f32) -> f32 {
-    10.0 * scale
+    21.0 * scale
   }
   pub fn init<R: Rng>(
     rng: &mut R,

@@ -52,7 +52,7 @@ impl PaintMask {
     let precision = self.precision;
     let width = (self.width / precision) as usize;
     let height = (self.height / precision) as usize;
-    let mut distances = vec![usize::MAX; self.mask.len()];
+    let mut distances = vec![usize::MAX / 2; self.mask.len()];
     // Forward pass
     for y in 0..height {
       for x in 0..width {

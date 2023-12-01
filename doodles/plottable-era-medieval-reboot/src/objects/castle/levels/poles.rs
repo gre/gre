@@ -1,6 +1,9 @@
 use rand::prelude::*;
 
-use crate::algo::shapes::circle_route;
+use crate::{
+  algo::shapes::circle_route,
+  global::{GlobalCtx, Special},
+};
 
 use super::RenderItem;
 
@@ -15,17 +18,24 @@ pub enum PoleKind {
   Circle,
   Cross,
   CrossCircle,
+  Spike,
 }
 
 impl PoleKind {
-  pub fn rand<R: Rng>(rng: &mut R) -> Self {
-    let i = rng.gen_range(0.0..4.0) * rng.gen_range(0.3..1.0);
-    match i as usize {
-      0 => Self::Flag,
-      1 => Self::Cross,
-      2 => Self::Circle,
-      _ => Self::CrossCircle,
-    }
+  pub fn rand<R: Rng>(rng: &mut R, ctx: &GlobalCtx) -> Self {
+    let choices = if ctx.specials.contains(&Special::Chinese) {
+      vec![Self::Flag, Self::Spike]
+    } else {
+      vec![
+        Self::Flag,
+        Self::Cross,
+        Self::Circle,
+        Self::CrossCircle,
+        Self::Spike,
+      ]
+    };
+    let i = rng.gen_range(0.0..choices.len() as f32) * rng.gen_range(0.3..1.0);
+    choices[i as usize].clone()
   }
 
   pub fn render(
@@ -68,6 +78,11 @@ impl PoleKind {
           .push((clr, vec![(o.0 - crossw / 2.0, y), (o.0 + crossw / 2.0, y)]));
         Some(RenderItem::new(routes, vec![poly], zindex))
       }
+      Self::Spike => Some(RenderItem::new(
+        vec![(clr, vec![o, (o.0, o.1 - size)])],
+        vec![],
+        zindex,
+      )),
       _ => None,
     }
   }

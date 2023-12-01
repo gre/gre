@@ -23,11 +23,11 @@ pub struct Bell {
 
 impl Bell {
   pub fn max_allowed_width(scale: f32) -> f32 {
-    10.0 * scale
+    14.0 * scale
   }
   pub fn init<R: Rng>(
-    rng: &mut R,
-    ctx: &GlobalCtx,
+    _rng: &mut R,
+    _ctx: &GlobalCtx,
     params: &LevelParams,
   ) -> Self {
     let mut items = vec![];

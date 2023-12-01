@@ -19,7 +19,7 @@ use crate::{
       flag::Flag,
       human::{HeadShape, HoldableObject, Human},
     },
-    castle::levels::roof::Roof,
+    castle::{self, levels::roof::Roof},
   },
 };
 use rand::prelude::*;
@@ -30,11 +30,37 @@ use std::{collections::HashMap, f32::consts::PI};
  * Author: greweb – 2023 – Plottable Era: (II) Medieval
  */
 
+pub struct GlobalCastleProperties {
+  pub scale: f32,
+  pub reference_roof_params: RoofParams,
+  pub light_x_direction: f32,
+  // TODO we could give in param a probabilistic config
+  // also most of the rng parts of the shape should be params
+}
+impl GlobalCastleProperties {
+  pub fn rand<R: Rng>(
+    rng: &mut R,
+    ctx: &GlobalCtx,
+    scale: f32,
+    origin: (f32, f32),
+  ) -> Self {
+    let reference_roof_params = RoofParams::rand(rng, ctx);
+    let dx = origin.0 - ctx.sun_xpercentage_pos * ctx.width;
+    let light_x_direction = (dx / (0.1 * ctx.width)).max(-1.0).min(1.0);
+    Self {
+      scale,
+      reference_roof_params,
+      light_x_direction,
+    }
+  }
+}
+
 fn rec_build<R: Rng>(
   toplevels: usize,
   rng: &mut R,
   ctx: &mut GlobalCtx,
   paint: &mut PaintMask,
+  castleprops: &GlobalCastleProperties,
   origin: (f32, f32),
   width: f32,
   ybase: f32,
@@ -42,14 +68,6 @@ fn rec_build<R: Rng>(
   scale: f32,
   objects: &mut HashMap<usize, Box<dyn Renderable<R>>>,
 ) -> Vec<RenderItem> {
-  // TODO we could give in param a probabilistic config
-  // also most of the rng parts of the shape should be params
-
-  /*
-  let mut level = SimpleWall::init(rng, ctx, params);
-  levels.push(Box::new(level) as Box<dyn Level>);
-  */
-
   let mut splits = vec![];
   if width < 20.0 * scale {
     let count = (rng.gen_range(0.0..3.0) * rng.gen_range(0.0..1.0)) as usize;
@@ -68,10 +86,9 @@ fn rec_build<R: Rng>(
 
   let initial_h = origin.1 - ymax;
 
-  // TODO depends on sun pos
-  let light_direction = rng.gen_range(-2.0f32..2.0).max(-1.0).min(1.0);
   let mut params = LevelParams {
     tower_seed: rng.gen(),
+    reference_roof_params: castleprops.reference_roof_params.clone(),
     level: 0,
     scaleref: scale,
     blazonclr: ctx.defendersclr,
@@ -81,7 +98,7 @@ fn rec_build<R: Rng>(
     level_zorder: 0.0,
     preferrable_height: 0.0,
     lowest_y_allowed: ybase,
-    light_x_direction: light_direction,
+    light_x_direction: castleprops.light_x_direction,
   };
 
   let level_max_allowed_width = vec![
@@ -99,7 +116,7 @@ fn rec_build<R: Rng>(
     // 0 roof
     vec![0],
     // 1 wall
-    vec![],
+    vec![1],
     // 2 wall transition
     vec![2],
     // 3 merlon
@@ -111,8 +128,7 @@ fn rec_build<R: Rng>(
     // 6 bartizans
     vec![3, 5, 6, 7],
     // 7 bell
-    vec![6],
-    // TODO stairs
+    vec![6, 7],
   ];
   let roof_choices = vec![0, 3];
   let first_only_choices = (1..2).collect::<Vec<_>>();
@@ -145,89 +161,83 @@ fn rec_build<R: Rng>(
       .cloned()
       .collect::<Vec<_>>();
     if choices.is_empty() {
+      // RECURSIVE BUILD UP
+      if toplevels == 0 || rng.gen_bool(0.8) {
+        // on floor 1, we can have the opportinity to split into multiple towers
+        let percent = rng.gen_range(0.7..0.9);
+        let allw = params.floor.width;
+        let remains = allw * percent;
+        if remains >= 2.0 * regular_tower_width {
+          let count = (rng.gen_range(0.8..1.2) * remains / regular_tower_width)
+            .max(2.0)
+            .min(10.0) as usize;
+
+          // find an interesting distribution of splits
+          let mut splits = Vec::new();
+          if rng.gen_bool(0.7) && count > 3 {
+            splits.push((1, -2.0));
+            splits.push((count - 2, -3.0));
+            splits.push((1, -2.0));
+          } else if rng.gen_bool(0.7) && count > 4 {
+            let h = count / rng.gen_range(2..4);
+            splits.push((h, -2.0));
+            splits.push((count - 2 * h, -3.0));
+            splits.push((h, -2.0));
+          } else {
+            for i in 0..count {
+              splits.push((1, -(i as f32) - 1.0));
+            }
+            splits.shuffle(rng);
+          }
+
+          // make the new floors
+          let divs = count as f32;
+          let m = remains / divs;
+          let mut wsum = 0;
+          for (weight, zordermul) in splits {
+            let width = m * weight as f32;
+            let pos = params.floor.pos;
+            let origin = (
+              pos.0 - allw / 2.0
+                + (wsum as f32 + weight as f32 / 2.0) * allw / divs,
+              pos.1,
+            );
+            let tower = rec_build(
+              toplevels + 1,
+              rng,
+              ctx,
+              paint,
+              castleprops,
+              origin,
+              width,
+              ybase,
+              ymax,
+              scale,
+              objects,
+            );
+            // we are remapping the zorder in order to integrate in the bigger picture.
+            let tower = tower
+              .into_iter()
+              .map(|mut item| {
+                item.zorder += 10.0 * zordermul;
+                item
+              })
+              .collect::<Vec<_>>();
+
+            items.extend(tower);
+            wsum += weight;
+          }
+          break;
+        }
+      }
+    }
+
+    if choices.is_empty() {
       break;
     }
     let i = rng.gen_range(0..choices.len());
     let levelkind = choices[i];
     forbidden_structure = forbidden_on_top_of[levelkind].clone();
-
-    // RECURSIVE HERE. TO BE OUT OF THE FUNCTION?
-
-    /*
-    if toplevels == 0 && l == 0
-      || l > 1 && (toplevels == 0 || rng.gen_bool(0.5))
-    {
-      // on floor 1, we can have the opportinity to split into multiple towers
-      let percent = if toplevels == 0 && l == 0 {
-        1.01
-      } else {
-        rng.gen_range(0.7..0.9)
-      };
-      let allw = params.floor.width;
-      let remains = allw * percent;
-      if remains >= 2.0 * regular_tower_width {
-        let count = (rng.gen_range(0.8..1.2) * remains / regular_tower_width)
-          .max(2.0)
-          .min(10.0) as usize;
-
-        // find an interesting distribution of splits
-        let mut splits = Vec::new();
-        if rng.gen_bool(0.7) && count > 3 {
-          splits.push((1, -2.0));
-          splits.push((count - 2, -3.0));
-          splits.push((1, -2.0));
-        } else if rng.gen_bool(0.7) && count > 4 {
-          let h = count / rng.gen_range(2..4);
-          splits.push((h, -2.0));
-          splits.push((count - 2 * h, -3.0));
-          splits.push((h, -2.0));
-        } else {
-          for i in 0..count {
-            splits.push((1, -(i as f32) - 1.0));
-          }
-          splits.shuffle(rng);
-        }
-
-        // make the new floors
-        let divs = count as f32;
-        let m = remains / divs;
-        let mut wsum = 0;
-        for (weight, zordermul) in splits {
-          let width = m * weight as f32;
-          let pos = params.floor.pos;
-          let origin = (
-            pos.0 - allw / 2.0
-              + (wsum as f32 + weight as f32 / 2.0) * allw / divs,
-            pos.1,
-          );
-          let tower = rec_build(
-            toplevels + 1,
-            rng,
-            ctx,
-            paint,
-            origin,
-            width,
-            ybase,
-            ymax,
-            scale,
-            objects,
-          );
-          // we are remapping the zorder in order to integrate in the bigger picture.
-          let tower = tower
-            .into_iter()
-            .map(|mut item| {
-              item.zorder += 10.0 * zordermul;
-              item
-            })
-            .collect::<Vec<_>>();
-
-          items.extend(tower);
-          wsum += weight;
-        }
-        break;
-      }
-    }
-    */
 
     // a leaf happens if there is not enough space. (TODO: we need to sometimes "close" with a ceil still...?)
     if params.max_height <= minh || params.floor.width <= minw {
@@ -239,8 +249,8 @@ fn rec_build<R: Rng>(
 
     let level: Box<dyn Level> = match levelkind {
       0 => {
-        // TODO in future it's shared.
-        let roofparams = RoofParams::rand(rng, ctx);
+        let roofparams =
+          RoofParams::from_reference(rng, ctx, &params.reference_roof_params);
         Box::new(Roof::init(&params, &roofparams))
       }
       1 => {
@@ -277,10 +287,17 @@ fn rec_build<R: Rng>(
   }
 
   for spawn in possible_bg_human_positions {
+    if rng.gen_bool(0.5) {
+      continue;
+    }
     let blazon = ctx.defenders;
     let blazonclr = ctx.defendersclr;
     let xflip = rng.gen_bool(0.5);
-    let lefthand = Some(HoldableObject::Flag);
+    let lefthand = Some(if rng.gen_bool(0.5) {
+      HoldableObject::LongBow(rng.gen_range(0.0..1.0))
+    } else {
+      HoldableObject::Flag
+    });
     let righthand = None;
     let head = HeadShape::NAKED;
     let posture = HumanPosture::from_holding(rng, xflip, lefthand, righthand);
@@ -306,7 +323,6 @@ fn rec_build<R: Rng>(
       let cloth_height_factor = rng.gen_range(0.4..0.5);
       let cloth_len_factor = rng.gen_range(0.5..1.0);
       let flagtoleft = true;
-      // FIXME this should global on the castle i think
       let flag = Flag::init(
         rng,
         0,
@@ -327,6 +343,7 @@ fn rec_build<R: Rng>(
 
   // TODO work on the destruction of items with the destruction map
   // we need to somehow preserve the items but move them as we go slicing things. might be tricky.
+  // cheap idea for destruction is to use worms filling and balance between real stroke and worms filling to have natural fragment that will appear...
 
   items.sort();
 
@@ -337,6 +354,7 @@ pub fn build_castle<R: Rng>(
   rng: &mut R,
   ctx: &mut GlobalCtx,
   paint: &mut PaintMask,
+  castleprops: &GlobalCastleProperties,
   origin: (f32, f32),
   width: f32,
   ybase: f32,
@@ -349,6 +367,7 @@ pub fn build_castle<R: Rng>(
     rng,
     ctx,
     paint,
+    castleprops,
     origin,
     width,
     ybase,
@@ -356,8 +375,6 @@ pub fn build_castle<R: Rng>(
     scale,
     &mut objects,
   );
-
-  // TODO work on the destruction of items with the destruction map
 
   items.sort();
 

@@ -3,10 +3,11 @@ use super::{
 };
 use crate::{
   algo::{math1d::mix, math2d::lerp_point, polylines::path_subdivide_to_curve},
-  global::GlobalCtx,
+  global::{GlobalCtx, Special},
 };
 use rand::prelude::*;
 
+#[derive(Clone)]
 pub struct RoofParams {
   // force color
   pub clr: Option<usize>,
@@ -18,28 +19,56 @@ pub struct RoofParams {
   pub pushdown: f32,
   // if Some, add a pole at the top of the roof
   pub pole_kind: Option<PoleKind>,
+  // if 1.0, roof ends with a spike, otherwise it's flag
+  pub spikyfactor: f32,
+  // max ratio of the roof height v the width
+  pub max_ratio: f32,
 }
 
-// TODO in Chinese mode, can we try to make the roof curved accordingly?
-
-// TODO gargoyles?
-
 impl RoofParams {
+  pub fn from_reference<R: Rng>(
+    rng: &mut R,
+    ctx: &GlobalCtx,
+    r: &RoofParams,
+  ) -> Self {
+    let randomized = Self::rand(rng, ctx);
+    let mut copy = r.clone();
+    copy.clr = randomized.clr;
+    copy.pole_kind = randomized.pole_kind;
+    copy
+  }
+
   pub fn rand<R: Rng>(rng: &mut R, ctx: &GlobalCtx) -> Self {
+    let clr = if rng.gen_bool(0.02) {
+      ctx.get_golden_color()
+    } else {
+      None
+    };
+    let mut curvyfactor = rng.gen_range(0.0..1.0) * rng.gen_range(-0.5..0.5);
+    let mut groww = rng.gen_range(-1.0f32..1.0).max(0.0);
+    let mut pushdown = rng.gen_range(0.0..1.0) * rng.gen_range(-0.1..0.1);
+    let pole_kind = if rng.gen_bool(0.8) {
+      Some(PoleKind::rand(rng, ctx))
+    } else {
+      None
+    };
+    let spikyfactor = 1.0;
+    let mut max_ratio = rng.gen_range(0.5..1.5);
+
+    if ctx.specials.contains(&Special::Chinese) {
+      curvyfactor = -0.3;
+      groww = 1.0;
+      pushdown = -0.1;
+      max_ratio = 0.4;
+    }
     Self {
-      clr: if rng.gen_bool(0.02) {
-        ctx.get_golden_color()
-      } else {
-        None
-      },
-      groww: rng.gen_range(-1.0f32..1.0).max(0.0),
-      curvyfactor: rng.gen_range(0.0..1.0) * rng.gen_range(-0.5..0.5),
-      pushdown: rng.gen_range(0.0..1.0) * rng.gen_range(-0.1..0.1),
-      pole_kind: if rng.gen_bool(0.8) {
-        Some(PoleKind::rand(rng))
-      } else {
-        None
-      },
+      clr,
+      groww,
+      curvyfactor,
+      pushdown,
+      pole_kind,
+      spikyfactor,
+      max_ratio,
     }
   }
 }
@@ -57,11 +86,9 @@ pub struct Roof {
 
 impl Roof {
   pub fn max_allowed_width(scale: f32) -> f32 {
-    10.0 * scale
+    18.0 * scale
   }
 
-  // TODO the shape of roof should be shared, so i think we need to move the rng into another param
-  // and try to remove the Rng out of the renderer.
   pub fn init(params: &LevelParams, roofparams: &RoofParams) -> Self {
     let mut items = vec![];
     let zorder = params.level_zorder;
@@ -72,13 +99,14 @@ impl Roof {
     let w = params.floor.width + groww * 3.0 * s;
     let toph = 0.0; // flag etc..
     let h = (params.preferrable_height - toph)
-      .max(3.0 * s)
-      .min(10.0 * s);
+      .min(10.0 * s)
+      .min(roofparams.max_ratio * w)
+      .max(3.0 * s);
 
     let mut routes = vec![];
     let mut polygons = vec![];
     let hw = w / 2.;
-    let hw2 = 0.3;
+    let hw2 = mix(w / 10., 0.3, roofparams.spikyfactor);
     let y1 = o.1;
     let y2 = o.1 - h;
     let roof_base = None;
@@ -127,18 +155,21 @@ impl Roof {
       routes.push((clr, path));
       bottom.push(a);
     }
+    if hw2 > 0.5 {
+      routes.push((clr, vec![p3, p4]))
+    };
     routes.push((clr, bottom.clone()));
     polygons.push(poly);
     items.push(RenderItem::new(routes, polygons, zorder));
 
     let mut pole_positions = vec![];
     if let Some(kind) = &roofparams.pole_kind {
-      pole_positions.push(SpawnablePole {
-        pos: (o.0, y2),
-        zorder: zorder - 0.1,
-        size: h / 5.0,
-        kind: kind.clone(),
-      });
+      pole_positions.push(SpawnablePole::new(
+        (o.0, y2),
+        zorder - 0.1,
+        h / 5.0,
+        kind.clone(),
+      ));
     }
 
     Self {

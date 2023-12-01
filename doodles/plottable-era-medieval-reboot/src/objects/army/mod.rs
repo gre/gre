@@ -107,7 +107,7 @@ impl ArmyOnMountain {
     let blazon = self.blazon;
     let mut renderables = Container::new();
 
-    let mainclr = 0;
+    let mainclr = mountain.clr;
     let blazonclr = 2;
 
     let mut noarmy = false;
@@ -212,7 +212,7 @@ impl ArmyOnMountain {
       }
     }
 
-    let clr = 0;
+    let clr = mainclr;
     let animals_count = rng.gen_range(0..10);
     for _i in 0..animals_count {
       let x = mix(first.0, last.0, rng.gen_range(0.0..1.0));
@@ -283,7 +283,8 @@ impl ArmyOnMountain {
       // we track a bunch of circle to avoid spawning people too close to each other
       let mut exclusion_mask = paint.clone_empty();
 
-      let first_castle = mountains.mountains.iter().find_map(|m| m.castle);
+      let first_castle =
+        mountains.mountains.iter().find_map(|m| m.castle.clone());
 
       if let Some(castle) = first_castle {
         let trebuchet_tries = (rng.gen_range(-4.0f32..4.0)
@@ -301,7 +302,7 @@ impl ArmyOnMountain {
         } else {
           0
         };
-        let clr = 0;
+        let clr = mainclr;
         let foliage_ratio =
           0.5 + rng.gen_range(0.0..0.5) * rng.gen_range(0.0..0.5);
         let bush_width_ratio = mix(foliage_ratio, 0.8, 0.5);
@@ -351,8 +352,15 @@ impl ArmyOnMountain {
 
           let extraratio = rng.gen_range(0.3..0.6);
 
-          let convoy =
-            ConvoyWalk::init(rng, (x, y), relicsize, ang, 1.0, extraratio);
+          let convoy = ConvoyWalk::init(
+            rng,
+            mainclr,
+            (x, y),
+            relicsize,
+            ang,
+            1.0,
+            extraratio,
+          );
 
           let mut monks = vec![];
 
@@ -398,7 +406,7 @@ impl ArmyOnMountain {
               let height = 0.1 * width;
               let action_percent = rng.gen_range(0.0..1.0);
               let xflip = x > castle.position.0;
-              let clr = 0;
+              let clr = mainclr;
               let trebuchet = Trebuchet::init(
                 rng,
                 origin,
@@ -434,7 +442,7 @@ impl ArmyOnMountain {
             let y2 = lookup_ridge(&ridge, x - 0.2 * h);
             let y = y.max(y1).max(y2);
             let origin = (x, y);
-            let clr = 0;
+            let clr = mainclr;
             let bridge_width = rng.gen_range(0.3..0.6) * h;
             let bridge_opening = rng.gen_range(0.0f32..2.0).min(1.0);
 
@@ -525,7 +533,7 @@ impl ArmyOnMountain {
           }
         }
 
-        let clr = 0;
+        let clr = mainclr;
         for _i in 0..warriors_sampling {
           let x = mix(first.0, last.0, rng.gen_range(0.1..0.9));
           let y =
@@ -565,7 +573,7 @@ impl ArmyOnMountain {
           }
         }
 
-        let clr = 0;
+        let clr = mainclr;
         for _i in 0..archers_sampling {
           let x = mix(first.0, last.0, rng.gen_range(0.1..0.9));
           let y =

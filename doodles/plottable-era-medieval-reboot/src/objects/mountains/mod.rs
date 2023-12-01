@@ -1,11 +1,13 @@
-use crate::algo::{
-  clipping::regular_clip,
-  math1d::mix,
-  math2d::{lookup_ridge, strictly_in_boundaries},
-  moving_average::moving_average_2d,
-  paintmask::PaintMask,
-  passage::Passage,
-  polylines::Polylines,
+use crate::{
+  algo::{
+    clipping::regular_clip,
+    math1d::mix,
+    math2d::{lookup_ridge, strictly_in_boundaries},
+    paintmask::PaintMask,
+    passage::Passage,
+    polylines::Polylines,
+  },
+  global::GlobalCtx,
 };
 use noise::*;
 use rand::prelude::*;
@@ -18,14 +20,15 @@ pub mod wall;
  * Author: greweb – 2023 – Plottable Era: (II) Medieval
  */
 
-#[derive(Clone, Copy)]
+#[derive(Clone)]
 pub struct CastleGrounding {
+  pub ridge: Vec<(f32, f32)>,
   pub position: (f32, f32),
   pub width: f32,
-  pub moats: (bool, bool),
 }
 
 pub struct Mountain {
+  pub clr: usize,
   // meta info for the objects we will need to draw inside mountains
   pub castle: Option<CastleGrounding>,
   pub ridge: Vec<(f32, f32)>,
@@ -55,12 +58,14 @@ pub struct MountainsV2 {
 impl MountainsV2 {
   pub fn rand<R: Rng>(
     rng: &mut R,
-    clr: usize,
+    ctx: &GlobalCtx,
+    mainclr: usize,
     width: f32,
     height: f32,
     yhorizon: f32,
     ymax: f32,
     count: usize,
+    count_behind: usize,
   ) -> Self {
     let bound = (0.0, 0.0, width, yhorizon);
     let seed = rng.gen_range(0.0..100.0);
@@ -74,7 +79,10 @@ impl MountainsV2 {
 
     let mut mountains = vec![];
 
-    for j in 0..count {
+    let secondcolor = (mainclr + 1) % 3;
+
+    for j in 0..count + count_behind {
+      let clr = if j < count { mainclr } else { secondcolor };
       let jf = j as f32 / ((count - 1) as f32);
       let mut routes: Polylines = Vec::new();
       let mut local_height_map: Vec<f32> = Vec::new();
@@ -87,9 +95,9 @@ impl MountainsV2 {
       } else {
         2.0 + (rng.gen_range(-1f32..8.0) * rng.gen_range(0.0..1.0)).max(0.0)
       };
-      let amp1 = rng.gen_range(-1.0f32..4.0).max(0.0) * rng.gen_range(0.0..1.0);
-      let amp2 = rng.gen_range(-1.0f32..4.0).max(0.0) * rng.gen_range(0.0..1.0);
-      let amp3 = rng.gen_range(-1.0f32..2.0).max(0.0) * rng.gen_range(0.0..1.0);
+      let amp1 = rng.gen_range(-1.0f32..5.0).max(0.0) * rng.gen_range(0.3..1.0);
+      let amp2 = rng.gen_range(-1.0f32..3.0).max(0.0) * rng.gen_range(0.3..1.0);
+      let amp3 = rng.gen_range(-1.0f32..2.0).max(0.0) * rng.gen_range(0.3..1.0);
       let center = rng.gen_range(0.2..0.8) * width;
 
       let stopy = mix(yhorizon, ymax, 0.2 + 0.8 * jf);
@@ -216,7 +224,7 @@ impl MountainsV2 {
         }
       }
 
-      let ridge = local_height_map
+      let ridge: Vec<(f32, f32)> = height_map
         .iter()
         .enumerate()
         .map(|(i, &y)| (i as f32 * precision, y))
@@ -226,11 +234,13 @@ impl MountainsV2 {
         // find a location for the castle
         // shape the mountain when needed
 
-        let smooth = (width * 0.1) as usize;
-        let smoothed_ridge = moving_average_2d(&ridge, smooth);
+        //let smooth = (width * 0.1) as usize;
+        //let smoothed_ridge = moving_average_2d(&ridge, smooth);
 
+        /*
         // take an interesting high point
         let mut castle_position = (width / 2.0, height);
+
         let borderypush = 0.3 * height;
         for p in smoothed_ridge.iter() {
           // formula to avoid borders
@@ -240,36 +250,84 @@ impl MountainsV2 {
             castle_position = *p;
           }
         }
+        */
 
-        if castle_position.1 > yhorizon {
-          // TODO in that case, we skip completely the castle?
-          castle_position.1 = yhorizon;
+        // TODO try to find the flattest area possible that is high enough.
+
+        let mut candidates = vec![];
+
+        let tries = rng.gen_range(1..20);
+        for _ in 0..tries {
+          // allow a crazy case where the width would be beyond the screen & we literally have a huge castle
+          let castle_width = if ctx.full_castle {
+            width * 1.5
+          } else {
+            rng.gen_range(0.2..0.8) * width
+          };
+          let xcastlepos = rng.gen_range(0.2..0.8) * width;
+
+          let ileft =
+            ((xcastlepos - castle_width / 2.0).max(0.0) / precision) as usize;
+          let iright = (((xcastlepos + castle_width / 2.0) / precision)
+            as usize)
+            .min(ridge.len() - 1);
+
+          let mut miny = yhorizon;
+          let mut maxy = 0.0;
+          for i in ileft..iright {
+            let p = ridge[i];
+            if p.1 < miny {
+              miny = p.1;
+            }
+            if p.1 > maxy {
+              maxy = p.1;
+            }
+          }
+
+          let castle_position = (xcastlepos, miny);
+
+          candidates.push((castle_position, castle_width, maxy - miny));
         }
 
-        // TODO we could vary this based on the mountain shape
-        let castle_width = rng.gen_range(0.25..0.35) * width;
+        candidates.sort_by(|a, b| {
+          let a = a.2;
+          let b = b.2;
+          if a < b {
+            std::cmp::Ordering::Less
+          } else if a > b {
+            std::cmp::Ordering::Greater
+          } else {
+            std::cmp::Ordering::Equal
+          }
+        });
 
-        /*
-        let leftx = castle_position.0 - castle_width / 2.0;
-        let righty = castle_position.0 + castle_width / 2.0;
-        */
-        // TODO: shape the mountain to flatten the area...
+        if let Some(&(position, width, _)) = candidates.iter().min_by(|a, b| {
+          let a = a.2;
+          let b = b.2;
+          if a < b {
+            std::cmp::Ordering::Less
+          } else if a > b {
+            std::cmp::Ordering::Greater
+          } else {
+            std::cmp::Ordering::Equal
+          }
+        }) {
+          // TODO we need to provide to the castle the ridge in order to determine internally where there can be doors
 
-        let castle_moats = (false, false);
-
-        Some(CastleGrounding {
-          //position: castle_position,
-          //width: castle_width,
-          position: (width / 2.0, castle_position.1),
-          width: width,
-          // TODO idea: in rare case, castle to take the whole space.
-          moats: castle_moats,
-        })
+          Some(CastleGrounding {
+            ridge: ridge.clone(),
+            position,
+            width,
+          })
+        } else {
+          None
+        }
       } else {
         None
       };
 
       mountains.push(Mountain {
+        clr,
         castle,
         ridge,
         yhorizon,

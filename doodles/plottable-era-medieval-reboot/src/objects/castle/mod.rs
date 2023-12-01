@@ -2,7 +2,12 @@ use crate::{algo::paintmask::PaintMask, global::GlobalCtx};
 use rand::prelude::*;
 
 use self::{
-  chapel::Chapel, levels::builder::build_castle, wall::CastleWall,
+  chapel::Chapel,
+  levels::{
+    builder::{build_castle, GlobalCastleProperties},
+    roof::RoofParams,
+  },
+  wall::CastleWall,
   walltower::CastleWallTower,
 };
 
@@ -58,6 +63,7 @@ impl Castle {
     ymax: f32,
   ) -> Self {
     let width = castle.width;
+    // TODO scale should be function of ratio of the space we have. but not only
     let scale = rng.gen_range(0.8..2.0);
     let wallh = rng.gen_range(0.3..0.8) * width;
 
@@ -96,20 +102,42 @@ impl Castle {
 
     let mut routes = vec![];
 
+    /*
     let mut x = 0.0;
     while x < width {
-      let w = rng.gen_range(0.05..0.3) * width;
+      let w = rng.gen_range(0.03..0.3) * width;
       let rts =
         build_castle(rng, ctx, paint, (x, pos.1), w, ybase, ymax, scale);
       routes.extend(rts);
       x += w * 1.2;
     }
-
-    /*
-    let rts =
-      build_castle(rng, ctx, paint, (pos.0, pos.1), width, ybase, ymax, scale);
-    routes.extend(rts);
     */
+
+    let castleprops = GlobalCastleProperties::rand(rng, ctx, scale, pos);
+
+    for _ in 0..2 {
+      let rts = build_castle(
+        rng,
+        ctx,
+        paint,
+        &castleprops,
+        pos,
+        width,
+        ybase,
+        ymax,
+        scale,
+      );
+      // we also create a halo cropping around castle
+      for (_, route) in &rts {
+        paint.paint_polyline(route, 1.0);
+      }
+      routes.extend(rts);
+    }
+
+    // we also create a halo cropping around castle
+    for (_, route) in &routes {
+      paint.paint_polyline(route, 2.0);
+    }
 
     /*
     let clr = self.clr;

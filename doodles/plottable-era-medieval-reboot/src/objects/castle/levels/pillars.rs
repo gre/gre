@@ -14,7 +14,7 @@ pub struct Pillars {
 
 impl Pillars {
   pub fn max_allowed_width(scale: f32) -> f32 {
-    10.0 * scale
+    15.0 * scale
   }
   pub fn init<R: Rng>(rng: &mut R, params: &LevelParams) -> Self {
     let mut items = vec![];

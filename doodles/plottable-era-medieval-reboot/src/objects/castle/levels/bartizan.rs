@@ -6,7 +6,7 @@ use super::{
 use crate::{
   algo::{
     math1d::{mix, smoothstep},
-    paintmask::{self, PaintMask},
+    paintmask::PaintMask,
   },
   global::GlobalCtx,
 };
@@ -24,7 +24,7 @@ pub struct Bartizan {
 
 impl Bartizan {
   pub fn max_allowed_width(scale: f32) -> f32 {
-    10.0 * scale
+    21.0 * scale
   }
   pub fn init<R: Rng>(
     rng: &mut R,
@@ -34,7 +34,8 @@ impl Bartizan {
   ) -> Self {
     let wallratio = rng.gen_range(0.5..0.7);
 
-    let roofparams = RoofParams::rand(rng, ctx);
+    let roofparams =
+      RoofParams::from_reference(rng, ctx, &params.reference_roof_params);
 
     let mut items = vec![];
     let zorder = params.level_zorder + 100.5; // in front of next level (many in advance to secure it)
@@ -55,7 +56,7 @@ impl Bartizan {
         w,
         h,
         zorder,
-        wallratio, // TODO direction that may shape the "triangle" to attach to the wall
+        wallratio,
         xf,
       ));
       // TODO spawn flag
@@ -92,19 +93,14 @@ fn make_bartizan<R: Rng>(
 ) -> Vec<RenderItem> {
   let mut items = vec![];
 
-  let mut params = LevelParams {
-    tower_seed: baseparams.tower_seed,
-    level: 0,
-    scaleref: 0.5 * baseparams.scaleref,
-    blazonclr: baseparams.blazonclr,
-    clr: baseparams.clr,
-    floor: Floor::new(o, w, vec![], false),
-    max_height: h,
-    preferrable_height: wallratio * h,
-    level_zorder: zorder,
-    lowest_y_allowed: baseparams.lowest_y_allowed,
-    light_x_direction: baseparams.light_x_direction,
-  };
+  let mut params = baseparams.clone();
+  params.level = 0;
+  params.scaleref *= 0.5;
+  params.floor = Floor::new(o, w, vec![], false);
+  params.max_height = h;
+  params.preferrable_height = wallratio * h;
+  params.level_zorder = zorder;
+
   let mut wallparams = WallParams::new();
   // TODO force the presence of windows. wallparams to include the rng of these
   let push = 0.5 * h;
@@ -120,7 +116,6 @@ fn make_bartizan<R: Rng>(
     params.floor = floor;
   }
   let roof = Roof::init(&params, &roofparams);
-  // TODO we need the roof not to be too crazy
 
   items.extend(wall.render());
   items.extend(roof.render());

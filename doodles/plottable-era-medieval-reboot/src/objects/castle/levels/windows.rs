@@ -51,16 +51,19 @@ impl WindowShape {
     size: f32,
     zindex: f32,
     xratio: f32,
+    wall_textured: bool,
   ) -> Vec<RenderItem> {
-    let mut items = vec![];
-    let mut routes = vec![];
-
     let h = size;
     let w = size * xratio;
 
+    let mut should_fill_window = !wall_textured;
+
+    let mut routes = vec![];
+    let mut poly;
+
     match self {
       WindowShape::Rectangle(r) => {
-        let poly = vec![
+        poly = vec![
           (o.0 - 0.5 * r * w, o.1 - 0.5 * h),
           (o.0 + 0.5 * r * w, o.1 - 0.5 * h),
           (o.0 + 0.5 * r * w, o.1 + 0.5 * h),
@@ -68,25 +71,24 @@ impl WindowShape {
           (o.0 - 0.5 * r * w, o.1 - 0.5 * h),
         ];
         routes.push((clr, poly.clone()));
-        items.push(RenderItem::new(routes, vec![poly], zindex));
       }
       WindowShape::Cross => {
-        let poly = cross(o, 0.35 * w, 0.5 * h, 0.08 * h);
+        poly = cross(o, 0.35 * w, 0.5 * h, 0.08 * h);
         routes.push((clr, poly.clone()));
-        items.push(RenderItem::new(routes, vec![poly], zindex));
       }
       WindowShape::CircleCross => {
         let circle = ovale_route(o, (0.5 * w, 0.5 * h), 24);
         routes.push((clr, circle.clone()));
         routes.push((clr, cross(o, 0.5 * w, 0.5 * h, 0.05 * h)));
-        items.push(RenderItem::new(routes, vec![circle], zindex));
+        should_fill_window = false;
+        poly = circle;
       }
       &WindowShape::HalfCurve(curvy) => {
         let w1 = 0.3 * w;
         let h1 = 0.5 * h;
         let h2 = mix(0.0, -0.5, curvy) * h;
 
-        let mut poly =
+        poly =
           vec![(o.0 - w1, o.1 + h1), (o.0 - w1, o.1 + h2), (o.0, o.1 - h1)];
         poly = path_subdivide_to_curve(&poly, 2, 0.7);
         poly.extend(
@@ -99,28 +101,40 @@ impl WindowShape {
         poly.push(poly[0]);
 
         routes.push((clr, poly.clone()));
-        items.push(RenderItem::new(routes, vec![poly], zindex));
       }
       WindowShape::SquareCross => {
-        let poly = vec![
+        poly = vec![
           (o.0 - 0.5 * w, o.1 - 0.5 * h),
           (o.0 + 0.5 * w, o.1 - 0.5 * h),
           (o.0 + 0.5 * w, o.1 + 0.5 * h),
           (o.0 - 0.5 * w, o.1 + 0.5 * h),
           (o.0 - 0.5 * w, o.1 - 0.5 * h),
         ];
-        items.push(RenderItem::new(
-          vec![
-            (clr, poly.clone()),
-            (clr, cross(o, 0.5 * h, 0.5 * w, 0.05 * h)),
-          ],
-          vec![poly.clone()],
-          zindex,
-        ));
+        routes.push((clr, poly.clone()));
+        routes.push((clr, cross(o, 0.5 * w, 0.5 * h, 0.05 * h)));
+        should_fill_window = false;
       }
     }
 
-    items
+    if should_fill_window {
+      let mut fill = vec![];
+      let mut x = o.0 - size;
+      while x < o.0 + size {
+        let y1 = o.1 - size;
+        let y2 = o.1 + size;
+        let rt = vec![(x, y1), (x, y2)];
+        fill.push((clr, rt));
+        x += 0.3;
+      }
+      routes.extend(clip_routes_with_colors(
+        &fill,
+        &|p| !polygon_includes_point(&poly, p),
+        0.6,
+        3,
+      ));
+    }
+
+    vec![RenderItem::new(routes, vec![poly], zindex)]
   }
 }
 pub struct WallWindowParams {
@@ -172,6 +186,7 @@ pub fn wall_windows(
   zindex: f32,
   polygon: &Vec<(f32, f32)>,
   ratio: f32,
+  wall_textured: bool,
 ) -> Vec<RenderItem> {
   let mut items = vec![];
   let mut miny = f32::INFINITY;
@@ -226,26 +241,20 @@ pub fn wall_windows(
             c as f32 / (cols - 1) as f32
           };
           let o = lerp_point((xleft, origin.1), (xright, origin.1), m);
-          items.extend(params.shape.render(o, clr, params.size, zindex, ratio));
+          items.extend(params.shape.render(
+            o,
+            clr,
+            params.size,
+            zindex,
+            ratio,
+            wall_textured,
+          ));
         }
       }
-      /*
-      if i % 2 == 0 {
-        items.extend(params.shape.render(
-          origin,
-          clr,
-          params.size,
-          zindex,
-          ratio,
-        ));
-      }
-      */
       d += (params.size + params.pad) / 2.0;
       i += 1;
     }
   }
-
-  // TODO quinconces
 
   items
 }

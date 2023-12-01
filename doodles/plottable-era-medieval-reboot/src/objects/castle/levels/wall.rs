@@ -16,7 +16,10 @@ pub struct WallParams {
   pub fill_to_lowest_y_allowed: bool,
   pub push_left_down: f32,
   pub push_right_down: f32,
+  // TODO stairs with a door entrance in castle
+  // TODO door
 }
+
 impl WallParams {
   pub fn new() -> Self {
     Self {
@@ -100,7 +103,42 @@ impl Wall {
       areas.len() - 1
     };
 
-    if w < 20.0 * scale {
+    let index_with_windows = if areas.len() == 1 {
+      0
+    } else {
+      let possibles = (0..areas.len())
+        .filter(|&i| i != index_with_shadows)
+        .collect::<Vec<_>>();
+      let p = rng.gen_range(0..possibles.len());
+      possibles[p]
+    };
+
+    let wall_textured = w * rng.gen_range(0.0..1.0) > 8.0;
+
+    if let Some(poly) = areas.get(index_with_windows) {
+      let range = ranges[index_with_windows].clone();
+      let ratio = range.end - range.start;
+      let windowparams = WallWindowParams::init(rng, scale, ratio * w);
+      items.extend(wall_windows(
+        &windowparams,
+        params.clr,
+        zorder + 0.1,
+        poly,
+        ratio,
+        wall_textured,
+      ));
+    }
+
+    if wall_textured {
+      routes.extend(wall_texture(
+        rng,
+        paintref,
+        params.tower_seed,
+        params.clr,
+        &poly,
+        scale,
+      ));
+    } else if w < 30.0 * scale {
       if let Some(poly) = areas.get(index_with_shadows) {
         let light_x_direction = params.light_x_direction;
         routes.extend(wall_shadow(
@@ -113,39 +151,6 @@ impl Wall {
         ));
       }
     }
-
-    let index_with_windows = if areas.len() == 1 {
-      0
-    } else {
-      let possibles = (0..areas.len())
-        .filter(|&i| i != index_with_shadows)
-        .collect::<Vec<_>>();
-      let p = rng.gen_range(0..possibles.len());
-      possibles[p]
-    };
-
-    if let Some(poly) = areas.get(index_with_windows) {
-      let range = ranges[index_with_windows].clone();
-      let ratio = range.end - range.start;
-      let windowparams = WallWindowParams::init(rng, scale, ratio * w);
-      items.extend(wall_windows(
-        &windowparams,
-        params.clr,
-        zorder + 0.1,
-        poly,
-        ratio,
-      ));
-    }
-
-    // TODO if enough width =>
-    routes.extend(wall_texture(
-      rng,
-      paintref,
-      params.tower_seed,
-      params.clr,
-      &poly,
-      scale,
-    ));
 
     items.push(RenderItem::new(routes, polygons, zorder));
 

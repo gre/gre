@@ -70,7 +70,7 @@ impl WormsFilling {
     };
     let coloring = |_: &Vec<(f32, f32)>| clr;
     let precision = 0.4;
-    let search_max = 10;
+    let search_max = rng.gen_range(5..10);
     self.fill(rng, &f, bound, &coloring, precision, iterations, search_max)
   }
 
@@ -151,6 +151,7 @@ impl WormsFilling {
 
 // data model that stores values information in 2D
 pub struct WeightMap {
+  // TODO performance still aren't great. we need a map{index->weight} where we can easily update by index but also we can easily sort by weight (resorted each time we insert)
   weights: Vec<f32>,
   living_indexes: HashSet<usize>,
   living_threshold: f32,
@@ -187,9 +188,10 @@ impl WeightMap {
       for y in 0..self.h {
         let p = (x as f32 * self.precision, y as f32 * self.precision);
         let v = f(p);
-        self.weights[y * self.w + x] = v;
+        let i = y * self.w + x;
+        self.weights[i] = v;
         if v > self.living_threshold {
-          living_indexes.insert(y * self.w + x);
+          living_indexes.insert(i);
         }
       }
     }

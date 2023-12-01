@@ -1,3 +1,15 @@
+PRIO:
+- iso castle features. sunset the old castle & fully replace. (door, tower on edge)
+- finalize a castle placement with nice mountains.
+- castle destruction. fire/smoke that goes with it
+- scene splits
+- battlefield placement. def/neutral/attack areas
+- battlefield extra details. people with machines & all other new objs
+- castle extra details (illumination, flags,..)
+- boat variety.
+- destruction map to impact battlefield too
+- post proc anim
+
 SCENE SPLITS:
 - rethink a bit the splits (front/sea/mountains/sky)
   - and allow some rare cases
@@ -55,6 +67,8 @@ BATTLEFIELD:
 - Palisade/Wall:
   - work on an entrance
   - work on a brick wall version 
+- giant people ("boss"/hero), golden, in the battlefield.
+- grappin + cables on people attacking (or going to) the castle
 
 GENERAL:
 - Work on Features
@@ -88,8 +102,8 @@ FRONT MOUNTAIN:
   - axe
 
 IDEAS:
+- defenders on the beach during trojan horse.
 - for most object i think we need to allow them to go gold. in rare case.
-- giant people ("boss"). also when the size is high enough (level of detail), renders people with better than just wireframe. using dist func?
 - archer on top of an attacker tower. 
 - ? for these specials. have special titles too.
 - night time illumination: castle lights, attacker torches, firecamp

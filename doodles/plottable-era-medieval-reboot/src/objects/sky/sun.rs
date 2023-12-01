@@ -54,7 +54,7 @@ impl Sun {
       let rt = spiral_optimized(
         origin.0,
         origin.1,
-        paint.height.max(paint.width) / 2.0,
+        paint.height.max(paint.width),
         dr,
         self.prec,
       );

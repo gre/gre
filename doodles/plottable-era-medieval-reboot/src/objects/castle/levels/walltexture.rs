@@ -23,9 +23,9 @@ pub fn wall_texture<R: Rng>(
   }
 
   // controls the gap between strokes
-  let xstep = 3.0 * scale;
-  let ystep = 1.5 * scale;
-  let strokel = 2.0 * scale;
+  let xstep = 2.0 * scale;
+  let ystep = 1.0 * scale;
+  let strokel = 1.6 * scale;
   let stroke_lfactor = 0.8;
 
   // control the noise of the stroke length

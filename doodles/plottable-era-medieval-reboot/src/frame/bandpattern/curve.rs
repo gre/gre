@@ -32,19 +32,20 @@ impl BandPattern for MedievalBandCurvePattern {
 
     let amp = self.amp * bandw;
 
-    let precision = 0.2;
+    let precision = 2.0;
 
     let mut curve1 = vec![];
     let mut curve2 = vec![];
     let mut p = 0.0;
-    while p < length {
-      let phase = 2.0 * PI * p / xrep;
+    while p < length + precision {
+      let x = p.min(length);
+      let phase = 2.0 * PI * x / xrep;
       if self.alt {
-        curve1.push((p, amp * phase.sin()));
-        curve2.push((p, amp * (phase + PI).sin()));
+        curve1.push((x, amp * phase.sin()));
+        curve2.push((x, amp * (phase + PI).sin()));
       } else {
-        curve1.push((p, amp * phase.cos()));
-        curve2.push((p, amp * (phase + PI).cos()));
+        curve1.push((x, amp * phase.cos()));
+        curve2.push((x, amp * (phase + PI).cos()));
       }
       p += precision;
     }
