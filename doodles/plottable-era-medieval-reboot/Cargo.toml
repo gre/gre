@@ -17,6 +17,8 @@ rand = "0.8"
 bs58 = "0.5"
 fontdue = "0.8"
 noise = "0.8"
+image = "0.24"
+base64 = "0.21"
 
 [dev-dependencies]
 rayon = "1.8"

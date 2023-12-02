@@ -1,4 +1,5 @@
 mod algo;
+mod effects;
 mod frame;
 mod fxhash;
 mod global;
@@ -59,11 +60,14 @@ pub fn render(
   let mut rng = rng_from_hash(&hash);
   let mut font = load_font(&fontdata);
 
+  let mut paint = PaintMask::new(precision, width, height);
+
   // Colors
   let (attacker_house, defender_house) = get_duel_houses(&mut rng);
   let palette = Palette::init(&mut rng, attacker_house);
   let mut ctx = GlobalCtx::rand(
     &mut rng,
+    &paint,
     width,
     height,
     precision,
@@ -74,7 +78,6 @@ pub fn render(
 
   // Make the scene
   let mut routes = vec![];
-  let mut paint = PaintMask::new(precision, width, height);
 
   let mut decoration_routes = vec![];
   let framingw = 0.05 * width;
@@ -131,11 +134,19 @@ pub fn render(
 
   let mask_with_framing = paint.clone();
 
-  let yhorizon = rng.gen_range(0.5..0.8) * height; // TODO rework randomness
-
+  let yhorizon = if ctx.no_sea {
+    height
+  } else {
+    // TODO tweak
+    rng.gen_range(0.5..0.8) * height
+  };
   //  mountains
   perf.span("mountains_front", &routes);
-  let ystart = mix(yhorizon, height, rng.gen_range(0.0..1.0));
+  let ystart = if ctx.no_sea {
+    rng.gen_range(0.7..1.0) * height
+  } else {
+    mix(yhorizon, height, rng.gen_range(0.0..1.0))
+  };
   let ybase = height - pad;
   let clr = 0;
   let mut mountains = FrontMountains {
@@ -147,65 +158,104 @@ pub fn render(
   routes.extend(mountains.render(&mut ctx, &mut rng, &mut paint));
   perf.span_end("mountains_front", &routes);
 
-  perf.span("sea", &vec![]);
-  let boat_color = 0;
-  let sea = Sea::from(&paint, yhorizon, boat_color, attacker_house);
-  let sea_routes = sea.render(&mut ctx, &mut rng, &mut paint);
-  perf.span_end("sea", &sea_routes);
-
-  perf.span("mountains", &routes);
-  let ymax = mix(0.0, yhorizon, 0.6);
-  let count = rng.gen_range(2..8);
-  let first_is_second = ctx.palette.inks[0] == ctx.palette.inks[1];
-  let countextra = if rng.gen_bool(if first_is_second { 0.01 } else { 0.2 }) {
-    rng.gen_range(1..10)
+  let sea_data = if !ctx.no_sea {
+    perf.span("sea", &vec![]);
+    let boat_color = 0;
+    let mut sea = Sea::from(&paint, yhorizon, boat_color, attacker_house);
+    let sea_routes = sea.render(&mut ctx, &mut rng, &mut paint);
+    perf.span_end("sea", &sea_routes);
+    let mut water = sea.sea_mask.clone();
+    water.reverse();
+    ctx.effects.water.paint(&water);
+    Some((sea, sea_routes))
   } else {
-    0
+    None
   };
-  let mountains = MountainsV2::rand(
-    &mut rng, &ctx, 0, width, height, yhorizon, ymax, count, countextra,
-  );
-  perf.span_end("mountains", &routes);
 
-  let army: ArmyOnMountain = ArmyOnMountain::init(attacker_house);
-
-  for (i, mountain) in mountains.mountains.iter().enumerate() {
-    if mountain.has_beach {
-      perf.span("beach", &routes);
-      let beach = Beach::init(
-        &mut ctx,
-        &mut rng,
-        &mut paint,
-        yhorizon,
-        width,
-        0,
-        0,
-        0,
-        attacker_house,
-      );
-      routes.extend(beach.render(&mut ctx, &mut rng, &mut paint));
-      perf.span_end("beach", &routes);
-    }
-
-    perf.span("attackers", &routes);
-    routes.extend(
-      army.render(&mut ctx, &mut rng, &mut paint, &mountain, &mountains, i),
-    );
-    perf.span_end("attackers", &routes);
-
+  if ctx.castle_on_sea {
+    // TODO make a structure, pilori, etc.. or sometimes just rocks.
+    // TODO multiple castle, we would loop through them. they would be placed on the sea but we would enforce there is no unit behind.
+    let castlewidth = rng.gen_range(0.2..0.5) * width;
+    let x = rng.gen_range(0.3..0.6) * width;
+    let scale = 1.0
+      + rng.gen_range(-0.2..0.4) * rng.gen_range(0.0..1.0)
+      + rng.gen_range(0.0..(1.0 * castlewidth / width));
+    let castle = CastleGrounding {
+      position: (x, yhorizon),
+      width: castlewidth,
+      moats: vec![],
+      main_door_pos: None,
+      scale,
+    };
+    perf.span("castle", &routes);
+    let ymax = pad + framingw + 0.02 * height;
+    let extra_towers =
+      rng.gen_range(-1.0f32..20.0 * castle.width / width).max(0.0) as usize;
+    let castle =
+      Castle::init(&mut ctx, &mut rng, &castle, yhorizon, ymax, extra_towers);
+    routes.extend(castle.render(&mut ctx, &mut rng, &mut paint));
+    perf.span_end("castle", &routes);
+  } else {
     perf.span("mountains", &routes);
-    routes.extend(mountain.render(&mut paint));
+    let ymax = mix(0.0, yhorizon, rng.gen_range(0.4..0.6));
+    let count = rng.gen_range(2..8);
+    let first_is_second = ctx.palette.inks[0] == ctx.palette.inks[1];
+    let countextra = if rng.gen_bool(if first_is_second { 0.01 } else { 0.2 }) {
+      rng.gen_range(1..10)
+    } else {
+      0
+    };
+    let mountains = MountainsV2::rand(
+      &mut rng, &ctx, 0, width, height, yhorizon, ymax, count, countextra,
+    );
     perf.span_end("mountains", &routes);
 
-    if let Some(castle) = &mountain.castle {
-      perf.span("castle", &routes);
-      let ymax = pad + framingw + 0.02 * height;
-      let extra_towers =
-        rng.gen_range(-1.0f32..20.0 * castle.width / width).max(0.0) as usize;
-      let castle =
-        Castle::init(&mut ctx, &mut rng, castle, yhorizon, ymax, extra_towers);
-      routes.extend(castle.render(&mut ctx, &mut rng, &mut paint));
-      perf.span_end("castle", &routes);
+    let army: ArmyOnMountain = ArmyOnMountain::init(attacker_house);
+
+    for (i, mountain) in mountains.mountains.iter().enumerate() {
+      if mountain.has_beach {
+        perf.span("beach", &routes);
+        let beach = Beach::init(
+          &mut ctx,
+          &mut rng,
+          &mut paint,
+          yhorizon,
+          width,
+          0,
+          0,
+          0,
+          attacker_house,
+        );
+        routes.extend(beach.render(&mut ctx, &mut rng, &mut paint));
+        perf.span_end("beach", &routes);
+      }
+
+      perf.span("attackers", &routes);
+      routes.extend(
+        army.render(&mut ctx, &mut rng, &mut paint, &mountain, &mountains, i),
+      );
+      perf.span_end("attackers", &routes);
+
+      perf.span("mountains", &routes);
+      routes.extend(mountain.render(&mut paint));
+      perf.span_end("mountains", &routes);
+
+      if let Some(castle) = &mountain.castle {
+        perf.span("castle", &routes);
+        let ymax = pad + framingw + 0.02 * height;
+        let extra_towers =
+          rng.gen_range(-1.0f32..20.0 * castle.width / width).max(0.0) as usize;
+        let castle = Castle::init(
+          &mut ctx,
+          &mut rng,
+          castle,
+          yhorizon,
+          ymax,
+          extra_towers,
+        );
+        routes.extend(castle.render(&mut ctx, &mut rng, &mut paint));
+        perf.span_end("castle", &routes);
+      }
     }
   }
 
@@ -231,44 +281,46 @@ pub fn render(
     height,
     pad,
   );
-  // prevent sky to glitch inside the sea
-  let is_below_horizon = |(_x, y): (f32, f32)| y > yhorizon;
-  let sky_routes = clip_routes_with_colors(
-    &sky.render(&mut rng, &mut paint),
-    &is_below_horizon,
-    1.0,
-    5,
-  );
+  let mut sky_routes = sky.render(&mut rng, &mut paint);
+  if !ctx.no_sea {
+    // prevent sky to glitch inside the sea
+    let is_below_horizon = |(_x, y): (f32, f32)| y > yhorizon;
+    sky_routes =
+      clip_routes_with_colors(&sky_routes, &is_below_horizon, 1.0, 5);
+  }
   routes.extend(sky_routes);
   perf.span_end("sky", &routes);
 
-  perf.span("reflect_shapes", &routes);
-  let probability_par_color = vec![0.08, 0.1, 0.2];
-  routes.extend(sea.reflect_shapes(
-    &mut rng,
-    &mut paint,
-    &routes,
-    probability_par_color,
-  ));
-  perf.span_end("reflect_shapes", &routes);
+  if let Some((sea, sea_routes)) = sea_data {
+    perf.span("reflect_shapes", &routes);
+    let probability_par_color = vec![0.08, 0.1, 0.2];
+    routes.extend(sea.reflect_shapes(
+      &mut rng,
+      &mut paint,
+      &routes,
+      probability_par_color,
+    ));
+    perf.span_end("reflect_shapes", &routes);
 
-  routes.extend(sea_routes);
+    routes.extend(sea_routes);
+  }
 
   perf.span("projectiles", &routes);
-  ctx.projectiles.resolve(&mut rng, &paint);
-  ctx
-    .projectiles
-    .render(&mut rng, &mut routes, &mask_with_framing);
+  ctx.render_projectiles(&mut rng, &mut routes, &paint, &mask_with_framing);
   perf.span_end("projectiles", &routes);
 
   routes.extend(decoration_routes);
 
+  perf.span("finalize", &vec![]);
+
   //  routes.extend(debug_weight_map(&ctx.destruction_map, 2, 0.0, 1.0));
 
-  ctx.cleanup();
+  ctx.finalize();
+
   let feature = ctx.to_feature(&routes);
   let feature_json = serde_json::to_string(&feature).unwrap();
   let palette_json: String = palette.to_json();
+  let extra_attributes = vec![ctx.effects.to_svg_metafields()];
 
   let layers = make_layers_from_routes_colors(
     &routes,
@@ -276,6 +328,7 @@ pub fn render(
     mask_mode,
     2.0 * precision,
   );
+  perf.span_end("finalize", &vec![]);
 
   let svg = make_document(
     hash.as_str(),
@@ -286,7 +339,8 @@ pub fn render(
     mask_mode,
     palette.paper.1,
     &layers,
-    Some(perf),
+    if debug { Some(perf) } else { None },
+    &extra_attributes,
   );
 
   svg
@@ -465,7 +519,7 @@ fn dragon<R: Rng>(
   for i in 0..n {
     let bx = pad + framingw + 0.2 * width;
     let by = pad + framingw + 0.2 * height;
-    let count = rng.gen_range(2..10);
+    let count = rng.gen_range(2..16);
     let mut circles = packing(
       rng,
       500,

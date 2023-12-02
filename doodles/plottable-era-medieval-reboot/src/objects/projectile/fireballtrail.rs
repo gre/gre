@@ -1,8 +1,12 @@
 use std::f32::consts::PI;
 
-use crate::algo::{
-  clipping::regular_clip, math1d::mix, packing::VCircle, paintmask::PaintMask,
-  pathlookup::PathLookup, shapes::circle_route, wormsfilling::WormsFilling,
+use crate::{
+  algo::{
+    clipping::regular_clip, math1d::mix, packing::VCircle,
+    paintmask::PaintMask, pathlookup::PathLookup, shapes::circle_route,
+    wormsfilling::WormsFilling,
+  },
+  global::GlobalCtx,
 };
 use rand::prelude::*;
 
@@ -11,6 +15,7 @@ use rand::prelude::*;
  * Author: greweb – 2023 – Plottable Era: (II) Medieval
  */
 
+#[derive(Clone)]
 pub struct FireballTrail {
   pub trailmask: PaintMask,
   pub particles: usize,
@@ -82,6 +87,7 @@ impl FireballTrail {
   pub fn render<R: Rng>(
     &self,
     rng: &mut R,
+    ctx: &mut GlobalCtx,
     paint: &mut PaintMask,
   ) -> Vec<(usize, Vec<(f32, f32)>)> {
     let clr = self.clr;
@@ -107,6 +113,7 @@ impl FireballTrail {
 
     for (_, route) in &routes {
       paint.paint_polyline(route, 2.0);
+      ctx.effects.hot.paint_polyline(route, 4.0);
     }
 
     paint.paint(&self.trailmask);

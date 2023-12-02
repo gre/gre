@@ -27,14 +27,18 @@ impl Sun {
     dr: f32,
     spiralrays: Option<f32>,
   ) -> Self {
-    let prec = 0.5;
+    let prec_sun = 0.5;
     let routes = vec![
-      (clr, spiral_optimized(origin.0, origin.1, radius, dr, prec)),
+      (
+        clr,
+        spiral_optimized(origin.0, origin.1, radius, dr, prec_sun),
+      ),
       (
         clr,
         circle_route(origin, radius, (radius * 2. + 8.) as usize),
       ),
     ];
+    let prec = 4.0;
     Self {
       routes,
       origin,

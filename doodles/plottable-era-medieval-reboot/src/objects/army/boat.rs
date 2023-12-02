@@ -144,7 +144,12 @@ impl Boat {
 }
 
 impl<R: Rng> super::Renderable<R> for Boat {
-  fn render(&self, rng: &mut R, mask: &mut PaintMask) -> Polylines {
+  fn render(
+    &self,
+    rng: &mut R,
+    ctx: &mut crate::global::GlobalCtx,
+    mask: &mut PaintMask,
+  ) -> Polylines {
     self.render(rng, mask, self.clr)
   }
   fn zorder(&self) -> f32 {

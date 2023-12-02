@@ -13,7 +13,10 @@ use super::{
   Floor, Level, LevelParams, RenderItem,
 };
 use crate::{
-  algo::{paintmask::PaintMask, polylines::Polylines, renderable::Renderable},
+  algo::{
+    math2d::lerp_point, paintmask::PaintMask, polylines::Polylines,
+    renderable::Renderable,
+  },
   global::GlobalCtx,
   objects::{
     army::{
@@ -22,6 +25,7 @@ use crate::{
       human::{HeadShape, HoldableObject, Human},
     },
     mountains::CastleGrounding,
+    projectile::attack::DefenseTarget,
   },
 };
 use rand::prelude::*;
@@ -301,6 +305,10 @@ fn rec_build<R: Rng>(
     possible_pole_positions.extend(level.possible_pole_positions());
 
     if let Some(floor) = level.roof_base() {
+      let middle = lerp_point(floor.pos, params.floor.pos, 0.5);
+
+      ctx.projectiles.add_defense(DefenseTarget::Building(middle));
+
       if let Some(y) = level.condamn_build_belowy() {
         params.lowest_y_allowed = y;
       }
@@ -415,7 +423,7 @@ pub fn build_castle<R: Rng>(
       routes.extend(item.render(paint));
       if let Some(id) = item.foreign_id {
         if let Some(obj) = objects.get(&id) {
-          routes.extend(obj.render(rng, paint));
+          routes.extend(obj.render(rng, ctx, paint));
         }
       }
     }
@@ -440,7 +448,7 @@ pub fn build_castle<R: Rng>(
       routes.extend(item.render(paint));
       if let Some(id) = item.foreign_id {
         if let Some(obj) = objects.get(&id) {
-          routes.extend(obj.render(rng, paint));
+          routes.extend(obj.render(rng, ctx, paint));
         }
       }
     }

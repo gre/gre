@@ -4,10 +4,9 @@ PRIO:
 - battlefield placement. def/neutral/attack areas
 - castle destruction. fire/smoke that goes with it
 - battlefield extra details. people with machines & all other new objs
-- castle extra details (illumination, flags,..)
+- castle extra details (illumination, flags,..) 
 - boat variety.
-- destruction map to impact battlefield too
-- post proc anim
+- destruction map to impact battlefield too. we should also have a noise map for where the targets are
 
 SCENE SPLITS:
 - rethink a bit the splits (front/sea/mountains/sky)
@@ -22,8 +21,7 @@ CASTLE:
   - watch towers
   - stairs
   - lights
-- make the wall also a generic wall on the mountain similar to palisade.
-- bush at bottom of walls
+- bush at bottom of walls to balance a bit the mountain is sometimes very curvy.
 
 BATTLEFIELD:
 - Shield have bad clipping?
@@ -56,16 +54,15 @@ BATTLEFIELD:
 - blazon & their impact + flags
   - on shield SHAPE.
   - on boat/belier head
-- alone horse in battlefield
+- ADD: grappin + cables on people attacking (or going to) the castle
 - ADD: lanciers
 - ADD: ladders and cords with people climbing.
+- giant people ("boss"/hero), golden, in the battlefield.
+- alone horse in battlefield
 - IMPROVE: helmet variety
 - as result of a fight (destruction map), the weapon/flag/... will be on the ground.
-- Palisade/Wall:
-  - work on an entrance
-  - work on a brick wall version 
-- giant people ("boss"/hero), golden, in the battlefield.
-- grappin + cables on people attacking (or going to) the castle
+- Palisade:
+  - work on a better entrance
 
 GENERAL:
 - Work on Features

@@ -42,6 +42,7 @@ pub struct Mountain {
   pub has_beach: bool,
   // info for the render time
   pub routes: Polylines,
+  pub is_behind: bool,
 }
 
 impl Mountain {
@@ -100,8 +101,8 @@ impl MountainsV2 {
       } else {
         2.0 + (rng.gen_range(-1f32..8.0) * rng.gen_range(0.0..1.0)).max(0.0)
       };
-      let amp1 = rng.gen_range(-2.0f32..5.0).max(0.0) * rng.gen_range(0.3..1.0);
-      let amp2 = rng.gen_range(-1.0f32..4.0).max(0.0) * rng.gen_range(0.3..1.0);
+      let amp1 = rng.gen_range(-2.0f32..4.0).max(0.0) * rng.gen_range(0.3..1.0);
+      let amp2 = rng.gen_range(-1.0f32..3.0).max(0.0) * rng.gen_range(0.3..1.0);
       let amp3 = rng.gen_range(-1.0f32..2.0).max(0.0) * rng.gen_range(0.3..1.0);
       let center = rng.gen_range(0.2..0.8) * width;
 
@@ -369,7 +370,6 @@ impl MountainsV2 {
                 x += xstep;
               }
               best
-              // best.map(|p| (p.0, p.1.min(castlepos.1)))
             } else {
               None
             };
@@ -396,6 +396,7 @@ impl MountainsV2 {
         routes,
         width,
         has_beach: j == 0,
+        is_behind: j >= count,
       });
 
       // move the ridge up to create some "halo" around mountain. and see more easily the diff layers

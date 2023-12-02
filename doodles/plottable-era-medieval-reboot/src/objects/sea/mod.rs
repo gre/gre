@@ -33,10 +33,10 @@ pub mod sauron;
  */
 
 pub struct Sea {
-  sea_mask: PaintMask,
-  boat_color: usize,
-  yhorizon: f32,
-  blazon: Blazon,
+  pub sea_mask: PaintMask,
+  pub boat_color: usize,
+  pub yhorizon: f32,
+  pub blazon: Blazon,
 }
 
 impl Sea {
@@ -79,9 +79,11 @@ impl Sea {
     let reflectables =
       clip_routes_with_colors(&reflectables, &is_below_sea_level, 0.5, 3);
 
-    let ydisplacement = 0.3 * paint.height;
-    let xdisplacement = 0.3 * ydisplacement;
     let stroke_len_base = 0.04 * paint.width;
+
+    let ydistortion = rng.gen_range(0.5..1.0);
+    let ydisplacement = rng.gen_range(0.1..0.2) * paint.height;
+    let xdisplacement = rng.gen_range(0.1..0.3) * paint.width;
 
     routes.extend(reflect_shapes(
       rng,
@@ -94,6 +96,7 @@ impl Sea {
       3,
       xdisplacement,
       ydisplacement,
+      ydistortion,
     ));
 
     // FIXME: should sea_mask be used instead? meaning that render() would alter it too?
@@ -102,7 +105,7 @@ impl Sea {
   }
 
   pub fn render<R: Rng>(
-    &self,
+    &mut self,
     ctx: &mut GlobalCtx,
     rng: &mut R,
     paint: &mut PaintMask,
@@ -124,7 +127,6 @@ impl Sea {
     let mut sea_shapes: Vec<Box<dyn Renderable<R>>> = vec![];
 
     // this mask is used to find location to pack things
-    let mut sea_mask = self.sea_mask.clone();
 
     let mut should_set_excalibur = rng.gen_bool(0.1) && ctx.specials.is_empty();
 
@@ -136,7 +138,7 @@ impl Sea {
             let x = width * rng.gen_range(0.0..1.0);
             let yp = rng.gen_range(0.0..1.0);
             let y = mix(self.yhorizon, height, yp);
-            if !sea_mask.is_painted((x, y)) {
+            if !self.sea_mask.is_painted((x, y)) {
               let size = (0.04
                 + rng.gen_range(0.0..0.04) * rng.gen_range(0.0..1.0))
                 * width;
@@ -144,7 +146,7 @@ impl Sea {
               let maxx = x + size;
               let miny = y - size;
               let maxy = y;
-              sea_mask.paint_rectangle(minx, miny, maxx, maxy);
+              self.sea_mask.paint_rectangle(minx, miny, maxx, maxy);
               let origin = (x, y);
               let elevation =
                 1.5 + rng.gen_range(0.0..5.0) * rng.gen_range(0.0..1.0);
@@ -211,12 +213,12 @@ impl Sea {
             let w = basew
               * (1.0 + rng.gen_range(-0.4..0.8) * rng.gen_range(0.0..1.0));
             let size = width * mix(0.03, 0.08, yp);
-            if !sea_mask.is_painted((x, y)) {
+            if !self.sea_mask.is_painted((x, y)) {
               let minx = x - w / 2.0;
               let maxx = x + w / 2.0;
               let miny = y - w / 10.0;
               let maxy = y + w / 10.0;
-              sea_mask.paint_rectangle(minx, miny, maxx, maxy);
+              self.sea_mask.paint_rectangle(minx, miny, maxx, maxy);
 
               let angle = rng.gen_range(-0.2..0.2) * rng.gen_range(0.0..1.0);
               let xflip = if rng.gen_bool(0.8) {
@@ -289,7 +291,7 @@ impl Sea {
 
     let mut routes = vec![];
     for s in sea_shapes {
-      routes.extend(s.render(rng, paint));
+      routes.extend(s.render(rng, ctx, paint));
     }
     routes
   }
@@ -307,6 +309,7 @@ fn reflect_shapes<R: Rng>(
   max_passage: usize,
   xdisplacement: f32,
   ydisplacement: f32,
+  ydistortion: f32,
 ) -> Vec<(usize, Vec<(f32, f32)>)> {
   let mut new_shapes = Vec::new();
 
@@ -331,7 +334,8 @@ fn reflect_shapes<R: Rng>(
         + rng.gen_range(0.0..xdisplacement)
           * rng.gen_range(0.0..1.0)
           * rng.gen_range(-1.0..1.0);
-      let y = 2.0 * ycenter - p.1
+      let y = ycenter
+        + (ycenter - p.1) * rng.gen_range((1.0 - ydistortion)..1.0)
         + rng.gen_range(0.0..ydisplacement) * rng.gen_range(-1.0..1.0);
       if y > ycenter && y < boundaries.3 {
         let x1 = (x - sx).max(boundaries.0).min(boundaries.2);

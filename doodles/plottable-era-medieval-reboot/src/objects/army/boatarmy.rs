@@ -1,6 +1,7 @@
 use super::{boat::Boat, human::Human};
 use crate::{
   algo::{paintmask::PaintMask, polylines::Polylines, renderable::Renderable},
+  global::GlobalCtx,
   objects::blazon::Blazon,
 };
 use rand::prelude::*;
@@ -102,7 +103,12 @@ impl BoatArmy {
 }
 
 impl<R: Rng> Renderable<R> for BoatArmy {
-  fn render(&self, rng: &mut R, paint: &mut PaintMask) -> Polylines {
+  fn render(
+    &self,
+    rng: &mut R,
+    _ctx: &mut GlobalCtx,
+    paint: &mut PaintMask,
+  ) -> Polylines {
     self.render(rng, paint)
   }
   fn zorder(&self) -> f32 {

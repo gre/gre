@@ -7,6 +7,7 @@ use crate::algo::{
  * Author: greweb – 2023 – Plottable Era: (II) Medieval
  */
 
+#[derive(Clone)]
 pub struct ArrowTrail {
   pub path: Vec<(f32, f32)>,
   pub clr: usize,

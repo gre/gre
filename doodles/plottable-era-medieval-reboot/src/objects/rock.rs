@@ -1,6 +1,9 @@
-use crate::algo::{
-  clipping::regular_clip, paintmask::PaintMask, polygon::polygons_find_miny,
-  polylines::Polylines, renderable::Renderable, wormsfilling::WormsFilling,
+use crate::{
+  algo::{
+    clipping::regular_clip, paintmask::PaintMask, polygon::polygons_find_miny,
+    polylines::Polylines, renderable::Renderable, wormsfilling::WormsFilling,
+  },
+  global::GlobalCtx,
 };
 use rand::prelude::*;
 use std::f32::consts::PI;
@@ -90,7 +93,12 @@ impl<R: Rng> Rock<R> {
       clr,
     }
   }
-  pub fn render(&self, rng: &mut R, paint: &mut PaintMask) -> Polylines {
+  pub fn render(
+    &self,
+    rng: &mut R,
+    ctx: &mut GlobalCtx,
+    paint: &mut PaintMask,
+  ) -> Polylines {
     for poly in self.inner_crop_polys.iter() {
       paint.paint_polygon(poly);
     }
@@ -115,7 +123,7 @@ impl<R: Rng> Rock<R> {
     }
 
     if let Some(o) = &self.top {
-      let rts = o.as_ref().render(rng, paint);
+      let rts = o.as_ref().render(rng, ctx, paint);
       // halo around the sword
       for (_, route) in &rts {
         paint.paint_polyline(route, 2.0);
@@ -132,8 +140,13 @@ impl<R: Rng> Rock<R> {
 }
 
 impl<R: Rng> Renderable<R> for Rock<R> {
-  fn render(&self, rng: &mut R, paint: &mut PaintMask) -> Polylines {
-    self.render(rng, paint)
+  fn render(
+    &self,
+    rng: &mut R,
+    ctx: &mut GlobalCtx,
+    paint: &mut PaintMask,
+  ) -> Polylines {
+    self.render(rng, ctx, paint)
   }
   fn zorder(&self) -> f32 {
     self.origin.1

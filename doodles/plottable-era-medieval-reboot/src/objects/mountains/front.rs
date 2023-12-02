@@ -1,9 +1,17 @@
 use crate::{
   algo::{
-    clipping::clip_routes_with_colors, math1d::mix, paintmask::PaintMask,
+    clipping::clip_routes_with_colors, math1d::mix, math2d::lookup_ridge,
+    paintmask::PaintMask,
   },
   global::{GlobalCtx, Special},
-  objects::{army::trebuchet::Trebuchet, castle::chinesedoor::ChineseDoor},
+  objects::{
+    army::{
+      body::HumanPosture,
+      human::{HeadShape, HoldableObject, Human},
+      trebuchet::Trebuchet,
+    },
+    castle::chinesedoor::ChineseDoor,
+  },
 };
 use noise::*;
 use rand::prelude::*;
@@ -135,11 +143,32 @@ impl FrontMountains {
     }
 
     // TODO we need to make a Front Front Mountains with this guy!
-    /*
-    {
-      // human test
-      let o = (width / 2.0, rng.gen_range(0.8..0.9) * paint.height);
-      let size = rng.gen_range(0.1..0.2) * width;
+
+    trebuchet_candidates.shuffle(rng);
+
+    let trebuchets_max =
+      (rng.gen_range(-1.0f32..3.5) * rng.gen_range(0.5..1.0)).max(0.0) as usize;
+
+    for &o in trebuchet_candidates.iter().take(trebuchets_max) {
+      let height = rng.gen_range(0.14..0.2) * width;
+      let action_percent = if !ctx.trebuchets_should_shoot {
+        0.0
+      } else {
+        rng.gen_range(0.0..1.0)
+      };
+      let xflip = rng.gen_bool(0.5);
+      let clr = 0;
+      let trebuchet =
+        Trebuchet::init(rng, o, height, action_percent, xflip, clr);
+      routes.extend(trebuchet.render(&mut paint_before));
+      trebuchet.throw_projectiles(ctx);
+    }
+
+    let x = rng.gen_range(0.2..0.8) * width;
+    let y = mix(lookup_ridge(&ridge, x), ybase, 0.05);
+    if y < paint.height * 0.85 {
+      let o = (x, y);
+      let size = rng.gen_range(0.08..0.12) * width;
       let angle = 0.0;
       let xflip = rng.gen_bool(0.5);
       let blazon = ctx.attackers;
@@ -170,23 +199,6 @@ impl FrontMountains {
       )
       .with_worms_filling_defaults();
       routes.extend(human.render(rng, &mut paint_before));
-    }
-    */
-
-    trebuchet_candidates.shuffle(rng);
-
-    let trebuchets_max =
-      (rng.gen_range(-1.0f32..3.5) * rng.gen_range(0.5..1.0)).max(0.0) as usize;
-
-    for &o in trebuchet_candidates.iter().take(trebuchets_max) {
-      let height = rng.gen_range(0.14..0.2) * width;
-      let action_percent = rng.gen_range(0.0..1.0);
-      let xflip = rng.gen_bool(0.5);
-      let clr = 0;
-      let trebuchet =
-        Trebuchet::init(rng, o, height, action_percent, xflip, clr);
-      routes.extend(trebuchet.render(&mut paint_before));
-      trebuchet.throw_projectiles(ctx);
     }
 
     paint.paint(&paint_before);

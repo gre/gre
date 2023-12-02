@@ -16,7 +16,7 @@ use crate::{
     packing::{packing, VCircle},
     paintmask::PaintMask,
     polylines::Polylines,
-    shapes::{circle_route, spiral_optimized},
+    shapes::{circle_route, spiral_optimized, yarnballs},
   },
   global::{GlobalCtx, Special},
 };
@@ -136,6 +136,8 @@ impl MedievalSky {
       }
     }
 
+    let mut should_set_yarn_balls = rng.gen_range(-1000..100);
+
     let mut routes = vec![];
     if should_uh_oh_sky {
       let pad = rng.gen_range(0.5..2.0);
@@ -165,8 +167,14 @@ impl MedievalSky {
         if v > 0.0 {
           if v > 0.35 {
             let r = c.r * 1.1;
-            routes.push((clr, spiral_optimized(c.x, c.y, r, 1.3 - v, 0.01)));
-            routes.push((clr, circle_route((c.x, c.y), c.r, 32)));
+            if should_set_yarn_balls > 0 {
+              should_set_yarn_balls -= 1;
+              let r = r * rng.gen_range(1.0..3.0);
+              routes.push((clr, yarnballs(rng, c.pos(), r, 1.0)));
+            } else {
+              routes.push((clr, spiral_optimized(c.x, c.y, r, 1.3 - v, 0.1)));
+              routes.push((clr, circle_route((c.x, c.y), c.r, 32)));
+            }
           } else {
             let r = mix(0.2, c.r, smoothstep(0.0, 0.3, v));
             routes.push((clr, vec![(c.x - r, c.y), (c.x + r, c.y)]));

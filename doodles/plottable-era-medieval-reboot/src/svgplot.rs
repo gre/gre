@@ -16,6 +16,7 @@ pub fn make_document(
   paper_background: &str,
   layers: &Vec<String>,
   maybe_perf: Option<PerfRecords>,
+  extra_attributes: &Vec<String>,
 ) -> String {
   let mut attributes = vec![
     "data-credits=\"@greweb - 2023 - Plottable Era: (II) Medieval\""
@@ -37,6 +38,10 @@ pub fn make_document(
 
   if let Some(mut perf) = maybe_perf {
     attributes.push(format!("data-perf='{}'", json!(perf.end()).to_string()));
+  }
+
+  for extra in extra_attributes {
+    attributes.push(extra.clone());
   }
 
   let mut svg = format!("<svg {}>", attributes.join(" "));

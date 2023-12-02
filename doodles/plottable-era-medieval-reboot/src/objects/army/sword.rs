@@ -1,8 +1,13 @@
-use crate::algo::{
-  clipping::regular_clip_polys,
-  paintmask::PaintMask,
-  polylines::{grow_as_rectangle, grow_stroke_zigzag, route_translate_rotate},
-  renderable::Renderable,
+use crate::{
+  algo::{
+    clipping::regular_clip_polys,
+    paintmask::PaintMask,
+    polylines::{
+      grow_as_rectangle, grow_stroke_zigzag, route_translate_rotate,
+    },
+    renderable::Renderable,
+  },
+  global::GlobalCtx,
 };
 use rand::prelude::*;
 
@@ -94,6 +99,7 @@ impl<R: Rng> Renderable<R> for Sword {
   fn render(
     &self,
     _rng: &mut R,
+    _ctx: &mut GlobalCtx,
     paint: &mut PaintMask,
   ) -> Vec<(usize, Vec<(f32, f32)>)> {
     self.render(paint)

@@ -16,6 +16,7 @@ use crate::{
     polylines::Polylines, renderable::Renderable,
     wormsfilling::worms_fill_strokes,
   },
+  global::GlobalCtx,
   objects::blazon::Blazon,
 };
 use rand::prelude::*;
@@ -319,7 +320,12 @@ impl Human {
 // TODO we need to expand human into a container that can yield the 2 parts
 // but we need to figure out the polyline halo effect...
 impl<R: Rng> Renderable<R> for Human {
-  fn render(&self, rng: &mut R, paint: &mut PaintMask) -> Polylines {
+  fn render(
+    &self,
+    rng: &mut R,
+    _ctx: &mut GlobalCtx,
+    paint: &mut PaintMask,
+  ) -> Polylines {
     self.render(rng, paint)
   }
   fn zorder(&self) -> f32 {

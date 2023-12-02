@@ -76,7 +76,12 @@ impl Hut {
 }
 
 impl<R: Rng> Renderable<R> for Hut {
-  fn render(&self, _rng: &mut R, paint: &mut PaintMask) -> Polylines {
+  fn render(
+    &self,
+    _rng: &mut R,
+    _ctx: &mut crate::global::GlobalCtx,
+    paint: &mut PaintMask,
+  ) -> Polylines {
     self.render(paint)
   }
   fn zorder(&self) -> f32 {

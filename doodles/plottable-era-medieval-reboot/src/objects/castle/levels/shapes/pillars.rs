@@ -23,13 +23,14 @@ impl Pillars {
     let o = params.floor.pos;
     let splits = params.floor.splits.clone();
     let s = params.scaleref;
-    let h = params.preferrable_height.max(6.0 * s);
 
-    let wratio = 3.0;
     let pillarw = rng.gen_range(0.5..1.0) * s;
     let pad =
       pillarw + rng.gen_range(-0.1f32..0.2).max(0.0) * params.floor.width;
     let w = params.floor.width - pad * 2.0;
+    let h = params.preferrable_height.max(6.0 * s).min(1.5 * w);
+
+    let wratio = 3.0;
     let neww = mix(w, params.floor.width, rng.gen_range(0.0..1.0));
     let count =
       (rng.gen_range(0.5..1.2) * w / (pillarw * wratio)).max(2.0) as usize;

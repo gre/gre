@@ -1,11 +1,10 @@
-use std::f32::consts::PI;
-
 use self::{
   belfry::Belfry,
   belier::Belier,
   body::HumanPosture,
   car4l::Renault4L,
   convoywalk::ConvoyWalk,
+  firecamp::Firecamp,
   flag::Flag,
   human::{HeadShape, HoldableObject, Human},
   hut::Hut,
@@ -36,6 +35,7 @@ use crate::{
 };
 use noise::*;
 use rand::prelude::*;
+use std::f32::consts::PI;
 
 /**
  * LICENSE CC BY-NC-ND 4.0
@@ -55,6 +55,7 @@ pub mod catapult;
 pub mod club;
 pub mod convoywalk;
 pub mod dragonhead;
+pub mod firecamp;
 pub mod flag;
 pub mod flyingdragon;
 pub mod head;
@@ -74,7 +75,6 @@ pub mod trebuchet;
 pub mod trojanhorse;
 pub mod tunnelstructure;
 pub mod wheeledplatform;
-
 pub struct ArmyOnMountain {
   pub debug: bool,
   pub blazon: Blazon,
@@ -404,7 +404,12 @@ impl ArmyOnMountain {
             let dist_to_border = x.min(width - x);
             if !too_close_to_castle && dist_to_border > 0.1 * width {
               let height = 0.1 * width;
-              let action_percent = rng.gen_range(0.0..1.0);
+              let action_percent =
+                if ctx.trebuchets_should_shoot && !mountain.is_behind {
+                  rng.gen_range(0.0..1.0)
+                } else {
+                  0.0
+                };
               let xflip = x > castle.position.0;
               let clr = mainclr;
               let trebuchet = Trebuchet::init(
@@ -596,9 +601,11 @@ impl ArmyOnMountain {
               headshape, leftobj, rightobj,
             );
 
-            ctx.projectiles.add_attack(AttackOrigin::Arrow(
-              human.body.hand_right_pos_angle().0,
-            ));
+            if ctx.archers_should_shoot && !mountain.is_behind {
+              ctx.projectiles.add_attack(AttackOrigin::Arrow(
+                human.body.hand_right_pos_angle().0,
+              ));
+            }
 
             renderables.add(human);
 
@@ -618,7 +625,7 @@ impl ArmyOnMountain {
               let origin = (x, y);
               let size = rng.gen_range(0.1..0.2) * width;
               let xflip = x > castle.position.0;
-              let lasering = rng.gen_bool(0.6);
+              let lasering = rng.gen_bool(0.5);
               let headshape = HeadShape::CYCLOPE;
               let leftobj = None;
               let rightobj = if lasering {
@@ -631,7 +638,11 @@ impl ArmyOnMountain {
                 Some(HoldableObject::Club)
               };
               let clr = if mainclr == 0 {
-                rng.gen_range(0..2)
+                if rng.gen_bool(0.8) {
+                  0
+                } else {
+                  1
+                }
               } else {
                 mainclr
               };
@@ -660,6 +671,7 @@ impl ArmyOnMountain {
         }
 
         // huts
+        // TODO we want them more organized
         for _ in 0..rng.gen_range(0..4) {
           let x = mix(first.0, last.0, rng.gen_range(0.1..0.9));
           let y =
@@ -686,12 +698,24 @@ impl ArmyOnMountain {
           let hut = Hut::init(rng, mainclr, (x, y), size, angle, Some(flag));
           renderables.add(hut);
         }
+
+        for _ in 0..rng.gen_range(0..2) {
+          let x = mix(first.0, last.0, rng.gen_range(0.1..0.9));
+          let y =
+            mix(lookup_ridge(&ridge, x), yhorizon, rng.gen_range(0.0..0.2));
+          let origin = (x, y);
+          let size = rng.gen_range(0.02..0.03) * width;
+          let smokel =
+            size * rng.gen_range(8.0..24.0) * rng.gen_range(0.0..1.0);
+          let camp = Firecamp::init(rng, ctx, mainclr, origin, size, smokel);
+          renderables.add(camp);
+        }
       }
     }
 
     let mut routes = vec![];
 
-    routes.extend(renderables.render(rng, paint));
+    routes.extend(renderables.render(rng, ctx, paint));
 
     if self.debug {
       for c in debug_circle.iter() {

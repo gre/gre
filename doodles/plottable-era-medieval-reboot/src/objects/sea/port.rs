@@ -1,8 +1,11 @@
 use rand::prelude::*;
 
-use crate::algo::{
-  clipping::regular_clip, paintmask::PaintMask, polylines::Polylines,
-  renderable::Renderable,
+use crate::{
+  algo::{
+    clipping::regular_clip, paintmask::PaintMask, polylines::Polylines,
+    renderable::Renderable,
+  },
+  global::GlobalCtx,
 };
 
 /**
@@ -87,7 +90,12 @@ impl Port {
 }
 
 impl<R: Rng> Renderable<R> for Port {
-  fn render(&self, rng: &mut R, paint: &mut PaintMask) -> Polylines {
+  fn render(
+    &self,
+    rng: &mut R,
+    _ctx: &mut GlobalCtx,
+    paint: &mut PaintMask,
+  ) -> Polylines {
     self.render(rng, paint, self.clr)
   }
 

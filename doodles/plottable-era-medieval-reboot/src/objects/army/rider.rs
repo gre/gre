@@ -1,6 +1,7 @@
 use super::{horse::Horse, human::Human};
-use crate::algo::{
-  paintmask::PaintMask, polylines::Polylines, renderable::Renderable,
+use crate::{
+  algo::{paintmask::PaintMask, polylines::Polylines, renderable::Renderable},
+  global::GlobalCtx,
 };
 use rand::prelude::*;
 
@@ -64,7 +65,12 @@ impl Rider {
 }
 
 impl<R: Rng> Renderable<R> for Rider {
-  fn render(&self, rng: &mut R, paint: &mut PaintMask) -> Polylines {
+  fn render(
+    &self,
+    rng: &mut R,
+    _ctx: &mut GlobalCtx,
+    paint: &mut PaintMask,
+  ) -> Polylines {
     self.render(rng, paint)
   }
   fn zorder(&self) -> f32 {

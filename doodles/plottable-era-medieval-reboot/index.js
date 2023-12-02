@@ -39,6 +39,19 @@ Promise.all([
   }
   $fx.features(props);
 
+  const effectsHot = svg.match("data-effects-hot='([^']+)'")[1];
+  const effectsWater = svg.match("data-effects-water='([^']+)'")[1];
+
+  const effectsHotImg = new Image();
+  effectsHotImg.src = effectsHot;
+  const effectsWaterImg = new Image();
+  effectsWaterImg.src = effectsWater;
+
+  if (debug) {
+    document.body.appendChild(effectsHotImg);
+    document.body.appendChild(effectsWaterImg);
+  }
+
   // Generate the WebGL
 
   let MAX = 4096;
@@ -146,6 +159,7 @@ Promise.all([
   const grainAmp = isBlackPaper ? 0.07 : 0.13;
   const lighting = isBlackPaper ? 0.2 : 0.05;
   const baseColor = [-0.003, -0.006, -0.01];
+  const effect = $fx.isPreview ? 0 : 1;
 
   let render = regl({
     frag: g.sourceCode,
@@ -156,6 +170,9 @@ Promise.all([
     uniforms: {
       [g.uniforms.time.variableName]: prop("T"),
       [g.uniforms.t.variableName]: prop("t"),
+      [g.uniforms.waterT.variableName]: prop("waterT"),
+      [g.uniforms.hotT.variableName]: prop("hotT"),
+      [g.uniforms.effect.variableName]: effect,
       [g.uniforms.paper.variableName]: framebuffer,
       [g.uniforms.primary.variableName]: colorRgb(palette.primary[1]),
       [g.uniforms.primaryHighlight.variableName]: colorRgb(palette.primary[2]),
@@ -198,6 +215,11 @@ Promise.all([
     }
   };
 
+  let waterT = regl.texture(txParam(effectsWaterImg));
+  let hotT = regl.texture(txParam(effectsHotImg));
+  effectsHotImg.onload = () => hotT(txParam(effectsHotImg));
+  effectsWaterImg.onload = () => waterT(txParam(effectsWaterImg));
+
   let r = (onresize = () => resize(WINDOW.innerWidth, WINDOW.innerHeight));
   r();
 
@@ -205,7 +227,7 @@ Promise.all([
   regl.frame(({ time }) => {
     if (!startT) startT = time;
     let T = time - startT;
-    render({ T, t: tex });
+    render({ T, t: tex, waterT, hotT });
   });
 
   // global helpers

@@ -146,7 +146,7 @@ impl Beach {
 
     let mut routes = vec![];
 
-    routes.extend(container.render(rng, paint));
+    routes.extend(container.render(rng, ctx, paint));
 
     routes.extend(beach_rendering(rng, paint, self.clr, self.yhorizon, width));
 

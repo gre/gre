@@ -41,9 +41,9 @@ impl Bartizan {
     let zorder = params.level_zorder + 100.5; // in front of next level (many in advance to secure it)
     let o = params.floor.pos;
     let width = params.floor.width;
-    let w = rng.gen_range(0.15..0.2) * width;
-    let h = rng.gen_range(1.0..3.0) * w;
     let count = rng.gen_range(2..4);
+    let w = rng.gen_range(0.6..0.8) * width / count as f32;
+    let h = rng.gen_range(1.0..3.0) * w;
     for i in 0..count {
       let xf = i as f32 / (count - 1) as f32;
       let x = mix(o.0 - width / 2.0, o.0 + width / 2.0, xf);

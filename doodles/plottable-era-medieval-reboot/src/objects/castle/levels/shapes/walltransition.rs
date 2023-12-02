@@ -30,7 +30,7 @@ impl WallTransition {
     let o = params.floor.pos;
     let splits = params.floor.splits.clone();
     let s = params.scaleref;
-    let reducing = rng.gen_bool(0.7);
+    let reducing = rng.gen_bool(0.6);
     let should_draw_shadows = (reducing || rng.gen_bool(0.2))
       && !is_transition_to_roof
       && rng.gen_bool(0.3);

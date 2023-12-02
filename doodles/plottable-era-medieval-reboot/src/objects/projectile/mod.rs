@@ -8,8 +8,9 @@ use self::{
   laser::Laser,
 };
 use super::army::arrow::Arrow;
-use crate::algo::{
-  clipping::regular_clip, paintmask::PaintMask, polylines::Polylines,
+use crate::{
+  algo::{clipping::regular_clip, paintmask::PaintMask, polylines::Polylines},
+  global::GlobalCtx,
 };
 use noise::*;
 use rand::prelude::*;
@@ -25,6 +26,7 @@ pub mod laser;
  * Author: greweb – 2023 – Plottable Era: (II) Medieval
  */
 
+#[derive(Clone)]
 pub struct Projectiles {
   // store all the attack/def intent to be resolved later as projectiles
   attacks: Vec<AttackOrigin>,
@@ -141,6 +143,7 @@ impl Projectiles {
   pub fn render<R: Rng>(
     &self,
     rng: &mut R,
+    ctx: &mut GlobalCtx,
     existing_routes: &mut Polylines,
     preserve_area: &PaintMask,
   ) {
@@ -159,7 +162,7 @@ impl Projectiles {
     }
 
     for trail in self.fireballtrails.iter() {
-      routes.extend(trail.render(rng, &mut removing_area));
+      routes.extend(trail.render(rng, ctx, &mut removing_area));
     }
     for trail in self.arrowtrails.iter() {
       routes.extend(trail.render(&mut removing_area));

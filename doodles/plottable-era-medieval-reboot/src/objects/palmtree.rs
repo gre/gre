@@ -1,8 +1,11 @@
-use crate::algo::{
-  clipping::regular_clip,
-  paintmask::PaintMask,
-  polylines::{path_subdivide_to_curve, shake, Polylines},
-  renderable::Renderable,
+use crate::{
+  algo::{
+    clipping::regular_clip,
+    paintmask::PaintMask,
+    polylines::{path_subdivide_to_curve, shake, Polylines},
+    renderable::Renderable,
+  },
+  global::GlobalCtx,
 };
 use rand::prelude::*;
 
@@ -66,7 +69,12 @@ impl PalmTree {
 }
 
 impl<R: Rng> Renderable<R> for PalmTree {
-  fn render(&self, rng: &mut R, paint: &mut PaintMask) -> Polylines {
+  fn render(
+    &self,
+    rng: &mut R,
+    _ctx: &mut GlobalCtx,
+    paint: &mut PaintMask,
+  ) -> Polylines {
     self.render(rng, paint, self.clr)
   }
   fn zorder(&self) -> f32 {

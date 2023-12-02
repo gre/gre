@@ -284,7 +284,12 @@ impl Belfry {
 }
 
 impl<R: Rng> Renderable<R> for Belfry {
-  fn render(&self, _rng: &mut R, paint: &mut PaintMask) -> Polylines {
+  fn render(
+    &self,
+    _rng: &mut R,
+    _ctx: &mut crate::global::GlobalCtx,
+    paint: &mut PaintMask,
+  ) -> Polylines {
     let routes = regular_clip(&self.routes, paint);
     for (_, rt) in &routes {
       paint.paint_polyline(rt, 1.0);

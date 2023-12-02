@@ -124,7 +124,7 @@ impl WindowShape {
         let y2 = o.1 + size;
         let rt = vec![(x, y1), (x, y2)];
         fill.push((clr, rt));
-        x += 0.3;
+        x += 0.4;
       }
       routes.extend(clip_routes_with_colors(
         &fill,

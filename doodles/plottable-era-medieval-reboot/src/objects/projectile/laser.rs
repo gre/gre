@@ -9,6 +9,7 @@ use crate::algo::{
  * Author: greweb – 2023 – Plottable Era: (II) Medieval
  */
 
+#[derive(Clone)]
 pub struct Laser {
   pub routes: Polylines,
   pub clr: usize,

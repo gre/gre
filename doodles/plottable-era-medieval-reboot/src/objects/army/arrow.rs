@@ -8,6 +8,7 @@ use crate::algo::{
  * LICENSE CC BY-NC-ND 4.0
  * Author: greweb – 2023 – Plottable Era: (II) Medieval
  */
+#[derive(Clone)]
 pub struct Arrow {
   pub routes: Polylines,
 }

@@ -1,3 +1,5 @@
+use crate::global::GlobalCtx;
+
 use super::{paintmask::PaintMask, polylines::Polylines};
 use rand::prelude::*;
 use std::cmp::Ordering;
@@ -8,7 +10,12 @@ use std::cmp::Ordering;
  */
 
 pub trait Renderable<R: Rng> {
-  fn render(&self, rng: &mut R, paint: &mut PaintMask) -> Polylines;
+  fn render(
+    &self,
+    rng: &mut R,
+    ctx: &mut GlobalCtx,
+    paint: &mut PaintMask,
+  ) -> Polylines;
   fn zorder(&self) -> f32;
 }
 
@@ -65,10 +72,15 @@ impl<R: Rng> Container<R> {
 }
 
 impl<R: Rng> Renderable<R> for Container<R> {
-  fn render(&self, rng: &mut R, paint: &mut PaintMask) -> Polylines {
+  fn render(
+    &self,
+    rng: &mut R,
+    ctx: &mut GlobalCtx,
+    paint: &mut PaintMask,
+  ) -> Polylines {
     let mut routes = vec![];
     for e in &self.elements {
-      routes.extend(e.inner.render(rng, paint));
+      routes.extend(e.inner.render(rng, ctx, paint));
     }
     routes
   }

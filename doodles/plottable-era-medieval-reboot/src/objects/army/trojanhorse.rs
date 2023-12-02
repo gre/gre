@@ -1,6 +1,7 @@
 use super::{horse::Horse, wheeledplatform::WheeledPlatform};
-use crate::algo::{
-  paintmask::PaintMask, polylines::Polylines, renderable::Renderable,
+use crate::{
+  algo::{paintmask::PaintMask, polylines::Polylines, renderable::Renderable},
+  global::GlobalCtx,
 };
 use rand::prelude::*;
 
@@ -58,7 +59,12 @@ impl TrojanHorse {
 }
 
 impl<R: Rng> Renderable<R> for TrojanHorse {
-  fn render(&self, rng: &mut R, paint: &mut PaintMask) -> Polylines {
+  fn render(
+    &self,
+    rng: &mut R,
+    _ctx: &mut GlobalCtx,
+    paint: &mut PaintMask,
+  ) -> Polylines {
     self.render(rng, paint)
   }
 

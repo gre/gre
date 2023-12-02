@@ -1,5 +1,9 @@
 use crate::{
-  algo::{math1d::smoothstep, polylines::Polylines, wormsfilling::WeightMap},
+  algo::{
+    math1d::smoothstep, paintmask::PaintMask, polylines::Polylines,
+    wormsfilling::WeightMap,
+  },
+  effects::Effects,
   objects::{blazon::Blazon, projectile::Projectiles},
   palette::{
     Palette, AMBER, BLACK_PAPER, BLUE_PAPER, DARK_BLUE_PAPER, GOLD_GEL,
@@ -51,6 +55,11 @@ pub struct GlobalCtx {
   pub specials: HashSet<Special>,
   pub night_time: bool,
   pub full_castle: bool,
+  pub castle_on_sea: bool,
+  pub no_sea: bool,
+
+  pub trebuchets_should_shoot: bool,
+  pub archers_should_shoot: bool,
 
   pub sun_xpercentage_pos: f32,
 
@@ -67,6 +76,7 @@ pub struct GlobalCtx {
   pub attackersclr: usize,
 
   pub projectiles: Projectiles,
+  pub effects: Effects,
 
   // stats that we need to cleanup at the end & for the features
   pub nb_cyclopes: usize,
@@ -75,6 +85,7 @@ pub struct GlobalCtx {
 impl GlobalCtx {
   pub fn rand<R: Rng>(
     rng: &mut R,
+    paintref: &PaintMask,
     width: f32,
     height: f32,
     precision: f32,
@@ -84,6 +95,9 @@ impl GlobalCtx {
   ) -> Self {
     let paper = palette.paper;
     let colors = &palette.inks;
+
+    let trebuchets_should_shoot = rng.gen_bool(0.3);
+    let archers_should_shoot = rng.gen_bool(0.3);
 
     let attackersclr = 2;
     let mut defendersclr = 0;
@@ -101,9 +115,9 @@ impl GlobalCtx {
       specials.insert(Special::Barricades);
     } else if rng.gen_bool(0.01) && matches!(attackers, Blazon::Falcon) {
       specials.insert(Special::EaglesAttack);
-    } else if rng.gen_bool(0.02) {
+    } else if trebuchets_should_shoot && rng.gen_bool(0.05) {
       specials.insert(Special::Trebuchets);
-    } else if rng.gen_bool(0.02) {
+    } else if rng.gen_bool(0.01) {
       specials.insert(Special::Cyclopes);
     }
 
@@ -146,7 +160,12 @@ impl GlobalCtx {
       0.5 + rng.gen_range(-0.3..0.3) * rng.gen_range(0.0..1.0);
     let full_castle = rng.gen_bool(0.04);
 
+    let castle_on_sea = true || rng.gen_bool(0.04);
+    let no_sea = !castle_on_sea && rng.gen_bool(0.08);
+
     Self {
+      castle_on_sea,
+      no_sea,
       palette,
       width,
       height,
@@ -158,11 +177,14 @@ impl GlobalCtx {
       destruction_map,
       battlefield_map,
       projectiles: Projectiles::new(),
+      effects: Effects::new(paintref),
       attackers: attackers.clone(),
       defenders: defenders.clone(),
       defendersclr,
       attackersclr,
       nb_cyclopes: 0,
+      trebuchets_should_shoot,
+      archers_should_shoot,
     }
   }
 
@@ -179,7 +201,21 @@ impl GlobalCtx {
     self.palette.get_golden_color()
   }
 
-  pub fn cleanup(&mut self) {
+  pub fn render_projectiles<R: Rng>(
+    &mut self,
+    rng: &mut R,
+    routes: &mut Polylines,
+    paint: &PaintMask,
+    mask_with_framing: &PaintMask,
+  ) {
+    self.projectiles.resolve(rng, &paint);
+    let mut projectiles = self.projectiles.clone();
+    projectiles.render(rng, self, routes, &mask_with_framing);
+    self.projectiles = projectiles;
+  }
+
+  pub fn finalize(&mut self) {
+    self.effects.finalize();
     if self.specials.contains(&Special::Cyclopes) && self.nb_cyclopes == 0 {
       self.specials.remove(&Special::Cyclopes);
     }
@@ -198,7 +234,9 @@ impl GlobalCtx {
       } else {
         "Day".to_string()
       },
-      castle: if self.full_castle {
+      castle: if self.castle_on_sea {
+        "On The Sea".to_string()
+      } else if self.full_castle {
         "Huge".to_string()
       } else {
         "Regular".to_string()

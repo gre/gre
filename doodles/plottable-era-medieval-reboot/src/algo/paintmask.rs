@@ -37,13 +37,20 @@ impl PaintMask {
     }
   }
 
-  pub fn is_painted(&self, point: (f32, f32)) -> bool {
+  pub fn unsafe_get_at(&self, i: usize) -> bool {
+    self.mask[i]
+  }
+
+  pub fn is_painted(&self, (x, y): (f32, f32)) -> bool {
+    if x < 0.0 || y < 0.0 || x >= self.width || y >= self.height {
+      return false;
+    }
     let precision = self.precision;
     let wi = (self.width / precision) as usize;
     let hi = (self.height / precision) as usize;
-    let x = ((point.0.max(0.) / precision) as usize).min(wi - 1);
-    let y = ((point.1.max(0.) / precision) as usize).min(hi - 1);
-    self.mask[x + y * wi]
+    let xi = ((x / precision) as usize).min(wi - 1);
+    let yi = ((y / precision) as usize).min(hi - 1);
+    self.mask[xi + yi * wi]
   }
 
   pub fn manhattan_distance(&self) -> Vec<usize> {
@@ -114,11 +121,25 @@ impl PaintMask {
       || other.height != self.height
       || other.precision != self.precision
     {
-      panic!("PaintMask::paint: incompatible sizes");
-    }
-    for (i, &v) in other.mask.iter().enumerate() {
-      if v {
-        self.mask[i] = true;
+      // alternative less efficient way when the sizes are different
+      let wi = (self.width / self.precision) as usize;
+      let hi = (self.height / self.precision) as usize;
+      for x in 0..wi {
+        let xf = x as f32 * self.precision;
+        for y in 0..hi {
+          let yf = y as f32 * self.precision;
+          if other.is_painted((xf, yf)) {
+            let i = x + y * wi;
+            self.mask[i] = true;
+          }
+        }
+      }
+    } else {
+      // regular way
+      for (i, &v) in other.mask.iter().enumerate() {
+        if v {
+          self.mask[i] = true;
+        }
       }
     }
   }
@@ -150,7 +171,7 @@ impl PaintMask {
       || other.height != self.height
       || other.precision != self.precision
     {
-      panic!("PaintMask::intersection: incompatible sizes");
+      panic!("PaintMask::paint: incompatible sizes");
     }
     for (i, &v) in other.mask.iter().enumerate() {
       if !v {

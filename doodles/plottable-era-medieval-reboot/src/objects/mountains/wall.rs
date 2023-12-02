@@ -25,7 +25,12 @@ struct PalisadeWoodTrunk {
 }
 
 impl<R: Rng> Renderable<R> for PalisadeWoodTrunk {
-  fn render(&self, _rng: &mut R, paint: &mut PaintMask) -> Polylines {
+  fn render(
+    &self,
+    _rng: &mut R,
+    _ctx: &mut crate::global::GlobalCtx,
+    paint: &mut PaintMask,
+  ) -> Polylines {
     let mut routes = vec![];
     let pos = self.pos;
     let width = self.width;
@@ -181,7 +186,7 @@ impl EntranceDoor {
   }
 }
 impl<R: Rng> Renderable<R> for EntranceDoor {
-  fn render(&self, _rng: &mut R, paint: &mut PaintMask) -> Polylines {
+  fn render(&self, _rng: &mut R, _ctx: &mut crate::global::GlobalCtx, paint: &mut PaintMask) -> Polylines {
     let mut routes = vec![];
     let origin = self.origin;
     let size = self.size;

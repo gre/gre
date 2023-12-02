@@ -10,6 +10,7 @@ use rand::prelude::*;
  * Author: greweb – 2023 – Plottable Era: (II) Medieval
  */
 
+#[derive(Clone)]
 pub struct Ball {
   pub origin: (f32, f32),
   pub r: f32,
