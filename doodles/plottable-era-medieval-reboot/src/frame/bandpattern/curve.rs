@@ -32,7 +32,7 @@ impl BandPattern for MedievalBandCurvePattern {
 
     let amp = self.amp * bandw;
 
-    let precision = 2.0;
+    let precision = 3.0;
 
     let mut curve1 = vec![];
     let mut curve2 = vec![];

@@ -1,12 +1,13 @@
+use super::polylines::Polylines;
 use crate::algo::paintmask::*;
 use crate::algo::rdp::*;
 use noise::*;
 use rand::prelude::*;
+use std::cmp::Ordering;
+use std::collections::BTreeMap;
 use std::collections::HashMap;
 use std::collections::HashSet;
 use std::f32::consts::PI;
-
-use super::polylines::Polylines;
 
 /**
  * LICENSE CC BY-NC-ND 4.0
@@ -73,8 +74,7 @@ impl WormsFilling {
     };
     let coloring = |_: &Vec<(f32, f32)>| clr;
     let precision = self.precision;
-    let search_max = rng.gen_range(5..10);
-    self.fill(rng, &f, bound, &coloring, precision, iterations, search_max)
+    self.fill(rng, &f, bound, &coloring, precision, iterations)
   }
 
   pub fn fill<R: Rng>(
@@ -85,7 +85,6 @@ impl WormsFilling {
     clr: &dyn Fn(&Vec<(f32, f32)>) -> usize,
     precision: f32,
     iterations: usize,
-    search_max: usize,
   ) -> Vec<(usize, Vec<(f32, f32)>)> {
     let mut routes = vec![];
     let perlin = Perlin::new(rng.gen());
@@ -111,7 +110,7 @@ impl WormsFilling {
     let mut bail_out = 0;
 
     for _i in 0..iterations {
-      let top = map.search_weight_top(search_max, min_weight);
+      let top = map.search_weight_top();
       if top.is_none() {
         bail_out += 1;
         if bail_out > 10 {
@@ -152,11 +151,23 @@ impl WormsFilling {
   }
 }
 
+#[derive(Debug, PartialEq, PartialOrd, Clone, Copy)]
+struct OrderedFloat(f32);
+
+impl Eq for OrderedFloat {}
+
+impl Ord for OrderedFloat {
+  fn cmp(&self, other: &Self) -> Ordering {
+    self.partial_cmp(other).unwrap_or(Ordering::Equal)
+  }
+}
+
 // data model that stores values information in 2D
 pub struct WeightMap {
   // TODO performance still aren't great. we need a map{index->weight} where we can easily update by index but also we can easily sort by weight (resorted each time we insert)
   weights: Vec<f32>,
-  living_indexes: HashSet<usize>,
+  weight_index_map: BTreeMap<OrderedFloat, HashSet<usize>>, // Maps weight to a set of indexes
+
   living_threshold: f32,
   w: usize,
   h: usize,
@@ -176,7 +187,7 @@ impl WeightMap {
     let weights = vec![0.0; w * h];
     WeightMap {
       weights,
-      living_indexes: HashSet::new(),
+      weight_index_map: BTreeMap::new(),
       living_threshold,
       w,
       h,
@@ -186,19 +197,14 @@ impl WeightMap {
     }
   }
   pub fn fill_fn(&mut self, f: &impl Fn((f32, f32)) -> f32) {
-    let mut living_indexes = HashSet::new();
     for x in 0..self.w {
       for y in 0..self.h {
         let p = (x as f32 * self.precision, y as f32 * self.precision);
         let v = f(p);
         let i = y * self.w + x;
-        self.weights[i] = v;
-        if v > self.living_threshold {
-          living_indexes.insert(i);
-        }
+        self.update_weight(i, v);
       }
     }
-    self.living_indexes = living_indexes;
   }
 
   // do a simple bilinear interpolation
@@ -239,7 +245,6 @@ impl WeightMap {
     let precision = self.precision;
     let w = self.w;
     let radius2 = radius * radius;
-    let weights = &mut self.weights;
     for y in y0..y1 {
       for x in x0..x1 {
         let p = (x as f32 * precision, y as f32 * precision);
@@ -249,13 +254,10 @@ impl WeightMap {
         if d2 < radius2 {
           let i = y * w + x;
           let d = d2.sqrt();
-          let w = weights[i];
+          let w = self.weights[i];
           let v = value * (1.0 - d / radius);
           let newv = w - v;
-          weights[i] = newv;
-          if w >= self.living_threshold && newv < self.living_threshold {
-            self.living_indexes.remove(&i);
-          }
+          self.update_weight(i, newv);
         }
       }
     }
@@ -297,38 +299,41 @@ impl WeightMap {
     return best_ang;
   }
 
-  pub fn search_weight_top(
-    &mut self,
-    search_max: usize,
-    min_weight: f32,
-  ) -> Option<(f32, f32)> {
-    let living_indexes = &self.living_indexes;
-    let l = living_indexes.len();
-    if l == 0 {
-      return None;
-    }
-    let mut tries = 0;
-    let mut best_w = min_weight;
-    let mut best_p: Option<usize> = None;
-    let weights = &self.weights;
-    for &i in living_indexes.iter() {
-      if tries > search_max {
-        break;
-      }
-      let w = weights[i];
-      if w > best_w {
-        tries += 1;
-        best_w = w;
-        best_p = Some(i);
+  fn update_weight(&mut self, index: usize, new_weight: f32) {
+    let old_weight = OrderedFloat(self.weights[index]);
+    self.weights[index] = new_weight;
+
+    // Remove old weight entry
+    if let Some(indexes) = self.weight_index_map.get_mut(&old_weight) {
+      indexes.remove(&index);
+      if indexes.is_empty() {
+        self.weight_index_map.remove(&old_weight);
       }
     }
-    return best_p.map(|i| {
-      let w = self.w;
-      let precision = self.precision;
-      let x = (i % w) as f32 * precision;
-      let y = (i / w) as f32 * precision;
-      (x, y)
-    });
+
+    if new_weight < self.living_threshold {
+      return;
+    }
+    // Insert new weight entry
+    self
+      .weight_index_map
+      .entry(OrderedFloat(new_weight))
+      .or_insert_with(HashSet::new)
+      .insert(index);
+  }
+
+  pub fn search_weight_top(&mut self) -> Option<(f32, f32)> {
+    self
+      .weight_index_map
+      .iter()
+      .last()
+      .and_then(|(_, indexes)| {
+        indexes.iter().next().map(|&index| {
+          let x = (index % self.w) as f32 * self.precision;
+          let y = (index / self.w) as f32 * self.precision;
+          (x, y)
+        })
+      })
   }
 
   pub fn dig_random_route(
