@@ -15,7 +15,9 @@ use super::{
 };
 use crate::{
   algo::{
-    math2d::lerp_point, paintmask::PaintMask, polylines::Polylines,
+    clipping::regular_clip, math1d::mix, math2d::lerp_point,
+    multicut::multicut_along_line, paintmask::PaintMask,
+    polygon::poly_centroid_weighted, polylines::Polylines,
     renderable::Renderable,
   },
   global::GlobalCtx,
@@ -25,7 +27,6 @@ use crate::{
       flag::Flag,
       human::{HeadShape, HoldableObject, Human},
     },
-    castle,
     mountains::CastleGrounding,
     projectile::attack::DefenseTarget,
   },
@@ -505,6 +506,53 @@ pub fn build_castle<R: Rng>(
         }
       }
     }
+
+    // TODO we need to apply this idea on each tower column
+    /*
+    {
+      // attempt to implement some destructions
+
+      let scale = castleprops.grounding.scale;
+      let pushbackbase =
+        40.0 * rng.gen_range(0.0..scale) * rng.gen_range(0.0..1.0);
+      let pushbackrotbase = rng.gen_range(-1.0..1.0);
+      let pushbackrotmix = rng.gen_range(0.1..0.9);
+      let sliding = scale * rng.gen_range(0.5..2.0);
+      let o = multicut_along_line(
+        rng,
+        &routes,
+        &mut vec![],
+        0,
+        castleprops.grounding.position,
+        (
+          castleprops.grounding.position.0,
+          castleprops.grounding.position.1 - 50.0,
+        ),
+        |rng| rng.gen_range(2.0..10.0),
+        |rng| rng.gen_range(-PI / 2.0..PI / 2.0) * rng.gen_range(0.0..1.0),
+        |rng| sliding * rng.gen_range(-1.0..1.0) * rng.gen_range(0.0..1.0),
+        |rng| pushbackbase * rng.gen_range(0.5..2.0),
+        |rng| {
+          0.1 * mix(pushbackrotbase, rng.gen_range(-1.0..1.0), pushbackrotmix)
+        },
+      );
+
+      routes = o.0;
+
+      // make ropes behind the construction
+      let count = rng.gen_range(3..16);
+      routes.extend(building_ropes(
+        rng,
+        paint,
+        &vec![],
+        count,
+        0,
+        2.0 * castleprops.grounding.width,
+        50.0,
+      ));
+    }
+    */
+
     // we also create a halo cropping around castle
     for (_, route) in &routes {
       paint.paint_polyline(route, halo);
@@ -570,4 +618,35 @@ pub fn build_castle<R: Rng>(
   }
 
   routes
+}
+
+fn building_ropes<R: Rng>(
+  rng: &mut R,
+  paint: &mut PaintMask,
+  polys: &Vec<Vec<(f32, f32)>>,
+  count: usize,
+  clr: usize,
+  width: f32,
+  height: f32,
+) -> Vec<(usize, Vec<(f32, f32)>)> {
+  let weights = polys.iter().map(|_p| rng.gen_range(0.0..1.0)).collect();
+  let mut pts = polys
+    .iter()
+    .map(|p| poly_centroid_weighted(p, &weights))
+    .collect::<Vec<_>>();
+  pts.shuffle(rng);
+  pts.truncate(count);
+  let mut ropes = vec![];
+  for p in pts {
+    let rt = vec![
+      p,
+      (
+        p.0 + 2.0 * rng.gen_range(-1.0..1.0) * width,
+        p.1 + height + rng.gen_range(0.0..50.0),
+      ),
+    ];
+
+    ropes.push((clr, rt));
+  }
+  regular_clip(&ropes, paint)
 }
