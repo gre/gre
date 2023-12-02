@@ -699,16 +699,18 @@ impl ArmyOnMountain {
           renderables.add(hut);
         }
 
-        for _ in 0..rng.gen_range(0..2) {
-          let x = mix(first.0, last.0, rng.gen_range(0.1..0.9));
-          let y =
-            mix(lookup_ridge(&ridge, x), yhorizon, rng.gen_range(0.0..0.2));
-          let origin = (x, y);
-          let size = rng.gen_range(0.02..0.03) * width;
-          let smokel =
-            size * rng.gen_range(8.0..24.0) * rng.gen_range(0.0..1.0);
-          let camp = Firecamp::init(rng, ctx, mainclr, origin, size, smokel);
-          renderables.add(camp);
+        if rng.gen_bool(0.1) {
+          for _ in 0..rng.gen_range(0..2) {
+            let x = mix(first.0, last.0, rng.gen_range(0.1..0.9));
+            let y =
+              mix(lookup_ridge(&ridge, x), yhorizon, rng.gen_range(0.0..0.2));
+            let origin = (x, y);
+            let size = rng.gen_range(0.02..0.03) * width;
+            let smokel =
+              size * rng.gen_range(8.0..24.0) * rng.gen_range(0.0..1.0);
+            let camp = Firecamp::init(rng, ctx, mainclr, origin, size, smokel);
+            renderables.add(camp);
+          }
         }
       }
     }

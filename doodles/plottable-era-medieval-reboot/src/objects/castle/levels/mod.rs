@@ -76,7 +76,7 @@ impl RenderItem {
   }
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct LevelParams {
   // seed global for the tower.
   pub tower_seed: u32,

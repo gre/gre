@@ -97,7 +97,7 @@ impl GlobalCtx {
     let colors = &palette.inks;
 
     let trebuchets_should_shoot = rng.gen_bool(0.3);
-    let archers_should_shoot = rng.gen_bool(0.3);
+    let archers_should_shoot = rng.gen_bool(0.2);
 
     let attackersclr = 2;
     let mut defendersclr = 0;
@@ -160,7 +160,7 @@ impl GlobalCtx {
       0.5 + rng.gen_range(-0.3..0.3) * rng.gen_range(0.0..1.0);
     let full_castle = rng.gen_bool(0.04);
 
-    let castle_on_sea = true || rng.gen_bool(0.04);
+    let castle_on_sea = rng.gen_bool(0.05);
     let no_sea = !castle_on_sea && rng.gen_bool(0.08);
 
     Self {
@@ -209,7 +209,7 @@ impl GlobalCtx {
     mask_with_framing: &PaintMask,
   ) {
     self.projectiles.resolve(rng, &paint);
-    let mut projectiles = self.projectiles.clone();
+    let projectiles = self.projectiles.clone();
     projectiles.render(rng, self, routes, &mask_with_framing);
     self.projectiles = projectiles;
   }

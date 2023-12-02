@@ -12,7 +12,7 @@ use super::RenderItem;
  * Author: greweb – 2023 – Plottable Era: (II) Medieval
  */
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub enum PoleKind {
   Flag,
   Circle,

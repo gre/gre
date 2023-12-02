@@ -47,9 +47,12 @@ Promise.all([
   const effectsWaterImg = new Image();
   effectsWaterImg.src = effectsWater;
 
+
   if (debug) {
+    /*
     document.body.appendChild(effectsHotImg);
     document.body.appendChild(effectsWaterImg);
+    */
   }
 
   // Generate the WebGL
@@ -195,7 +198,7 @@ Promise.all([
   let lastSVGWidth;
   let txParam = (data) => ({ data, min: LINEAR, mag: LINEAR, flipY: true });
 
-  let tex = regl.texture(txParam(img));
+  let tex = regl.texture(txParam(null));
   let resize = (width, height) => {
     let [W, H, w, h, svgWidth, svgHeight] = calcSizes(width, height);
     canvas.width = w;
@@ -215,8 +218,8 @@ Promise.all([
     }
   };
 
-  let waterT = regl.texture(txParam(effectsWaterImg));
-  let hotT = regl.texture(txParam(effectsHotImg));
+  let waterT = regl.texture(txParam(null));
+  let hotT = regl.texture(txParam(null));
   effectsHotImg.onload = () => hotT(txParam(effectsHotImg));
   effectsWaterImg.onload = () => waterT(txParam(effectsWaterImg));
 

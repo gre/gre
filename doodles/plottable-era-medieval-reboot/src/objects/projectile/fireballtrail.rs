@@ -113,7 +113,7 @@ impl FireballTrail {
 
     for (_, route) in &routes {
       paint.paint_polyline(route, 2.0);
-      ctx.effects.hot.paint_polyline(route, 4.0);
+      ctx.effects.hot.paint_polyline(route, 6.0);
     }
 
     paint.paint(&self.trailmask);

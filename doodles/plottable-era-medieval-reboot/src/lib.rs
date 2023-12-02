@@ -14,6 +14,7 @@ use algo::packing::packing;
 use algo::polylines::path_subdivide_to_curve;
 use algo::polylines::shake;
 use algo::polylines::Polylines;
+use algo::renderable::*;
 use fxhash::*;
 use global::GlobalCtx;
 use global::Special;
@@ -23,6 +24,7 @@ use objects::blazon::get_duel_houses;
 use objects::castle::Castle;
 use objects::mountains::front::FrontMountains;
 use objects::mountains::*;
+use objects::rock::Rock;
 use objects::sea::beach::Beach;
 use objects::sea::Sea;
 use objects::sky::MedievalSky;
@@ -61,6 +63,8 @@ pub fn render(
   let mut font = load_font(&fontdata);
 
   let mut paint = PaintMask::new(precision, width, height);
+  // some spacing to avoid small glitches
+  paint.paint_borders(pad / 2.0);
 
   // Colors
   let (attacker_house, defender_house) = get_duel_houses(&mut rng);
@@ -173,6 +177,7 @@ pub fn render(
   };
 
   if ctx.castle_on_sea {
+    perf.span("castle", &routes);
     // TODO make a structure, pilori, etc.. or sometimes just rocks.
     // TODO multiple castle, we would loop through them. they would be placed on the sea but we would enforce there is no unit behind.
     let castlewidth = rng.gen_range(0.2..0.5) * width;
@@ -186,8 +191,40 @@ pub fn render(
       moats: vec![],
       main_door_pos: None,
       scale,
+      is_on_water: true,
     };
-    perf.span("castle", &routes);
+    let mut items = Container::new();
+    let count = rng.gen_range(1..20);
+    let skipf = rng.gen_range(0.2..0.8);
+    for i in 0..count {
+      if rng.gen_bool(skipf) {
+        continue;
+      }
+      let dx = castlewidth
+        * if count == 1 {
+          0.0
+        } else {
+          i as f32 / (count - 1) as f32 - 0.5
+        };
+      let p = (x + dx, yhorizon + rng.gen_range(0.0..0.05) * castlewidth);
+      let size = rng.gen_range(0.05..0.1) * castlewidth;
+      let elevation = rng.gen_range(0.0..1.0)
+        + rng.gen_range(0.0..3.0) * rng.gen_range(0.0..1.0);
+      let count_poly =
+        (rng.gen_range(0.8..1.2) * (elevation * 5. + 3.)) as usize;
+      let rock = Rock::init(
+        &mut rng,
+        p,
+        size,
+        0,
+        count_poly,
+        elevation,
+        &mut |_, _, _, _| None,
+      );
+      items.add(rock);
+    }
+    routes.extend(items.render(&mut rng, &mut ctx, &mut paint));
+
     let ymax = pad + framingw + 0.02 * height;
     let extra_towers =
       rng.gen_range(-1.0f32..20.0 * castle.width / width).max(0.0) as usize;

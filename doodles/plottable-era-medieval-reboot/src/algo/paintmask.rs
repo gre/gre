@@ -37,14 +37,7 @@ impl PaintMask {
     }
   }
 
-  pub fn unsafe_get_at(&self, i: usize) -> bool {
-    self.mask[i]
-  }
-
   pub fn is_painted(&self, (x, y): (f32, f32)) -> bool {
-    if x < 0.0 || y < 0.0 || x >= self.width || y >= self.height {
-      return false;
-    }
     let precision = self.precision;
     let wi = (self.width / precision) as usize;
     let hi = (self.height / precision) as usize;

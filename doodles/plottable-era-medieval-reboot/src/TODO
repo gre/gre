@@ -1,6 +1,4 @@
 PRIO:
-- scene splits
-  - no mountain case => castle on water. pilloris.
 - battlefield placement. def/neutral/attack areas
 - castle destruction. fire/smoke that goes with it
 - battlefield extra details. people with machines & all other new objs
@@ -8,18 +6,11 @@ PRIO:
 - boat variety.
 - destruction map to impact battlefield too. we should also have a noise map for where the targets are
 
-SCENE SPLITS:
-- rethink a bit the splits (front/sea/mountains/sky)
-  - and allow some rare cases
-    - no sea?
-    - only sea? boat battle? we need better boat like the defender have the relic on one?
-  - reflection could be a bit more compressed when it's smaller area
-
 CASTLE:
 - rework castle
   - defenders on the walls
   - watch towers
-  - stairs
+  - stairs => where we can find some empty space. typically in the big towers.
   - lights
 - bush at bottom of walls to balance a bit the mountain is sometimes very curvy.
 
@@ -79,6 +70,7 @@ WORK ON DESTRUCTION:
 - Dead battle field. (remains of weapons and flaks in the ground)
 
 SEA:
+- only sea = boat battle? we need better boat like the defender have the relic on one?
 - boats:
   - boat spawner to spawn add variety + flags.
   - mat de bateau
@@ -102,9 +94,6 @@ IDEAS:
 - ? for these specials. have special titles too.
 - night time illumination: castle lights, attacker torches, firecamp
   - ADD: campfire near huts (it's an area)
-- ADD post processing anim. add an invisible polygon to make a texture in the web side (replace to activate).
-  - on sea (like (I) Primitive)
-  - on the fires to make the glow & have some sort of moving effect
 - ADD Random event on rock:
   - a nest
   - a weapon

@@ -1,5 +1,6 @@
 pub mod bartizan;
 pub mod bell;
+pub mod bridges;
 pub mod merlon;
 pub mod pillars;
 pub mod roof;

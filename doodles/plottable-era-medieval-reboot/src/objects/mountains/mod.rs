@@ -30,6 +30,7 @@ pub struct CastleGrounding {
   pub moats: Vec<((f32, f32), (f32, f32))>,
   pub main_door_pos: Option<(f32, f32)>,
   pub scale: f32,
+  pub is_on_water: bool,
 }
 
 pub struct Mountain {
@@ -380,6 +381,7 @@ impl MountainsV2 {
             moats,
             main_door_pos,
             scale,
+            is_on_water: false,
           })
         } else {
           None

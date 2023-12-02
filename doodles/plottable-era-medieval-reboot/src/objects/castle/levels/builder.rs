@@ -3,6 +3,7 @@ use super::{
   shapes::{
     bartizan::Bartizan,
     bell::Bell,
+    bridges::{Bridges, BridgesParams},
     merlon::Merlon,
     pillars::Pillars,
     roof::{Roof, RoofParams},
@@ -24,6 +25,7 @@ use crate::{
       flag::Flag,
       human::{HeadShape, HoldableObject, Human},
     },
+    castle,
     mountains::CastleGrounding,
     projectile::attack::DefenseTarget,
   },
@@ -36,6 +38,7 @@ use std::{collections::HashMap, f32::consts::PI};
  * Author: greweb – 2023 – Plottable Era: (II) Medieval
  */
 
+#[derive(Clone)]
 pub struct GlobalCastleProperties {
   pub extra_towers: usize,
   // ybase is where the chapel foundation need to start
@@ -48,6 +51,8 @@ pub struct GlobalCastleProperties {
   pub light_x_direction: f32,
   // TODO we could give in param a probabilistic config
   // also most of the rng parts of the shape should be params
+  pub first_only_choices_extra: Vec<usize>,
+  pub generic_choices_extra: Vec<usize>,
 }
 impl GlobalCastleProperties {
   pub fn rand<R: Rng>(
@@ -61,6 +66,19 @@ impl GlobalCastleProperties {
     let reference_roof_params = RoofParams::rand(rng, ctx);
     let dx = grounding.position.0 - ctx.sun_xpercentage_pos * ctx.width;
     let light_x_direction = (dx / (0.1 * ctx.width)).max(-1.0).min(1.0);
+    let mut first_only_choices_extra = vec![];
+    let mut generic_choices_extra = vec![];
+
+    if grounding.is_on_water {
+      first_only_choices_extra.push(8);
+    } else if rng.gen_bool(0.02) {
+      first_only_choices_extra.push(8);
+    }
+
+    if rng.gen_bool(0.02) {
+      generic_choices_extra.push(8);
+    }
+
     Self {
       grounding: grounding.clone(),
       reference_roof_params,
@@ -68,12 +86,15 @@ impl GlobalCastleProperties {
       ybase,
       ymax,
       extra_towers,
+      first_only_choices_extra,
+      generic_choices_extra,
     }
   }
 }
 
 fn rec_build<R: Rng>(
   rec_level: usize,
+  floors: &mut Vec<Floor>,
   rng: &mut R,
   ctx: &mut GlobalCtx,
   paint: &mut PaintMask,
@@ -94,10 +115,11 @@ fn rec_build<R: Rng>(
     }
   }
 
-  let floor = Floor::new(origin, width, splits, false);
+  let floor = Floor::new(origin, width, splits, true);
+  floors.push(floor.clone());
 
   let initial_h = origin.1 - ymax;
-  let max_levels = rng.gen_range(2..16);
+  let max_levels = rng.gen_range(2..14);
   let grow_factor = 1.0 / (max_levels as f32);
   let grow_constant = rng.gen_range(0.0..0.2) * initial_h;
 
@@ -129,6 +151,28 @@ fn rec_build<R: Rng>(
     Pillars::max_allowed_width(scale),
     Bartizan::max_allowed_width(scale),
     Bell::max_allowed_width(scale),
+    Bridges::max_allowed_width(scale),
+  ];
+
+  let max_in_a_tower = vec![
+    // 0 roof
+    1,
+    // 1 wall
+    usize::MAX,
+    // 2 wall transition
+    usize::MAX,
+    // 3 merlon
+    3,
+    // 4 zigzag
+    3,
+    // 5 pillars
+    1,
+    // 6 bartizans
+    5,
+    // 7 bell
+    2,
+    // 8 bridge (special)
+    1,
   ];
 
   let forbidden_on_top_of: Vec<Vec<usize>> = vec![
@@ -148,15 +192,23 @@ fn rec_build<R: Rng>(
     vec![3, 5, 6, 7],
     // 7 bell
     vec![6, 7],
+    // 8 bridge (special)
+    vec![8],
   ];
   let roof_choices = vec![0, 3];
-  let first_only_choices = (1..2).collect::<Vec<_>>();
-  let generic_choices = (0..forbidden_on_top_of.len()).collect::<Vec<_>>();
+  let mut first_only_choices = (1..2).collect::<Vec<_>>();
+  first_only_choices.extend(castleprops.first_only_choices_extra.clone());
+
+  let mut generic_choices = (0..8).collect::<Vec<_>>();
+  generic_choices.extend(castleprops.generic_choices_extra.clone());
+
   let mut forbidden_structure = vec![];
 
   let mut items = vec![];
   let mut possible_bg_human_positions = vec![];
   let mut possible_pole_positions = vec![];
+
+  let mut remainings = max_in_a_tower.clone();
 
   // TODO should we be driven by max_levels? i think it's better to climb until we can but a probability to stop.
   for l in 0..max_levels {
@@ -175,6 +227,7 @@ fn rec_build<R: Rng>(
       .iter()
       .filter(|&i| {
         !forbidden_structure.contains(i)
+          && remainings[*i] > 0
           && params.floor.width < level_max_allowed_width[*i]
       })
       .cloned()
@@ -209,6 +262,20 @@ fn rec_build<R: Rng>(
             splits.shuffle(rng);
           }
 
+          let mut castleprops = castleprops.clone();
+          if l > 0 {
+            castleprops.first_only_choices_extra = vec![];
+            castleprops.ybase = params.floor.pos.1;
+            castleprops.grounding = CastleGrounding {
+              position: params.floor.pos,
+              width: params.floor.width,
+              scale: castleprops.grounding.scale,
+              is_on_water: false,
+              main_door_pos: None,
+              moats: vec![],
+            };
+          }
+
           // make the new floors
           let divs = count as f32;
           let m = remains / divs;
@@ -224,10 +291,11 @@ fn rec_build<R: Rng>(
               );
               let tower = rec_build(
                 rec_level + 1,
+                &mut vec![],
                 rng,
                 ctx,
                 paint,
-                castleprops,
+                &castleprops,
                 origin,
                 width,
                 objects,
@@ -256,6 +324,7 @@ fn rec_build<R: Rng>(
     }
     let i = rng.gen_range(0..choices.len());
     let levelkind = choices[i];
+    remainings[levelkind] -= 1;
     forbidden_structure = forbidden_on_top_of[levelkind].clone();
 
     // a leaf happens if there is not enough space. (TODO: we need to sometimes "close" with a ceil still...?)
@@ -296,6 +365,11 @@ fn rec_build<R: Rng>(
       5 => Box::new(Pillars::init(rng, &params)),
       6 => Box::new(Bartizan::init(rng, ctx, paint, &params)),
       7 => Box::new(Bell::init(rng, ctx, &params)),
+      8 => {
+        let mut bridgeparams = BridgesParams::new(rng);
+        bridgeparams.fill_to_lowest_y_allowed = l == 0;
+        Box::new(Bridges::init(rng, paint, &params, &bridgeparams))
+      }
       _ => panic!("unknown level kind"),
     };
 
@@ -306,6 +380,7 @@ fn rec_build<R: Rng>(
 
     if let Some(floor) = level.roof_base() {
       let middle = lerp_point(floor.pos, params.floor.pos, 0.5);
+      floors.push(floor.clone());
 
       ctx.projectiles.add_defense(DefenseTarget::Building(middle));
 
@@ -405,11 +480,14 @@ pub fn build_castle<R: Rng>(
   let halo = 1.4;
   let mut routes = vec![];
 
+  let mut levels = vec![];
+
   // Build the main castle
   {
     let mut objects = HashMap::new();
     let mut items = rec_build(
       0,
+      &mut levels,
       rng,
       ctx,
       paint,
@@ -433,15 +511,47 @@ pub fn build_castle<R: Rng>(
     }
   }
 
+  // try to get floor 1 and use it as ref
+  let (refpos, refwidth) = levels
+    .get(1)
+    .map(|floor| {
+      let pos = floor.pos;
+      let width = floor.width;
+      (pos, width)
+    })
+    .unwrap_or((castleprops.grounding.position, castleprops.grounding.width));
+
+  let mut castleprops = castleprops.clone();
+  castleprops.first_only_choices_extra = vec![];
+  castleprops.ybase = refpos.1;
+  castleprops.grounding = CastleGrounding {
+    position: refpos,
+    width: refwidth,
+    scale: castleprops.grounding.scale,
+    is_on_water: false,
+    main_door_pos: None,
+    moats: vec![],
+  };
+
   // build extra towers
   for _ in 0..castleprops.extra_towers {
     let mut objects = HashMap::new();
-    let width = rng.gen_range(0.2..0.5) * castleprops.grounding.width;
-    let mut origin = castleprops.grounding.position;
-    origin.0 +=
-      rng.gen_range(-0.5..0.5) * (castleprops.grounding.width - width);
-    let mut items =
-      rec_build(1, rng, ctx, paint, castleprops, origin, width, &mut objects);
+
+    let width = rng.gen_range(0.2..0.5) * refwidth;
+    let mut origin = refpos;
+    origin.0 += rng.gen_range(-0.5..0.5) * (refwidth - width);
+
+    let mut items = rec_build(
+      1,
+      &mut vec![],
+      rng,
+      ctx,
+      paint,
+      &castleprops,
+      origin,
+      width,
+      &mut objects,
+    );
     items.sort();
 
     for item in &items {

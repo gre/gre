@@ -7,7 +7,7 @@ use crate::{
 };
 use rand::prelude::*;
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct RoofParams {
   // force color
   pub clr: Option<usize>,

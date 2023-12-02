@@ -37,12 +37,8 @@ void main() {
   vec3 c1 = pal(v.r, primary, primaryHighlight);
   vec3 c2 = pal(v.g, secondary, secondaryHighlight);
   vec3 c3 = pal(v.b, third, thirdHighlight);
-
-  // crop some glitch on edges
-  float border = smoothstep(0.496, 0.495, max(abs(p.x - 0.5), abs(p.y - 0.5)));
-  
   vec3 c =
-  (c1 + c2 + c3) * (1. + lighting * gain) * border +
+  (c1 + c2 + c3) * (1. + lighting * gain) +
   grainAmp * grain +/*developed by @greweb*/
   baseColor +
   background * smoothstep(0.5, 1.0, v.r * v.g * v.b);
