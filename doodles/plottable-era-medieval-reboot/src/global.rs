@@ -169,8 +169,8 @@ impl GlobalCtx {
       0.5 + rng.gen_range(-0.3..0.3) * rng.gen_range(0.0..1.0);
     let full_castle = rng.gen_bool(0.04);
 
-    let castle_on_sea = rng.gen_bool(0.05);
-    let no_sea = !castle_on_sea && rng.gen_bool(0.08);
+    let castle_on_sea = rng.gen_bool(0.1);
+    let no_sea = !castle_on_sea && rng.gen_bool(0.1);
 
     Self {
       is_sandbox,

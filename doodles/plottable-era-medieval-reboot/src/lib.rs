@@ -160,7 +160,6 @@ pub fn render(
     let yhorizon = if ctx.no_sea {
       height
     } else {
-      // TODO tweak
       rng.gen_range(0.5..0.8) * height
     };
     //  mountains
@@ -243,7 +242,11 @@ pub fn render(
       perf.span_end("castle", &routes);
     } else {
       perf.span("mountains", &routes);
-      let ymax = mix(0.0, yhorizon, rng.gen_range(0.4..0.6));
+      let ymax = mix(
+        0.0,
+        mix(yhorizon, 0.5 * height, rng.gen_range(0.2..0.7)),
+        rng.gen_range(0.5..0.7),
+      );
       let count =
         2 + (rng.gen_range(0.0..10.0) * rng.gen_range(0.0..1.0)) as usize;
       let first_is_second = ctx.palette.inks[0] == ctx.palette.inks[1];
@@ -342,7 +345,7 @@ pub fn render(
 
     if let Some((sea, sea_routes)) = sea_data {
       perf.span("reflect_shapes", &routes);
-      let probability_par_color = vec![0.08, 0.1, 0.2];
+      let probability_par_color = vec![0.1, 0.15, 0.22];
       routes.extend(sea.reflect_shapes(
         &mut rng,
         &mut paint,

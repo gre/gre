@@ -59,6 +59,23 @@ impl MedievalSky {
     height: f32,
     pad: f32,
   ) -> Self {
+    let should_sun_spiral = !ctx.night_time && rng.gen_bool(0.6);
+    let should_rain =
+      !ctx.night_time && !should_sun_spiral && rng.gen_bool(0.3);
+    let should_have_stars = ctx.night_time && rng.gen_bool(0.5);
+    // ref to https://greweb.me/plots/1163
+    let should_uh_oh_sky = (!should_sun_spiral || rng.gen_bool(0.2))
+      && !should_rain
+      && !should_have_stars
+      && rng.gen_bool(0.5);
+    let should_moon = ctx.night_time;
+    let mut should_set_yarn_balls = rng.gen_range(-1000..100);
+
+    let should_cloud_rays = (!should_rain || rng.gen_bool(0.05))
+      && (!should_sun_spiral || rng.gen_bool(0.15))
+      && (!should_have_stars || rng.gen_bool(0.01))
+      && rng.gen_bool(0.7);
+
     let sun_circle = VCircle::new(
       width * ctx.sun_xpercentage_pos,
       height * rng.gen_range(0.1..0.3),
@@ -99,17 +116,6 @@ impl MedievalSky {
       .max(0.0) as usize
     };
 
-    let should_sun_spiral = !ctx.night_time && rng.gen_bool(0.6);
-    let should_rain =
-      !ctx.night_time && !should_sun_spiral && rng.gen_bool(0.3);
-    let should_have_stars = ctx.night_time && rng.gen_bool(0.5);
-    // ref to https://greweb.me/plots/1163
-    let should_uh_oh_sky = !should_sun_spiral
-      && !should_rain
-      && !should_have_stars
-      && rng.gen_bool(0.5);
-    let should_moon = ctx.night_time;
-
     let mut stars = vec![];
     if should_have_stars {
       let count =
@@ -136,8 +142,6 @@ impl MedievalSky {
         stars.push(star);
       }
     }
-
-    let mut should_set_yarn_balls = rng.gen_range(-1000..100);
 
     let mut routes = vec![];
     if should_uh_oh_sky {
@@ -186,11 +190,6 @@ impl MedievalSky {
         }
       }
     }
-
-    let should_cloud_rays = (!should_rain || rng.gen_bool(0.1))
-      && (!should_sun_spiral || rng.gen_bool(0.05))
-      && (stars.is_empty() || rng.gen_bool(0.01))
-      && rng.gen_bool(0.7);
 
     MedievalSky {
       sun_color: 1,

@@ -34,7 +34,7 @@ impl PoleKind {
         Self::Spike,
       ]
     };
-    let i = rng.gen_range(0.0..choices.len() as f32) * rng.gen_range(0.3..1.0);
+    let i = rng.gen_range(0.0..choices.len() as f32) * rng.gen_range(0.2..1.0);
     choices[i as usize].clone()
   }
 

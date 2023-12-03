@@ -252,10 +252,10 @@ impl Boat {
 
     // mast
     if self.with_mast {
-      let main_h = (rng.gen_range(2.8..3.6) * size).min(self.w * 1.5);
+      let main_h = (rng.gen_range(2.8..3.6) * size).min(self.w * 2.0);
       let second_w = rng
-        .gen_range((if self.with_sailing { 0.25 } else { 0.1 })..0.5)
-        * self.w.min(5.0 * size);
+        .gen_range((if self.with_sailing { 0.25 } else { 0.1 })..0.4)
+        * self.w.min(4.0 * size);
       let y = -main_h;
       let y2 = rng.gen_range(0.8..1.0) * y;
 

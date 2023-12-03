@@ -109,7 +109,11 @@ impl ArmyOnMountain {
     let mut renderables = Container::new();
 
     let mainclr = mountain.clr;
-    let blazonclr = 2;
+    let blazonclr = if mountain.is_behind && rng.gen_bool(0.8) {
+      mountain.clr
+    } else {
+      2
+    };
 
     let mut noarmy = false;
 
