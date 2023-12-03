@@ -29,7 +29,6 @@ pub struct WallParams {
   pub push_left_down: f32,
   pub push_right_down: f32,
   // TODO stairs with a door entrance in castle
-  // TODO door
 }
 
 impl WallParams {

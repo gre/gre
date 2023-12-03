@@ -3,7 +3,6 @@ PRIO:
 - castle destruction. fire/smoke that goes with it
 - battlefield extra details. people with machines & all other new objs
 - castle extra details (illumination, flags,..) 
-- boat variety.
 - destruction map to impact battlefield too. we should also have a noise map for where the targets are
 
 CASTLE:
@@ -71,11 +70,6 @@ WORK ON DESTRUCTION:
 
 SEA:
 - only sea = boat battle? we need better boat like the defender have the relic on one?
-- boats:
-  - boat spawner to spawn add variety + flags.
-  - mat de bateau
-- reflection: reflect the particles?!
-- reflection: dragon
 
 FRONT MOUNTAIN:
 - rework spawning. 
@@ -89,16 +83,10 @@ FRONT MOUNTAIN:
 
 IDEAS:
 - defenders on the beach during trojan horse.
-- for most object i think we need to allow them to go gold. in rare case.
-- archer on top of an attacker tower. 
-- ? for these specials. have special titles too.
 - night time illumination: castle lights, attacker torches, firecamp
-  - ADD: campfire near huts (it's an area)
 - ADD Random event on rock:
   - a nest
   - a weapon
   - an observer/lost person
 - SPECIAL lockness event. 
 - SPECIAL "zombie"/ghul mode. with the red moon. ref to zelda?
-- IDEA: sky parametric equations with worms filling.
-- can we optim perf of Filling?

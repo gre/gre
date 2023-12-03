@@ -69,6 +69,24 @@ impl<R: Rng> Container<R> {
     self.elements.extend(other.elements);
     self.elements.sort();
   }
+
+  pub fn render_with_extra_halo(
+    &self,
+    rng: &mut R,
+    ctx: &mut GlobalCtx,
+    paint: &mut PaintMask,
+    halo: f32,
+  ) -> Polylines {
+    let mut routes = vec![];
+    for e in &self.elements {
+      let rts = e.inner.render(rng, ctx, paint);
+      for (_, route) in &rts {
+        paint.paint_polyline(route, halo);
+      }
+      routes.extend(rts);
+    }
+    routes
+  }
 }
 
 impl<R: Rng> Renderable<R> for Container<R> {
@@ -84,6 +102,7 @@ impl<R: Rng> Renderable<R> for Container<R> {
     }
     routes
   }
+
   fn zorder(&self) -> f32 {
     self
       .elements

@@ -59,7 +59,6 @@ impl Bartizan {
         wallratio,
         xf,
       ));
-      // TODO spawn flag
     }
 
     // only renders as is, rest is unchanged

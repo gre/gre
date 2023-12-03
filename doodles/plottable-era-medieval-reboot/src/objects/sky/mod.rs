@@ -1,4 +1,5 @@
 pub mod clouds;
+pub mod dragons;
 pub mod eagle;
 pub mod moon;
 pub mod rain;
@@ -291,7 +292,7 @@ impl MedievalSky {
     }
 
     // sun
-    let dr = 0.5;
+    let dr = if rng.gen_bool(0.1) { 1.0 } else { 0.5 };
     if should_moon {
       let phase = 0.5
         + rng.gen_range(0.02..0.3) * if rng.gen_bool(0.5) { 1.0 } else { -1.0 };

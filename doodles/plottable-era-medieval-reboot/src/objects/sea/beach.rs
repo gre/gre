@@ -9,7 +9,10 @@ use crate::{
   },
   global::{GlobalCtx, Special},
   objects::{
-    army::{boat::Boat, trojanhorse::TrojanHorse},
+    army::{
+      boat::{Boat, BoatGlobals},
+      trojanhorse::TrojanHorse,
+    },
     blazon::Blazon,
     palmtree::PalmTree,
   },
@@ -118,6 +121,10 @@ impl Beach {
       )
     };
 
+    let mut boatglobs = BoatGlobals::rand(rng);
+    boatglobs.mast_p /= 2.0;
+    boatglobs.sailing_p /= 2.0;
+
     for i in 0..self.port_boats_count {
       let w = boatw * rng.gen_range(0.8..1.2);
       let xflip = rng.gen_bool(0.5);
@@ -127,8 +134,18 @@ impl Beach {
         boaty + (i as f32 + rng.gen_range(0.0..1.0)) * 0.3 * boatsize,
       );
       let ang = rng.gen_range(-1.0..1.0) * angamp;
-      let boat =
-        Boat::init(rng, origin, boatsize, ang, w, xflip, blazon, self.portclr);
+      let boat = Boat::init(
+        rng,
+        origin,
+        boatsize,
+        ang,
+        w,
+        xflip,
+        blazon,
+        self.portclr,
+        self.portclr,
+        &boatglobs,
+      );
       container.add(boat);
     }
 

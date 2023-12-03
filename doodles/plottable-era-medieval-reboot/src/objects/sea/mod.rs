@@ -1,6 +1,7 @@
 use super::{
   army::{
-    boatarmy::BoatArmy,
+    boat::BoatGlobals,
+    boatarmy::{BoatArmy, SpawnHumanArg},
     body::HumanPosture,
     human::{HeadShape, HoldableObject, Human},
     sword::Sword,
@@ -15,7 +16,7 @@ use crate::{
     paintmask::PaintMask,
     passage::Passage,
     polylines::slice_polylines,
-    renderable::{as_box_renderable, Renderable},
+    renderable::{as_box_renderable, Container, Renderable},
   },
   global::{GlobalCtx, Special},
   objects::sea::sauron::SauronEye,
@@ -34,25 +35,18 @@ pub mod sauron;
 
 pub struct Sea {
   pub sea_mask: PaintMask,
-  pub boat_color: usize,
   pub yhorizon: f32,
   pub blazon: Blazon,
 }
 
 impl Sea {
-  pub fn from(
-    paint: &PaintMask,
-    yhorizon: f32,
-    boat_color: usize,
-    blazon: Blazon,
-  ) -> Self {
+  pub fn from(paint: &PaintMask, yhorizon: f32, blazon: Blazon) -> Self {
     let mut sea_mask = paint.clone();
     sea_mask.paint_fn(&|(_, y)| y < yhorizon);
 
     Self {
       yhorizon,
       sea_mask,
-      boat_color,
       blazon,
     }
   }
@@ -65,15 +59,6 @@ impl Sea {
     probability_par_color: Vec<f32>,
   ) -> Vec<(usize, Vec<(f32, f32)>)> {
     let mut routes = vec![];
-    // TODO idea to improve this:
-
-    // 1: we select the part above yhorizon sea level
-
-    // 2: we store coloring information in a map, with density information...
-    // the density is max-ed out by a certain amount to deduplicate information
-
-    // 3: for each grid point we will project a % of the density on the sea, & apply some dash effect & y disp
-
     let mut passage = Passage::new(0.5, paint.width, paint.height);
     let is_below_sea_level = |(_x, y): (f32, f32)| y > self.yhorizon;
     let reflectables =
@@ -99,12 +84,10 @@ impl Sea {
       ydistortion,
     ));
 
-    // FIXME: should sea_mask be used instead? meaning that render() would alter it too?
-    // depending if we manage to not alter the sea when drawing the above parts
     regular_clip(&routes, paint)
   }
 
-  pub fn render<R: Rng>(
+  pub fn render<R: Rng + 'static>(
     &mut self,
     ctx: &mut GlobalCtx,
     rng: &mut R,
@@ -120,184 +103,265 @@ impl Sea {
     let boats_count = if no_boats {
       0
     } else {
-      (rng.gen_range(0.0f32..20.0) * rng.gen_range(-0.3..1.0)).max(0.0) as usize
+      let min = if ctx.castle_on_sea { 0.0 } else { -0.3 };
+      (rng.gen_range(0.0f32..20.0) * rng.gen_range(min..1.0)).max(0.0) as usize
     };
 
     // Place rocks
-    let mut sea_shapes: Vec<Box<dyn Renderable<R>>> = vec![];
+    let mut sea_shapes = Container::new();
 
     // this mask is used to find location to pack things
 
     let mut should_set_excalibur = rng.gen_bool(0.1) && ctx.specials.is_empty();
 
     let tries = 10;
-    sea_shapes.extend(
-      (0..rocks_count)
-        .filter_map(|_| {
-          for _ in 0..tries {
-            let x = width * rng.gen_range(0.0..1.0);
-            let yp = rng.gen_range(0.0..1.0);
-            let y = mix(self.yhorizon, height, yp);
-            if !self.sea_mask.is_painted((x, y)) {
-              let size = (0.04
-                + rng.gen_range(0.0..0.04) * rng.gen_range(0.0..1.0))
-                * width;
-              let minx = x - size;
-              let maxx = x + size;
-              let miny = y - size;
-              let maxy = y;
-              self.sea_mask.paint_rectangle(minx, miny, maxx, maxy);
-              let origin = (x, y);
-              let elevation =
-                1.5 + rng.gen_range(0.0..5.0) * rng.gen_range(0.0..1.0);
-              let count_poly =
-                (rng.gen_range(0.8..1.2) * (elevation * 5. + 3.)) as usize;
+    for _ in 0..rocks_count {
+      for _ in 0..tries {
+        let x = width * rng.gen_range(0.0..1.0);
+        let yp = rng.gen_range(0.0..1.0);
+        let y = mix(self.yhorizon, height, yp);
+        if self.sea_mask.is_painted((x, y)) {
+          continue;
+        }
 
-              let rockclr = if rng.gen_bool(0.02) { 1 } else { 0 };
+        let size =
+          (0.04 + rng.gen_range(0.0..0.04) * rng.gen_range(0.0..1.0)) * width;
+        let minx = x - size;
+        let maxx = x + size;
+        let miny = y - size;
+        let maxy = y;
+        self.sea_mask.paint_rectangle(minx, miny, maxx, maxy);
+        let origin = (x, y);
+        let elevation = 1.5 + rng.gen_range(0.0..5.0) * rng.gen_range(0.0..1.0);
+        let count_poly =
+          (rng.gen_range(0.8..1.2) * (elevation * 5. + 3.)) as usize;
 
-              let excalibur = if should_set_excalibur
-                && elevation > 4.0
-                && (0.3..0.7).contains(&(x / width))
-              {
-                should_set_excalibur = false;
-                true
-              } else {
-                false
-              };
+        let rockclr = if rng.gen_bool(0.02) { 1 } else { 0 };
 
-              let mut spawn = |rng: &mut R, o: (f32, f32), s, a| {
-                if !(0.3..0.7).contains(&(o.0 / width)) {
-                  return None;
-                }
-                if excalibur {
-                  ctx.specials.insert(Special::Excalibur);
-                  let clr = rng.gen_range(0..2);
-                  Some(as_box_renderable(Sword::init(rng, o, s, a, clr)))
-                } else {
-                  let dy = origin.1 - o.1;
-                  if rng.gen_bool(0.08) && dy > 0.3 * width {
-                    let sauron = SauronEye::init(rng, paint, rockclr, 1, o, s);
-                    ctx.specials.insert(Special::Sauroned);
-                    return Some(as_box_renderable(sauron));
-                  } else if dy > 0.15 * width {
-                    // opportunity for some other random stuff
-                  }
-                  None
-                }
-              };
+        let excalibur = if should_set_excalibur
+          && elevation > 4.0
+          && (0.3..0.7).contains(&(x / width))
+        {
+          should_set_excalibur = false;
+          true
+        } else {
+          false
+        };
 
-              let rock = Rock::init(
-                rng, origin, size, rockclr, count_poly, elevation, &mut spawn,
-              );
+        let mut rock =
+          Rock::init(rng, origin, size, rockclr, count_poly, elevation);
 
-              let b: Box<dyn Renderable<R>> = Box::new(rock);
-              return Some(b);
-            }
+        rock.spawn_on_top(rng, &mut |rng: &mut R, o: (f32, f32), s, a| {
+          if !(0.3..0.7).contains(&(o.0 / width)) {
+            return None;
           }
-          return None;
-        })
-        .collect::<Vec<_>>(),
-    );
+          if excalibur {
+            ctx.specials.insert(Special::Excalibur);
+            let clr = rng.gen_range(0..2);
+            Some(as_box_renderable(Sword::init(rng, o, s, a, clr)))
+          } else {
+            let dy = origin.1 - o.1;
+            if rng.gen_bool(0.08) && dy > 0.3 * width {
+              let sauron = SauronEye::init(rng, paint, rockclr, 1, o, s);
+              ctx.specials.insert(Special::Sauroned);
+              return Some(as_box_renderable(sauron));
+            } else if dy > 0.15 * width {
+              // opportunity for some other random stuff
+            }
+            None
+          }
+        });
+
+        sea_shapes.add(rock);
+        break;
+      }
+    }
 
     // Place boats
 
+    let mut should_spawn_supreme_leader = rng.gen_bool(0.3);
+    let boatglobs = BoatGlobals::rand(rng);
     let tries = 10;
     let basew = width * rng.gen_range(0.15..0.25);
-    sea_shapes.extend(
-      (0..boats_count)
-        .filter_map(|_| {
-          for _ in 0..tries {
-            let x = width * rng.gen_range(0.2..0.8);
-            let yp = rng.gen_range(0.1..1.0);
-            let y = mix(self.yhorizon, height, yp);
-            let w = basew
-              * (1.0 + rng.gen_range(-0.4..0.8) * rng.gen_range(0.0..1.0));
-            let size = width * mix(0.03, 0.08, yp);
-            if !self.sea_mask.is_painted((x, y)) {
-              let minx = x - w / 2.0;
-              let maxx = x + w / 2.0;
-              let miny = y - w / 10.0;
-              let maxy = y + w / 10.0;
-              self.sea_mask.paint_rectangle(minx, miny, maxx, maxy);
+    for _ in 0..boats_count {
+      for _ in 0..tries {
+        let x = width * rng.gen_range(0.2..0.8);
+        let yp = rng.gen_range(0.1..1.0);
+        let y = mix(self.yhorizon, height, yp);
+        let w =
+          basew * (1.0 + rng.gen_range(-0.4..0.8) * rng.gen_range(0.0..1.0));
+        let size = width * mix(0.03, 0.08, yp);
+        if self.sea_mask.is_painted((x, y)) {
+          continue;
+        }
+        let minx = x - w / 2.0;
+        let maxx = x + w / 2.0;
+        let miny = y - w / 6.0;
+        let maxy = y + w / 6.0;
+        self.sea_mask.paint_rectangle(minx, miny, maxx, maxy);
 
-              let angle = rng.gen_range(-0.2..0.2) * rng.gen_range(0.0..1.0);
-              let xflip = if rng.gen_bool(0.8) {
-                x > width / 2.0
-              } else {
-                rng.gen_bool(0.5)
-              };
+        let angle = rng.gen_range(-0.2..0.2) * rng.gen_range(0.0..1.0);
+        let xflip = if rng.gen_bool(0.8) {
+          x > width / 2.0
+        } else {
+          rng.gen_bool(0.5)
+        };
 
-              // TODO boat need to have people with spears / swords / archers only
-              // TODO also flags
-
-              let spawn_human = |rng: &mut R, o, size, angle, xflip| {
-                let headshape = HeadShape::HELMET;
-                let lefthandobj = Some(HoldableObject::Shield);
-                // TODO paddle angle to be organized between people on the boat and sometimes it can be up.
-                let a = if xflip {
-                  -PI * rng.gen_range(0.6..0.7)
-                } else {
-                  -PI * rng.gen_range(0.3..0.4)
-                };
-                let righthandobj = Some(HoldableObject::Paddle(a));
-                let posture = HumanPosture::from_holding(
-                  rng,
-                  false,
-                  lefthandobj,
-                  righthandobj,
-                );
-
-                let human = Human::init(
-                  rng,
-                  o,
-                  size,
-                  angle,
-                  xflip,
-                  self.blazon,
-                  0,
-                  self.boat_color,
-                  posture,
-                  headshape,
-                  lefthandobj,
-                  righthandobj,
-                );
-                human
-              };
-              let boat = BoatArmy::init(
-                rng,
-                self.boat_color,
-                (x, y),
-                size,
-                angle,
-                w,
-                xflip,
-                self.blazon,
-                &spawn_human,
-              );
-
-              let b: Box<dyn Renderable<R>> = Box::new(boat);
-              return Some(b);
-            }
+        let color_overrides = if rng.gen_bool(0.1) {
+          if rng.gen_bool(0.8) {
+            Some(1)
+          } else {
+            Some(2)
           }
-          return None;
-        })
-        .collect::<Vec<_>>(),
-    );
+        } else {
+          None
+        };
+        let clr = color_overrides.unwrap_or(0);
+        let blazonclr = color_overrides.unwrap_or(2);
 
-    // Render
+        let has_supreme_leader = should_spawn_supreme_leader;
+        should_spawn_supreme_leader = false;
 
-    // TODO move to a Container
-    sea_shapes.sort_by(|a, b| b.zorder().partial_cmp(&a.zorder()).unwrap());
+        let regular_weapon = if rng.gen_bool(0.5) {
+          HoldableObject::Sword
+        } else if rng.gen_bool(0.6) {
+          HoldableObject::Axe
+        } else if rng.gen_bool(0.7) {
+          HoldableObject::Club
+        } else {
+          HoldableObject::Flag
+        };
+
+        let leader_weapon = if rng.gen_bool(0.7) {
+          regular_weapon
+        } else if rng.gen_bool(0.5) {
+          HoldableObject::LongSword
+        } else {
+          HoldableObject::Flag
+        };
+
+        let are_paddling = rng.gen_bool(0.8);
+        let have_shields = rng.gen_bool(0.8);
+
+        let go_archer_only = rng.gen_bool(0.1);
+        let go_archer_lower_index = rng.gen_bool(0.5);
+        let archers_split = rng.gen_range(2..10);
+
+        let spawn_human = |rng: &mut R, arg: &SpawnHumanArg| {
+          let mut size = arg.size;
+          let mut mainclr = clr;
+          let mut blazonclr = blazonclr;
+
+          let is_flag_man = arg.index == 0;
+
+          let is_archer = !is_flag_man
+            && (go_archer_only
+              || go_archer_lower_index
+                && arg.index < arg.total / archers_split);
+
+          let is_leader = arg.index == arg.total - 1;
+
+          // one room for leader
+          if arg.index == arg.total - 2 {
+            return None;
+          }
+
+          let mut origin = arg.origin;
+
+          let mut lefthand = if have_shields {
+            Some(HoldableObject::Shield)
+          } else {
+            None
+          };
+          let mut headshape = HeadShape::HELMET;
+          let righthand;
+          let posture;
+          if is_leader {
+            if has_supreme_leader {
+              size *= rng.gen_range(1.3..1.6);
+              mainclr = 1;
+              blazonclr = 1;
+            }
+            if rng.gen_bool(0.5) {
+              lefthand = None;
+            }
+            righthand = Some(leader_weapon);
+            posture = HumanPosture::hand_risen(rng);
+          } else if is_archer {
+            origin.1 -= size * rng.gen_range(0.0..0.3);
+            lefthand = None;
+            headshape = HeadShape::NAKED;
+            righthand = Some(HoldableObject::LongBow(
+              rng.gen_range(0.0..1.0) * rng.gen_range(0.0..1.0),
+            ));
+            posture =
+              HumanPosture::from_holding(rng, arg.xflip, lefthand, righthand);
+          } else if is_flag_man {
+            origin.1 -= size * rng.gen_range(0.0..0.3);
+            if rng.gen_bool(0.5) {
+              lefthand = None;
+            }
+            righthand = Some(HoldableObject::Flag);
+            posture =
+              HumanPosture::from_holding(rng, arg.xflip, lefthand, righthand);
+          } else {
+            if are_paddling {
+              // TODO paddle angle to be organized between people on the boat and sometimes it can be up.
+              let a = if arg.xflip {
+                -PI * rng.gen_range(0.6..0.7)
+              } else {
+                -PI * rng.gen_range(0.3..0.4)
+              };
+              righthand = Some(HoldableObject::Paddle(a));
+            } else {
+              righthand = Some(regular_weapon);
+            };
+            posture =
+              HumanPosture::from_holding(rng, arg.xflip, lefthand, righthand)
+          }
+
+          let human = Human::init(
+            rng,
+            origin,
+            size,
+            arg.angle,
+            arg.xflip,
+            self.blazon,
+            mainclr,
+            blazonclr,
+            posture,
+            headshape,
+            lefthand,
+            righthand,
+          );
+          Some(human)
+        };
+        let human_density = rng.gen_range(0.5..1.0);
+        let boat = BoatArmy::init(
+          rng,
+          clr,
+          blazonclr,
+          (x, y),
+          size,
+          angle,
+          w,
+          xflip,
+          self.blazon,
+          human_density,
+          &spawn_human,
+          &boatglobs,
+        );
+        sea_shapes.add(boat);
+        break;
+      }
+    }
 
     let mut routes = vec![];
-    for s in sea_shapes {
-      routes.extend(s.render(rng, ctx, paint));
-    }
+    routes.extend(sea_shapes.render(rng, ctx, paint));
     routes
   }
 }
 
-// FIXME this is the old impl
 fn reflect_shapes<R: Rng>(
   rng: &mut R,
   reflectables: &Vec<(usize, Vec<(f32, f32)>)>,

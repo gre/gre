@@ -24,16 +24,13 @@ pub struct Rock<R: Rng> {
 }
 
 impl<R: Rng> Rock<R> {
-  pub fn init<
-    F: FnMut(&mut R, (f32, f32), f32, f32) -> Option<Box<dyn Renderable<R>>>,
-  >(
+  pub fn init(
     rng: &mut R,
     origin: (f32, f32),
     size: f32,
     clr: usize,
     count_poly: usize,
     elevation: f32,
-    spawn_top: &mut F,
   ) -> Self {
     let mut routes = vec![];
     let mut polys = vec![];
@@ -73,26 +70,33 @@ impl<R: Rng> Rock<R> {
       inner_crop_polys.push(inner_crop_poly);
     }
 
-    let top = if let Some(y) = polygons_find_miny(&polys, origin.0) {
-      let s = 2.0 * size;
-      let o = (origin.0, y - rng.gen_range(0.5..0.7) * s);
-      let a = -PI / 2.0;
-      let r = spawn_top(rng, o, s, a);
-      r
-    } else {
-      None
-    };
-
     Self {
       origin,
       size,
       routes,
       polys,
       inner_crop_polys,
-      top,
+      top: None,
       clr,
     }
   }
+
+  pub fn spawn_on_top<
+    F: FnMut(&mut R, (f32, f32), f32, f32) -> Option<Box<dyn Renderable<R>>>,
+  >(
+    &mut self,
+    rng: &mut R,
+    spawn_top: &mut F,
+  ) {
+    if let Some(y) = polygons_find_miny(&self.polys, self.origin.0) {
+      let s = 2.0 * self.size;
+      let o = (self.origin.0, y - rng.gen_range(0.5..0.7) * s);
+      let a = -PI / 2.0;
+      let r = spawn_top(rng, o, s, a);
+      self.top = r;
+    }
+  }
+
   pub fn render(
     &self,
     rng: &mut R,

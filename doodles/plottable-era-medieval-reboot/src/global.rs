@@ -35,7 +35,6 @@ pub struct Feature {
 #[derive(PartialEq, Eq, Hash)]
 pub enum Special {
   TrojanHorse,
-  // Lockness, // TODO
   Excalibur,
   Montmirail,
   Dragon(usize),
@@ -45,6 +44,7 @@ pub enum Special {
   EaglesAttack,
   Trebuchets,
   Cyclopes,
+  Sandbox,
 }
 
 pub struct GlobalCtx {
@@ -80,6 +80,8 @@ pub struct GlobalCtx {
 
   // stats that we need to cleanup at the end & for the features
   pub nb_cyclopes: usize,
+
+  pub is_sandbox: bool,
 }
 
 impl GlobalCtx {
@@ -96,6 +98,22 @@ impl GlobalCtx {
     let paper = palette.paper;
     let colors = &palette.inks;
 
+    let mut night_time = paper == DARK_BLUE_PAPER
+      || rng.gen_bool(0.5) && paper == BLACK_PAPER
+      || rng.gen_bool(0.4) && paper == RED_PAPER
+      || rng.gen_bool(0.3) && paper == BLUE_PAPER
+      || rng.gen_bool(0.2) && paper == GREY_PAPER;
+    colors[1];
+    if night_time && colors[0] == colors[1] {
+      // in monochrome, we allow the night_time to get disabled
+      if night_time {
+        night_time = rng.gen_bool(0.5);
+      }
+    }
+
+    let is_sandbox =
+      night_time && rng.gen_bool(0.01) || !night_time && rng.gen_bool(0.001);
+
     let trebuchets_should_shoot = rng.gen_bool(0.3);
     let archers_should_shoot = rng.gen_bool(0.2);
 
@@ -110,51 +128,41 @@ impl GlobalCtx {
     }
 
     let mut specials = HashSet::new();
-
-    if rng.gen_bool(0.02) {
-      specials.insert(Special::Barricades);
-    } else if rng.gen_bool(0.01) && matches!(attackers, Blazon::Falcon) {
-      specials.insert(Special::EaglesAttack);
-    } else if trebuchets_should_shoot && rng.gen_bool(0.05) {
-      specials.insert(Special::Trebuchets);
-    } else if rng.gen_bool(0.01) {
-      specials.insert(Special::Cyclopes);
-    }
-
-    let dragon_proba_mul = if paper == RED_PAPER { 1.0 } else { 0.08 };
-
-    if rng.gen_bool(0.4 * dragon_proba_mul)
-      && matches!(attackers, Blazon::Dragon)
-      || rng.gen_bool(0.1 * dragon_proba_mul)
-        && matches!(attackers, Blazon::Lys)
-    {
-      specials.insert(Special::Dragon(rng.gen_range(1..4)));
-    } else if rng.gen_bool(0.01) {
-      specials.insert(Special::TrojanHorse);
-    } else if rng.gen_bool(0.01) {
-      let c = c[1];
-      if c == GOLD_GEL || c == AMBER {
-        specials.insert(Special::Montmirail);
+    if is_sandbox {
+      specials.insert(Special::Sandbox);
+    } else {
+      if rng.gen_bool(0.02) {
+        specials.insert(Special::Barricades);
+      } else if rng.gen_bool(0.01) && matches!(attackers, Blazon::Falcon) {
+        specials.insert(Special::EaglesAttack);
+      } else if trebuchets_should_shoot && rng.gen_bool(0.05) {
+        specials.insert(Special::Trebuchets);
+      } else if rng.gen_bool(0.01) {
+        specials.insert(Special::Cyclopes);
       }
-    } else if rng.gen_bool(0.05) && matches!(defenders, Blazon::Dragon) {
-      specials.insert(Special::Chinese);
+
+      let dragon_proba_mul = if paper == RED_PAPER { 1.0 } else { 0.08 };
+
+      if rng.gen_bool(0.4 * dragon_proba_mul)
+        && matches!(attackers, Blazon::Dragon)
+        || rng.gen_bool(0.1 * dragon_proba_mul)
+          && matches!(attackers, Blazon::Lys)
+      {
+        specials.insert(Special::Dragon(rng.gen_range(1..4)));
+      } else if rng.gen_bool(0.01) {
+        specials.insert(Special::TrojanHorse);
+      } else if rng.gen_bool(0.01) {
+        let c = c[1];
+        if c == GOLD_GEL || c == AMBER {
+          specials.insert(Special::Montmirail);
+        }
+      } else if rng.gen_bool(0.05) && matches!(defenders, Blazon::Dragon) {
+        specials.insert(Special::Chinese);
+      }
     }
 
     let destruction_map = gen_destruction_map(rng, width, height, 3.0);
     let battlefield_map = gen_battlefield_map(rng, width, height, 3.0);
-
-    let mut night_time = paper == DARK_BLUE_PAPER
-      || rng.gen_bool(0.5) && paper == BLACK_PAPER
-      || rng.gen_bool(0.4) && paper == RED_PAPER
-      || rng.gen_bool(0.3) && paper == BLUE_PAPER
-      || rng.gen_bool(0.2) && paper == GREY_PAPER;
-    colors[1];
-    if night_time && colors[0] == colors[1] {
-      // in monochrome, we allow the night_time to get disabled
-      if night_time {
-        night_time = rng.gen_bool(0.5);
-      }
-    }
 
     let sun_xpercentage_pos =
       0.5 + rng.gen_range(-0.3..0.3) * rng.gen_range(0.0..1.0);
@@ -164,6 +172,7 @@ impl GlobalCtx {
     let no_sea = !castle_on_sea && rng.gen_bool(0.08);
 
     Self {
+      is_sandbox,
       castle_on_sea,
       no_sea,
       palette,
@@ -255,6 +264,7 @@ impl GlobalCtx {
           Special::Trebuchets => "Trebuchets".to_string(),
           Special::Cyclopes => "Cyclopes".to_string(),
           Special::Sauroned => "Sauroned".to_string(),
+          Special::Sandbox => "Sandbox".to_string(),
         })
         .collect::<Vec<String>>()
         .join(", "),

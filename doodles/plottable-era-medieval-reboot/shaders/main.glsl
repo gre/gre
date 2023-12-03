@@ -15,6 +15,9 @@ vec3 pal(float t, vec3 c1, vec3 c2){
 } 
 void main() {
     vec2 p = uv;
+    float gain = smoothstep(0.3, 1.0, max(1.0-effect, abs(cos(3.14159*(length(p-0.5)-0.5*time)))));
+    vec4 g = texture2D(paper, p);
+    float grain = g.r;
     
     float ef = effect * smoothstep(-0.5,0.5,cos(0.1*time));
     float motion = cos(40. * p.y + time) + sin(10. * p.x + time);
@@ -30,9 +33,6 @@ void main() {
     float hot = min(texture2D(hotT, p).r, texture2D(hotT, q).r);
     p = mix(p, q, hot);
     
-    float gain = smoothstep(0.3, 1.0, max(1.0-effect, abs(cos(3.14159*(length(p-0.5)-0.5*time)))));
-    vec4 g = texture2D(paper, p);
-    float grain = g.r;
     vec4 v = texture2D(t, p);
     vec3 c1 = pal(v.r, primary, primaryHighlight);
     vec3 c2 = pal(v.g, secondary, secondaryHighlight);

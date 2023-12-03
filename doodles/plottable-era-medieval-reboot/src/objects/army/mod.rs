@@ -699,7 +699,7 @@ impl ArmyOnMountain {
           renderables.add(hut);
         }
 
-        if rng.gen_bool(0.1) {
+        if rng.gen_bool(0.1) && index == 0 {
           for _ in 0..rng.gen_range(0..2) {
             let x = mix(first.0, last.0, rng.gen_range(0.1..0.9));
             let y =

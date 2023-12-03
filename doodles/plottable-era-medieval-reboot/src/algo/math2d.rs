@@ -1,3 +1,5 @@
+use std::f32::consts::PI;
+
 use super::math1d::mix;
 use rand::prelude::*;
 
@@ -140,4 +142,16 @@ pub fn polar_sort_from_center(pts: &Vec<(f32, f32)>) -> Vec<(f32, f32)> {
     .collect::<Vec<_>>();
   points.sort_by(|a, b| a.1.partial_cmp(&b.1).unwrap());
   points.iter().map(|p| *(p.0)).collect()
+}
+
+pub fn mirrored_angle_x_axis(original_angle: f32) -> f32 {
+  if original_angle >= 0.0 && original_angle <= PI / 2.0 {
+    -original_angle
+  } else if original_angle <= PI {
+    PI - original_angle
+  } else if original_angle <= 3.0 * PI / 2.0 {
+    original_angle - PI
+  } else {
+    -original_angle
+  }
 }

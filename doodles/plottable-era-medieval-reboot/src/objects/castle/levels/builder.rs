@@ -211,7 +211,6 @@ fn rec_build<R: Rng>(
 
   let mut remainings = max_in_a_tower.clone();
 
-  // TODO should we be driven by max_levels? i think it's better to climb until we can but a probability to stop.
   for l in 0..max_levels {
     // We determine the next possible shape to do
     let is_first = l == 0;

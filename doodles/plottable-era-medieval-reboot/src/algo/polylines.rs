@@ -44,6 +44,9 @@ pub fn path_subdivide_to_curve(
   n: usize,
   interpolation: f32,
 ) -> Vec<(f32, f32)> {
+  if n == 0 {
+    return path.clone();
+  }
   let mut route = path.clone();
   for _i in 0..n {
     route = path_subdivide_to_curve_it(&route, interpolation);
@@ -289,13 +292,14 @@ pub fn path_to_fibers(
   if count < 2 {
     return vec![path.clone()];
   }
+  let len = widths.len().min(path.len());
   let mut fibers: Vec<Vec<(f32, f32)>> = vec![];
   for _ in 0..count {
     fibers.push(vec![]);
   }
   for i in 0..count {
     let df = (i as f32) / ((count - 1) as f32) - 0.5;
-    for j in 0..path.len() {
+    for j in 0..len {
       let p = path[j];
       let a = if j > 0 {
         let prev = path[j - 1];

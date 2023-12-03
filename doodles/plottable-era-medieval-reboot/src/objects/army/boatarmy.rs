@@ -1,6 +1,12 @@
-use super::{boat::Boat, human::Human};
+use super::{
+  boat::{Boat, BoatGlobals},
+  human::{self, Human},
+};
 use crate::{
-  algo::{paintmask::PaintMask, polylines::Polylines, renderable::Renderable},
+  algo::{
+    math2d::mirrored_angle_x_axis, paintmask::PaintMask, polylines::Polylines,
+    renderable::Renderable,
+  },
   global::GlobalCtx,
   objects::blazon::Blazon,
 };
@@ -23,29 +29,36 @@ pub struct BoatArmy {
   pub boat: Boat,
 }
 
+pub struct SpawnHumanArg {
+  pub origin: (f32, f32),
+  pub size: f32,
+  pub angle: f32, // in global space (xflip applied)
+  pub xflip: bool,
+  pub index: usize,
+  pub total: usize,
+}
+
 impl BoatArmy {
   pub fn init<
     R: Rng,
-    SpawnHuman: Fn(
-      &mut R,     // rng
-      (f32, f32), // position
-      f32,        // size
-      f32,        // angle
-      bool,       // xflip
-    ) -> Human,
+    SpawnHuman: Fn(&mut R, &SpawnHumanArg) -> Option<Human>,
   >(
     rng: &mut R,
     clr: usize,
+    blazonclr: usize,
     origin: (f32, f32),
     size: f32,
     angle: f32,
     w: f32,
     xflip: bool,
     blazon: Blazon,
+    human_density: f32,
     spawn_human: &SpawnHuman,
+    boatglobs: &BoatGlobals,
   ) -> Self {
-    let mut humans = vec![];
-    let boat = Boat::init(rng, origin, size, angle, w, xflip, blazon, clr);
+    let boat = Boat::init(
+      rng, origin, size, angle, w, xflip, blazon, clr, blazonclr, boatglobs,
+    );
 
     let xdir = if xflip { -1.0 } else { 1.0 };
     let acos = angle.cos();
@@ -53,15 +66,41 @@ impl BoatArmy {
     let x1 = boat.x1;
     let x2 = boat.x2;
     let mut x = x1;
-    while x < x2 {
-      let y = rng.gen_range(-0.1 * size..0.0);
-      let p = (x, y);
-      let p = (p.0 * acos + p.1 * asin, p.1 * acos - p.0 * asin);
-      let p = (p.0 * xdir + origin.0, p.1 + origin.1);
-      let human = spawn_human(rng, p, size, angle, xflip);
-      humans.push(human);
-      x += rng.gen_range(0.15..0.25) * size;
+    let mut positions = vec![];
+    if human_density > 0.0 {
+      while x < x2 {
+        let y = rng.gen_range(-0.1 * size..0.0);
+        let p = (x, y);
+        let p = (p.0 * acos + p.1 * asin, p.1 * acos - p.0 * asin);
+        let p = (p.0 * xdir + origin.0, p.1 + origin.1);
+        positions.push(p);
+        x += rng.gen_range(0.15..0.25) * size / human_density;
+      }
     }
+
+    let total = positions.len();
+    let a = if !xflip {
+      angle
+    } else {
+      mirrored_angle_x_axis(angle)
+    };
+    let humans = positions
+      .iter()
+      .enumerate()
+      .flat_map(|(index, &origin)| {
+        spawn_human(
+          rng,
+          &SpawnHumanArg {
+            origin,
+            size,
+            angle: a,
+            xflip,
+            index,
+            total,
+          },
+        )
+      })
+      .collect();
 
     Self {
       clr,
@@ -83,19 +122,45 @@ impl BoatArmy {
 
     let mut routes = vec![];
 
+    let halo_humans = 0.8;
+    let halo_boat = 1.0;
+
+    // HUMANS FOREGROUND
+    let mut human_rts = vec![];
     for front in humans.iter() {
-      routes.extend(front.render_foreground_only(rng, mask));
+      let rts = front.render_foreground_only(rng, mask);
+      human_rts.extend(rts);
     }
+    for (_, rt) in &human_rts {
+      mask.paint_polyline(rt, halo_humans);
+    }
+    routes.extend(human_rts);
 
-    routes.extend(boat.render(rng, mask, clr));
+    // BOAT FOREGROUND
+    let main_boat_rts = boat.render_main_only(mask, clr);
+    routes.extend(main_boat_rts.clone());
 
+    // HUMANS BACKGROUND
+    let mut human_rts = vec![];
     for human in humans.iter() {
-      routes.extend(human.render_background_only(rng, mask));
+      let rts = human.render_background_only(rng, mask);
+      human_rts.extend(rts);
     }
+    for (_, rt) in &human_rts {
+      mask.paint_polyline(rt, halo_humans);
+    }
+    routes.extend(human_rts);
 
-    // we also create a halo cropping around castle
-    for (_, route) in &routes {
-      mask.paint_polyline(route, 1.0);
+    // BOAT BACKGROUND
+    let background_boat_rts = boat.render_background_only(rng, mask, clr);
+    routes.extend(background_boat_rts.clone());
+
+    // we also create a halo around
+    for (_, route) in &main_boat_rts {
+      mask.paint_polyline(route, halo_boat);
+    }
+    for (_, route) in &background_boat_rts {
+      mask.paint_polyline(route, halo_boat);
     }
 
     routes

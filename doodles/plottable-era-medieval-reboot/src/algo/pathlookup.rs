@@ -63,6 +63,10 @@ impl PathLookup {
     path
   }
 
+  pub fn lookup_percentage(&self, l: f32) -> (f32, f32) {
+    self.lookup_pos(l * self.length)
+  }
+
   pub fn lookup_pos(&self, l: f32) -> (f32, f32) {
     let path = &self.path;
     if l < 0.0 {
