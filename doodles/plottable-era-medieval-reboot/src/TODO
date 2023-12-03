@@ -1,14 +1,13 @@
 PRIO:
 - battlefield placement. def/neutral/attack areas
-- castle destruction. fire/smoke that goes with it
 - battlefield extra details. people with machines & all other new objs
+- castle destruction. fire/smoke that goes with it
 - castle extra details (illumination, flags,..) 
 - destruction map to impact battlefield too. we should also have a noise map for where the targets are
+- fix position of Chinese Door
 
 CASTLE:
 - rework castle
-  - defenders on the walls
-  - watch towers
   - stairs => where we can find some empty space. typically in the big towers.
   - lights
 - bush at bottom of walls to balance a bit the mountain is sometimes very curvy.
@@ -34,9 +33,9 @@ BATTLEFIELD:
   - have a horse caravan version. where we can put relique / cage..
   - attacker supposed to climp on the belfry
   - Belfry improvements.
+  - tortue de bouclier.
   - ADD: Catapult
-  - ADD: dragon canon. throw fireball with lot of particle in direction to the castle.
-    - one guy with a torch to fire the canon.
+  - human managing the cannon, with a torch to fire the canon.
 - MONKS:
   - SPECIAL merlin? golden, big, stick
   - merge Monk into Human. we need a concept of HoldingObject::Foreign

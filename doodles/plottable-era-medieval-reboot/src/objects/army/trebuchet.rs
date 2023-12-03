@@ -439,7 +439,7 @@ impl Trebuchet {
       return;
     }
     let o = self.get_basket_position();
-    ctx.projectiles.add_attack(AttackOrigin::Fireball(o));
+    ctx.projectiles.add_attack(AttackOrigin::Trebuchet(o));
   }
 }
 

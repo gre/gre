@@ -15,9 +15,10 @@ type Pos = (f32, f32);
 
 #[derive(Clone, Copy)]
 pub enum AttackOrigin {
-  Fireball(Pos),
-  Laser(Pos),
-  Arrow(Pos),
+  Cannon(Pos),
+  Trebuchet(Pos),
+  Eye(Pos),
+  Bow(Pos),
 }
 
 #[derive(Clone, Copy)]
@@ -28,9 +29,10 @@ pub enum DefenseTarget {
 
 pub fn extract_attack_pos(origin: AttackOrigin) -> Pos {
   match origin {
-    AttackOrigin::Fireball(pos) => pos,
-    AttackOrigin::Laser(pos) => pos,
-    AttackOrigin::Arrow(pos) => pos,
+    AttackOrigin::Cannon(pos) => pos,
+    AttackOrigin::Trebuchet(pos) => pos,
+    AttackOrigin::Eye(pos) => pos,
+    AttackOrigin::Bow(pos) => pos,
   }
 }
 
@@ -45,12 +47,13 @@ pub fn resolve_trajectory_path(
     // DefenseTarget::Human(pos) => pos,
   };
   let curvy_factor = match origin {
-    AttackOrigin::Fireball(_) => 0.7,
-    AttackOrigin::Laser(_) => 0.0,
-    AttackOrigin::Arrow(_) => 0.5,
+    AttackOrigin::Cannon(_) => 0.1,
+    AttackOrigin::Trebuchet(_) => 0.7,
+    AttackOrigin::Eye(_) => 0.0,
+    AttackOrigin::Bow(_) => 0.5,
   };
   let p = match origin {
-    AttackOrigin::Laser(_) => 1.0,
+    AttackOrigin::Eye(_) => 1.0,
     _ => progress,
   };
 

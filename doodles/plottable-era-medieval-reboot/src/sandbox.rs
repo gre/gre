@@ -1,3 +1,5 @@
+use std::f32::consts::PI;
+
 use crate::{
   algo::{paintmask::PaintMask, polylines::Polylines, renderable::Container},
   global::GlobalCtx,
@@ -6,6 +8,7 @@ use crate::{
       boat::BoatGlobals,
       boatarmy::BoatArmy,
       body::HumanPosture,
+      cannon::Cannon,
       human::{HeadShape, HoldableObject, Human},
       trebuchet::Trebuchet,
     },
@@ -13,7 +16,6 @@ use crate::{
   },
 };
 use rand::prelude::*;
-use std::f32::consts::PI;
 
 /**
  * LICENSE CC BY-NC-ND 4.0
@@ -28,12 +30,12 @@ pub fn sandbox<R: Rng>(
   width: f32,
   height: f32,
 ) {
-  match 3 {
-    //rng.gen_range(0..4) {
+  match rng.gen_range(0..5) {
     0 => sandbox_trebuchet(rng, ctx, paint, routes, width, height),
     1 => sandbox_dragons(rng, ctx, paint, routes, width, height),
     2 => sandbox_flagmen(rng, ctx, paint, routes, width, height),
     3 => sandbox_boat(rng, ctx, paint, routes, width, height),
+    4 => sandbox_cannon(rng, ctx, paint, routes, width, height),
     _ => {}
   }
 }
@@ -142,7 +144,6 @@ fn sandbox_boat<R: Rng>(
       blazon,
       human_density,
       &|rng, arg| {
-        /*
         let headshape = HeadShape::HELMET;
         let lefthandobj = Some(HoldableObject::Shield);
         let a = if xflip {
@@ -154,18 +155,10 @@ fn sandbox_boat<R: Rng>(
 
         let posture =
           HumanPosture::from_holding(rng, false, lefthandobj, righthandobj);
-        */
-        let headshape = HeadShape::NAKED;
-        let lefthandobj = None;
-        let righthandobj = None;
-
-        let posture = HumanPosture::hand_risen(rng);
-        let mut origin = arg.origin;
-        origin.1 -= 0.5 * arg.size;
 
         let human = Human::init(
           rng,
-          origin,
+          arg.origin,
           arg.size,
           arg.angle,
           arg.xflip,
@@ -209,6 +202,36 @@ fn sandbox_trebuchet<R: Rng>(
     let percent = o.1 / height;
     let trebuchet = Trebuchet::init(rng, o, size, percent, xflip, clr);
     container.add(trebuchet);
+  }
+
+  let rts = container.render_with_extra_halo(rng, ctx, paint, 2.0);
+  routes.extend(rts.clone());
+}
+
+pub fn sandbox_cannon<R: Rng>(
+  rng: &mut R,
+  ctx: &mut GlobalCtx,
+  paint: &mut PaintMask,
+  routes: &mut Polylines,
+  width: f32,
+  height: f32,
+) {
+  let mut container = Container::new();
+  let general_s = rng.gen_range(0.02..0.04) * width;
+  for _ in 0..rng.gen_range(10..50) {
+    let xflip = rng.gen_bool(0.5);
+    let o = (
+      rng.gen_range(0.15..0.85) * width,
+      rng.gen_range(0.2..0.9) * height,
+    );
+    let size = rng.gen_range(1.0..2.0) * general_s;
+    let clr = rng.gen_range(0..3);
+    let angle = rng.gen_range(-0.5..0.5)
+      * rng.gen_range(0.0..1.0)
+      * rng.gen_range(0.0..1.0);
+    let obj = Cannon::init(rng, clr, o, size, angle, xflip);
+    obj.throw_projectiles(ctx);
+    container.add(obj);
   }
 
   let rts = container.render_with_extra_halo(rng, ctx, paint, 2.0);

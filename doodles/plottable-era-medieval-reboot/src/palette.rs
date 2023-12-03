@@ -115,18 +115,18 @@ impl Palette {
         (colors, BLACK_PAPER)
       }
       1 => {
-        let base = if rng.gen_bool(0.8) {
+        let base = if rng.gen_bool(0.85) {
           BLACK
         } else if rng.gen_bool(0.2) {
-          MOONSTONE
+          INAHO
         } else if rng.gen_bool(0.4) {
           INDIGO
         } else if rng.gen_bool(0.4) {
           SEIBOKUBLUE
         } else if rng.gen_bool(0.4) {
           BLOODY_BREXIT
-        } else if rng.gen_bool(0.4) {
-          INAHO
+        } else if rng.gen_bool(0.5) {
+          MOONSTONE
         } else {
           IMPERIAL_PURPLE
         };
@@ -167,11 +167,11 @@ impl Palette {
             }
           }
           Blazon::Falcon => {
-            if rng.gen_bool(0.5) {
+            if rng.gen_bool(0.4) {
               SOFT_MINT
-            } else if rng.gen_bool(0.4) {
+            } else if rng.gen_bool(0.3) {
               SPRING_GREEN
-            } else if rng.gen_bool(0.4) {
+            } else if rng.gen_bool(0.35) {
               EVERGREEN
             } else if rng.gen_bool(0.66) {
               AURORA_BOREALIS

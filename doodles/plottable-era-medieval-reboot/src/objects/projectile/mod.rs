@@ -102,7 +102,7 @@ impl Projectiles {
           * rng.gen_range(0.0..1.0);
 
       match origin {
-        AttackOrigin::Fireball(_) => {
+        AttackOrigin::Cannon(_) => {
           let clr = 2;
           let size = rng.gen_range(1.0..3.0);
           let particles = rng.gen_range(10..100);
@@ -121,7 +121,26 @@ impl Projectiles {
           self.balls.push(ball);
           self.fireballtrails.push(trail);
         }
-        AttackOrigin::Arrow(_) => {
+        AttackOrigin::Trebuchet(_) => {
+          let clr = 2;
+          let size = rng.gen_range(1.0..3.0);
+          let particles = rng.gen_range(10..100);
+          let strokes = rng.gen_range(1..6);
+          let ball = Ball::init(rng, bulletpos, size, clr);
+          let trail = FireballTrail::init(
+            rng,
+            &referencemask,
+            path,
+            size,
+            trailpercent,
+            particles,
+            strokes,
+            clr,
+          );
+          self.balls.push(ball);
+          self.fireballtrails.push(trail);
+        }
+        AttackOrigin::Bow(_) => {
           let size = rng.gen_range(4.0..5.0);
           self.arrows.push(Arrow::init(0, bulletpos, size, angle));
           if rng.gen_bool(0.3) {
@@ -130,7 +149,7 @@ impl Projectiles {
               .push(ArrowTrail::init(0, path, trailpercent));
           }
         }
-        AttackOrigin::Laser(_) => {
+        AttackOrigin::Eye(_) => {
           let size = rng.gen_range(1.0..2.5);
           let laser = Laser::init(1, path, size);
           self.lasers.push(laser);

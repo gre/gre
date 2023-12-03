@@ -207,8 +207,8 @@ impl Sea {
           rng.gen_bool(0.5)
         };
 
-        let color_overrides = if rng.gen_bool(0.1) {
-          if rng.gen_bool(0.8) {
+        let color_overrides = if rng.gen_bool(0.05) {
+          if rng.gen_bool(0.7) {
             Some(1)
           } else {
             Some(2)

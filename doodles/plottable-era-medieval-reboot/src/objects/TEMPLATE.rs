@@ -43,10 +43,15 @@ impl NAME {
 }
 
 impl<R: Rng> Renderable<R> for NAME {
-  fn render(&self, rng: &mut R, paint: &mut PaintMask) -> Polylines {
+  fn render(
+    &self,
+    rng: &mut R,
+    ctx: &mut GlobalCtx,
+    paint: &mut PaintMask,
+  ) -> Polylines {
     self.render(paint)
   }
-  fn yorder(&self) -> f32 {
+  fn zorder(&self) -> f32 {
     self.origin.1
   }
 }

@@ -66,7 +66,7 @@ impl BoatGlobals {
     } else {
       2 + (rng.gen_range(0.0..8.0) * rng.gen_range(0.0..1.0)) as usize
     };
-    let wide = rng.gen_range(1.0..2.0);
+    let wide = 1.0 + rng.gen_range(0.0..0.8) * rng.gen_range(0.0..1.0);
     let fibers_density = rng.gen_range(1.0..2.0);
     let sailing_divisions = rng.gen_range(3..12);
     let sailing_interp_n = if rng.gen_bool(0.8) { 1 } else { 0 };
@@ -277,7 +277,7 @@ impl Boat {
         let wfrom = rng.gen_range(0.5..1.0) * second_w;
         let wto = rng.gen_range(0.2..1.0) * wfrom;
         let ampcurve = rng.gen_range(-0.1f32..0.3).max(0.0) * w;
-        let noisef = rng.gen_range(-0.03f32..0.08).max(0.0) * w;
+        let noisef = rng.gen_range(-0.1f32..0.08).max(0.0) * w;
         let curveinversion = rng.gen_range(0.0..1.0) * rng.gen_range(0.0..1.0);
         let mut full_widths = vec![];
         while y <= yto {

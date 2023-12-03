@@ -111,8 +111,9 @@ impl GlobalCtx {
       }
     }
 
-    let is_sandbox =
-      night_time && rng.gen_bool(0.01) || !night_time && rng.gen_bool(0.001);
+    let is_sandbox = false
+      || night_time && rng.gen_bool(0.01)
+      || !night_time && rng.gen_bool(0.001);
 
     let trebuchets_should_shoot = rng.gen_bool(0.3);
     let archers_should_shoot = rng.gen_bool(0.2);

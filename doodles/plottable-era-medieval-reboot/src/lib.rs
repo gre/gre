@@ -120,7 +120,17 @@ pub fn render(
     paint.paint_borders(pad);
   }
 
-  // sandbox
+  /*
+  sandbox::sandbox_cannon(
+    &mut rng,
+    &mut ctx,
+    &mut paint,
+    &mut routes,
+    width,
+    height,
+  );
+  */
+
   if ctx.is_sandbox {
     sandbox::sandbox(
       &mut rng,

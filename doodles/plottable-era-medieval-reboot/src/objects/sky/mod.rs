@@ -173,7 +173,7 @@ impl MedievalSky {
               let r = r * rng.gen_range(1.0..3.0);
               routes.push((clr, yarnballs(rng, c.pos(), r, 1.0)));
             } else {
-              routes.push((clr, spiral_optimized(c.x, c.y, r, 1.3 - v, 0.1)));
+              routes.push((clr, spiral_optimized(c.x, c.y, r, 1.3 - v, 0.3)));
               routes.push((clr, circle_route((c.x, c.y), c.r, 32)));
             }
           } else {

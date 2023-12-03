@@ -50,6 +50,7 @@ pub mod boat;
 pub mod boatarmy;
 pub mod body;
 pub mod cage;
+pub mod cannon;
 pub mod car4l;
 pub mod catapult;
 pub mod club;
@@ -602,7 +603,7 @@ impl ArmyOnMountain {
             );
 
             if ctx.archers_should_shoot && !mountain.is_behind {
-              ctx.projectiles.add_attack(AttackOrigin::Arrow(
+              ctx.projectiles.add_attack(AttackOrigin::Bow(
                 human.body.hand_right_pos_angle().0,
               ));
             }
@@ -658,7 +659,7 @@ impl ArmyOnMountain {
 
               if lasering {
                 let o = human.eye_pos();
-                ctx.projectiles.add_attack(AttackOrigin::Laser(o));
+                ctx.projectiles.add_attack(AttackOrigin::Eye(o));
               }
 
               renderables.add(human);
