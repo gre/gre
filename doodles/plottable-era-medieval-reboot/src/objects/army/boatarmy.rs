@@ -1,6 +1,6 @@
 use super::{
   boat::{Boat, BoatGlobals},
-  human::{self, Human},
+  human::Human,
 };
 use crate::{
   algo::{

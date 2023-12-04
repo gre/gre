@@ -16,8 +16,8 @@ pub fn values_subdivide_to_curve_it(
     return values.clone();
   }
   let mut route = Vec::new();
-  let mut first = values[0];
-  let mut last = values[l - 1];
+  let first = values[0];
+  let last = values[l - 1];
   route.push(first);
   for i in 1..(l - 1) {
     let p = values[i];

@@ -1,10 +1,10 @@
 use crate::{
   algo::{
-    clipping::{regular_clip, regular_clip_polys},
+    clipping::regular_clip_polys,
     math2d::lerp_point,
     paintmask::PaintMask,
     polygon::make_wireframe_from_vertexes,
-    polylines::{grow_as_rectangle, path_to_fibers, Polylines},
+    polylines::{path_to_fibers, Polylines},
     renderable::Renderable,
     shapes::{circle_route, spiral_optimized},
   },
@@ -12,8 +12,6 @@ use crate::{
   objects::projectile::attack::AttackOrigin,
 };
 use rand::prelude::*;
-
-use super::dragonhead::DragonHead;
 
 /**
  * LICENSE CC BY-NC-ND 4.0

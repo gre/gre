@@ -1,8 +1,4 @@
-use crate::algo::math2d::*;
 use crate::algo::polygon::*;
-
-use super::polylines;
-use super::rdp::rdp;
 
 /**
  * LICENSE CC BY-NC-ND 4.0
