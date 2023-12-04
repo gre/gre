@@ -65,22 +65,28 @@ impl WormsFilling {
     bound: (f32, f32, f32, f32),
     iterations: usize,
   ) -> Vec<(usize, Vec<(f32, f32)>)> {
-    let f = |x, y| {
-      if drawings.is_painted((x, y)) {
-        density
-      } else {
-        0.0
-      }
-    };
     let coloring = |_: &Vec<(f32, f32)>| clr;
     let precision = self.precision;
-    self.fill(rng, &f, bound, &coloring, precision, iterations)
+    self.fill(
+      rng,
+      &|x, y| {
+        if drawings.is_painted((x, y)) {
+          density
+        } else {
+          0.0
+        }
+      },
+      bound,
+      &coloring,
+      precision,
+      iterations,
+    )
   }
 
-  pub fn fill<R: Rng>(
+  pub fn fill<R: Rng, F: Fn(f32, f32) -> f32>(
     &self,
     rng: &mut R,
-    f: &dyn Fn(f32, f32) -> f32,
+    f: &F,
     bound: (f32, f32, f32, f32),
     clr: &dyn Fn(&Vec<(f32, f32)>) -> usize,
     precision: f32,
@@ -196,7 +202,7 @@ impl WeightMap {
       precision,
     }
   }
-  pub fn fill_fn(&mut self, f: &impl Fn((f32, f32)) -> f32) {
+  pub fn fill_fn<F: Fn((f32, f32)) -> f32>(&mut self, f: &F) {
     for x in 0..self.w {
       for y in 0..self.h {
         let p = (x as f32 * self.precision, y as f32 * self.precision);

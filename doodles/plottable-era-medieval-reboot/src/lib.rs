@@ -312,14 +312,21 @@ pub fn render(
     }
 
     perf.span("sky masks", &routes);
-    let mut skysafemask = paint.clone();
+    let mut skysafemask = paint.clone_rescaled(4.0);
     skysafemask.unpaint_borders(pad + framingw);
     skysafemask.paint_fn(|(_x, y)| y > yhorizon);
-    skysafemask.dilate_manhattan(rng.gen_range(0.0..0.1) * width);
+    let distances = skysafemask.manhattan_distance();
     let mut skysafemask1 = skysafemask.clone();
+    skysafemask1.assign_data_lower_than_threshold(
+      &distances,
+      rng.gen_range(0.0..0.1) * width,
+    );
     skysafemask1.paint_borders(pad + framingw);
-    skysafemask.dilate_manhattan(rng.gen_range(0.0..0.2) * width);
     let mut skysafemask2 = skysafemask.clone();
+    skysafemask2.assign_data_lower_than_threshold(
+      &distances,
+      rng.gen_range(0.0..0.2) * width,
+    );
     skysafemask2.paint_borders(pad + framingw);
     perf.span_end("sky masks", &routes);
 

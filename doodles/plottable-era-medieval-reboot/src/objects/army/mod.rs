@@ -286,7 +286,7 @@ impl ArmyOnMountain {
         (rng.gen_range(0.0f32..500.) * rng.gen_range(0.0..1.0)) as usize;
 
       // we track a bunch of circle to avoid spawning people too close to each other
-      let mut exclusion_mask = paint.clone_empty();
+      let mut exclusion_mask = paint.clone_rescaled(2.0);
 
       let first_castle =
         mountains.mountains.iter().find_map(|m| m.castle.clone());

@@ -48,7 +48,7 @@ impl Beach {
     portclr: usize,
     attacker_blazon: Blazon,
   ) -> Self {
-    let mut avoiding_area = paint.clone_empty();
+    let mut avoiding_area = paint.clone_rescaled(2.0);
     let trees_count = (rng.gen_range(-1.0f32..1.0) * rng.gen_range(0.0..30.0))
       .max(0.0) as usize;
     let port_boats_count = (rng.gen_range(-2.0f32..5.5)).max(0.0) as usize;

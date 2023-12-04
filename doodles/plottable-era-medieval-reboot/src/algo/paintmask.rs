@@ -1,6 +1,9 @@
 use crate::algo::math2d::*;
 use crate::algo::polygon::*;
 
+use super::polylines;
+use super::rdp::rdp;
+
 /**
  * LICENSE CC BY-NC-ND 4.0
  * Author: greweb – 2023 – Plottable Era: (II) Medieval
@@ -24,6 +27,31 @@ impl PaintMask {
       height: self.height,
       precision: self.precision,
     }
+  }
+
+  pub fn clone_rescaled(&self, precision: f32) -> Self {
+    if precision == self.precision {
+      return self.clone();
+    }
+    let width = self.width;
+    let height = self.height;
+    let wi = (width / precision) as usize;
+    let hi = (height / precision) as usize;
+    let mut next = Self {
+      mask: vec![false; wi * hi],
+      width,
+      height,
+      precision,
+    };
+    for x in 0..wi {
+      for y in 0..hi {
+        let j = x + y * wi;
+        let xf = x as f32 * precision;
+        let yf = y as f32 * precision;
+        next.mask[j] = self.is_painted((xf, yf));
+      }
+    }
+    next
   }
 
   pub fn new(precision: f32, width: f32, height: f32) -> Self {
@@ -87,16 +115,16 @@ impl PaintMask {
   }
 
   pub fn dilate_manhattan(&mut self, radius: f32) {
-    let radius_scaled = (radius / self.precision) as usize;
     let distances = self.manhattan_distance();
-    self.assign_data_lower_than_threshold(&distances, radius_scaled);
+    self.assign_data_lower_than_threshold(&distances, radius);
   }
 
   pub fn assign_data_lower_than_threshold(
     &mut self,
     data: &Vec<usize>,
-    threshold: usize,
+    radius: f32,
   ) {
+    let threshold = (radius / self.precision) as usize;
     let wi = (self.width / self.precision) as usize;
     let hi = (self.height / self.precision) as usize;
     for y in 0..hi {
@@ -145,9 +173,13 @@ impl PaintMask {
     let hi = (height / precision) as usize;
     for x in 0..wi {
       for y in 0..hi {
+        let j = x + y * wi;
+        if self.mask[j] {
+          continue;
+        }
         let point = (x as f32 * precision, y as f32 * precision);
         if f(point) {
-          self.mask[x + y * wi] = true;
+          self.mask[j] = true;
         }
       }
     }
@@ -235,11 +267,18 @@ impl PaintMask {
     let maxx = (maxx / precision) as usize;
     let maxy = (maxy / precision) as usize;
     let wi = (width / precision) as usize;
+    let cr2 = cr * cr;
     for x in minx..maxx {
       for y in miny..maxy {
+        let j = x + y * wi;
+        if self.mask[j] {
+          continue;
+        }
         let point = (x as f32 * precision, y as f32 * precision);
-        if euclidian_dist(point, (cx, cy)) < cr {
-          self.mask[x + y * wi] = true;
+        let dx = point.0 - cx;
+        let dy = point.1 - cy;
+        if dx * dx + dy * dy < cr2 {
+          self.mask[j] = true;
         }
       }
     }
@@ -342,9 +381,13 @@ impl PaintMask {
     let wi = (width / precision) as usize;
     for x in minx..maxx {
       for y in miny..maxy {
+        let j = x + y * wi;
+        if self.mask[j] {
+          continue;
+        }
         let point = (x as f32 * precision, y as f32 * precision);
         if polygon_includes_point(polygon, point) {
-          self.mask[x + y * wi] = true;
+          self.mask[j] = true;
         }
       }
     }
@@ -378,13 +421,19 @@ impl PaintMask {
     let maxy = (maxy / precision) as usize;
     let wi = (width / precision) as usize;
     for x in minx..maxx {
+      let xf = x as f32 * precision;
       for y in miny..maxy {
-        let point = (x as f32 * precision, y as f32 * precision);
+        let j = x + y * wi;
+        if self.mask[j] {
+          continue;
+        }
+        let yf = y as f32 * precision;
+        let point = (xf, yf);
         for i in 0..polyline.len() - 1 {
           let a = polyline[i];
           let b = polyline[i + 1];
           if point_in_segment(point, a, b, strokew) {
-            self.mask[x + y * wi] = true;
+            self.mask[j] = true;
             break;
           }
         }
