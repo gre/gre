@@ -198,10 +198,14 @@ impl PaintMask {
     {
       panic!("PaintMask::paint: incompatible sizes");
     }
-    for (i, &v) in other.mask.iter().enumerate() {
-      if !v {
+
+    let len = self.mask.len();
+    let mut i = 0;
+    while i < len {
+      if !other.mask[i] {
         self.mask[i] = false;
       }
+      i += 1;
     }
   }
 
@@ -215,16 +219,20 @@ impl PaintMask {
     let mut miny = height;
     let mut maxx = 0.0f32;
     let mut maxy = 0.0f32;
+    // TODO we just need to calculate the boundaries. there are ways to iter more faster without having to check all cells
     for x in 0..wi {
       for y in 0..hi {
         if self.mask[x + y * wi] {
-          minx = minx.min(x as f32 * precision);
-          miny = miny.min(y as f32 * precision);
-          maxx = maxx.max(x as f32 * precision);
-          maxy = maxy.max(y as f32 * precision);
+          let xf = x as f32 * precision;
+          let yf = y as f32 * precision;
+          minx = minx.min(xf);
+          miny = miny.min(yf);
+          maxx = maxx.max(xf);
+          maxy = maxy.max(yf);
         }
       }
     }
+
     if minx > maxx || miny > maxy {
       minx = 0.0;
       maxx = 0.0;
@@ -394,7 +402,8 @@ impl PaintMask {
   }
 
   pub fn paint_polyline(&mut self, polyline: &Vec<(f32, f32)>, strokew: f32) {
-    if polyline.len() < 1 {
+    let len = polyline.len();
+    if len < 1 {
       return;
     }
     let first = polyline[0];
@@ -402,11 +411,22 @@ impl PaintMask {
     let mut miny = first.1;
     let mut maxx = first.0;
     let mut maxy = first.1;
-    for p in polyline.iter().skip(1) {
-      minx = minx.min(p.0);
-      miny = miny.min(p.1);
-      maxx = maxx.max(p.0);
-      maxy = maxy.max(p.1);
+    let mut i = 1;
+    while i < len {
+      let (x, y) = polyline[i];
+      if x < minx {
+        minx = x;
+      }
+      if x > maxx {
+        maxx = x;
+      }
+      if y < miny {
+        miny = y;
+      }
+      if y > maxy {
+        maxy = y;
+      }
+      i += 1;
     }
     minx = (minx - strokew).max(0.0);
     miny = (miny - strokew).max(0.0);
@@ -429,13 +449,16 @@ impl PaintMask {
         }
         let yf = y as f32 * precision;
         let point = (xf, yf);
-        for i in 0..polyline.len() - 1 {
-          let a = polyline[i];
-          let b = polyline[i + 1];
-          if point_in_segment(point, a, b, strokew) {
+        let mut i = 1;
+        let mut prev = polyline[0];
+        while i < len {
+          let next = polyline[i];
+          if point_in_segment(point, prev, next, strokew) {
             self.mask[j] = true;
             break;
           }
+          i += 1;
+          prev = next;
         }
       }
     }

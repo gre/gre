@@ -63,6 +63,10 @@ pub fn draw_font_with_worms_filling<R: Rng>(
     iterations,
   ));
 
+  let newprec = 0.5 * growpad;
+  if drawing.precision < newprec {
+    drawing = drawing.clone_rescaled(newprec);
+  }
   drawing.dilate_manhattan(growpad);
 
   // we don't need collision

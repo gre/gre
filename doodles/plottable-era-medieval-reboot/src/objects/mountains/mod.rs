@@ -82,7 +82,7 @@ impl MountainsV2 {
     let mut height_map: Vec<f32> = Vec::new();
 
     let mut passage = Passage::new(0.5, width, height);
-    let precision = 0.5;
+    let precision = 1.0;
 
     let mut mountains = vec![];
 
@@ -102,9 +102,9 @@ impl MountainsV2 {
       } else {
         2.0 + (rng.gen_range(-1f32..8.0) * rng.gen_range(0.0..1.0)).max(0.0)
       };
-      let amp1 = rng.gen_range(-2.0f32..4.0).max(0.0) * rng.gen_range(0.3..1.0);
-      let amp2 = rng.gen_range(-1.0f32..3.0).max(0.0) * rng.gen_range(0.3..1.0);
-      let amp3 = rng.gen_range(-1.0f32..2.0).max(0.0) * rng.gen_range(0.3..1.0);
+      let amp1 = rng.gen_range(-2.0f64..4.0).max(0.0) * rng.gen_range(0.3..1.0);
+      let amp2 = rng.gen_range(-1.0f64..3.0).max(0.0) * rng.gen_range(0.3..1.0);
+      let amp3 = rng.gen_range(-1.0f64..2.0).max(0.0) * rng.gen_range(0.3..1.0);
       let center = rng.gen_range(0.2..0.8) * width;
 
       let stopy = mix(yhorizon, ymax, 0.2 + 0.8 * jf);
@@ -127,51 +127,51 @@ impl MountainsV2 {
           if x > width - mountainpadding {
             break;
           }
-          let xv = (h - base_y / height) * (x - center);
+          let xv = ((h - base_y / height) * (x - center)) as f64;
 
-          let amp = height * ampfactor;
-          let mut y = base_y;
+          let amp = (height * ampfactor) as f64;
+          let mut y = base_y as f64;
 
           y += amp2
             * amp
             * perlin
               .get([
                 //
-                8.311 + xv as f64 * 0.00511,
-                88.1 + y as f64 * ynoisefactor,
+                8.311 + xv * 0.00511,
+                88.1 + y * ynoisefactor,
                 seed * 97.311,
               ])
-              .max(0.0) as f32;
+              .max(0.0);
 
           y += amp1
             * amp
             * perlin.get([
               //
-              xv as f64 * 0.007111 + 9.9,
-              y as f64 * 0.00311 + 3.1,
+              xv * 0.007111 + 9.9,
+              y * 0.00311 + 3.1,
               77.
                 + seed / 7.3
                 + 0.1
                   * perlin.get([
                     //
                     55. + seed * 7.3,
-                    80.3 + xv as f64 * 0.0057,
-                    y as f64 * 0.06 + 11.3,
+                    80.3 + xv * 0.0057,
+                    y * 0.06 + 11.3,
                   ]),
-            ]) as f32;
+            ]);
 
           y += amp
             * amp3
             * perlin
               .get([
                 //
-                xv as f64 * 0.009 + 8.33,
-                88.1 + y as f64 * 0.07,
+                xv * 0.009 + 8.33,
+                88.1 + y * 0.07,
                 seed / 7.7 + 6.66,
               ])
-              .powf(2.0) as f32;
-          /*
-           */
+              .powf(2.0);
+
+          let y = y as f32;
 
           if y < miny {
             miny = y;
