@@ -4,7 +4,7 @@ use super::{
 };
 use crate::{
   algo::{
-    math2d::mirrored_angle_x_axis, paintmask::PaintMask, polylines::Polylines,
+    math2d::angle_mirrored_on_x, paintmask::PaintMask, polylines::Polylines,
     renderable::Renderable,
   },
   global::GlobalCtx,
@@ -82,7 +82,7 @@ impl BoatArmy {
     let a = if !xflip {
       angle
     } else {
-      mirrored_angle_x_axis(angle)
+      angle_mirrored_on_x(angle)
     };
     let humans = positions
       .iter()
@@ -176,6 +176,7 @@ impl<R: Rng> Renderable<R> for BoatArmy {
   ) -> Polylines {
     self.render(rng, paint)
   }
+
   fn zorder(&self) -> f32 {
     self.origin.1
   }

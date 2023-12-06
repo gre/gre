@@ -1,5 +1,3 @@
-use std::f32::consts::PI;
-
 use crate::{
   algo::{paintmask::PaintMask, polylines::Polylines, renderable::Container},
   global::GlobalCtx,
@@ -9,13 +7,16 @@ use crate::{
       boatarmy::BoatArmy,
       body::HumanPosture,
       cannon::Cannon,
+      catapult::Catapult,
       human::{HeadShape, HoldableObject, Human},
       trebuchet::Trebuchet,
     },
     sky::dragons::dragons,
   },
 };
+use noise::*;
 use rand::prelude::*;
+use std::f32::consts::PI;
 
 /**
  * LICENSE CC BY-NC-ND 4.0
@@ -30,12 +31,13 @@ pub fn sandbox<R: Rng>(
   width: f32,
   height: f32,
 ) {
-  match rng.gen_range(0..5) {
-    0 => sandbox_trebuchet(rng, ctx, paint, routes, width, height),
+  match rng.gen_range(0..6) {
+    0 => sandbox_catapult(rng, ctx, paint, routes, width, height),
     1 => sandbox_dragons(rng, ctx, paint, routes, width, height),
     2 => sandbox_flagmen(rng, ctx, paint, routes, width, height),
     3 => sandbox_boat(rng, ctx, paint, routes, width, height),
     4 => sandbox_cannon(rng, ctx, paint, routes, width, height),
+    5 => sandbox_trebuchet(rng, ctx, paint, routes, width, height),
     _ => {}
   }
 }
@@ -201,6 +203,40 @@ fn sandbox_trebuchet<R: Rng>(
     let clr = rng.gen_range(0..3);
     let percent = o.1 / height;
     let trebuchet = Trebuchet::init(rng, o, size, percent, xflip, clr);
+    container.add(trebuchet);
+  }
+
+  let rts = container.render_with_extra_halo(rng, ctx, paint, 2.0);
+  routes.extend(rts.clone());
+}
+
+fn sandbox_catapult<R: Rng>(
+  rng: &mut R,
+  ctx: &mut GlobalCtx,
+  paint: &mut PaintMask,
+  routes: &mut Polylines,
+  width: f32,
+  height: f32,
+) {
+  let perlin = Perlin::new(rng.gen());
+  let mut container = Container::new();
+  let general_s = rng.gen_range(0.08..0.12) * width;
+  let xflip = rng.gen_bool(0.5);
+  let f = rng.gen_range(1.0..4.0);
+  let amp = rng.gen_range(0.0..2.0);
+  for _ in 0..rng.gen_range(50..200) {
+    let o = (
+      rng.gen_range(0.15..0.85) * width,
+      rng.gen_range(0.2..0.9) * height,
+    );
+    let progress = o.1 / height;
+    let angle = amp
+      * perlin
+        .get([f * o.0 as f64 / width as f64, f * o.1 as f64 / width as f64])
+        as f32;
+    let size = rng.gen_range(1.0..2.0) * general_s;
+    let clr = rng.gen_range(0..3);
+    let trebuchet = Catapult::init(rng, clr, o, size, angle, xflip, progress);
     container.add(trebuchet);
   }
 

@@ -169,6 +169,7 @@ impl<R: Rng> Renderable<R> for Monk {
   ) -> Polylines {
     self.render(paint)
   }
+
   fn zorder(&self) -> f32 {
     self.human.origin.1
   }

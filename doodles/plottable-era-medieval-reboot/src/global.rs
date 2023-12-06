@@ -4,7 +4,7 @@ use crate::{
     wormsfilling::WeightMap,
   },
   effects::Effects,
-  objects::{blazon::Blazon, projectile::Projectiles},
+  objects::{blazon::Blazon, castle, projectile::Projectiles},
   palette::{
     Palette, AMBER, BLACK_PAPER, BLUE_PAPER, DARK_BLUE_PAPER, GOLD_GEL,
     GREY_PAPER, RED_PAPER,
@@ -111,9 +111,8 @@ impl GlobalCtx {
       }
     }
 
-    let is_sandbox = false
-      || night_time && rng.gen_bool(0.01)
-      || !night_time && rng.gen_bool(0.001);
+    let is_sandbox =
+      night_time && rng.gen_bool(0.01) || !night_time && rng.gen_bool(0.001);
 
     let trebuchets_should_shoot = rng.gen_bool(0.3);
     let archers_should_shoot = rng.gen_bool(0.2);
@@ -171,6 +170,8 @@ impl GlobalCtx {
 
     let castle_on_sea = rng.gen_bool(0.1);
     let no_sea = !castle_on_sea && rng.gen_bool(0.1);
+
+    let castle_on_sea = false; // FIXME tmp
 
     Self {
       is_sandbox,

@@ -52,7 +52,7 @@ impl Shield {
 
     route = route_translate_rotate(&route, origin, angle);
     let polygons = vec![route.clone()];
-    routes.push((clr, route));
+    routes.push((blazonclr, route));
 
     // TODO either a > or a square, or a circle,... many possibilities
     let tick = rng.gen_range(0.2..0.3);

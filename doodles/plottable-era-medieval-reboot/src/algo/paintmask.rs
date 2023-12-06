@@ -146,7 +146,7 @@ impl PaintMask {
         for y in 0..hi {
           let yf = y as f32 * self.precision;
           if other.is_painted((xf, yf)) {
-            let i = x + y * wi;
+            let i: usize = x + y * wi;
             self.mask[i] = true;
           }
         }
@@ -211,6 +211,7 @@ impl PaintMask {
     let height = self.height;
     let wi = (width / precision) as usize;
     let hi = (height / precision) as usize;
+
     let mut minx = width;
     let mut miny = height;
     let mut maxx = 0.0f32;
@@ -235,6 +236,7 @@ impl PaintMask {
       miny = 0.0;
       maxy = 0.0;
     }
+
     (minx, miny, maxx, maxy)
   }
 

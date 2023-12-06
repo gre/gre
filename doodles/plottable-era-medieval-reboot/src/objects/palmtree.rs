@@ -77,6 +77,7 @@ impl<R: Rng> Renderable<R> for PalmTree {
   ) -> Polylines {
     self.render(rng, paint, self.clr)
   }
+
   fn zorder(&self) -> f32 {
     self.origin.1
   }

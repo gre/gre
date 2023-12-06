@@ -121,7 +121,7 @@ impl Projectiles {
           self.balls.push(ball);
           self.fireballtrails.push(trail);
         }
-        AttackOrigin::Trebuchet(_) => {
+        AttackOrigin::Catapult(_) | AttackOrigin::Trebuchet(_) => {
           let clr = 2;
           let size = rng.gen_range(1.0..3.0);
           let particles = rng.gen_range(10..100);

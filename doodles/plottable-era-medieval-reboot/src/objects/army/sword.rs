@@ -104,6 +104,7 @@ impl<R: Rng> Renderable<R> for Sword {
   ) -> Vec<(usize, Vec<(f32, f32)>)> {
     self.render(paint)
   }
+
   fn zorder(&self) -> f32 {
     self.origin.1
   }

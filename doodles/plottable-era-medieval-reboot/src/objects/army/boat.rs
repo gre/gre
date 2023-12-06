@@ -2,7 +2,7 @@ use crate::{
   algo::{
     clipping::{clip_routes_with_colors, regular_clip, regular_clip_polys},
     math1d::{mix, values_subdivide_to_curve},
-    math2d::{lerp_point, mirrored_angle_x_axis},
+    math2d::{angle_mirrored_on_x, lerp_point},
     paintmask::PaintMask,
     pathlookup::PathLookup,
     polygon::polygon_includes_point,
@@ -276,7 +276,7 @@ impl Boat {
         let mut path2 = vec![];
         let wfrom = rng.gen_range(0.5..1.0) * second_w;
         let wto = rng.gen_range(0.2..1.0) * wfrom;
-        let ampcurve = rng.gen_range(-0.1f32..0.3).max(0.0) * w;
+        let ampcurve = rng.gen_range(-0.1f32..0.2).max(0.0) * w;
         let noisef = rng.gen_range(-0.1f32..0.08).max(0.0) * w;
         let curveinversion = rng.gen_range(0.0..1.0) * rng.gen_range(0.0..1.0);
         let mut full_widths = vec![];
@@ -413,7 +413,7 @@ impl Boat {
         let flagtoleft = !xflip;
         let mut a = angle - PI / 2.0;
         if !xflip {
-          a = mirrored_angle_x_axis(a);
+          a = angle_mirrored_on_x(a);
         }
         let flag = Flag::init(
           rng,
@@ -472,6 +472,7 @@ impl<R: Rng> super::Renderable<R> for Boat {
     out.extend(self.render_background_only(rng, mask, self.clr));
     out
   }
+
   fn zorder(&self) -> f32 {
     self.origin.1
   }

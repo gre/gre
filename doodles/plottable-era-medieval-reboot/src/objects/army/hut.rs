@@ -84,6 +84,7 @@ impl<R: Rng> Renderable<R> for Hut {
   ) -> Polylines {
     self.render(paint)
   }
+
   fn zorder(&self) -> f32 {
     self.origin.1
   }

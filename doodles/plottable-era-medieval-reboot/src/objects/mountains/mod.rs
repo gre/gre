@@ -34,6 +34,7 @@ pub struct CastleGrounding {
 }
 
 pub struct Mountain {
+  precision: f32,
   pub clr: usize,
   // meta info for the objects we will need to draw inside mountains
   pub castle: Option<CastleGrounding>,
@@ -55,6 +56,10 @@ impl Mountain {
       yridge..yhorizon
     });
     out
+  }
+
+  pub fn lookup_ridge_index(&self, x: f32) -> usize {
+    ((x / self.precision).max(0.0) as usize).min(self.ridge.len() - 1)
   }
 }
 
@@ -391,6 +396,7 @@ impl MountainsV2 {
       };
 
       mountains.push(Mountain {
+        precision,
         clr,
         castle,
         ridge: modified_ridge,

@@ -89,6 +89,7 @@ impl<R: Rng> Renderable<R> for Cannon {
   ) -> Polylines {
     self.render(rng, paint)
   }
+
   fn zorder(&self) -> f32 {
     self.origin.1
   }

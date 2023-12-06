@@ -328,6 +328,7 @@ impl<R: Rng> Renderable<R> for Human {
   ) -> Polylines {
     self.render(rng, paint)
   }
+
   fn zorder(&self) -> f32 {
     self.body.origin.1
   }

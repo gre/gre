@@ -125,8 +125,6 @@ impl Palette {
           SEIBOKUBLUE
         } else if rng.gen_bool(0.4) {
           BLOODY_BREXIT
-        } else if rng.gen_bool(0.5) {
-          MOONSTONE
         } else {
           IMPERIAL_PURPLE
         };

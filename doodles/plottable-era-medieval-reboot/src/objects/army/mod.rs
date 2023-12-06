@@ -84,6 +84,7 @@ pub struct ArmyOnMountain {
 impl ArmyOnMountain {
   pub fn init(blazon: Blazon) -> Self {
     Self {
+      // debug: true,
       debug: false,
       blazon,
     }
@@ -122,48 +123,16 @@ impl ArmyOnMountain {
     }
 
     if ctx.specials.contains(&Special::Montmirail) && index == 0 {
-      let x = mix(first.0, last.0, rng.gen_range(0.2..0.8));
-      let y = mix(lookup_ridge(&ridge, x), yhorizon, rng.gen_range(0.0..0.7));
-      let origin = (x, y);
-      let size = rng.gen_range(0.05..0.1) * width;
-      let car = Renault4L::init(rng, 1, origin, size, 0.0);
-      let leftobj = None;
-      let rightobj = Some(HoldableObject::Club);
-      let posture = HumanPosture::from_holding(rng, false, leftobj, rightobj);
-      let jacquouille = Human::init(
+      montmirail(
         rng,
-        (x - 1.5 * size, y),
-        0.8 * size,
-        0.0,
-        false,
+        &mut renderables,
+        &ridge,
+        yhorizon,
+        width,
         blazon,
         mainclr,
         blazonclr,
-        posture,
-        HeadShape::NAKED,
-        leftobj,
-        rightobj,
       );
-      renderables.add(jacquouille);
-      let rightobj = Some(HoldableObject::Sword);
-      let posture = HumanPosture::from_holding(rng, false, leftobj, rightobj);
-      let godefroy = Human::init(
-        rng,
-        (x - 1.2 * size, y),
-        size,
-        0.0,
-        false,
-        blazon,
-        mainclr,
-        blazonclr,
-        posture,
-        HeadShape::HELMET,
-        None,
-        Some(HoldableObject::Sword),
-      );
-      renderables.add(godefroy);
-      renderables.add(car);
-
       noarmy = true;
     }
 
@@ -217,6 +186,56 @@ impl ArmyOnMountain {
       }
     }
 
+    let mut exclusion_mask = paint.clone_rescaled(1.0);
+
+    let sampling = 2000;
+    let clr = mainclr;
+    for _i in 0..sampling {
+      let x = mix(first.0, last.0, rng.gen_range(0.0..1.0));
+
+      let i = mountain.lookup_ridge_index(x);
+      let bottomy = if let Some(prevridge) = &prevridge {
+        prevridge[i].1
+      } else {
+        yhorizon
+      };
+      let y = mix(lookup_ridge(&ridge, x), bottomy, rng.gen_range(0.0..1.0));
+      if !exclusion_mask.is_painted((x, y))
+      // && warriors_noise_range.contains(&fnoise(x, y))
+      {
+        let c = if rng.gen_bool(0.01) { blazonclr } else { clr };
+        let origin = (x, y);
+        let size = 0.04 * width;
+        let xflip = true; // TODO
+        let headshape = HeadShape::HELMET;
+        let leftobj = Some(HoldableObject::Shield);
+        let mut rightobj = match blazon {
+          Blazon::Lys => Some(HoldableObject::Sword),
+          Blazon::Falcon => Some(HoldableObject::Club),
+          Blazon::Dragon => Some(HoldableObject::Axe),
+        };
+        if rng.gen_bool(0.1) {
+          rightobj = Some(HoldableObject::Flag);
+        }
+        let posture = HumanPosture::from_holding(rng, false, leftobj, rightobj);
+        let warrior = Human::init(
+          rng, origin, size, 0.0, xflip, blazon, c, blazonclr, posture,
+          headshape, leftobj, rightobj,
+        );
+
+        // todo in one case it is riding a horse or it's not.
+
+        renderables.add(warrior);
+
+        let area = VCircle::new(x, y - 0.5 * size, 0.5 * size);
+        debug_circle.push(area);
+        exclusion_mask.paint_circle(area.x, area.y, area.r);
+      }
+    }
+
+    /*
+
+
     let clr = mainclr;
     let animals_count = rng.gen_range(0..10);
     for _i in 0..animals_count {
@@ -241,23 +260,16 @@ impl ArmyOnMountain {
           let obj = Dog::init(rng, clr, origin, size, reversex, true);
           renderables.add(obj);
         };
-
-        // animals_rts.extend(rts);
-        /*
-        let area = VCircle::new(x, y - 0.3 * size, 0.5 * size);
-        debug_circle.push(area);
-        exclusion_mask.paint_circle(area.x, area.y, area.r);
-        */
       }
     }
 
-    /*
     // TODO small halo around animals...
     for (_, rt) in animals_rts.iter() {
       paint.paint_polyline(rt, 1.0);
     }
     */
 
+    /*
     if !noarmy {
       let perlin = Perlin::new(rng.gen());
 
@@ -339,13 +351,6 @@ impl ArmyOnMountain {
           }
         }
 
-        /*
-        // TODO small halo around forest
-        for (_, rt) in tree_rts.iter() {
-          paint.paint_polyline(rt, 1.0);
-        }
-        */
-
         // relic convoy
         if rng.gen_bool(0.05) {
           let x = mix(first.0, last.0, rng.gen_range(0.0..1.0));
@@ -386,13 +391,6 @@ impl ArmyOnMountain {
           for monk in monks {
             renderables.add(monk);
           }
-
-          /*
-          // TODO halo around convoy
-          for (_, rt) in rts.iter() {
-            paint.paint_polyline(rt, 1.0);
-          }
-          */
         }
 
         for _t in 0..trebuchet_tries {
@@ -717,8 +715,10 @@ impl ArmyOnMountain {
             renderables.add(camp);
           }
         }
+
       }
     }
+    */
 
     let mut routes = vec![];
 
@@ -732,4 +732,59 @@ impl ArmyOnMountain {
 
     routes
   }
+}
+
+fn montmirail<R: Rng>(
+  rng: &mut R,
+  renderables: &mut Container<R>,
+  ridge: &Vec<(f32, f32)>,
+  yhorizon: f32,
+  width: f32,
+  blazon: Blazon,
+  mainclr: usize,
+  blazonclr: usize,
+) {
+  let first = ridge[0];
+  let last = ridge[ridge.len() - 1];
+  let x = mix(first.0, last.0, rng.gen_range(0.2..0.8));
+  let y = mix(lookup_ridge(&ridge, x), yhorizon, rng.gen_range(0.0..0.7));
+  let origin = (x, y);
+  let size = rng.gen_range(0.05..0.1) * width;
+  let car = Renault4L::init(rng, 1, origin, size, 0.0);
+  let leftobj = None;
+  let rightobj = Some(HoldableObject::Club);
+  let posture = HumanPosture::from_holding(rng, false, leftobj, rightobj);
+  let jacquouille = Human::init(
+    rng,
+    (x - 1.5 * size, y),
+    0.8 * size,
+    0.0,
+    false,
+    blazon,
+    mainclr,
+    blazonclr,
+    posture,
+    HeadShape::NAKED,
+    leftobj,
+    rightobj,
+  );
+  renderables.add(jacquouille);
+  let rightobj = Some(HoldableObject::Sword);
+  let posture = HumanPosture::from_holding(rng, false, leftobj, rightobj);
+  let godefroy = Human::init(
+    rng,
+    (x - 1.2 * size, y),
+    size,
+    0.0,
+    false,
+    blazon,
+    mainclr,
+    blazonclr,
+    posture,
+    HeadShape::HELMET,
+    None,
+    Some(HoldableObject::Sword),
+  );
+  renderables.add(godefroy);
+  renderables.add(car);
 }

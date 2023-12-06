@@ -73,6 +73,7 @@ impl<R: Rng> Renderable<R> for Rider {
   ) -> Polylines {
     self.render(rng, paint)
   }
+
   fn zorder(&self) -> f32 {
     self.horse.origin.1
   }

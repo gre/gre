@@ -86,7 +86,7 @@ pub fn render(
   if !ctx.is_sandbox {
     perf.span("epic title", &decoration_routes);
     let txt = epic_title(&mut rng, &ctx);
-    let fontsize = width / 26.0;
+    let fontsize = width / 24.0;
     let iterations = 5000;
     let density = 4.0;
     let growpad = 2.0;
@@ -162,6 +162,9 @@ pub fn render(
     } else {
       rng.gen_range(0.5..0.8) * height
     };
+
+    let yhorizon = height; // FIXME TMP
+
     //  mountains
     perf.span("mountains_front", &routes);
     let ystart = if ctx.no_sea {
@@ -169,6 +172,9 @@ pub fn render(
     } else {
       mix(yhorizon, height, rng.gen_range(0.0..1.0))
     };
+
+    let ystart = height; // FIXME TMP
+
     let ybase = height - pad;
     let clr = 0;
     let mut mountains = FrontMountains {
@@ -247,8 +253,10 @@ pub fn render(
         mix(yhorizon, 0.5 * height, rng.gen_range(0.2..0.7)),
         rng.gen_range(0.5..0.7),
       );
+      let ymax = 0.0; // FIXME TMP
       let count =
         2 + (rng.gen_range(0.0..10.0) * rng.gen_range(0.0..1.0)) as usize;
+      let count = 8; // FIXME TMP
       let first_is_second = ctx.palette.inks[0] == ctx.palette.inks[1];
       let countextra = if rng.gen_bool(if first_is_second { 0.01 } else { 0.2 })
       {
@@ -319,13 +327,13 @@ pub fn render(
     let mut skysafemask1 = skysafemask.clone();
     skysafemask1.assign_data_lower_than_threshold(
       &distances,
-      rng.gen_range(0.0..0.1) * width,
+      rng.gen_range(0.05..0.1) * width,
     );
     skysafemask1.paint_borders(pad + framingw);
     let mut skysafemask2 = skysafemask.clone();
     skysafemask2.assign_data_lower_than_threshold(
       &distances,
-      rng.gen_range(0.0..0.2) * width,
+      rng.gen_range(0.1..0.2) * width,
     );
     skysafemask2.paint_borders(pad + framingw);
     perf.span_end("sky masks", &routes);

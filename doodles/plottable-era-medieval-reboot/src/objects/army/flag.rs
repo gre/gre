@@ -174,6 +174,7 @@ impl<R: Rng> Renderable<R> for Flag {
   ) -> Polylines {
     self.render(paint)
   }
+
   fn zorder(&self) -> f32 {
     self.spear.origin.1
   }

@@ -51,6 +51,7 @@ impl<R: Rng> Renderable<R> for NAME {
   ) -> Polylines {
     self.render(paint)
   }
+
   fn zorder(&self) -> f32 {
     self.origin.1
   }

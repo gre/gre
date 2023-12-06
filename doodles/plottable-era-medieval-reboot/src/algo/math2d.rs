@@ -144,14 +144,19 @@ pub fn polar_sort_from_center(pts: &Vec<(f32, f32)>) -> Vec<(f32, f32)> {
   points.iter().map(|p| *(p.0)).collect()
 }
 
-pub fn mirrored_angle_x_axis(original_angle: f32) -> f32 {
-  if original_angle >= 0.0 && original_angle <= PI / 2.0 {
-    -original_angle
-  } else if original_angle <= PI {
-    PI - original_angle
-  } else if original_angle <= 3.0 * PI / 2.0 {
-    original_angle - PI
-  } else {
-    -original_angle
+pub fn angle_between_0_2pi(a: f32) -> f32 {
+  let mut a = a;
+  while a < 0.0 {
+    a += 2.0 * PI;
   }
+  while a > 2.0 * PI {
+    a -= 2.0 * PI;
+  }
+  a
+}
+
+pub fn angle_mirrored_on_x(a: f32) -> f32 {
+  let acos = -a.cos();
+  let asin = a.sin();
+  asin.atan2(acos)
 }

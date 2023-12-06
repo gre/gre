@@ -119,6 +119,7 @@ impl<R: Rng> Renderable<R> for Firecamp {
   ) -> Polylines {
     self.render(rng, ctx, paint)
   }
+
   fn zorder(&self) -> f32 {
     self.origin.1
   }

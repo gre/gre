@@ -1,6 +1,10 @@
 PRIO:
-- battlefield placement. def/neutral/attack areas
-- battlefield extra details. people with machines & all other new objs
+- battlefield
+  - rework battlefield placement. def/neutral/attack areas
+  - only place machines on opportunated locations (belier on door, cannon on mountain next to castle when possible, catapult and trebuchet far enough)
+  - path of army / convoy
+  - make packed turtle formations
+  - battlefield extra details. people with machines & all other new objs
 - castle destruction. fire/smoke that goes with it
 - castle extra details (illumination, flags,..) 
 - destruction map to impact battlefield too. we should also have a noise map for where the targets are
@@ -34,7 +38,6 @@ BATTLEFIELD:
   - attacker supposed to climp on the belfry
   - Belfry improvements.
   - tortue de bouclier.
-  - ADD: Catapult
   - human managing the cannon, with a torch to fire the canon.
 - MONKS:
   - SPECIAL merlin? golden, big, stick

@@ -1,8 +1,8 @@
-use crate::global::GlobalCtx;
+use crate::{global::GlobalCtx, objects::army::human::Human};
 
 use super::{paintmask::PaintMask, polylines::Polylines};
 use rand::prelude::*;
-use std::cmp::Ordering;
+use std::{any::Any, cmp::Ordering};
 
 /**
  * LICENSE CC BY-NC-ND 4.0
@@ -16,7 +16,10 @@ pub trait Renderable<R: Rng> {
     ctx: &mut GlobalCtx,
     paint: &mut PaintMask,
   ) -> Polylines;
+
   fn zorder(&self) -> f32;
+
+  // fn as_any(&self) -> &dyn Any;
 }
 
 // FIXME can a Renderable be an implicit Container? like it wants to emit sub renderable... because we want the human shields to be ordered separately.
@@ -68,6 +71,32 @@ impl<R: Rng> Container<R> {
   pub fn extend(&mut self, other: Container<R>) {
     self.elements.extend(other.elements);
     self.elements.sort();
+  }
+
+  fn render_with_humans(
+    &self,
+    rng: &mut R,
+    ctx: &mut GlobalCtx,
+    paint: &mut PaintMask,
+  ) -> Polylines {
+    let mut routes = vec![];
+
+    /*
+    let humans: Vec<&Human> = self
+      .elements
+      .into_iter()
+      .filter_map(|obj| {
+        let b = obj.inner;
+        let boxed_human = b.as_ref().as_any().downcast_ref::<Human>();
+        boxed_human
+      })
+      .collect();
+    */
+
+    for e in &self.elements {
+      routes.extend(e.inner.render(rng, ctx, paint));
+    }
+    routes
   }
 
   pub fn render_with_extra_halo(

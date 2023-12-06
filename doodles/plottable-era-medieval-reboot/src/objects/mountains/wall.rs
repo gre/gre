@@ -55,6 +55,7 @@ impl<R: Rng> Renderable<R> for PalisadeWoodTrunk {
 
     routes
   }
+
   fn zorder(&self) -> f32 {
     self.pos.1
   }
