@@ -161,7 +161,7 @@ impl FrontMountains {
       let trebuchet =
         Trebuchet::init(rng, o, height, action_percent, xflip, clr);
       routes.extend(trebuchet.render(&mut paint_before));
-      trebuchet.throw_projectiles(ctx);
+      trebuchet.possibly_throw_projectiles(ctx);
     }
 
     let x = rng.gen_range(0.2..0.8) * width;
@@ -194,8 +194,8 @@ impl FrontMountains {
       let headshape = HeadShape::NAKED;
       let posture = HumanPosture::hand_risen(rng);
       let human = Human::init(
-        rng, o, size, angle, xflip, blazon, mainclr, blazonclr, posture,
-        headshape, lefthand, righthand,
+        rng, o, size, xflip, blazon, mainclr, blazonclr, posture, headshape,
+        lefthand, righthand,
       )
       .with_worms_filling_defaults();
       routes.extend(human.render(rng, &mut paint_before));

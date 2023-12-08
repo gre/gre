@@ -12,7 +12,7 @@ use rand::prelude::*;
 
 pub struct Rider {
   pub horse: Horse,
-  pub warrior: Human,
+  pub human: Human,
 }
 
 impl Rider {
@@ -26,7 +26,7 @@ impl Rider {
     blazonclr: usize,
     decorationratio: f32,
     foot_offset: f32,
-    warrior: Human,
+    human: Human,
   ) -> Self {
     let horse = Horse::init(
       origin,
@@ -39,7 +39,7 @@ impl Rider {
       foot_offset,
     );
 
-    Self { warrior, horse }
+    Self { human, horse }
   }
 
   pub fn render<R: Rng>(
@@ -47,14 +47,14 @@ impl Rider {
     rng: &mut R,
     mask: &mut PaintMask,
   ) -> Vec<(usize, Vec<(f32, f32)>)> {
-    let warrior = &self.warrior;
+    let human = &self.human;
     let horse = &self.horse;
 
     let mut routes = vec![];
 
-    routes.extend(warrior.render_foreground_only(rng, mask));
+    routes.extend(human.render_foreground_only(rng, mask));
     routes.extend(horse.render(rng, mask));
-    routes.extend(warrior.render_background_only(rng, mask));
+    routes.extend(human.render_background_only(rng, mask));
 
     // add halo around
     for (_, route) in routes.iter() {

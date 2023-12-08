@@ -163,8 +163,6 @@ pub fn render(
       rng.gen_range(0.5..0.8) * height
     };
 
-    let yhorizon = height; // FIXME TMP
-
     //  mountains
     perf.span("mountains_front", &routes);
     let ystart = if ctx.no_sea {
@@ -172,8 +170,6 @@ pub fn render(
     } else {
       mix(yhorizon, height, rng.gen_range(0.0..1.0))
     };
-
-    let ystart = height; // FIXME TMP
 
     let ybase = height - pad;
     let clr = 0;
@@ -251,12 +247,10 @@ pub fn render(
       let ymax = mix(
         0.0,
         mix(yhorizon, 0.5 * height, rng.gen_range(0.2..0.7)),
-        rng.gen_range(0.5..0.7),
+        rng.gen_range(if ctx.no_sea { 0.3 } else { 0.5 }..0.7),
       );
-      let ymax = 0.0; // FIXME TMP
       let count =
         2 + (rng.gen_range(0.0..10.0) * rng.gen_range(0.0..1.0)) as usize;
-      let count = 8; // FIXME TMP
       let first_is_second = ctx.palette.inks[0] == ctx.palette.inks[1];
       let countextra = if rng.gen_bool(if first_is_second { 0.01 } else { 0.2 })
       {

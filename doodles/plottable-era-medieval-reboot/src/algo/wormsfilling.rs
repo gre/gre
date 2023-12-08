@@ -215,10 +215,10 @@ impl WeightMap {
 
   // do a simple bilinear interpolation
   pub fn get_weight(&self, p: (f32, f32)) -> f32 {
-    let x = p.0 / self.precision;
-    let y = p.1 / self.precision;
-    let x0 = x.floor() as usize;
-    let y0 = y.floor() as usize;
+    let x = p.0.max(0.) / self.precision;
+    let y = p.1.max(0.) / self.precision;
+    let x0 = (x.floor() as usize).min(self.w - 1);
+    let y0 = (y.floor() as usize).min(self.h - 1);
     let x1 = (x0 + 1).min(self.w - 1);
     let y1 = (y0 + 1).min(self.h - 1);
     let dx = x - x0 as f32;

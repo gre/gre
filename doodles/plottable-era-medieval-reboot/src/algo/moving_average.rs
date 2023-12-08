@@ -26,3 +26,20 @@ pub fn moving_average_2d(
   }
   out
 }
+
+pub fn center_vec_2d(values: &Vec<(f32, f32)>, len: usize) -> Vec<(f32, f32)> {
+  if values.len() >= len {
+    return values.clone();
+  }
+  // make a Vec<(f32, f32)> of len elements, containing values in the middle and padded with the extremes
+  let mut out = vec![values[values.len() - 1]; len];
+  let first = values[0];
+  let offset = (len - values.len()) / 2;
+  for i in 0..offset {
+    out[i] = first;
+  }
+  for i in 0..values.len() {
+    out[i + offset] = values[i];
+  }
+  out
+}

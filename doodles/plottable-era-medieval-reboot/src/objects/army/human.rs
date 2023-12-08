@@ -72,7 +72,6 @@ impl Human {
     rng: &mut R,
     origin: (f32, f32),
     size: f32,
-    angle: f32,
     xflip: bool,
     blazon: Blazon,
     mainclr: usize,
@@ -82,6 +81,7 @@ impl Human {
     lefthand: Option<HoldableObject>,
     righthand: Option<HoldableObject>,
   ) -> Self {
+    let angle = posture.get_rotation();
     let acos = angle.cos();
     let asin = angle.sin();
     let xdir = if xflip { -1.0 } else { 1.0 };
@@ -272,6 +272,7 @@ impl Human {
       routes.extend(flag.render(mask));
     }
     routes.extend(regular_clip(&self.weapon_routes, mask));
+    // TODO aren't we supposed to clip this? also to paint the mask actually?!
     self.rendering_pass(rng, mask, &routes)
   }
 
@@ -299,6 +300,15 @@ impl Human {
     routes.extend(human.render(mask, mainclr));
     self.rendering_pass(rng, mask, &routes)
   }
+
+  /*
+  pub fn get_renderables_parts<R: Rng>(&self) -> Vec<Box<dyn Renderable<R>>> {
+    vec![
+      Box::new(HumanForeground(Box::new(self))),
+      Box::new(HumanBackground(Box::new(self))),
+    ]
+  }
+  */
 
   // a standalone rendering version when it's not rendered riding something.
   pub fn render<R: Rng>(
@@ -332,4 +342,44 @@ impl<R: Rng> Renderable<R> for Human {
   fn zorder(&self) -> f32 {
     self.body.origin.1
   }
+
+  fn as_human(&self) -> Option<&Human> {
+    Some(self)
+  }
 }
+
+/*
+pub struct HumanForeground(Box<Human>);
+
+impl<R: Rng> Renderable<R> for HumanForeground {
+  fn render(
+    &self,
+    rng: &mut R,
+    _ctx: &mut GlobalCtx,
+    paint: &mut PaintMask,
+  ) -> Polylines {
+    self.0.render_foreground_only(rng, paint)
+  }
+
+  fn zorder(&self) -> f32 {
+    self.0.body.origin.1 + 0.2 * self.0.size
+  }
+}
+
+pub struct HumanBackground(Box<Human>);
+
+impl<R: Rng> Renderable<R> for HumanBackground {
+  fn render(
+    &self,
+    rng: &mut R,
+    _ctx: &mut GlobalCtx,
+    paint: &mut PaintMask,
+  ) -> Polylines {
+    self.0.render_background_only(rng, paint)
+  }
+
+  fn zorder(&self) -> f32 {
+    self.0.body.origin.1 + 0.2 * self.0.size
+  }
+}
+*/

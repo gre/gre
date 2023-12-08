@@ -25,7 +25,7 @@ pub enum AttackOrigin {
 #[derive(Clone, Copy)]
 pub enum DefenseTarget {
   Building(Pos),
-  // Human(Pos),
+  Human(Pos),
 }
 
 pub fn extract_attack_pos(origin: AttackOrigin) -> Pos {
@@ -46,7 +46,7 @@ pub fn resolve_trajectory_path(
   let o = extract_attack_pos(origin);
   let t = match target {
     DefenseTarget::Building(pos) => pos,
-    // DefenseTarget::Human(pos) => pos,
+    DefenseTarget::Human(pos) => pos,
   };
   let curvy_factor = match origin {
     AttackOrigin::Cannon(_) => 0.1,

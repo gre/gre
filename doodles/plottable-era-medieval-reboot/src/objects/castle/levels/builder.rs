@@ -426,8 +426,8 @@ fn rec_build<R: Rng>(
     let s = scale * rng.gen_range(3.0..4.0);
 
     let human = Human::init(
-      rng, spawn.pos, s, angle, xflip, blazon, 0, blazonclr, posture, head,
-      lefthand, righthand,
+      rng, spawn.pos, s, xflip, blazon, 0, blazonclr, posture, head, lefthand,
+      righthand,
     );
 
     let id = objects.len();

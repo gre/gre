@@ -324,7 +324,6 @@ impl Sea {
             rng,
             origin,
             size,
-            arg.angle,
             arg.xflip,
             self.blazon,
             mainclr,

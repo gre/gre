@@ -80,8 +80,11 @@ pub struct GlobalCtx {
 
   // stats that we need to cleanup at the end & for the features
   pub nb_cyclopes: usize,
+  pub nb_castle_siege_machine: usize,
 
   pub is_sandbox: bool,
+
+  pub has_leader_been_picked: bool,
 }
 
 impl GlobalCtx {
@@ -95,6 +98,9 @@ impl GlobalCtx {
     defenders: &Blazon,
     attackers: &Blazon,
   ) -> Self {
+    let castle_on_sea = rng.gen_bool(0.1);
+    let no_sea = !castle_on_sea && rng.gen_bool(0.1);
+
     let paper = palette.paper;
     let colors = &palette.inks;
 
@@ -149,7 +155,7 @@ impl GlobalCtx {
           && matches!(attackers, Blazon::Lys)
       {
         specials.insert(Special::Dragon(rng.gen_range(1..4)));
-      } else if rng.gen_bool(0.01) {
+      } else if rng.gen_bool(0.01) && !no_sea {
         specials.insert(Special::TrojanHorse);
       } else if rng.gen_bool(0.01) {
         let c = c[1];
@@ -167,11 +173,6 @@ impl GlobalCtx {
     let sun_xpercentage_pos =
       0.5 + rng.gen_range(-0.3..0.3) * rng.gen_range(0.0..1.0);
     let full_castle = rng.gen_bool(0.04);
-
-    let castle_on_sea = rng.gen_bool(0.1);
-    let no_sea = !castle_on_sea && rng.gen_bool(0.1);
-
-    let castle_on_sea = false; // FIXME tmp
 
     Self {
       is_sandbox,
@@ -194,8 +195,10 @@ impl GlobalCtx {
       defendersclr,
       attackersclr,
       nb_cyclopes: 0,
+      nb_castle_siege_machine: 0,
       trebuchets_should_shoot,
       archers_should_shoot,
+      has_leader_been_picked: false,
     }
   }
 

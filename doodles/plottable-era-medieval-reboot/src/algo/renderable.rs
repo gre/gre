@@ -2,7 +2,7 @@ use crate::{global::GlobalCtx, objects::army::human::Human};
 
 use super::{paintmask::PaintMask, polylines::Polylines};
 use rand::prelude::*;
-use std::{any::Any, cmp::Ordering};
+use std::cmp::Ordering;
 
 /**
  * LICENSE CC BY-NC-ND 4.0
@@ -20,6 +20,9 @@ pub trait Renderable<R: Rng> {
   fn zorder(&self) -> f32;
 
   // fn as_any(&self) -> &dyn Any;
+  fn as_human(&self) -> Option<&Human> {
+    None
+  }
 }
 
 // FIXME can a Renderable be an implicit Container? like it wants to emit sub renderable... because we want the human shields to be ordered separately.
@@ -73,29 +76,41 @@ impl<R: Rng> Container<R> {
     self.elements.sort();
   }
 
-  fn render_with_humans(
+  // TODO a better impl would be to make humans returning two renderables and we would natively sort these, so we wouldn't need this function...
+  pub fn render_with_humans(
     &self,
     rng: &mut R,
     ctx: &mut GlobalCtx,
     paint: &mut PaintMask,
   ) -> Polylines {
     let mut routes = vec![];
+    let mut human_routes = vec![];
 
-    /*
-    let humans: Vec<&Human> = self
-      .elements
-      .into_iter()
-      .filter_map(|obj| {
-        let b = obj.inner;
-        let boxed_human = b.as_ref().as_any().downcast_ref::<Human>();
-        boxed_human
-      })
-      .collect();
-    */
+    let human_halo = 0.8;
 
     for e in &self.elements {
-      routes.extend(e.inner.render(rng, ctx, paint));
+      if let Some(human) = e.inner.as_human() {
+        human_routes.extend(human.render_foreground_only(rng, paint));
+      } else {
+        routes.extend(e.inner.render(rng, ctx, paint));
+      }
     }
+    for (_, route) in &human_routes {
+      paint.paint_polyline(route, human_halo);
+    }
+    routes.extend(human_routes);
+
+    human_routes = vec![];
+    for e in &self.elements {
+      if let Some(human) = e.inner.as_human() {
+        human_routes.extend(human.render_background_only(rng, paint));
+      }
+    }
+    for (_, route) in &human_routes {
+      paint.paint_polyline(route, human_halo);
+    }
+    routes.extend(human_routes);
+
     routes
   }
 

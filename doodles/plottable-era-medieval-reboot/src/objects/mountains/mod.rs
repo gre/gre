@@ -3,6 +3,7 @@ use crate::{
     clipping::{clip_routes_with_colors, regular_clip},
     math1d::mix,
     math2d::{lookup_ridge, strictly_in_boundaries},
+    moving_average::{center_vec_2d, moving_average_2d},
     paintmask::PaintMask,
     passage::Passage,
     polygon::polygon_includes_point,
@@ -13,6 +14,9 @@ use crate::{
 use noise::*;
 use rand::prelude::*;
 
+use self::battlefield::BattlefieldArea;
+
+pub mod battlefield;
 pub mod front;
 pub mod wall;
 
@@ -39,12 +43,14 @@ pub struct Mountain {
   // meta info for the objects we will need to draw inside mountains
   pub castle: Option<CastleGrounding>,
   pub ridge: Vec<(f32, f32)>,
+  pub smoothed_ridge: Vec<(f32, f32)>,
   pub yhorizon: f32,
   pub width: f32,
   pub has_beach: bool,
   // info for the render time
   pub routes: Polylines,
   pub is_behind: bool,
+  pub will_have_the_leader: bool,
 }
 
 impl Mountain {
@@ -61,10 +67,30 @@ impl Mountain {
   pub fn lookup_ridge_index(&self, x: f32) -> usize {
     ((x / self.precision).max(0.0) as usize).min(self.ridge.len() - 1)
   }
+
+  pub fn ridge_pos_for_x(&self, x: f32) -> (f32, f32) {
+    let i = self.lookup_ridge_index(x);
+    self.ridge[i]
+  }
+
+  pub fn slope_for_x(&self, x: f32) -> f32 {
+    let step = 1.0;
+    let lefti = self.lookup_ridge_index(x - step);
+    let righti = self.lookup_ridge_index(x + step);
+    let left = self.smoothed_ridge[lefti];
+    let right = self.smoothed_ridge[righti];
+    let dx = right.0 - left.0;
+    let dy = right.1 - left.1;
+    if dx <= 0.0 {
+      return 0.0;
+    }
+    dy.atan2(dx)
+  }
 }
 
 pub struct MountainsV2 {
   pub mountains: Vec<Mountain>,
+  pub battlefield: BattlefieldArea,
 }
 
 impl MountainsV2 {
@@ -92,6 +118,8 @@ impl MountainsV2 {
     let mut mountains = vec![];
 
     let secondcolor = (mainclr + 1) % 3;
+
+    let leader_mountain_index = rng.gen_range(0..count);
 
     for j in 0..count + count_behind {
       let clr = if j < count { mainclr } else { secondcolor };
@@ -136,6 +164,10 @@ impl MountainsV2 {
 
           let amp = (height * ampfactor) as f64;
           let mut y = base_y as f64;
+
+          /*
+          y += ((x / width - 0.5).abs() * 120.0) as f64;
+          */
 
           y += amp2
             * amp
@@ -395,16 +427,22 @@ impl MountainsV2 {
         None
       };
 
+      let rlen = modified_ridge.len();
+      let smoothed_ridge =
+        center_vec_2d(&moving_average_2d(&modified_ridge, rlen / 16), rlen);
+
       mountains.push(Mountain {
         precision,
         clr,
         castle,
         ridge: modified_ridge,
+        smoothed_ridge,
         yhorizon,
         routes,
         width,
         has_beach: j == 0,
         is_behind: j >= count,
+        will_have_the_leader: j == leader_mountain_index,
       });
 
       // move the ridge up to create some "halo" around mountain. and see more easily the diff layers
@@ -414,6 +452,12 @@ impl MountainsV2 {
       }
     }
 
-    Self { mountains }
+    let battlefield =
+      BattlefieldArea::rand(rng, ctx, width, height, yhorizon, &mountains);
+
+    Self {
+      mountains,
+      battlefield,
+    }
   }
 }

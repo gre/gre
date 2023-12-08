@@ -34,6 +34,9 @@ pub struct HumanPosture {
 }
 
 impl HumanPosture {
+  pub fn get_rotation(&self) -> f32 {
+    0.0
+  }
   pub fn from_holding<R: Rng>(
     rng: &mut R,
     xflip: bool,

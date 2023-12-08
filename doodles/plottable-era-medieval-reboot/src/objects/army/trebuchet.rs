@@ -432,7 +432,7 @@ impl Trebuchet {
     routes
   }
 
-  pub fn throw_projectiles(&self, ctx: &mut GlobalCtx) {
+  pub fn possibly_throw_projectiles(&self, ctx: &mut GlobalCtx) {
     // we may use action_percent more precisely for the projectile position
     let threshold = 0.8;
     if self.action_percent < threshold {

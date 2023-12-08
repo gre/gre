@@ -40,13 +40,13 @@ impl Tree {
 
     let bushcy = origin.1 - size * (1. - foliage_ratio);
 
-    let w = size * 0.1;
+    let w = size * rng.gen_range(0.1..0.2);
     let wmin = 0.4 * w;
     let trunkp = vec![
       (origin.0, bushcy),
       (
         origin.0 + rng.gen_range(-0.3..0.3) * w,
-        mix(origin.1, bushcy, rng.gen_range(0.5..0.8)),
+        mix(origin.1, bushcy, rng.gen_range(0.4..0.8)),
       ),
       origin,
     ];

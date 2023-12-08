@@ -11,6 +11,7 @@ pub struct PaintMask {
   pub precision: f32,
   pub width: f32,
   pub height: f32,
+  // TODO we should have wi and hi computed instead of these ?
 }
 
 impl PaintMask {
