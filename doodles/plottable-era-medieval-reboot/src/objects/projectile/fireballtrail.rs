@@ -22,6 +22,7 @@ pub struct FireballTrail {
   pub bound: (f32, f32, f32, f32),
   pub circles: Vec<VCircle>,
   pub clr: usize,
+  pub halo: f32,
 }
 
 impl FireballTrail {
@@ -34,6 +35,7 @@ impl FireballTrail {
     particles: usize,
     strokes: usize,
     clr: usize,
+    halo: f32,
   ) -> Self {
     let mut trailmask = referencemask.clone_empty();
 
@@ -81,6 +83,7 @@ impl FireballTrail {
       bound,
       circles,
       clr,
+      halo,
     }
   }
 
@@ -112,7 +115,7 @@ impl FireballTrail {
     routes = regular_clip(&routes, paint);
 
     for (_, route) in &routes {
-      paint.paint_polyline(route, 2.0);
+      paint.paint_polyline(route, self.halo);
       ctx.effects.hot.paint_polyline(route, 6.0);
     }
 

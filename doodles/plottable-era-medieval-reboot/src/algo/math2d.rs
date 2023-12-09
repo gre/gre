@@ -160,3 +160,14 @@ pub fn angle_mirrored_on_x(a: f32) -> f32 {
   let asin = a.sin();
   asin.atan2(acos)
 }
+
+pub fn distance_angles(a1: f32, a2: f32) -> f32 {
+  let norm_a1 = angle_between_0_2pi(a1);
+  let norm_a2 = angle_between_0_2pi(a2);
+  let diff = (norm_a1 - norm_a2).abs();
+  if diff > PI {
+    2.0 * PI - diff
+  } else {
+    diff
+  }
+}

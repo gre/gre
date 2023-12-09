@@ -31,7 +31,8 @@ pub fn sandbox<R: Rng>(
   width: f32,
   height: f32,
 ) {
-  match rng.gen_range(0..6) {
+  match 4 {
+    //rng.gen_range(0..6) {
     0 => sandbox_catapult(rng, ctx, paint, routes, width, height),
     1 => sandbox_dragons(rng, ctx, paint, routes, width, height),
     2 => sandbox_flagmen(rng, ctx, paint, routes, width, height),
@@ -113,7 +114,7 @@ fn sandbox_boat<R: Rng>(
   width: f32,
   height: f32,
 ) {
-  let boatconf = BoatGlobals::rand(rng);
+  let boatconf = BoatGlobals::rand(rng, false);
   let mut container = Container::new();
   let general_width = 2. * rng.gen_range(0.08..0.15) * width;
   for _ in 0..rng.gen_range(200..1000) {
@@ -135,6 +136,7 @@ fn sandbox_boat<R: Rng>(
     let human_density = rng.gen_range(0.0..1.0);
     let boat = BoatArmy::init(
       rng,
+      ctx,
       mainclr,
       blazonclr,
       o,
@@ -252,7 +254,7 @@ pub fn sandbox_cannon<R: Rng>(
 ) {
   let mut container = Container::new();
   let general_s = rng.gen_range(0.02..0.04) * width;
-  for _ in 0..rng.gen_range(10..50) {
+  for _ in 0..rng.gen_range(10..100) {
     let xflip = rng.gen_bool(0.5);
     let o = (
       rng.gen_range(0.15..0.85) * width,
@@ -268,6 +270,6 @@ pub fn sandbox_cannon<R: Rng>(
     container.add(obj);
   }
 
-  let rts = container.render_with_extra_halo(rng, ctx, paint, 2.0);
+  let rts = container.render_with_extra_halo(rng, ctx, paint, 1.0);
   routes.extend(rts.clone());
 }

@@ -9,6 +9,7 @@ use std::f32::consts::PI;
  * Author: greweb – 2023 – Plottable Era: (II) Medieval
  */
 
+#[derive(Clone)]
 pub struct Helmet {
   pub origin: (f32, f32),
   pub angle: f32,

@@ -13,6 +13,7 @@ use std::f32::consts::PI;
  * LICENSE CC BY-NC-ND 4.0
  * Author: greweb – 2023 – Plottable Era: (II) Medieval
  */
+#[derive(Clone)]
 pub struct Flag {
   pub spear: Spear,
   pub cloth: FlagCloth,
@@ -70,6 +71,7 @@ impl Flag {
   }
 }
 
+#[derive(Clone)]
 pub struct FlagCloth {
   pub routes: Polylines,
   pub filling: f32,

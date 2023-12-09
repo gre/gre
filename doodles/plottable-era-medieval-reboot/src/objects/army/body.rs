@@ -31,11 +31,45 @@ pub struct HumanPosture {
   pub left_leg_bend: f32,
   pub right_arm_bend: f32,
   pub right_leg_bend: f32,
+
+  pub origin_on_feet: bool,
 }
 
 impl HumanPosture {
   pub fn get_rotation(&self) -> f32 {
     0.0
+  }
+  pub fn climbing<R: Rng>(rng: &mut R, angle: f32, la: f32) -> Self {
+    let la1 = 0.3;
+    let la2 = -0.3 + la;
+    let shoulder_right_angle = angle + la1;
+    let elbow_right_angle = shoulder_right_angle - la2
+      + rng.gen_range(-0.5..0.5) * rng.gen_range(0.0..1.0);
+    let shoulder_left_angle = angle - la1;
+    let elbow_left_angle = shoulder_left_angle
+      + la2
+      + rng.gen_range(-0.5..0.5) * rng.gen_range(0.0..1.0);
+
+    let left_arm_bend = rng.gen_range(0.0..1.0);
+    let right_arm_bend = rng.gen_range(0.7..1.0);
+
+    Self {
+      body_angle: angle,
+      head_angle: angle,
+      shoulder_right_angle,
+      shoulder_left_angle,
+      elbow_right_angle,
+      elbow_left_angle,
+      hip_right_angle: PI + angle - la1,
+      hip_left_angle: PI + angle + la1,
+      knee_right_angle: PI + angle,
+      knee_left_angle: PI + angle,
+      left_arm_bend,
+      right_arm_bend,
+      left_leg_bend: rng.gen_range(0.7..1.0),
+      right_leg_bend: rng.gen_range(0.7..1.0),
+      origin_on_feet: false,
+    }
   }
   pub fn from_holding<R: Rng>(
     rng: &mut R,
@@ -111,6 +145,7 @@ impl HumanPosture {
       right_arm_bend,
       left_leg_bend: 1.0,
       right_leg_bend: 1.0,
+      origin_on_feet: true,
     }
   }
 
@@ -141,6 +176,7 @@ impl HumanPosture {
       right_arm_bend,
       left_leg_bend: 1.0,
       right_leg_bend: 1.0,
+      origin_on_feet: true,
     }
   }
 }
@@ -192,7 +228,9 @@ impl HumanBody {
     let j = joints;
     let mut hip = origin;
 
-    hip.1 -= 0.5 * h;
+    if joints.origin_on_feet {
+      hip.1 -= 0.5 * h;
+    }
 
     let shoulder = proj_point(hip, j.body_angle, 0.4 * h);
 

@@ -2,6 +2,7 @@ use crate::algo::{
   clipping::regular_clip_polys,
   paintmask::PaintMask,
   polylines::{path_subdivide_to_curve_it, route_translate_rotate},
+  renderable::Renderable,
 };
 use rand::prelude::*;
 
@@ -9,6 +10,7 @@ use rand::prelude::*;
  * LICENSE CC BY-NC-ND 4.0
  * Author: greweb – 2023 – Plottable Era: (II) Medieval
  */
+#[derive(Clone)]
 pub struct Club {
   pub origin: (f32, f32),
   pub routes: Vec<(usize, Vec<(f32, f32)>)>,
@@ -59,5 +61,21 @@ impl Club {
 
   pub fn render(&self, paint: &mut PaintMask) -> Vec<(usize, Vec<(f32, f32)>)> {
     regular_clip_polys(&self.routes, paint, &self.polys)
+  }
+}
+
+impl<R: Rng> Renderable<R> for Club {
+  fn render(
+    &self,
+    rng: &mut R,
+    ctx: &mut crate::global::GlobalCtx,
+    paint: &mut crate::algo::paintmask::PaintMask,
+  ) -> crate::algo::polylines::Polylines {
+    let routes = self.render(paint);
+    routes
+  }
+
+  fn zorder(&self) -> f32 {
+    self.origin.1
   }
 }

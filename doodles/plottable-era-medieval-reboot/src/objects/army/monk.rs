@@ -51,6 +51,7 @@ impl Monk {
       right_arm_bend: 1.0,
       left_leg_bend: 1.0,
       right_leg_bend: 1.0,
+      origin_on_feet: true,
     };
     let y = rng.gen_range(-0.1 * size..0.0);
     let p = (0.0, y);

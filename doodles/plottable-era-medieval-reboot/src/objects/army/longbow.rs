@@ -1,9 +1,12 @@
 use crate::algo::{
+  clipping::regular_clip,
   math1d::mix,
   polylines::{
     grow_path_zigzag, path_subdivide_to_curve, route_translate_rotate,
   },
+  renderable::Renderable,
 };
+use rand::prelude::*;
 
 /**
  * LICENSE CC BY-NC-ND 4.0
@@ -49,4 +52,54 @@ pub fn long_bow(
     .collect();
 
   out
+}
+
+pub struct LongBow {
+  pub origin: (f32, f32),
+  pub size: f32,
+  pub angle: f32,
+  pub phase: f32,
+  pub clr: usize,
+}
+
+impl LongBow {
+  pub fn init(
+    origin: (f32, f32),
+    size: f32,
+    angle: f32,
+    phase: f32,
+    clr: usize,
+  ) -> Self {
+    Self {
+      origin,
+      size,
+      angle,
+      phase,
+      clr,
+    }
+  }
+
+  pub fn render(&self) -> Vec<(usize, Vec<(f32, f32)>)> {
+    long_bow(self.clr, self.origin, self.size, self.angle, self.phase)
+  }
+}
+
+impl<R: Rng> Renderable<R> for LongBow {
+  fn render(
+    &self,
+    rng: &mut R,
+    ctx: &mut crate::global::GlobalCtx,
+    paint: &mut crate::algo::paintmask::PaintMask,
+  ) -> crate::algo::polylines::Polylines {
+    let routes = self.render();
+    let routes = regular_clip(&routes, paint);
+    for (_, route) in routes.iter() {
+      paint.paint_polyline(route, 0.5);
+    }
+    routes
+  }
+
+  fn zorder(&self) -> f32 {
+    self.origin.1
+  }
 }

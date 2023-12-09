@@ -20,12 +20,16 @@ pub enum AttackOrigin {
   Trebuchet(Pos),
   Eye(Pos),
   Bow(Pos),
+  Ladder(Pos),
+  Rope(Pos, usize),
 }
 
 #[derive(Clone, Copy)]
 pub enum DefenseTarget {
   Building(Pos),
   Human(Pos),
+  Ladder(Pos),
+  Rope(Pos),
 }
 
 pub fn extract_attack_pos(origin: AttackOrigin) -> Pos {
@@ -35,6 +39,15 @@ pub fn extract_attack_pos(origin: AttackOrigin) -> Pos {
     AttackOrigin::Trebuchet(pos) => pos,
     AttackOrigin::Eye(pos) => pos,
     AttackOrigin::Bow(pos) => pos,
+    AttackOrigin::Ladder(pos) => pos,
+    AttackOrigin::Rope(pos, _) => pos,
+  }
+}
+
+pub fn map_progress(origin: AttackOrigin, progress: f32) -> f32 {
+  match origin {
+    AttackOrigin::Cannon(_) => 0.4 * progress,
+    _ => progress,
   }
 }
 
@@ -47,6 +60,8 @@ pub fn resolve_trajectory_path(
   let t = match target {
     DefenseTarget::Building(pos) => pos,
     DefenseTarget::Human(pos) => pos,
+    DefenseTarget::Ladder(pos) => pos,
+    DefenseTarget::Rope(pos) => pos,
   };
   let curvy_factor = match origin {
     AttackOrigin::Cannon(_) => 0.1,
@@ -54,9 +69,13 @@ pub fn resolve_trajectory_path(
     AttackOrigin::Trebuchet(_) => 0.7,
     AttackOrigin::Eye(_) => 0.0,
     AttackOrigin::Bow(_) => 0.4,
+    AttackOrigin::Ladder(_) => 0.0,
+    AttackOrigin::Rope(_, _) => -0.1, // gravity
   };
   let p = match origin {
     AttackOrigin::Eye(_) => 1.0,
+    AttackOrigin::Ladder(_) => 1.0,
+    AttackOrigin::Rope(_, _) => 1.0,
     _ => progress,
   };
 
@@ -66,7 +85,7 @@ pub fn resolve_trajectory_path(
   path.push(o);
   path.push(t);
 
-  if curvy_factor > 0.0 {
+  if curvy_factor != 0.0 {
     path = step_polyline(&path, 1.0);
     let plen = path.len();
     path = path

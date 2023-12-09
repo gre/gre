@@ -47,6 +47,7 @@ impl WallParams {
 pub struct Wall {
   roof_base: Option<Floor>,
   items: Vec<RenderItem>,
+  possible_ladder_positions: Vec<(f32, f32)>,
 }
 
 impl Wall {
@@ -210,7 +211,23 @@ impl Wall {
       ));
     }
 
-    Self { items, roof_base }
+    let mut possible_ladder_positions = vec![];
+    if params.level == 0
+    // && params.rec_level == 0
+    {
+      let samples = rng.gen_range(1..10);
+      for _ in 0..samples {
+        let x = rng.gen_range(x1..x2);
+        let y = mix(o.1, y2, rng.gen_range(0.5..1.0));
+        possible_ladder_positions.push((x, y));
+      }
+    }
+
+    Self {
+      items,
+      roof_base,
+      possible_ladder_positions,
+    }
   }
 }
 
@@ -221,6 +238,10 @@ impl Level for Wall {
 
   fn render(&self) -> Vec<RenderItem> {
     self.items.clone()
+  }
+
+  fn possible_ladder_positions(&self) -> Vec<(f32, f32)> {
+    self.possible_ladder_positions.clone()
   }
 }
 

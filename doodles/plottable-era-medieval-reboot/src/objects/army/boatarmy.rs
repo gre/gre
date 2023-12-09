@@ -1,6 +1,6 @@
 use super::{
   boat::{Boat, BoatGlobals},
-  human::Human,
+  human::{HoldableObject, Human},
 };
 use crate::{
   algo::{
@@ -8,7 +8,7 @@ use crate::{
     renderable::Renderable,
   },
   global::GlobalCtx,
-  objects::blazon::Blazon,
+  objects::{blazon::Blazon, projectile::attack::AttackOrigin},
 };
 use rand::prelude::*;
 
@@ -44,6 +44,7 @@ impl BoatArmy {
     SpawnHuman: Fn(&mut R, &SpawnHumanArg) -> Option<Human>,
   >(
     rng: &mut R,
+    ctx: &mut GlobalCtx,
     clr: usize,
     blazonclr: usize,
     origin: (f32, f32),
@@ -67,14 +68,23 @@ impl BoatArmy {
     let x2 = boat.x2;
     let mut x = x1;
     let mut positions = vec![];
+    let yhorizondy = (ctx.yhorizon - origin.1).abs();
+    let spawn_prob = ((1.0 - 10.0 * yhorizondy / ctx.height) as f64)
+      .max(0.00001)
+      .min(0.8);
+    let mut i = 0;
     if human_density > 0.0 {
       while x < x2 {
         let y = rng.gen_range(-0.1 * size..0.0);
         let p = (x, y);
         let p = (p.0 * acos + p.1 * asin, p.1 * acos - p.0 * asin);
         let p = (p.0 * xdir + origin.0, p.1 + origin.1);
+        if i % 3 == 0 && boatglobs.can_spawn_ropes && rng.gen_bool(spawn_prob) {
+          ctx.projectiles.add_attack(AttackOrigin::Rope(p, clr));
+        }
         positions.push(p);
         x += rng.gen_range(0.15..0.25) * size / human_density;
+        i += 1;
       }
     }
 
@@ -88,7 +98,7 @@ impl BoatArmy {
       .iter()
       .enumerate()
       .flat_map(|(index, &origin)| {
-        spawn_human(
+        let human = spawn_human(
           rng,
           &SpawnHumanArg {
             origin,
@@ -98,7 +108,11 @@ impl BoatArmy {
             index,
             total,
           },
-        )
+        );
+        if let Some(human) = &human {
+          human.throw_projectiles(ctx);
+        }
+        human
       })
       .collect();
 

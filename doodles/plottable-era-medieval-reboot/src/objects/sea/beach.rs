@@ -121,7 +121,7 @@ impl Beach {
       )
     };
 
-    let mut boatglobs = BoatGlobals::rand(rng);
+    let mut boatglobs = BoatGlobals::rand(rng, false);
     boatglobs.mast_p /= 2.0;
     boatglobs.sailing_p /= 2.0;
 

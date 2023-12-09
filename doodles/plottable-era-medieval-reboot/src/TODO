@@ -1,9 +1,7 @@
 PRIO:
 - battlefield
-  - rework battlefield placement. def/neutral/attack areas
   - only place machines on opportunated locations (belier on door, cannon on mountain next to castle when possible, catapult and trebuchet far enough)
   - path of army / convoy
-  - make packed turtle formations
   - battlefield extra details. people with machines & all other new objs
 - castle destruction. fire/smoke that goes with it
 - castle extra details (illumination, flags,..) 
@@ -14,30 +12,16 @@ CASTLE:
 - rework castle
   - stairs => where we can find some empty space. typically in the big towers.
   - lights
-- bush at bottom of walls to balance a bit the mountain is sometimes very curvy.
 
 BATTLEFIELD:
-- Shield have bad clipping?
 - organize ArmyOnMountain fight. divide the terrain. rework the code to add more kind of items and people.
-  - rework army on mountain spawn: we need to look between the 2 ridges
-  - we would use an area map.
-  - make them aligned into areas. for instance i want to see alignment of archers and alignement of shields.
-  - make a neutral area. which could allow to spawn forest and wild animals.
-  - in the army, we need a leader. they will either have a flag OR a weapon that is bigger and colored with the team color.
-  - hut positionning too
-  - animals in neutral
   - we have to chose a count of units to spawn "globally". and we will have only one look to try to spawn where they can be.
-  - orient the body depending on terrain angle
-  - align the units using some kind of distance line. (maybe it works well with range on the oriented noise)
-- yordering:
-  - human to emit two renderables..
 - machines / caravans:
   - add folks on the machines.
   - do something with Cage. army transporting someone.
   - have a horse caravan version. where we can put relique / cage..
   - attacker supposed to climp on the belfry
   - Belfry improvements.
-  - tortue de bouclier.
   - human managing the cannon, with a torch to fire the canon.
 - MONKS:
   - SPECIAL merlin? golden, big, stick
@@ -46,19 +30,13 @@ BATTLEFIELD:
 - blazon & their impact + flags
   - on shield SHAPE.
   - on boat/belier head
-- ADD: grappin + cables on people attacking (or going to) the castle
 - ADD: lanciers
-- ADD: ladders and cords with people climbing.
-- giant people ("boss"/hero), golden, in the battlefield.
-- alone horse in battlefield
 - IMPROVE: helmet variety
-- as result of a fight (destruction map), the weapon/flag/... will be on the ground.
 - Palisade:
   - work on a better entrance
 
 GENERAL:
 - Work on Features
-- polish the projectile matcher to make it more logical.
 
 MOUNTAIN:
 - if we can allow castle to be on a mountain and have a mountain next to it where attackers are?
@@ -69,9 +47,6 @@ WORK ON DESTRUCTION:
 - fire & smoke
 - Slice the object and emit particles that can produce some fire.
 - Dead battle field. (remains of weapons and flaks in the ground)
-
-SEA:
-- only sea = boat battle? we need better boat like the defender have the relic on one?
 
 FRONT MOUNTAIN:
 - rework spawning. 
@@ -84,7 +59,6 @@ FRONT MOUNTAIN:
   - axe
 
 IDEAS:
-- defenders on the beach during trojan horse.
 - night time illumination: castle lights, attacker torches, firecamp
 - ADD Random event on rock:
   - a nest

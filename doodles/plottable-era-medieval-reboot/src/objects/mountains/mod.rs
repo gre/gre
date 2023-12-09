@@ -73,6 +73,27 @@ impl Mountain {
     self.ridge[i]
   }
 
+  pub fn ground_stability(&self, (x, y): (f32, f32), width: f32) -> f32 {
+    let currenti = self.lookup_ridge_index(x);
+    let step = width / 2.0;
+    let lefti = self.lookup_ridge_index(x - step);
+    let righti = self.lookup_ridge_index(x + step);
+    let current = self.smoothed_ridge[currenti];
+    let left = self.smoothed_ridge[lefti];
+    let right = self.smoothed_ridge[righti];
+    let dx = right.0 - left.0;
+    if dx <= 0.0 {
+      return 0.0;
+    }
+    let dy = right.1 - left.1;
+    // the obj is below
+    if y < current.1 || y < left.1 || y < right.1 {
+      return 0.0;
+    }
+
+    (0.2 * dx.abs() / (0.01 + dy.abs())).min(1.0)
+  }
+
   pub fn slope_for_x(&self, x: f32) -> f32 {
     let step = 1.0;
     let lefti = self.lookup_ridge_index(x - step);

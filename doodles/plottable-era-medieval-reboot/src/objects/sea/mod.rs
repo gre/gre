@@ -180,7 +180,7 @@ impl Sea {
     // Place boats
 
     let mut should_spawn_supreme_leader = rng.gen_bool(0.3);
-    let boatglobs = BoatGlobals::rand(rng);
+    let boatglobs = BoatGlobals::rand(rng, ctx.castle_on_sea);
     let tries = 10;
     let basew = width * rng.gen_range(0.15..0.25);
     for _ in 0..boats_count {
@@ -338,6 +338,7 @@ impl Sea {
         let human_density = rng.gen_range(0.5..1.0);
         let boat = BoatArmy::init(
           rng,
+          ctx,
           clr,
           blazonclr,
           (x, y),

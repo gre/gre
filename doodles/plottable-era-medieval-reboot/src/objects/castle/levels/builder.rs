@@ -131,6 +131,7 @@ fn rec_build<R: Rng>(
   let mut params = LevelParams {
     tower_seed: rng.gen(),
     reference_roof_params: castleprops.reference_roof_params.clone(),
+    rec_level,
     level: 0,
     scaleref: scale,
     blazonclr: ctx.defendersclr,
@@ -378,6 +379,13 @@ fn rec_build<R: Rng>(
       .extend(level.possible_background_human_positions());
     possible_pole_positions.extend(level.possible_pole_positions());
 
+    for pos in level.possible_ladder_positions() {
+      ctx.projectiles.add_defense(DefenseTarget::Ladder(pos));
+    }
+    for pos in level.possible_rope_attachment_positions() {
+      ctx.projectiles.add_defense(DefenseTarget::Rope(pos));
+    }
+
     if let Some(floor) = level.roof_base() {
       let middle = lerp_point(floor.pos, params.floor.pos, 0.5);
       floors.push(floor.clone());
@@ -422,7 +430,6 @@ fn rec_build<R: Rng>(
     let righthand = None;
     let head = HeadShape::NAKED;
     let posture = HumanPosture::from_holding(rng, xflip, lefthand, righthand);
-    let angle = 0.0;
     let s = scale * rng.gen_range(3.0..4.0);
 
     let human = Human::init(
@@ -432,6 +439,7 @@ fn rec_build<R: Rng>(
 
     let id = objects.len();
     objects.insert(id, Box::new(human));
+    ctx.projectiles.add_defense(DefenseTarget::Human(spawn.pos));
     items.push(RenderItem::from_foreign(id, spawn.zorder));
   }
 

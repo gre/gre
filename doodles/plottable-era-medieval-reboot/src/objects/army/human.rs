@@ -5,7 +5,7 @@ use super::{
   flag::Flag,
   head::{head_cyclope, head_square},
   helmet::Helmet,
-  longbow::long_bow,
+  longbow::{long_bow, LongBow},
   paddle::Paddle,
   shield::Shield,
   sword::Sword,
@@ -17,7 +17,7 @@ use crate::{
     wormsfilling::worms_fill_strokes,
   },
   global::GlobalCtx,
-  objects::blazon::Blazon,
+  objects::{blazon::Blazon, projectile::attack::AttackOrigin},
 };
 use rand::prelude::*;
 use std::f32::consts::PI;
@@ -27,6 +27,7 @@ use std::f32::consts::PI;
  * Author: greweb – 2023 – Plottable Era: (II) Medieval
  */
 
+#[derive(Clone)]
 pub struct Human {
   pub body: HumanBody,
   pub shields: Vec<Shield>,
@@ -44,6 +45,8 @@ pub struct Human {
   pub head_polys: Vec<Vec<(f32, f32)>>,
   pub size: f32,
   pub xflip: bool,
+  pub lefthand: Option<HoldableObject>,
+  pub righthand: Option<HoldableObject>,
 }
 
 #[derive(Clone, Copy, PartialEq)]
@@ -58,6 +61,88 @@ pub enum HoldableObject {
   LongBow(/*phase: */ f32),
   Paddle(/* ang */ f32),
   // TODO Lance,
+}
+
+impl HoldableObject {
+  pub fn as_destructed_renderable<R: Rng>(
+    &self,
+    rng: &mut R,
+    pos: (f32, f32),
+    size: f32,
+    mainclr: usize,
+    blazonclr: usize,
+    blazon: Blazon,
+  ) -> Option<Box<dyn Renderable<R>>> {
+    let angle = if rng.gen_bool(0.7) {
+      PI / 2.0
+    } else {
+      -PI / 2.0
+    } + rng.gen_range(-1.0..1.0) * rng.gen_range(0.0..1.0);
+    let xflip = rng.gen_bool(0.5);
+    match self {
+      HoldableObject::Shield => {
+        let shield = Shield::init(
+          rng,
+          mainclr,
+          blazonclr,
+          pos,
+          size * 0.6,
+          angle,
+          xflip,
+          blazon,
+        );
+        Some(Box::new(shield) as Box<dyn Renderable<R>>)
+      }
+      HoldableObject::Axe => {
+        let s = 0.4 * size;
+        let axe = Axe::init(rng, mainclr, pos, s, angle, (false, xflip));
+        Some(Box::new(axe) as Box<dyn Renderable<R>>)
+      }
+      HoldableObject::Sword => {
+        let xdir = if xflip { -1.0 } else { 1.0 };
+        let swordang = PI / 2.0 - xdir * rng.gen_range(0.0..2.0);
+        let sword = Sword::init(rng, pos, 0.5 * size, swordang, mainclr);
+        Some(Box::new(sword) as Box<dyn Renderable<R>>)
+      }
+      HoldableObject::Club => {
+        let xdir = if xflip { -1.0 } else { 1.0 };
+        let ang = PI / 2.0 - xdir * rng.gen_range(0.0..2.0);
+        let club = Club::init(rng, pos, 0.5 * size, ang, mainclr);
+        Some(Box::new(club) as Box<dyn Renderable<R>>)
+      }
+      HoldableObject::LongSword => {
+        let xdir = if xflip { -1.0 } else { 1.0 };
+        let swordang = PI / 2.0 - xdir * rng.gen_range(0.0..2.0);
+        let sword = Sword::init(rng, pos, size, swordang, mainclr);
+        Some(Box::new(sword) as Box<dyn Renderable<R>>)
+      }
+      HoldableObject::Flag => {
+        let o = (pos.0, pos.1 - 0.4 * size);
+        let flag = Flag::init(
+          rng,
+          mainclr,
+          blazonclr,
+          o,
+          size,
+          -PI / 2.0,
+          !xflip,
+          0.5,
+          1.0,
+          true,
+        );
+        Some(Box::new(flag) as Box<dyn Renderable<R>>)
+      }
+      HoldableObject::LongBow(_) => {
+        let bow = LongBow::init(pos, size * 0.5, angle, 0.0, mainclr);
+        Some(Box::new(bow) as Box<dyn Renderable<R>>)
+      }
+      HoldableObject::Paddle(_) => {
+        let paddle = Paddle::init(rng, mainclr, pos, size, angle);
+        Some(Box::new(paddle) as Box<dyn Renderable<R>>)
+      }
+      _ => None,
+    }
+  }
 }
 
 #[derive(Clone, Copy, PartialEq)]
@@ -219,6 +304,8 @@ impl Human {
       wormsfillingrendering: None,
       size,
       xflip,
+      lefthand,
+      righthand,
     }
   }
 
@@ -319,11 +406,22 @@ impl Human {
     let mut routes = vec![];
     routes.extend(self.render_foreground_only(rng, mask));
     routes.extend(self.render_background_only(rng, mask));
-    let strokew = (self.body.height * 0.2).max(3.0 * mask.precision).min(1.6);
+    let strokew = (self.body.height * 0.15).max(2.0 * mask.precision).min(1.5);
     for (_, route) in routes.iter() {
       mask.paint_polyline(route, strokew);
     }
     routes
+  }
+
+  pub fn throw_projectiles(&self, ctx: &mut GlobalCtx) {
+    if ctx.archers_should_shoot
+      && (matches!(self.lefthand, Some(HoldableObject::LongBow(_)))
+        || matches!(self.righthand, Some(HoldableObject::LongBow(_))))
+    {
+      ctx
+        .projectiles
+        .add_attack(AttackOrigin::Bow(self.body.hand_right_pos_angle().0));
+    }
   }
 }
 

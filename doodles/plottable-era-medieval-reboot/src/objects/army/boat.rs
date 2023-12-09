@@ -58,9 +58,10 @@ pub struct BoatGlobals {
   pub decoration_fibers_density: f32,
   pub sailing_divisions: usize,
   pub sailing_interp_n: usize,
+  pub can_spawn_ropes: bool,
 }
 impl BoatGlobals {
-  pub fn rand<R: Rng>(rng: &mut R) -> Self {
+  pub fn rand<R: Rng>(rng: &mut R, can_spawn_ropes: bool) -> Self {
     let stripes = if rng.gen_bool(0.2) {
       1
     } else {
@@ -93,6 +94,7 @@ impl BoatGlobals {
       decoration_fibers_density: fibers_density,
       sailing_divisions,
       sailing_interp_n,
+      can_spawn_ropes,
     }
   }
 }

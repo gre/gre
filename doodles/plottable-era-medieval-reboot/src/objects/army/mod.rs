@@ -66,11 +66,13 @@ pub mod helmet;
 pub mod horse;
 pub mod human;
 pub mod hut;
+pub mod ladder;
 pub mod longbow;
 pub mod monk;
 pub mod paddle;
 pub mod relic;
 pub mod rider;
+pub mod rope;
 pub mod shield;
 pub mod spear;
 pub mod sword;
@@ -190,9 +192,15 @@ impl ArmyOnMountain {
           0
         };
 
-    // TODO global counters to stop when reaching enough? alternative it's the goal of exclusion mask
+    // TODO when it's near the castle, we need to have opportunity to spawn climbing people, but that will need the castle to be solved first..
 
-    let sampling = 2000; // it could be interesting to vary it
+    let catapult_instead_of_cannon_proba = rng.gen_range(0.0..1.0);
+    let climb_attack_proba =
+      rng.gen_range(-1.0f64..1.0).max(0.0001) * rng.gen_range(0.0..1.0);
+
+    let sampling_skip_if_fails_more_than = 50;
+    let mut fails = 0;
+    let sampling = 2000;
     for _ in 0..sampling {
       let xposfactor = rng.gen_range(0.0..1.0);
       let x = mix(first.0, last.0, xposfactor);
@@ -206,8 +214,13 @@ impl ArmyOnMountain {
       let y = mix(mountain.ridge_pos_for_x(x).1, bottomy, yposfactor);
 
       if exclusion_mask.is_painted((x, y)) {
+        fails += 1;
+        if fails > sampling_skip_if_fails_more_than {
+          break;
+        }
         continue;
       }
+      fails = 0;
 
       let area = mountains.battlefield.get(x, y);
       let destruction = ctx.destruction_map.get_weight((x, y));
@@ -312,6 +325,17 @@ impl ArmyOnMountain {
         }
 
         Area::Attacker(props) => {
+          if let Some(castle) = &mountain.castle {
+            if rng.gen_bool(climb_attack_proba) {
+              let dy = origin.1 - castle.position.1;
+              if dy < 0.05 * width && rng.gen_bool(0.7) {
+                ctx.projectiles.add_attack(AttackOrigin::Ladder(origin));
+              } else {
+                ctx.projectiles.add_attack(AttackOrigin::Rope(origin, 0));
+              }
+            }
+          }
+
           let is_leader = should_spawn_leader
             && yposfactor < 0.8
             && (xposfactor - 0.5).abs() < 0.4;
@@ -340,36 +364,59 @@ impl ArmyOnMountain {
             props.rightobj,
           );
 
-          if ctx.archers_should_shoot
-            && !mountain.is_behind
-            && (matches!(props.leftobj, Some(HoldableObject::LongBow(_)))
-              || matches!(props.rightobj, Some(HoldableObject::LongBow(_))))
-          {
-            ctx.projectiles.add_attack(AttackOrigin::Bow(
-              human.body.hand_right_pos_angle().0,
-            ));
-          }
-
           // TODO in destruction case, we will only have the objects, possibly the horse
 
-          if props.on_horse {
-            let decorationratio = 0.3;
-            let foot_offset = 1.0;
-            let rider = Rider::init(
-              rng,
-              origin,
-              size,
-              angle,
-              xflip,
-              mainclr,
-              blazonclr,
-              decorationratio,
-              foot_offset,
-              human,
-            );
-            renderables.add(rider);
+          let decorationratio = 0.3;
+          let foot_offset = 1.0;
+          if destruction > 0.5 {
+            if destruction < 1.0 && rng.gen_bool(1. - destruction as f64) {
+              let horse = Horse::init(
+                origin,
+                size,
+                angle,
+                xflip,
+                mainclr,
+                blazonclr,
+                decorationratio,
+                foot_offset,
+              );
+              renderables.add(horse);
+            }
+
+            for obj in vec![props.leftobj, props.rightobj].iter().flatten() {
+              if rng.gen_bool(0.5) {
+                if let Some(o) = obj.as_destructed_renderable(
+                  rng, origin, size, mainclr, blazonclr, blazon,
+                ) {
+                  renderables.push(o);
+                }
+              }
+            }
           } else {
-            renderables.add(human);
+            if !mountain.is_behind {
+              human.throw_projectiles(ctx);
+            }
+            if props.on_horse {
+              let rider = Rider::init(
+                rng,
+                origin,
+                size,
+                angle,
+                xflip,
+                mainclr,
+                blazonclr,
+                decorationratio,
+                foot_offset,
+                human,
+              );
+              renderables.add(rider);
+            } else {
+              renderables.add(human);
+            }
+
+            if is_leader {
+              should_spawn_leader = false;
+            }
           }
 
           let proximity = (if is_leader { 2.0 } else { 1.0 })
@@ -379,31 +426,39 @@ impl ArmyOnMountain {
           let circle = VCircle::new(x, y - 0.5 * size, proximity);
           debug_circle.push(circle);
           exclusion_mask.paint_circle(circle.x, circle.y, circle.r);
-
-          if is_leader {
-            should_spawn_leader = false;
-          }
         }
 
         Area::DirectionalSiegeMachine(props) => {
+          let stability = mountain.ground_stability(origin, 5.0);
+          if stability < 0.5 {
+            continue;
+          }
+
           // TODO spawn people
+          let angle = 0.3 * angle;
           let xflip = props.oriented_left;
-          if rng.gen_bool(0.5) {
+          if rng.gen_bool(catapult_instead_of_cannon_proba) {
             let progress = rng.gen_range(0.0..1.0);
             let size = rng.gen_range(0.04..0.06) * width;
             let catapult =
               Catapult::init(rng, clr, origin, size, angle, xflip, progress);
+
+            catapult.throw_projectiles(ctx);
+
             renderables.add(catapult);
 
-            let circle = VCircle::new(x, y - 0.5 * size, 2.0 * size);
+            let circle = VCircle::new(x, y - 0.5 * size, 1.5 * size);
             debug_circle.push(circle);
             exclusion_mask.paint_circle(circle.x, circle.y, circle.r);
           } else {
             let size = rng.gen_range(0.01..0.015) * width;
             let cannon = Cannon::init(rng, clr, origin, size, angle, xflip);
+
+            cannon.throw_projectiles(ctx);
+
             renderables.add(cannon);
 
-            let circle = VCircle::new(x, y - 0.5 * size, 5.0 * size);
+            let circle = VCircle::new(x, y - 0.5 * size, 3.0 * size);
             debug_circle.push(circle);
             exclusion_mask.paint_circle(circle.x, circle.y, circle.r);
           }
@@ -457,7 +512,7 @@ impl ArmyOnMountain {
         }
 
         Area::Firecamp => {
-          let size = rng.gen_range(0.02..0.03) * width;
+          let size = rng.gen_range(0.01..0.02) * width;
           let smokel = size * rng.gen_range(4.0..12.0);
           let camp = Firecamp::init(rng, ctx, mainclr, origin, size, smokel);
           renderables.add(camp);
@@ -526,9 +581,12 @@ impl ArmyOnMountain {
             continue;
           }
 
+          let stability = mountain.ground_stability(origin, 5.0);
+          if stability < 0.5 {
+            continue;
+          }
+
           // TODO spawn people
-          // FIXME terrible positioning atm
-          // TODO check for terrain to be compatible
           let h = rng.gen_range(0.05..0.1) * width;
           let xflip = props.oriented_left;
           if rng.gen_bool(0.5) {
@@ -583,8 +641,13 @@ impl ArmyOnMountain {
           if remaining_trebuchets == 0 {
             continue;
           }
+
+          let stability = mountain.ground_stability(origin, 5.0);
+          if stability < 0.5 {
+            continue;
+          }
+
           // TODO spawn people
-          // TODO verify terrain compatibility
 
           let height = rng.gen_range(0.08..0.12) * width;
           let action_percent =
@@ -599,7 +662,7 @@ impl ArmyOnMountain {
           let trebuchet =
             Trebuchet::init(rng, origin, height, action_percent, xflip, clr);
 
-          trebuchet.possibly_throw_projectiles(ctx);
+          trebuchet.throw_projectiles(ctx);
 
           renderables.add(trebuchet);
 

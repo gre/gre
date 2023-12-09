@@ -1,13 +1,17 @@
-use crate::algo::{
-  clipping::{regular_clip, regular_clip_polys},
-  math1d::mix,
-  paintmask::PaintMask,
-  polygon::make_wireframe_from_vertexes,
-  polylines::{
-    grow_as_rectangle, path_subdivide_to_curve, route_scale_translate_rotate,
-    Polyline, Polylines,
+use crate::{
+  algo::{
+    clipping::{regular_clip, regular_clip_polys},
+    math1d::mix,
+    paintmask::PaintMask,
+    polygon::make_wireframe_from_vertexes,
+    polylines::{
+      grow_as_rectangle, path_subdivide_to_curve, route_scale_translate_rotate,
+      Polyline, Polylines,
+    },
+    renderable::Renderable,
+    wormsfilling::WormsFilling,
   },
-  wormsfilling::WormsFilling,
+  global::GlobalCtx,
 };
 use rand::prelude::*;
 
@@ -195,5 +199,20 @@ impl Horse {
     ));
 
     out
+  }
+}
+
+impl<R: Rng> Renderable<R> for Horse {
+  fn render(
+    &self,
+    rng: &mut R,
+    _ctx: &mut GlobalCtx,
+    paint: &mut PaintMask,
+  ) -> Polylines {
+    self.render(rng, paint)
+  }
+
+  fn zorder(&self) -> f32 {
+    self.origin.1
   }
 }

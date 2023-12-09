@@ -1,7 +1,7 @@
 use crate::{
   algo::{
     clipping::regular_clip_polys, paintmask::PaintMask,
-    polylines::route_translate_rotate,
+    polylines::route_translate_rotate, renderable::Renderable,
   },
   objects::blazon::Blazon,
 };
@@ -11,9 +11,11 @@ use rand::prelude::*;
  * LICENSE CC BY-NC-ND 4.0
  * Author: greweb – 2023 – Plottable Era: (II) Medieval
  */
+#[derive(Clone)]
 pub struct Shield {
   routes: Vec<(usize, Vec<(f32, f32)>)>,
   polygons: Vec<Vec<(f32, f32)>>,
+  origin: (f32, f32),
 }
 
 impl Shield {
@@ -70,10 +72,30 @@ impl Shield {
       ),
     ));
 
-    Self { routes, polygons }
+    Self {
+      routes,
+      polygons,
+      origin,
+    }
   }
 
   pub fn render(&self, paint: &mut PaintMask) -> Vec<(usize, Vec<(f32, f32)>)> {
     regular_clip_polys(&self.routes, paint, &self.polygons)
+  }
+}
+
+impl<R: Rng> Renderable<R> for Shield {
+  fn render(
+    &self,
+    rng: &mut R,
+    ctx: &mut crate::global::GlobalCtx,
+    paint: &mut crate::algo::paintmask::PaintMask,
+  ) -> crate::algo::polylines::Polylines {
+    let routes = self.render(paint);
+    routes
+  }
+
+  fn zorder(&self) -> f32 {
+    self.origin.1
   }
 }

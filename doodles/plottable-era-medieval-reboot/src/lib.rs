@@ -156,12 +156,7 @@ pub fn render(
     }
 
     let mask_with_framing = paint.clone();
-
-    let yhorizon = if ctx.no_sea {
-      height
-    } else {
-      rng.gen_range(0.5..0.8) * height
-    };
+    let yhorizon = ctx.yhorizon;
 
     //  mountains
     perf.span("mountains_front", &routes);

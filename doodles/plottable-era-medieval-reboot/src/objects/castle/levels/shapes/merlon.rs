@@ -11,6 +11,7 @@ pub struct Merlon {
   items: Vec<RenderItem>,
   forbiddeny: f32,
   spawnable_humans: Vec<SpawnableHuman>,
+  rope_attachment_positions: Vec<(f32, f32)>,
 }
 
 // TODO merlon should draw under also to create a nice rendering of the machicoulis
@@ -41,6 +42,7 @@ impl Merlon {
       o.1 - h,
       h,
     );
+
     routes.push((clr, route));
 
     items.push(RenderItem::new(routes, polygons, zorder));
@@ -59,11 +61,24 @@ impl Merlon {
       x += rng.gen_range(2.0..4.0) * scale;
     }
 
+    let pad = rng.gen_range(0.0..0.1) * w;
+    let xfrom = o.0 - w / 2. + pad;
+    let xto = o.0 + w / 2. - pad;
+    let mut x = xfrom;
+    let mut rope_attachment_positions = vec![];
+    while x < xto {
+      if rng.gen_bool(0.5) {
+        rope_attachment_positions.push((x, o.1 - 0.2 * h));
+      }
+      x += rng.gen_range(0.1..0.3) * w;
+    }
+
     Self {
       items,
       roof_base,
       forbiddeny,
       spawnable_humans,
+      rope_attachment_positions,
     }
   }
 }
@@ -79,6 +94,10 @@ impl Level for Merlon {
 
   fn possible_background_human_positions(&self) -> Vec<SpawnableHuman> {
     self.spawnable_humans.clone()
+  }
+
+  fn possible_rope_attachment_positions(&self) -> Vec<(f32, f32)> {
+    self.rope_attachment_positions.clone()
   }
 
   fn condamn_build_belowy(&self) -> Option<f32> {

@@ -4,7 +4,7 @@ use crate::{
     wormsfilling::WeightMap,
   },
   effects::Effects,
-  objects::{blazon::Blazon, castle, projectile::Projectiles},
+  objects::{blazon::Blazon, projectile::Projectiles},
   palette::{
     Palette, AMBER, BLACK_PAPER, BLUE_PAPER, DARK_BLUE_PAPER, GOLD_GEL,
     GREY_PAPER, RED_PAPER,
@@ -57,23 +57,17 @@ pub struct GlobalCtx {
   pub full_castle: bool,
   pub castle_on_sea: bool,
   pub no_sea: bool,
-
+  pub rope_len_base: f32,
+  pub yhorizon: f32,
   pub trebuchets_should_shoot: bool,
   pub archers_should_shoot: bool,
-
   pub sun_xpercentage_pos: f32,
-
   pub destruction_map: WeightMap,
-
-  // -1.0..0.0: defenders
-  // 0.0..1.0: neutral
-  // 1.0..2.0: attackers
-  pub battlefield_map: WeightMap,
-
   pub attackers: Blazon,
   pub defenders: Blazon,
   pub defendersclr: usize,
   pub attackersclr: usize,
+  pub fireball_color: usize,
 
   pub projectiles: Projectiles,
   pub effects: Effects,
@@ -98,11 +92,15 @@ impl GlobalCtx {
     defenders: &Blazon,
     attackers: &Blazon,
   ) -> Self {
-    let castle_on_sea = rng.gen_bool(0.1);
-    let no_sea = !castle_on_sea && rng.gen_bool(0.1);
-
     let paper = palette.paper;
     let colors = &palette.inks;
+
+    let fireball_color = if rng.gen_bool(0.5) { 0 } else { 1 };
+
+    let castle_on_sea = //false && // FIXME TMP
+    rng.gen_bool(0.2);
+    let no_sea = //true|| // FIXME TMP
+    !castle_on_sea && rng.gen_bool(0.2);
 
     let mut night_time = paper == DARK_BLUE_PAPER
       || rng.gen_bool(0.5) && paper == BLACK_PAPER
@@ -168,11 +166,16 @@ impl GlobalCtx {
     }
 
     let destruction_map = gen_destruction_map(rng, width, height, 3.0);
-    let battlefield_map = gen_battlefield_map(rng, width, height, 3.0);
 
     let sun_xpercentage_pos =
       0.5 + rng.gen_range(-0.3..0.3) * rng.gen_range(0.0..1.0);
     let full_castle = rng.gen_bool(0.04);
+
+    let yhorizon = if no_sea {
+      height
+    } else {
+      rng.gen_range(0.5..0.8) * height
+    };
 
     Self {
       is_sandbox,
@@ -187,11 +190,11 @@ impl GlobalCtx {
       specials,
       night_time,
       destruction_map,
-      battlefield_map,
       projectiles: Projectiles::new(),
       effects: Effects::new(paintref),
       attackers: attackers.clone(),
       defenders: defenders.clone(),
+      fireball_color,
       defendersclr,
       attackersclr,
       nb_cyclopes: 0,
@@ -199,6 +202,8 @@ impl GlobalCtx {
       trebuchets_should_shoot,
       archers_should_shoot,
       has_leader_been_picked: false,
+      rope_len_base: rng.gen_range(0.0..300.0),
+      yhorizon,
     }
   }
 
@@ -222,9 +227,14 @@ impl GlobalCtx {
     paint: &PaintMask,
     mask_with_framing: &PaintMask,
   ) {
-    self.projectiles.resolve(rng, &paint);
-    let projectiles = self.projectiles.clone();
-    projectiles.render(rng, self, routes, &mask_with_framing);
+    let mut projectiles = self.projectiles.clone();
+    projectiles.resolve_and_render(
+      rng,
+      self,
+      &paint,
+      routes,
+      &mask_with_framing,
+    );
     self.projectiles = projectiles;
   }
 
@@ -277,20 +287,6 @@ impl GlobalCtx {
 
     feature
   }
-}
-
-fn gen_battlefield_map<R: Rng>(
-  rng: &mut R,
-  width: f32,
-  height: f32,
-  precision: f32,
-) -> WeightMap {
-  let mut destruction_map = WeightMap::new(width, height, precision, 0.0);
-  let _perlin = Perlin::new(rng.gen());
-
-  destruction_map.fill_fn(&|(_x, _y)| 2.0);
-
-  destruction_map
 }
 
 fn gen_destruction_map<R: Rng>(

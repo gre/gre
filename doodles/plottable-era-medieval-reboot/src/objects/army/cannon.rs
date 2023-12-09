@@ -4,7 +4,7 @@ use crate::{
     math2d::lerp_point,
     paintmask::PaintMask,
     polygon::make_wireframe_from_vertexes,
-    polylines::{path_to_fibers, Polylines},
+    polylines::{path_to_fibers, scale_translate_rotate, Polylines},
     renderable::Renderable,
     shapes::{circle_route, spiral_optimized},
   },
@@ -37,11 +37,10 @@ impl Cannon {
     xflip: bool,
   ) -> Self {
     let w = size;
-    let headp = (origin.0 - rng.gen_range(1.0..2.0) * size, origin.1 - size);
-    let tailp = (
-      origin.0 + rng.gen_range(2.0..3.0) * size,
-      origin.1 + size - w * 0.2,
-    );
+    let xmul = if xflip { -1.0 } else { 1.0 };
+    let t = |p| scale_translate_rotate(p, (xmul, 1.0), origin, angle);
+    let headp = t((-rng.gen_range(1.0..3.0) * size, -size));
+    let tailp = t((rng.gen_range(2.0..3.0) * size, size - w * 0.2));
     Self {
       size,
       origin,

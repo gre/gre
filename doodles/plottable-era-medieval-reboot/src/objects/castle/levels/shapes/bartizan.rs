@@ -20,6 +20,7 @@ use rand::prelude::*;
 pub struct Bartizan {
   roof_base: Option<Floor>,
   items: Vec<RenderItem>,
+  possible_rope_attachment_positions: Vec<(f32, f32)>,
 }
 
 impl Bartizan {
@@ -44,6 +45,7 @@ impl Bartizan {
     let count = rng.gen_range(2..4);
     let w = rng.gen_range(0.6..0.8) * width / count as f32;
     let h = rng.gen_range(1.0..3.0) * w;
+    let mut possible_rope_attachment_positions = vec![];
     for i in 0..count {
       let xf = i as f32 / (count - 1) as f32;
       let x = mix(o.0 - width / 2.0, o.0 + width / 2.0, xf);
@@ -59,12 +61,20 @@ impl Bartizan {
         wallratio,
         xf,
       ));
+
+      if rng.gen_bool(0.8) {
+        possible_rope_attachment_positions.push((x, o.1));
+      }
     }
 
     // only renders as is, rest is unchanged
     let roof_base = Some(params.floor.clone());
 
-    Self { items, roof_base }
+    Self {
+      items,
+      roof_base,
+      possible_rope_attachment_positions,
+    }
   }
 }
 
@@ -75,6 +85,10 @@ impl Level for Bartizan {
 
   fn render(&self) -> Vec<RenderItem> {
     self.items.clone()
+  }
+
+  fn possible_rope_attachment_positions(&self) -> Vec<(f32, f32)> {
+    self.possible_rope_attachment_positions.clone()
   }
 }
 

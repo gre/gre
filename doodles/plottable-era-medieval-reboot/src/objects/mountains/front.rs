@@ -150,7 +150,7 @@ impl FrontMountains {
       (rng.gen_range(-1.0f32..3.5) * rng.gen_range(0.5..1.0)).max(0.0) as usize;
 
     for &o in trebuchet_candidates.iter().take(trebuchets_max) {
-      let height = rng.gen_range(0.14..0.2) * width;
+      let height = rng.gen_range(0.17..0.22) * width;
       let action_percent = if !ctx.trebuchets_should_shoot {
         0.0
       } else {
@@ -161,7 +161,7 @@ impl FrontMountains {
       let trebuchet =
         Trebuchet::init(rng, o, height, action_percent, xflip, clr);
       routes.extend(trebuchet.render(&mut paint_before));
-      trebuchet.possibly_throw_projectiles(ctx);
+      trebuchet.throw_projectiles(ctx);
     }
 
     let x = rng.gen_range(0.2..0.8) * width;
@@ -169,7 +169,6 @@ impl FrontMountains {
     if y < paint.height * 0.85 {
       let o = (x, y);
       let size = rng.gen_range(0.08..0.12) * width;
-      let angle = 0.0;
       let xflip = rng.gen_bool(0.5);
       let blazon = ctx.attackers;
       let mainclr = 0;

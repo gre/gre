@@ -27,6 +27,7 @@ pub struct Catapult {
   pub wheeledplatform: WheeledPlatform,
   pub woods: Vec<Vec<(f32, f32)>>,
   pub decoration_routes: Polylines,
+  pub progress: f32,
 }
 
 impl Catapult {
@@ -39,10 +40,9 @@ impl Catapult {
     xflip: bool,
     progress: f32,
   ) -> Self {
-    let flipmul = if xflip { -1.0 } else { 1.0 };
-    let basket = (origin.0, origin.1);
+    let flipmul = if !xflip { -1.0 } else { 1.0 };
 
-    let orient_angle = if xflip { angle_mirrored_on_x } else { |a| a };
+    let orient_angle = if !xflip { angle_mirrored_on_x } else { |a| a };
 
     let w = size;
     let h = rng.gen_range(0.45..0.55) * size;
@@ -114,10 +114,11 @@ impl Catapult {
     Self {
       clr,
       origin,
-      basket,
+      basket: basketp,
       wheeledplatform,
       woods,
       decoration_routes,
+      progress,
     }
   }
 
@@ -142,6 +143,9 @@ impl Catapult {
   }
 
   pub fn throw_projectiles(&self, ctx: &mut GlobalCtx) {
+    if self.progress < 0.5 {
+      return;
+    }
     let o = self.basket;
     ctx.projectiles.add_attack(AttackOrigin::Catapult(o));
   }

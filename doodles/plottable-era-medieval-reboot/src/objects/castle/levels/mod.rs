@@ -82,6 +82,8 @@ pub struct LevelParams {
   pub tower_seed: u32,
   // reference for the roof shape
   pub reference_roof_params: RoofParams,
+  // main level
+  pub rec_level: usize,
   // index of the level
   pub level: usize,
   // a reference scale that is shared on the castle
@@ -160,6 +162,14 @@ pub trait Level {
 
   // iter where the poles are and where we can spawn
   fn possible_pole_positions(&self) -> Vec<SpawnablePole> {
+    vec![]
+  }
+
+  fn possible_rope_attachment_positions(&self) -> Vec<(f32, f32)> {
+    vec![]
+  }
+
+  fn possible_ladder_positions(&self) -> Vec<(f32, f32)> {
     vec![]
   }
 

@@ -3,6 +3,7 @@ use crate::algo::{
   math2d::lerp_point,
   paintmask::PaintMask,
   polylines::{route_translate_rotate, Polylines},
+  renderable::Renderable,
   shapes::arc,
 };
 use rand::prelude::*;
@@ -11,11 +12,13 @@ use rand::prelude::*;
  * LICENSE CC BY-NC-ND 4.0
  * Author: greweb – 2023 – Plottable Era: (II) Medieval
  */
+#[derive(Clone)]
 pub struct Axe {
   pub routesbg: Polylines,
   pub routes: Polylines,
   pub polysbg: Vec<Vec<(f32, f32)>>,
   pub polys: Vec<Vec<(f32, f32)>>,
+  pub origin: (f32, f32),
 }
 
 impl Axe {
@@ -73,6 +76,7 @@ impl Axe {
       routesbg,
       polysbg,
       polys,
+      origin,
     }
   }
 
@@ -86,5 +90,21 @@ impl Axe {
       paint.paint_polygon(poly);
     }
     out
+  }
+}
+
+impl<R: Rng> Renderable<R> for Axe {
+  fn render(
+    &self,
+    rng: &mut R,
+    ctx: &mut crate::global::GlobalCtx,
+    paint: &mut crate::algo::paintmask::PaintMask,
+  ) -> crate::algo::polylines::Polylines {
+    let routes = self.render(paint);
+    routes
+  }
+
+  fn zorder(&self) -> f32 {
+    self.origin.1
   }
 }

@@ -3,6 +3,7 @@ use crate::algo::{
   math1d::mix,
   paintmask::PaintMask,
   polylines::{route_translate_rotate, Polylines},
+  renderable::Renderable,
 };
 use rand::prelude::*;
 
@@ -11,8 +12,10 @@ use rand::prelude::*;
  * Author: greweb – 2023 – Plottable Era: (II) Medieval
  */
 
+#[derive(Clone)]
 pub struct Paddle {
   routes: Polylines,
+  origin: (f32, f32),
 }
 
 impl Paddle {
@@ -62,7 +65,7 @@ impl Paddle {
     let watery = origin.1 + 0.8 * size;
     let routes = clip_routes_with_colors(&routes, &|o| o.1 > watery, 1.0, 3);
 
-    Self { routes }
+    Self { routes, origin }
   }
 
   pub fn render(&self, paint: &mut PaintMask) -> Polylines {
@@ -71,5 +74,21 @@ impl Paddle {
       paint.paint_polygon(&p); // the routes are the poly
     }
     routes
+  }
+}
+
+impl<R: Rng> Renderable<R> for Paddle {
+  fn render(
+    &self,
+    rng: &mut R,
+    ctx: &mut crate::global::GlobalCtx,
+    paint: &mut crate::algo::paintmask::PaintMask,
+  ) -> crate::algo::polylines::Polylines {
+    let routes = self.render(paint);
+    routes
+  }
+
+  fn zorder(&self) -> f32 {
+    self.origin.1
   }
 }

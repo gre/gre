@@ -2,7 +2,10 @@ use std::f64::consts::PI;
 
 use super::{CastleGrounding, Mountain};
 use crate::{
-  algo::{math1d::mix, math2d::euclidian_dist},
+  algo::{
+    math1d::mix,
+    math2d::{distance_angles, euclidian_dist},
+  },
   global::{GlobalCtx, Special},
   objects::{
     army::human::{HeadShape, HoldableObject},
@@ -87,12 +90,15 @@ impl BattlefieldArea {
     let last_mountain = mountains.iter().last();
 
     let castle_center = castle_grounding
+      .clone()
       .map(|c: CastleGrounding| c.position)
       .unwrap_or_else(|| {
         last_mountain
           .map(|m| m.ridge_pos_for_x(width / 2.))
           .unwrap_or((width / 2., yhorizon))
       });
+    let estimated_h = castle_grounding.map(|c| c.width * 0.3).unwrap_or(0.);
+    let castle_center = (castle_center.0, castle_center.1 - estimated_h / 2.0);
     let dscale = (castle_center.1 - yhorizon).abs() as f64;
 
     let has_cyclope = ctx.specials.contains(&Special::Cyclopes);
@@ -105,13 +111,31 @@ impl BattlefieldArea {
     let global_dist_delta = rng.gen_range(-20.0..20.0);
     let noise1_dist_amp = rng.gen_range(5.0..30.0);
 
-    let range_defenders = 0.0..0.1 + rng.gen_range(0.0..0.05);
-    let range_attackers = rng.gen_range(-0.05..0.0) + 0.2
-      ..0.3 + rng.gen_range(0.0..0.8) * rng.gen_range(0.0..1.0);
+    let attacker_cutoff = rng.gen_range(-0.5..0.5);
+
+    let range_defenders = 0.0..rng.gen_range(0.0..0.2);
+    let range_attackers = rng.gen_range(0.1..0.3)
+      ..0.3
+        + rng.gen_range(-1.0f64..1.0).max(0.0)
+          * rng.gen_range(0.0..1.0)
+          * rng.gen_range(0.0..1.0);
     let range_archers =
-      rng.gen_range(-0.15..0.0) + 0.5..0.55 + rng.gen_range(0.0..0.1);
+      rng.gen_range(-0.05..0.0) + 0.5..0.55 + rng.gen_range(0.0..0.1);
     let range_distance_machines =
       rng.gen_range(-0.2..0.0) + 0.8..0.9 + rng.gen_range(0.0..0.2);
+
+    let grid1f = rng.gen_range(3.0..10.0);
+    let gridoffx = rng.gen_range(0.0..1.0);
+    let gridoffy = rng.gen_range(0.0..1.0);
+    let unitmod = (rng.gen_range(2..8), rng.gen_range(2..8));
+    let grid1 = |x: f64, y: f64| {
+      let xp = gridoffx + x as f32 / width;
+      let yp = 2.0 * (gridoffy + y as f32 / width);
+      (
+        (xp * grid1f).floor() as usize,
+        (yp * grid1f).floor() as usize,
+      )
+    };
 
     // TODO shield formation case
     // TODO more crazy cases
@@ -170,6 +194,8 @@ impl BattlefieldArea {
         let xf = (x as f64 + mountainxdiff) * scaleref;
         let yf = y as f64 * scaleref;
 
+        let grid1p = grid1(xf, yf);
+
         let xmulratio = 0.5;
         let noise800 = perlin.get([xmulratio * xf / 800., yf / 800., s0]);
         let noise400 = perlin.get([xmulratio * xf / 400., yf / 400., s1]);
@@ -183,7 +209,11 @@ impl BattlefieldArea {
           perlin.get([xmulratio * xf / 100., yf / 50., s8]);
         let noise100alt = perlin.get([xmulratio * xf / 100., yf / 100., s9]);
 
-        let dcastle = euclidian_dist((x, y), castle_center) as f64;
+        let cdx = x - castle_center.0;
+        let cdy = y - castle_center.1;
+        let castle_angle = cdy.atan2(cdx);
+        let deucl = euclidian_dist((x, y), castle_center);
+        let dcastle = mix(deucl, cdy.abs(), rng.gen_range(0.0..1.0)) as f64;
         let sum =
           (global_dist_delta + noise1_dist_amp * noise100stretched + dcastle)
             / scaleref;
@@ -230,7 +260,7 @@ impl BattlefieldArea {
             rightobj = Some(HoldableObject::Flag);
           }
           candidates.push(Area::Attacker(HumanProps {
-            proximity: 0.5,
+            proximity: rng.gen_range(0.5..0.8),
             oriented_left,
             on_horse: false,
             headshape: HeadShape::HELMET,
@@ -261,10 +291,34 @@ impl BattlefieldArea {
         if noise200 > 0.0
           && noise50 < -0.2
           && matches!(area, Area::Attacker(_))
-          && (0.2..0.8).contains(&xratio)
+          && (0.1..0.9).contains(&xratio)
         {
-          // TODO place only if it makes sense. need to check the angle with the castle... (or other attackable?)
-          area = Area::DirectionalSiegeMachine(CannonProps { oriented_left });
+          let accepted_dist = 0.2;
+          let climb_angle = 0.1;
+          for (a, oriented_left) in
+            vec![(climb_angle, false), (PI - climb_angle, true)]
+          {
+            if distance_angles(a as f32, castle_angle) < accepted_dist {
+              area =
+                Area::DirectionalSiegeMachine(CannonProps { oriented_left });
+            }
+          }
+        }
+
+        // spawn organized units
+        if grid1p.0 % unitmod.0 == 0 && grid1p.1 % unitmod.1 == 0 {
+          area = Area::Attacker(HumanProps {
+            proximity: 0.25,
+            oriented_left,
+            on_horse: false,
+            headshape: HeadShape::HELMET,
+            leftobj: Some(HoldableObject::Shield),
+            rightobj: if rng.gen_bool(0.05) {
+              Some(HoldableObject::Flag)
+            } else {
+              Some(HoldableObject::Sword)
+            },
+          });
         }
 
         if no_attackers
@@ -287,11 +341,12 @@ impl BattlefieldArea {
           area = Area::Animal;
         }
 
-        if matches!(area, Area::Attacker(_)) && noise50 < 0.1 {
+        if matches!(area, Area::Attacker(_)) && noise50 < attacker_cutoff {
           area = Area::Empty;
         }
 
-        if sum > 0.8 * dscale && noise50 > 0.4 {
+        // TODO fire in middle of firecamp with people around it?
+        if sum > 0.8 * dscale && noise100alt > 0.0 && noise25 > 0.4 {
           area = Area::Hut;
         }
         if area == Area::Hut
@@ -301,7 +356,7 @@ impl BattlefieldArea {
           area = Area::Firecamp;
         }
 
-        if noise200 > 0.3 && noise100 > 0.2 && noise800 > 0.3 {
+        if noise200 > 0.3 && noise800 > 0.3 {
           let foliage_ratio =
             (0.5 + 0.6 * (noise400 + noise12)).max(0.4).min(0.8) as f32;
           let bush_width_ratio = mix(0.3, 1.0, 0.5 + 0.5 * noise25 as f32);

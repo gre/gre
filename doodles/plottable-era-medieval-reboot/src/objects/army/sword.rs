@@ -15,6 +15,7 @@ use rand::prelude::*;
  * LICENSE CC BY-NC-ND 4.0
  * Author: greweb – 2023 – Plottable Era: (II) Medieval
  */
+#[derive(Clone)]
 pub struct Sword {
   pub origin: (f32, f32),
   pub routes: Vec<(usize, Vec<(f32, f32)>)>,

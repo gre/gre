@@ -1,15 +1,23 @@
+use std::f32::consts::PI;
+
 use self::{
   arrowtrail::ArrowTrail,
   attack::{
-    extract_attack_pos, resolve_trajectory_path, AttackOrigin, DefenseTarget,
+    extract_attack_pos, map_progress, resolve_trajectory_path, AttackOrigin,
+    DefenseTarget,
   },
   ball::Ball,
   fireballtrail::FireballTrail,
   laser::Laser,
 };
-use super::army::arrow::Arrow;
+use super::army::{arrow::Arrow, ladder::Ladder, rope::Rope};
 use crate::{
-  algo::{clipping::regular_clip, paintmask::PaintMask, polylines::Polylines},
+  algo::{
+    clipping::regular_clip,
+    math2d::{distance_angles, euclidian_dist},
+    paintmask::PaintMask,
+    polylines::Polylines,
+  },
   global::GlobalCtx,
 };
 use noise::*;
@@ -25,7 +33,6 @@ pub mod laser;
  * LICENSE CC BY-NC-ND 4.0
  * Author: greweb – 2023 – Plottable Era: (II) Medieval
  */
-
 #[derive(Clone)]
 pub struct Projectiles {
   // store all the attack/def intent to be resolved later as projectiles
@@ -39,6 +46,57 @@ pub struct Projectiles {
   fireballtrails: Vec<FireballTrail>,
   arrowtrails: Vec<ArrowTrail>,
   lasers: Vec<Laser>,
+  ropes: Vec<Rope>,
+  ladders: Vec<Ladder>,
+}
+
+fn matches_attack_defense(
+  ctx: &GlobalCtx,
+  origin: &AttackOrigin,
+  target: &DefenseTarget,
+) -> bool {
+  let s = ctx.width / 210.;
+  match (origin, target) {
+    (AttackOrigin::Cannon(a), DefenseTarget::Building(d)) => {
+      let dx = a.0 - d.0;
+      let dy = a.1 - d.1;
+      dx.abs() / (1.0 + dy.abs()) > 3.0
+    }
+    (AttackOrigin::Catapult(_), DefenseTarget::Building(_)) => true,
+    (AttackOrigin::Trebuchet(_), DefenseTarget::Building(_)) => true,
+    (AttackOrigin::Eye(_), DefenseTarget::Building(_)) => true,
+    (AttackOrigin::Bow(_), DefenseTarget::Human(_)) => true,
+    (AttackOrigin::Ladder(a), DefenseTarget::Ladder(d)) => {
+      let minh = 4.0 * s;
+      let maxl = 120.0 * s;
+      let maxang = 0.4;
+      if a.1 < d.1 + minh {
+        return false;
+      }
+      let l = euclidian_dist(*a, *d);
+      if l > maxl {
+        return false;
+      }
+      let dx = a.0 - d.0;
+      let dy = a.1 - d.1;
+      let angle = dy.atan2(dx);
+      let angled = distance_angles(angle, PI / 2.0);
+      if angled > maxang {
+        return false;
+      }
+      true
+    }
+    (AttackOrigin::Rope(a, _), DefenseTarget::Rope(d)) => {
+      let dx = a.0 - d.0;
+      let dy = a.1 - d.1;
+      let l = dx.abs() + 2.0 * dy.abs();
+      if l > ctx.rope_len_base * s {
+        return false;
+      }
+      true
+    }
+    _ => false,
+  }
 }
 
 impl Projectiles {
@@ -52,6 +110,8 @@ impl Projectiles {
       fireballtrails: vec![],
       arrowtrails: vec![],
       lasers: vec![],
+      ropes: vec![],
+      ladders: vec![],
     }
   }
 
@@ -63,7 +123,24 @@ impl Projectiles {
     self.defenses.push(target);
   }
 
-  pub fn resolve<R: Rng>(&mut self, rng: &mut R, referencemask: &PaintMask) {
+  pub fn resolve_and_render<R: Rng>(
+    &mut self,
+    rng: &mut R,
+    ctx: &mut GlobalCtx,
+    paint: &PaintMask,
+    existing_routes: &mut Polylines,
+    preserve_area: &PaintMask,
+  ) {
+    self.resolve(rng, ctx, paint);
+    self.render(rng, ctx, existing_routes, preserve_area);
+  }
+
+  pub fn resolve<R: Rng>(
+    &mut self,
+    rng: &mut R,
+    ctx: &GlobalCtx,
+    referencemask: &PaintMask,
+  ) {
     let perlin = Perlin::new(rng.gen());
 
     let wf = 2.0 / referencemask.width as f64;
@@ -80,11 +157,21 @@ impl Projectiles {
         defs = self.defenses.clone();
         defs.shuffle(rng);
       }
-      let target = defs.pop().unwrap();
+      let index = defs
+        .iter()
+        .position(|t| matches_attack_defense(ctx, &origin, t));
+      if index.is_none() {
+        // no match
+        continue;
+      }
+      let index = index.unwrap();
+      let target = defs.remove(index);
 
       let o = extract_attack_pos(origin);
-      let progress =
-        0.5 + 0.4 * perlin.get([o.0 as f64 * wf, o.1 as f64 * wf, 0.0]) as f32;
+      let progress = map_progress(
+        origin,
+        0.5 + 0.4 * perlin.get([o.0 as f64 * wf, o.1 as f64 * wf, 0.0]) as f32,
+      );
       let path = resolve_trajectory_path(origin, target, progress);
 
       if path.len() < 2 {
@@ -96,33 +183,64 @@ impl Projectiles {
       let angle =
         -(bulletpos.1 - bulletposprev.1).atan2(bulletpos.0 - bulletposprev.0);
 
-      let trailpercent = 1.0
+      let trailpercent: f32 = 1.0
         - rng.gen_range(0.0..1.0)
           * rng.gen_range(0.0..1.0)
           * rng.gen_range(0.0..1.0);
 
       match origin {
+        AttackOrigin::Ladder(_) => {
+          let humansize = rng.gen_range(0.03..0.05) * ctx.width;
+          let o = Ladder::init(rng, ctx, &path, humansize);
+          self.ladders.push(o);
+        }
+        AttackOrigin::Rope(_, clr) => {
+          let humansize = rng.gen_range(0.03..0.05) * ctx.width;
+          let rope = Rope::init(rng, clr, ctx, &path, humansize);
+          self.ropes.push(rope);
+        }
         AttackOrigin::Cannon(_) => {
-          let clr = 2;
-          let size = rng.gen_range(1.0..3.0);
-          let particles = rng.gen_range(10..100);
-          let strokes = rng.gen_range(1..6);
+          let clr = ctx.fireball_color;
+          let size = rng.gen_range(1.0..2.0);
+          let particles = rng.gen_range(10..20);
+          let strokes = rng.gen_range(1..4);
           let ball = Ball::init(rng, bulletpos, size, clr);
           let trail = FireballTrail::init(
             rng,
             &referencemask,
             path,
             size,
-            trailpercent,
+            trailpercent.min(0.96),
             particles,
             strokes,
             clr,
+            0.5,
           );
           self.balls.push(ball);
           self.fireballtrails.push(trail);
         }
-        AttackOrigin::Catapult(_) | AttackOrigin::Trebuchet(_) => {
-          let clr = 2;
+        AttackOrigin::Catapult(_) => {
+          let clr = ctx.fireball_color;
+          let size = rng.gen_range(1.0..2.0);
+          let particles = rng.gen_range(10..20);
+          let strokes = rng.gen_range(1..4);
+          let ball = Ball::init(rng, bulletpos, size, clr);
+          let trail = FireballTrail::init(
+            rng,
+            &referencemask,
+            path,
+            size,
+            0.8 * trailpercent,
+            particles,
+            strokes,
+            clr,
+            1.0,
+          );
+          self.balls.push(ball);
+          self.fireballtrails.push(trail);
+        }
+        AttackOrigin::Trebuchet(_) => {
+          let clr = ctx.fireball_color;
           let size = rng.gen_range(1.0..3.0);
           let particles = rng.gen_range(10..100);
           let strokes = rng.gen_range(1..6);
@@ -136,6 +254,7 @@ impl Projectiles {
             particles,
             strokes,
             clr,
+            1.5,
           );
           self.balls.push(ball);
           self.fireballtrails.push(trail);
@@ -185,6 +304,13 @@ impl Projectiles {
     }
     for trail in self.arrowtrails.iter() {
       routes.extend(trail.render(&mut removing_area));
+    }
+
+    for rope in self.ropes.iter() {
+      routes.extend(rope.render(rng, &mut removing_area));
+    }
+    for ladder in self.ladders.iter() {
+      routes.extend(ladder.render(rng, &mut removing_area));
     }
 
     routes = regular_clip(&routes, preserve_area);
