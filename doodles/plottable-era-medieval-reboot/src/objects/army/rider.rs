@@ -45,6 +45,7 @@ impl Rider {
   pub fn render<R: Rng>(
     &self,
     rng: &mut R,
+    ctx: &mut GlobalCtx,
     mask: &mut PaintMask,
   ) -> Vec<(usize, Vec<(f32, f32)>)> {
     let human = &self.human;
@@ -52,9 +53,9 @@ impl Rider {
 
     let mut routes = vec![];
 
-    routes.extend(human.render_foreground_only(rng, mask));
+    routes.extend(human.render_foreground_only(rng, ctx, mask));
     routes.extend(horse.render(rng, mask));
-    routes.extend(human.render_background_only(rng, mask));
+    routes.extend(human.render_background_only(rng, ctx, mask));
 
     // add halo around
     for (_, route) in routes.iter() {
@@ -68,10 +69,10 @@ impl<R: Rng> Renderable<R> for Rider {
   fn render(
     &self,
     rng: &mut R,
-    _ctx: &mut GlobalCtx,
+    ctx: &mut GlobalCtx,
     paint: &mut PaintMask,
   ) -> Polylines {
-    self.render(rng, paint)
+    self.render(rng, ctx, paint)
   }
 
   fn zorder(&self) -> f32 {

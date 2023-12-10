@@ -190,44 +190,50 @@ impl MountainsV2 {
           y += ((x / width - 0.5).abs() * 120.0) as f64;
           */
 
-          y += amp2
-            * amp
-            * perlin
-              .get([
-                //
-                8.311 + xv * 0.00511,
-                88.1 + y * ynoisefactor,
-                seed * 97.311,
-              ])
-              .max(0.0);
+          if amp2 > 0. {
+            y += amp2
+              * amp
+              * perlin
+                .get([
+                  //
+                  8.311 + xv * 0.00511,
+                  88.1 + y * ynoisefactor,
+                  seed * 97.311,
+                ])
+                .max(0.0);
+          }
 
-          y += amp1
-            * amp
-            * perlin.get([
-              //
-              xv * 0.007111 + 9.9,
-              y * 0.00311 + 3.1,
-              77.
-                + seed / 7.3
-                + 0.1
-                  * perlin.get([
-                    //
-                    55. + seed * 7.3,
-                    80.3 + xv * 0.0057,
-                    y * 0.06 + 11.3,
-                  ]),
-            ]);
-
-          y += amp
-            * amp3
-            * perlin
-              .get([
+          if amp1 > 0. {
+            y += amp1
+              * amp
+              * perlin.get([
                 //
-                xv * 0.009 + 8.33,
-                88.1 + y * 0.07,
-                seed / 7.7 + 6.66,
-              ])
-              .powf(2.0);
+                xv * 0.007111 + 9.9,
+                y * 0.00311 + 3.1,
+                77.
+                  + seed / 7.3
+                  + 0.1
+                    * perlin.get([
+                      //
+                      55. + seed * 7.3,
+                      80.3 + xv * 0.0057,
+                      y * 0.06 + 11.3,
+                    ]),
+              ]);
+          }
+
+          if amp3 > 0. {
+            y += amp
+              * amp3
+              * perlin
+                .get([
+                  //
+                  xv * 0.009 + 8.33,
+                  88.1 + y * 0.07,
+                  seed / 7.7 + 6.66,
+                ])
+                .powf(2.0);
+          }
 
           let y = y as f32;
 

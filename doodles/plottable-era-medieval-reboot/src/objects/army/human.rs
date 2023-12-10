@@ -9,6 +9,7 @@ use super::{
   paddle::Paddle,
   shield::Shield,
   sword::Sword,
+  torch::Torch,
 };
 use crate::{
   algo::{
@@ -33,6 +34,7 @@ pub struct Human {
   pub shields: Vec<Shield>,
   pub axes: Vec<Axe>,
   pub swords: Vec<Sword>,
+  pub torches: Vec<Torch>,
   pub paddles: Vec<Paddle>,
   pub flags: Vec<Flag>,
   pub clubs: Vec<Club>,
@@ -58,6 +60,7 @@ pub enum HoldableObject {
   Club,
   LongSword,
   Flag,
+  Torch,
   LongBow(/*phase: */ f32),
   Paddle(/* ang */ f32),
   // TODO Lance,
@@ -184,6 +187,7 @@ impl Human {
     let mut flags = vec![];
     let mut clubs = vec![];
     let mut paddles = vec![];
+    let mut torches = vec![];
     let mut head_routes = vec![];
     let mut head_polys = vec![];
     let mut weapon_routes = vec![];
@@ -223,6 +227,11 @@ impl Human {
             let swordang = PI / 2.0 - xdir * rng.gen_range(0.0..2.0);
             let sword = Sword::init(rng, pos, 0.5 * size, swordang, mainclr);
             swords.push(sword);
+          }
+          HoldableObject::Torch => {
+            let s = size * rng.gen_range(0.4..0.5);
+            let torch = Torch::init(rng, mainclr, 1, pos, handangle, s);
+            torches.push(torch);
           }
           HoldableObject::Club => {
             let xdir = if xflip { -1.0 } else { 1.0 };
@@ -294,6 +303,7 @@ impl Human {
       swords,
       paddles,
       clubs,
+      torches,
       flags,
       helmet,
       mainclr,
@@ -340,6 +350,7 @@ impl Human {
   pub fn render_foreground_only<R: Rng>(
     &self,
     rng: &mut R,
+    ctx: &mut GlobalCtx,
     mask: &mut PaintMask,
   ) -> Vec<(usize, Vec<(f32, f32)>)> {
     let mut routes = vec![];
@@ -358,6 +369,9 @@ impl Human {
     for flag in self.flags.iter() {
       routes.extend(flag.render(mask));
     }
+    for torch in self.torches.iter() {
+      routes.extend(torch.render(ctx, mask));
+    }
     routes.extend(regular_clip(&self.weapon_routes, mask));
     // TODO aren't we supposed to clip this? also to paint the mask actually?!
     self.rendering_pass(rng, mask, &routes)
@@ -366,6 +380,7 @@ impl Human {
   pub fn render_background_only<R: Rng>(
     &self,
     rng: &mut R,
+    _ctx: &mut GlobalCtx,
     mask: &mut PaintMask,
   ) -> Vec<(usize, Vec<(f32, f32)>)> {
     let human = &self.body;
@@ -401,11 +416,12 @@ impl Human {
   pub fn render<R: Rng>(
     &self,
     rng: &mut R,
+    ctx: &mut GlobalCtx,
     mask: &mut PaintMask,
   ) -> Vec<(usize, Vec<(f32, f32)>)> {
     let mut routes = vec![];
-    routes.extend(self.render_foreground_only(rng, mask));
-    routes.extend(self.render_background_only(rng, mask));
+    routes.extend(self.render_foreground_only(rng, ctx, mask));
+    routes.extend(self.render_background_only(rng, ctx, mask));
     let strokew = (self.body.height * 0.15).max(2.0 * mask.precision).min(1.5);
     for (_, route) in routes.iter() {
       mask.paint_polyline(route, strokew);
@@ -431,14 +447,19 @@ impl<R: Rng> Renderable<R> for Human {
   fn render(
     &self,
     rng: &mut R,
-    _ctx: &mut GlobalCtx,
+    ctx: &mut GlobalCtx,
     paint: &mut PaintMask,
   ) -> Polylines {
-    self.render(rng, paint)
+    self.render(rng, ctx, paint)
   }
 
   fn zorder(&self) -> f32 {
     self.body.origin.1
+  }
+
+  fn apply_translation_rotation(&mut self, v: (f32, f32), rot: f32) {
+    self.body.apply_translation_rotation(v, rot);
+    // FIXME implement this for all objects...
   }
 
   fn as_human(&self) -> Option<&Human> {

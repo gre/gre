@@ -4,6 +4,7 @@ use super::super::{
 use crate::{
   algo::{math1d::mix, math2d::lerp_point, polylines::path_subdivide_to_curve},
   global::{GlobalCtx, Special},
+  objects::castle::levels::SpawnableFire,
 };
 use rand::prelude::*;
 
@@ -82,6 +83,7 @@ pub struct Roof {
   roof_base: Option<Floor>,
   items: Vec<RenderItem>,
   pole_positions: Vec<SpawnablePole>,
+  fire_start_positions: Vec<SpawnableFire>,
 }
 
 impl Roof {
@@ -89,7 +91,11 @@ impl Roof {
     18.0 * scale
   }
 
-  pub fn init(params: &LevelParams, roofparams: &RoofParams) -> Self {
+  pub fn init<R: Rng>(
+    rng: &mut R,
+    params: &LevelParams,
+    roofparams: &RoofParams,
+  ) -> Self {
     let mut items = vec![];
     let zorder = params.level_zorder;
     let clr = roofparams.clr.unwrap_or(params.clr);
@@ -102,6 +108,21 @@ impl Roof {
       .min(10.0 * s)
       .min(roofparams.max_ratio * w)
       .max(3.0 * s);
+    let mut fire_start_positions = vec![];
+
+    fire_start_positions.push(SpawnableFire {
+      pos: (o.0, o.1 - rng.gen_range(0.2..0.8) * h),
+      radius: h / 4.0,
+      zorder: zorder + 1000.,
+    });
+    fire_start_positions.push(SpawnableFire {
+      pos: (
+        o.0 + w * rng.gen_range(-0.4..0.4),
+        o.1 - rng.gen_range(0.0..0.4) * h,
+      ),
+      radius: h / 2.0,
+      zorder: zorder + 1000.,
+    });
 
     let mut routes = vec![];
     let mut polygons = vec![];
@@ -176,6 +197,7 @@ impl Roof {
       items,
       roof_base,
       pole_positions,
+      fire_start_positions,
     }
   }
 }
@@ -191,5 +213,9 @@ impl Level for Roof {
 
   fn possible_pole_positions(&self) -> Vec<SpawnablePole> {
     self.pole_positions.clone()
+  }
+
+  fn possible_fire_start_positions(&self) -> Vec<SpawnableFire> {
+    self.fire_start_positions.clone()
   }
 }

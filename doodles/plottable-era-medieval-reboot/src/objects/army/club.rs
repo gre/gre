@@ -67,8 +67,8 @@ impl Club {
 impl<R: Rng> Renderable<R> for Club {
   fn render(
     &self,
-    rng: &mut R,
-    ctx: &mut crate::global::GlobalCtx,
+    _rng: &mut R,
+    _ctx: &mut crate::global::GlobalCtx,
     paint: &mut crate::algo::paintmask::PaintMask,
   ) -> crate::algo::polylines::Polylines {
     let routes = self.render(paint);

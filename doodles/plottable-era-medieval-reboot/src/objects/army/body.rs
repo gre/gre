@@ -223,6 +223,10 @@ impl HumanBody {
   }
   */
 
+  pub fn apply_translation_rotation(&mut self, v: (f32, f32), _rot: f32) {
+    self.origin = (self.origin.0 + v.0, self.origin.1 + v.1);
+  }
+
   pub fn new(origin: (f32, f32), height: f32, joints: HumanPosture) -> Self {
     let h = height;
     let j = joints;

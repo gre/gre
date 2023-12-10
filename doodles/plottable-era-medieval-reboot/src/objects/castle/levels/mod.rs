@@ -5,76 +5,13 @@ pub mod wallshadows;
 pub mod walltexture;
 pub mod windows;
 
-use crate::algo::{
-  clipping::regular_clip_polys, paintmask::PaintMask, polylines::Polylines,
-};
-use std::cmp::Ordering;
-
 use self::{poles::SpawnablePole, shapes::roof::RoofParams};
+use crate::algo::renderitem::RenderItem;
 
 /**
  * LICENSE CC BY-NC-ND 4.0
  * Author: greweb – 2023 – Plottable Era: (II) Medieval
  */
-
-// it's like a Renderable item, but we need to work with polygon for the destruction logic.
-#[derive(Clone)]
-pub struct RenderItem {
-  pub routes: Polylines,
-  pub polygons: Vec<Vec<(f32, f32)>>,
-  pub zorder: f32,
-  // hack in order to return other things that aren't fitting in here
-  pub foreign_id: Option<usize>,
-}
-
-impl PartialEq for RenderItem {
-  fn eq(&self, other: &Self) -> bool {
-    self.zorder == other.zorder
-  }
-}
-
-impl Eq for RenderItem {}
-
-impl PartialOrd for RenderItem {
-  fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-    other.zorder.partial_cmp(&self.zorder)
-  }
-}
-
-impl Ord for RenderItem {
-  fn cmp(&self, other: &Self) -> Ordering {
-    self.partial_cmp(other).unwrap_or(Ordering::Equal)
-  }
-}
-
-impl RenderItem {
-  pub fn new(
-    routes: Polylines,
-    polygons: Vec<Vec<(f32, f32)>>,
-    zorder: f32,
-  ) -> Self {
-    Self {
-      routes,
-      polygons,
-      zorder,
-      foreign_id: None,
-    }
-  }
-
-  pub fn from_foreign(foreign_id: usize, zorder: f32) -> Self {
-    Self {
-      routes: vec![],
-      polygons: vec![],
-      zorder,
-      foreign_id: Some(foreign_id),
-    }
-  }
-
-  pub fn render(&self, paint: &mut PaintMask) -> Polylines {
-    let rts = regular_clip_polys(&self.routes, paint, &self.polygons);
-    rts
-  }
-}
 
 #[derive(Clone, Debug)]
 pub struct LevelParams {
@@ -173,7 +110,18 @@ pub trait Level {
     vec![]
   }
 
+  fn possible_fire_start_positions(&self) -> Vec<SpawnableFire> {
+    vec![]
+  }
+
   fn condamn_build_belowy(&self) -> Option<f32> {
     None
   }
+}
+
+#[derive(Clone)]
+pub struct SpawnableFire {
+  pos: (f32, f32),
+  radius: f32,
+  zorder: f32,
 }

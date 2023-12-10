@@ -4,9 +4,10 @@ PRIO:
   - path of army / convoy
   - battlefield extra details. people with machines & all other new objs
 - castle destruction. fire/smoke that goes with it
-- castle extra details (illumination, flags,..) 
+- castle extra details (illumination,..)
 - destruction map to impact battlefield too. we should also have a noise map for where the targets are
 - fix position of Chinese Door
+- test density of an extreme case of fire
 
 CASTLE:
 - rework castle

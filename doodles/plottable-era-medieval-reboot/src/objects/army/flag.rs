@@ -3,7 +3,7 @@ use crate::algo::{
   clipping::regular_clip,
   math1d::mix,
   paintmask::PaintMask,
-  polylines::{path_to_fibers, Polylines},
+  polylines::{path_to_fibers, route_translate_rotate, Polylines},
   renderable::Renderable,
 };
 use rand::prelude::*;
@@ -158,12 +158,40 @@ impl FlagCloth {
     Self { routes, filling }
   }
 
+  pub fn polygon(&self) -> Vec<(f32, f32)> {
+    let mut minx = std::f32::MAX;
+    let mut maxx = std::f32::MIN;
+    let mut miny = std::f32::MAX;
+    let mut maxy = std::f32::MIN;
+    for (_, route) in &self.routes {
+      for p in route {
+        minx = minx.min(p.0);
+        maxx = maxx.max(p.0);
+        miny = miny.min(p.1);
+        maxy = maxy.max(p.1);
+      }
+    }
+    vec![(minx, miny), (maxx, miny), (maxx, maxy), (minx, maxy)]
+  }
+
+  pub fn render_without_paint(&self) -> Polylines {
+    self.routes.clone()
+  }
+
   pub fn render(&self, paint: &mut PaintMask) -> Polylines {
     let routes = regular_clip(&self.routes, paint);
     for (_, poly) in &self.routes {
       paint.paint_polyline(poly, 0.5 * self.filling);
     }
     routes
+  }
+
+  pub fn apply_translation_rotation(&mut self, v: (f32, f32), _angle: f32) {
+    self.routes = self
+      .routes
+      .iter()
+      .map(|(clr, route)| (*clr, route_translate_rotate(route, v, 0.)))
+      .collect();
   }
 }
 
@@ -175,6 +203,12 @@ impl<R: Rng> Renderable<R> for Flag {
     paint: &mut PaintMask,
   ) -> Polylines {
     self.render(paint)
+  }
+
+  fn apply_translation_rotation(&mut self, v: (f32, f32), angle: f32) {
+    // NB we only apply a translation (otherwise the relative v would need to be altered)
+    self.cloth.apply_translation_rotation(v, angle);
+    self.spear.apply_translation_rotation(v, angle);
   }
 
   fn zorder(&self) -> f32 {

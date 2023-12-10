@@ -23,6 +23,8 @@ pub trait Renderable<R: Rng> {
   fn as_human(&self) -> Option<&Human> {
     None
   }
+
+  fn apply_translation_rotation(&mut self, _v: (f32, f32), _rot: f32) {}
 }
 
 // FIXME can a Renderable be an implicit Container? like it wants to emit sub renderable... because we want the human shields to be ordered separately.
@@ -76,6 +78,7 @@ impl<R: Rng> Container<R> {
     self.elements.sort();
   }
 
+  /*
   // TODO a better impl would be to make humans returning two renderables and we would natively sort these, so we wouldn't need this function...
   pub fn render_with_humans(
     &self,
@@ -113,6 +116,7 @@ impl<R: Rng> Container<R> {
 
     routes
   }
+  */
 
   pub fn render_with_extra_halo(
     &self,
@@ -154,5 +158,13 @@ impl<R: Rng> Renderable<R> for Container<R> {
       .max()
       .map(|o| o.inner.zorder())
       .unwrap_or_default()
+  }
+
+  // kinda a hack for now..
+
+  fn apply_translation_rotation(&mut self, pos: (f32, f32), angle: f32) {
+    for e in &mut self.elements {
+      e.inner.apply_translation_rotation(pos, angle);
+    }
   }
 }

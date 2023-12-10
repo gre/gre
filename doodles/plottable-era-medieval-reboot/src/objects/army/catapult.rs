@@ -122,11 +122,7 @@ impl Catapult {
     }
   }
 
-  pub fn render<R: Rng>(
-    &self,
-    rng: &mut R,
-    paint: &mut PaintMask,
-  ) -> Polylines {
+  pub fn render(&self, paint: &mut PaintMask) -> Polylines {
     let mut routes = vec![];
     let clr = self.clr;
 
@@ -154,11 +150,11 @@ impl Catapult {
 impl<R: Rng> Renderable<R> for Catapult {
   fn render(
     &self,
-    rng: &mut R,
+    _rng: &mut R,
     _ctx: &mut GlobalCtx,
     paint: &mut PaintMask,
   ) -> Polylines {
-    self.render(rng, paint)
+    self.render(paint)
   }
 
   fn zorder(&self) -> f32 {

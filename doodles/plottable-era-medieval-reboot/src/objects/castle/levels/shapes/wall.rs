@@ -4,14 +4,19 @@ use super::super::{
   windows::{wall_windows, WallWindowParams},
   Floor, Level, LevelParams, RenderItem,
 };
-use crate::algo::{
-  clipping::clip_routes_with_colors,
-  math1d::mix,
-  math2d::lerp_point,
-  paintmask::PaintMask,
-  polygon::polygon_includes_point,
-  polylines::{grow_as_rectangle, grow_stroke_zigzag, route_translate_rotate},
-  shapes::{arc, circle_route, spiral_optimized_with_initial_angle},
+use crate::{
+  algo::{
+    clipping::clip_routes_with_colors,
+    math1d::mix,
+    math2d::lerp_point,
+    paintmask::PaintMask,
+    polygon::polygon_includes_point,
+    polylines::{
+      grow_as_rectangle, grow_stroke_zigzag, route_translate_rotate,
+    },
+    shapes::{arc, circle_route, spiral_optimized_with_initial_angle},
+  },
+  objects::castle::levels::SpawnableFire,
 };
 use rand::prelude::*;
 use std::f32::consts::PI;
@@ -48,6 +53,7 @@ pub struct Wall {
   roof_base: Option<Floor>,
   items: Vec<RenderItem>,
   possible_ladder_positions: Vec<(f32, f32)>,
+  fire_start_positions: Vec<SpawnableFire>,
 }
 
 impl Wall {
@@ -136,8 +142,10 @@ impl Wall {
       let ratio = range.end - range.start;
       let windowparams = WallWindowParams::init(rng, scale, ratio * w);
       items.extend(wall_windows(
+        rng,
         &windowparams,
         clr,
+        params.blazonclr,
         zorder + 0.1,
         poly,
         ratio,
@@ -223,10 +231,28 @@ impl Wall {
       }
     }
 
+    let mut fire_start_positions = vec![];
+
+    let count =
+      (w / (4. + rng.gen_range(0.0..50.0) * rng.gen_range(0.0..1.0))) as usize;
+    if count > 0 {
+      for _ in 0..count {
+        let x = mix(o.0 - w / 2.0, o.0 + w / 2.0, rng.gen_range(0.1..0.9));
+        let y = mix(o.1, y2, rng.gen_range(0.1..0.9));
+        let radius = rng.gen_range(0.1..0.2) * w;
+        fire_start_positions.push(SpawnableFire {
+          pos: (x, y),
+          radius,
+          zorder: zorder + 1000.,
+        });
+      }
+    }
+
     Self {
       items,
       roof_base,
       possible_ladder_positions,
+      fire_start_positions,
     }
   }
 }
@@ -242,6 +268,12 @@ impl Level for Wall {
 
   fn possible_ladder_positions(&self) -> Vec<(f32, f32)> {
     self.possible_ladder_positions.clone()
+  }
+
+  fn possible_fire_start_positions(
+    &self,
+  ) -> Vec<crate::objects::castle::levels::SpawnableFire> {
+    self.fire_start_positions.clone()
   }
 }
 

@@ -108,11 +108,12 @@ impl Ladder {
   pub fn render<R: Rng>(
     &self,
     rng: &mut R,
+    ctx: &mut GlobalCtx,
     paint: &mut PaintMask,
   ) -> Polylines {
     let mut routes = vec![];
     for human in &self.humans {
-      routes.extend(human.render(rng, paint));
+      routes.extend(human.render(rng, ctx, paint));
     }
     routes.extend(regular_clip(&self.ladder, paint));
     for (_, rt) in self.ladder.iter() {

@@ -96,7 +96,7 @@ impl Fowl {
   pub fn render(&self, paint: &mut PaintMask) -> Polylines {
     let routes = regular_clip(&self.routes, paint);
     for (_, poly) in &self.routes {
-      paint.paint_polygon(poly); // TODO it would be best to have proper polygons
+      paint.paint_polygon(poly);
     }
     routes
   }

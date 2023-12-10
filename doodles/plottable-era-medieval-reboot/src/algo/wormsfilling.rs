@@ -30,6 +30,8 @@ pub struct WormsFilling {
 impl WormsFilling {
   // new
   pub fn rand<R: Rng>(rng: &mut R) -> Self {
+    // local rng to not have impredictibility.
+    let mut rng = StdRng::from_rng(rng).unwrap();
     let seed = rng.gen_range(-999.0..999.);
     let rot = PI / rng.gen_range(1.0..2.0);
     let step = 0.4;
@@ -171,6 +173,7 @@ impl Ord for OrderedFloat {
 // data model that stores values information in 2D
 pub struct WeightMap {
   // TODO performance still aren't great. we need a map{index->weight} where we can easily update by index but also we can easily sort by weight (resorted each time we insert)
+  // FIXME this implementation also cause the Worms Filling to not be deterministic :(
   weights: Vec<f32>,
   weight_index_map: BTreeMap<OrderedFloat, HashSet<usize>>, // Maps weight to a set of indexes
 

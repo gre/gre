@@ -150,7 +150,6 @@ impl Beach {
     }
 
     if ctx.specials.contains(&Special::TrojanHorse) {
-      // TODO ? in that case there should be a lot of people on the beach.
       let origin = (
         width * rng.gen_range(0.3..0.7),
         self.yhorizon - rng.gen_range(0.0..0.04) * paint.height,

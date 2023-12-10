@@ -117,24 +117,24 @@ impl Palette {
       1 => {
         let base = if rng.gen_bool(0.85) {
           BLACK
-        } else if rng.gen_bool(0.2) {
+        } else if rng.gen_bool(0.25) {
           INAHO
         } else if rng.gen_bool(0.4) {
           INDIGO
         } else if rng.gen_bool(0.4) {
           SEIBOKUBLUE
-        } else if rng.gen_bool(0.4) {
+        } else if rng.gen_bool(0.5) {
           BLOODY_BREXIT
         } else {
           IMPERIAL_PURPLE
         };
-        let sun = if rng.gen_bool(0.8) {
+        let sun = if rng.gen_bool(0.7) {
           AMBER
-        } else if rng.gen_bool(0.4) {
+        } else if rng.gen_bool(0.6) {
           POPPY_RED
         } else if rng.gen_bool(0.4) {
           INAHO
-        } else if rng.gen_bool(0.4) {
+        } else if rng.gen_bool(0.5) {
           PINK
         } else {
           HOPE_PINK

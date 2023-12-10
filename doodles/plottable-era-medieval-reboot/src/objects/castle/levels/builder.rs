@@ -15,15 +15,15 @@ use super::{
 };
 use crate::{
   algo::{
-    clipping::regular_clip, math1d::mix, math2d::lerp_point,
-    multicut::multicut_along_line, paintmask::PaintMask,
-    polygon::poly_centroid_weighted, polylines::Polylines,
-    renderable::Renderable,
+    math1d::mix, math2d::lerp_point, paintmask::PaintMask,
+    polylines::Polylines, renderable::Renderable,
+    renderitem::multicut_along_line,
   },
   global::GlobalCtx,
   objects::{
     army::{
       body::HumanPosture,
+      fire::Fire,
       flag::Flag,
       human::{HeadShape, HoldableObject, Human},
     },
@@ -50,10 +50,9 @@ pub struct GlobalCastleProperties {
   pub grounding: CastleGrounding,
   pub reference_roof_params: RoofParams,
   pub light_x_direction: f32,
-  // TODO we could give in param a probabilistic config
-  // also most of the rng parts of the shape should be params
   pub first_only_choices_extra: Vec<usize>,
   pub generic_choices_extra: Vec<usize>,
+  pub shapes_proba: Vec<f32>,
 }
 impl GlobalCastleProperties {
   pub fn rand<R: Rng>(
@@ -80,6 +79,11 @@ impl GlobalCastleProperties {
       generic_choices_extra.push(8);
     }
 
+    let mut shapes_proba = vec![];
+    for _ in 0..9 {
+      shapes_proba.push(rng.gen_range(-0.5f32..1.5).max(0.001).min(0.999));
+    }
+
     Self {
       grounding: grounding.clone(),
       reference_roof_params,
@@ -89,8 +93,143 @@ impl GlobalCastleProperties {
       extra_towers,
       first_only_choices_extra,
       generic_choices_extra,
+      shapes_proba,
     }
   }
+}
+
+/*
+struct Tower {
+  origin: (f32, f32),
+  castleprops: GlobalCastleProperties,
+  width: f32,
+}
+
+impl Tower {
+  fn new(
+    castleprops: &GlobalCastleProperties,
+    origin: (f32, f32),
+    width: f32,
+  ) -> Self {
+    Self {
+      castleprops: castleprops.clone(),
+      origin,
+      width,
+    }
+  }
+
+  fn render_to_render_item(
+    &self,
+    paint: &mut PaintMask,
+    floors: &mut Vec<Floor>,
+    ctx: &mut GlobalCtx,
+    rng: &mut impl Rng,
+    objects: &mut HashMap<usize, Box<dyn Renderable<impl Rng>>>,
+  ) -> RenderItem {
+    let mut items = rec_build(
+      0,
+      floors,
+      rng,
+      ctx,
+      paint,
+      &self.castleprops,
+      self.origin,
+      self.width,
+      objects,
+    );
+    items.sort();
+    RenderItem::new_from_items(items)
+  }
+}
+*/
+
+fn apply_destruction<R: Rng>(
+  items: &mut Vec<RenderItem>,
+  rng: &mut R,
+  ctx: &mut GlobalCtx,
+  castleprops: &GlobalCastleProperties,
+) {
+  // Apply destructions
+  // TODO work on the destruction of items with the destruction map
+  // we need to somehow preserve the items but move them as we go slicing things. might be tricky.
+  // cheap idea for destruction is to use worms filling and balance between real stroke and worms filling to have natural fragment that will appear...
+  // TODO we need to be able to define the rule of specific RenderItems
+  // typically some of the items shouldn't be cut.. (columns ones)
+  // also how to impl the ropes?
+  // We also need to preserve the location of foreign objects
+  // also i want to implement some destructed part that "expode out"
+
+  let from;
+  let to;
+  {
+    // iterate through the items to actually precise the avg x and top/bottom y
+    let mut miny = ctx.height;
+    let mut maxy = 0.0;
+    let mut sumx = 0.0;
+    let mut countx = 0;
+    for item in items.iter() {
+      for (_, poly) in &item.routes {
+        for p in poly {
+          if p.1 < miny {
+            miny = p.1;
+          }
+          if p.1 > maxy {
+            maxy = p.1;
+          }
+          sumx += p.0;
+          countx += 1;
+        }
+      }
+    }
+    if countx == 0 {
+      return;
+    }
+    sumx /= countx as f32;
+    from = (sumx, maxy);
+    to = (sumx, miny);
+  }
+
+  let mid = lerp_point(from, to, 0.5);
+  let destruction = ctx.destruction_map.get_weight(mid);
+  if destruction <= 0.001 {
+    return;
+  }
+
+  let scale = castleprops.grounding.scale;
+  let pushbackbase =
+    destruction * rng.gen_range(0.0..scale) * rng.gen_range(0.0..1.0);
+  let pushbackrotbase = rng.gen_range(-1.0..1.0) * rng.gen_range(0.0..1.0);
+  let pushbackrotmix = rng.gen_range(0.1..0.9);
+  let sliding = scale * rng.gen_range(0.5..2.0);
+  let increment_base = rng.gen_range(2.0..50.0);
+  let o = multicut_along_line(
+    rng,
+    &items,
+    0,
+    from,
+    to,
+    |rng| increment_base * rng.gen_range(1.0..2.0),
+    |rng| rng.gen_range(-PI / 2.0..PI / 2.0) * rng.gen_range(0.0..1.0),
+    |rng| sliding * rng.gen_range(-1.0..1.0) * rng.gen_range(0.0..1.0),
+    |rng| pushbackbase * rng.gen_range(0.5..1.0),
+    |rng| 0.1 * mix(pushbackrotbase, rng.gen_range(-1.0..1.0), pushbackrotmix),
+  );
+
+  *items = o;
+
+  // make ropes behind the construction
+  /*
+  let count = rng.gen_range(3..16);
+  routes.extend(building_ropes(
+    rng,
+    paint,
+    &vec![],
+    count,
+    0,
+    2.0 * castleprops.grounding.width,
+    50.0,
+  ));
+  */
 }
 
 fn rec_build<R: Rng>(
@@ -323,7 +462,32 @@ fn rec_build<R: Rng>(
     if choices.is_empty() {
       break;
     }
-    let i = rng.gen_range(0..choices.len());
+
+    // find a choice depending on probabilities
+    let sum = choices
+      .iter()
+      .map(|&i| castleprops.shapes_proba[i])
+      .sum::<f32>();
+    if sum < 0.001 {
+      break;
+    }
+    let mut v = rng.gen_range(0.0..sum);
+    let i = choices.iter().position(|&i| {
+      let p = castleprops.shapes_proba[i];
+      if p > v {
+        true
+      } else {
+        v -= p;
+        false
+      }
+    });
+
+    if i.is_none() {
+      break;
+    }
+    let i = i.unwrap();
+
+    // let i = rng.gen_range(0..choices.len());
     let levelkind = choices[i];
     remainings[levelkind] -= 1;
     forbidden_structure = forbidden_on_top_of[levelkind].clone();
@@ -340,7 +504,7 @@ fn rec_build<R: Rng>(
       0 => {
         let roofparams =
           RoofParams::from_reference(rng, ctx, &params.reference_roof_params);
-        Box::new(Roof::init(&params, &roofparams))
+        Box::new(Roof::init(rng, &params, &roofparams))
       }
       1 => {
         let mut wallparams = WallParams::new();
@@ -386,6 +550,17 @@ fn rec_build<R: Rng>(
       ctx.projectiles.add_defense(DefenseTarget::Rope(pos));
     }
 
+    for s in level.possible_fire_start_positions() {
+      let destr = ctx.destruction_map.get_weight(s.pos);
+      if destr > 0.1 && rng.gen_bool(ctx.fire_proba) {
+        let rad = (rng.gen_range(0.8..1.2) * destr * s.radius).min(10.0);
+        let fire = Fire::init(rng, 1, s.pos, rad);
+        let id = objects.len();
+        objects.insert(id, Box::new(fire));
+        items.push(RenderItem::from_foreign(id, s.zorder, s.pos));
+      }
+    }
+
     if let Some(floor) = level.roof_base() {
       let middle = lerp_point(floor.pos, params.floor.pos, 0.5);
       floors.push(floor.clone());
@@ -424,6 +599,8 @@ fn rec_build<R: Rng>(
     let xflip = rng.gen_bool(0.5);
     let lefthand = Some(if rng.gen_bool(0.5) {
       HoldableObject::LongBow(rng.gen_range(0.0..1.0))
+    } else if ctx.night_time {
+      HoldableObject::Torch
     } else {
       HoldableObject::Flag
     });
@@ -440,7 +617,7 @@ fn rec_build<R: Rng>(
     let id = objects.len();
     objects.insert(id, Box::new(human));
     ctx.projectiles.add_defense(DefenseTarget::Human(spawn.pos));
-    items.push(RenderItem::from_foreign(id, spawn.zorder));
+    items.push(RenderItem::from_foreign(id, spawn.zorder, spawn.pos));
   }
 
   for spawn in possible_pole_positions {
@@ -466,15 +643,15 @@ fn rec_build<R: Rng>(
       );
       let id = objects.len();
       objects.insert(id, Box::new(flag));
-      items.push(RenderItem::from_foreign(id, spawn.zorder));
+      items.push(RenderItem::from_foreign(id, spawn.zorder, spawn.pos));
     }
   }
 
-  // TODO work on the destruction of items with the destruction map
-  // we need to somehow preserve the items but move them as we go slicing things. might be tricky.
-  // cheap idea for destruction is to use worms filling and balance between real stroke and worms filling to have natural fragment that will appear...
-
   items.sort();
+
+  // items
+
+  apply_destruction(&mut items, rng, ctx, castleprops);
 
   items
 }
@@ -507,58 +684,13 @@ pub fn build_castle<R: Rng>(
     items.sort();
     for item in &items {
       routes.extend(item.render(paint));
-      if let Some(id) = item.foreign_id {
-        if let Some(obj) = objects.get(&id) {
+      if let Some(foreign) = &item.foreign {
+        if let Some(obj) = objects.get_mut(&foreign.id) {
+          obj.apply_translation_rotation(foreign.translation, foreign.rotation);
           routes.extend(obj.render(rng, ctx, paint));
         }
       }
     }
-
-    // TODO we need to apply this idea on each tower column
-    /*
-    {
-      // attempt to implement some destructions
-
-      let scale = castleprops.grounding.scale;
-      let pushbackbase =
-        40.0 * rng.gen_range(0.0..scale) * rng.gen_range(0.0..1.0);
-      let pushbackrotbase = rng.gen_range(-1.0..1.0);
-      let pushbackrotmix = rng.gen_range(0.1..0.9);
-      let sliding = scale * rng.gen_range(0.5..2.0);
-      let o = multicut_along_line(
-        rng,
-        &routes,
-        &mut vec![],
-        0,
-        castleprops.grounding.position,
-        (
-          castleprops.grounding.position.0,
-          castleprops.grounding.position.1 - 50.0,
-        ),
-        |rng| rng.gen_range(2.0..10.0),
-        |rng| rng.gen_range(-PI / 2.0..PI / 2.0) * rng.gen_range(0.0..1.0),
-        |rng| sliding * rng.gen_range(-1.0..1.0) * rng.gen_range(0.0..1.0),
-        |rng| pushbackbase * rng.gen_range(0.5..2.0),
-        |rng| {
-          0.1 * mix(pushbackrotbase, rng.gen_range(-1.0..1.0), pushbackrotmix)
-        },
-      );
-
-      routes = o.0;
-
-      // make ropes behind the construction
-      let count = rng.gen_range(3..16);
-      routes.extend(building_ropes(
-        rng,
-        paint,
-        &vec![],
-        count,
-        0,
-        2.0 * castleprops.grounding.width,
-        50.0,
-      ));
-    }
-    */
 
     // we also create a halo cropping around castle
     for (_, route) in &routes {
@@ -611,8 +743,9 @@ pub fn build_castle<R: Rng>(
 
     for item in &items {
       routes.extend(item.render(paint));
-      if let Some(id) = item.foreign_id {
-        if let Some(obj) = objects.get(&id) {
+      if let Some(foreign) = &item.foreign {
+        if let Some(obj) = objects.get_mut(&foreign.id) {
+          obj.apply_translation_rotation(foreign.translation, foreign.rotation);
           routes.extend(obj.render(rng, ctx, paint));
         }
       }
@@ -627,6 +760,7 @@ pub fn build_castle<R: Rng>(
   routes
 }
 
+/*
 fn building_ropes<R: Rng>(
   rng: &mut R,
   paint: &mut PaintMask,
@@ -657,3 +791,4 @@ fn building_ropes<R: Rng>(
   }
   regular_clip(&ropes, paint)
 }
+*/

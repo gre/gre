@@ -87,8 +87,8 @@ impl LongBow {
 impl<R: Rng> Renderable<R> for LongBow {
   fn render(
     &self,
-    rng: &mut R,
-    ctx: &mut crate::global::GlobalCtx,
+    _rng: &mut R,
+    _ctx: &mut crate::global::GlobalCtx,
     paint: &mut crate::algo::paintmask::PaintMask,
   ) -> crate::algo::polylines::Polylines {
     let routes = self.render();

@@ -100,5 +100,3 @@ pub fn packing<R: Rng>(
   }
   circles
 }
-
-// TODO we need an efficient way to do packing in a PaintMask

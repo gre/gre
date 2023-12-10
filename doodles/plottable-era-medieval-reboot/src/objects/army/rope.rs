@@ -86,11 +86,12 @@ impl Rope {
   pub fn render<R: Rng>(
     &self,
     rng: &mut R,
+    ctx: &mut GlobalCtx,
     paint: &mut PaintMask,
   ) -> Polylines {
     let mut routes = vec![];
     for human in &self.humans {
-      routes.extend(human.render(rng, paint));
+      routes.extend(human.render(rng, ctx, paint));
     }
     routes.extend(regular_clip(&vec![(self.clr, self.rope.clone())], paint));
     paint.paint_polyline(&self.rope, 0.5);

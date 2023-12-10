@@ -142,8 +142,6 @@ impl FrontMountains {
       }
     }
 
-    // TODO we need to make a Front Front Mountains with this guy!
-
     trebuchet_candidates.shuffle(rng);
 
     let trebuchets_max =
@@ -178,6 +176,7 @@ impl FrontMountains {
           let items = vec![
             None,
             Some(HoldableObject::Flag),
+            Some(HoldableObject::Torch),
             Some(HoldableObject::Axe),
             Some(HoldableObject::Shield),
             Some(HoldableObject::Sword),
@@ -197,7 +196,7 @@ impl FrontMountains {
         lefthand, righthand,
       )
       .with_worms_filling_defaults();
-      routes.extend(human.render(rng, &mut paint_before));
+      routes.extend(human.render(rng, ctx, &mut paint_before));
     }
 
     paint.paint(&paint_before);
@@ -236,8 +235,6 @@ fn stroke_mountains(
   if curve.len() < 2 {
     return (routes, curve);
   }
-
-  // TODO rework the implementation
 
   // make the polygons
   let mut polys = vec![];

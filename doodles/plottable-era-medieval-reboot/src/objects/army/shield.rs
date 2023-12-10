@@ -21,7 +21,7 @@ pub struct Shield {
 impl Shield {
   pub fn init<R: Rng>(
     rng: &mut R,
-    clr: usize,
+    _clr: usize,
     blazonclr: usize,
     origin: (f32, f32),
     size: f32,
@@ -87,8 +87,8 @@ impl Shield {
 impl<R: Rng> Renderable<R> for Shield {
   fn render(
     &self,
-    rng: &mut R,
-    ctx: &mut crate::global::GlobalCtx,
+    _rng: &mut R,
+    _ctx: &mut crate::global::GlobalCtx,
     paint: &mut crate::algo::paintmask::PaintMask,
   ) -> crate::algo::polylines::Polylines {
     let routes = self.render(paint);

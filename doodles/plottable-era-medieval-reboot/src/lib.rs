@@ -120,17 +120,6 @@ pub fn render(
     paint.paint_borders(pad);
   }
 
-  /*
-  sandbox::sandbox_cannon(
-    &mut rng,
-    &mut ctx,
-    &mut paint,
-    &mut routes,
-    width,
-    height,
-  );
-  */
-
   if ctx.is_sandbox {
     sandbox::sandbox(
       &mut rng,
@@ -192,7 +181,6 @@ pub fn render(
 
     if ctx.castle_on_sea {
       perf.span("castle", &routes);
-      // TODO ? multiple castle, we would loop through them. they would be placed on the sea but we would enforce there is no unit behind.
       let castlewidth = rng.gen_range(0.2..0.5) * width;
       let x = rng.gen_range(0.3..0.6) * width;
       let scale = 1.0
@@ -337,6 +325,7 @@ pub fn render(
       height,
       pad,
     );
+
     let mut sky_routes = sky.render(&mut rng, &mut paint);
     if !ctx.no_sea {
       // prevent sky to glitch inside the sea
@@ -350,6 +339,7 @@ pub fn render(
     if let Some((sea, sea_routes)) = sea_data {
       perf.span("reflect_shapes", &routes);
       let probability_par_color = vec![0.1, 0.15, 0.22];
+
       routes.extend(sea.reflect_shapes(
         &mut rng,
         &mut paint,
@@ -370,9 +360,11 @@ pub fn render(
 
   perf.span("finalize", &vec![]);
 
-  //  routes.extend(debug_weight_map(&ctx.destruction_map, 2, 0.0, 1.0));
+  // routes.extend(debug_weight_map(&ctx.destruction_map, 2, 0.0, 1.0));
 
   ctx.finalize();
+
+  println!("{}", rng.gen::<f64>());
 
   let feature = ctx.to_feature(&routes);
   let feature_json = serde_json::to_string(&feature).unwrap();
@@ -435,7 +427,7 @@ fn debug_weight_map(
               (xc - r, yc - r),
             ],
           ));
-          r -= 0.2;
+          r -= 0.8;
         }
       }
       y += weightmap.precision;

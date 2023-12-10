@@ -306,7 +306,6 @@ impl Sea {
               HumanPosture::from_holding(rng, arg.xflip, lefthand, righthand);
           } else {
             if are_paddling {
-              // TODO paddle angle to be organized between people on the boat and sometimes it can be up.
               let a = if arg.xflip {
                 -PI * rng.gen_range(0.6..0.7)
               } else {
@@ -380,8 +379,8 @@ fn reflect_shapes<R: Rng>(
   let min_stroke_length = 0.5 * stroke_len_base;
   let max_stroke_length = stroke_len_base;
 
-  for (clr, route) in reflectables.clone() {
-    let probability = probability_per_color[clr];
+  for (clr, route) in reflectables.iter() {
+    let probability = probability_per_color[*clr];
     for p in slice_polylines(&route, rng.gen_range(1.0..2.0) * stroke_len_base)
       .iter()
       .flatten()
@@ -405,12 +404,11 @@ fn reflect_shapes<R: Rng>(
         let x1 = (x - sx).max(boundaries.0).min(boundaries.2);
         let x2 = (x + sx).max(boundaries.0).min(boundaries.2);
         if x2 - x1 > min_stroke_length {
-          // TODO do it with as many point as needed between x1 and x2, if any of these have too much passage, we skip
           if passage.get((x, y)) > max_passage {
             continue;
           }
           passage.count((x, y));
-          new_shapes.push((clr, vec![(x1, y - sy), (x2, y + sy)]));
+          new_shapes.push((*clr, vec![(x1, y - sy), (x2, y + sy)]));
         }
       }
     }

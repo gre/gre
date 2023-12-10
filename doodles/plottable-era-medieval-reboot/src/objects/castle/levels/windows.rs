@@ -1,10 +1,15 @@
-use crate::algo::{
-  clipping::clip_routes_with_colors,
-  math1d::mix,
-  math2d::{euclidian_dist, lerp_point},
-  polygon::{polygon_centroid, polygon_includes_point},
-  polylines::{path_subdivide_to_curve, Polyline},
-  shapes::ovale_route,
+use std::f32::consts::PI;
+
+use crate::{
+  algo::{
+    clipping::clip_routes_with_colors,
+    math1d::mix,
+    math2d::{euclidian_dist, lerp_point},
+    polygon::{polygon_centroid, polygon_includes_point},
+    polylines::{path_subdivide_to_curve, Polyline},
+    shapes::ovale_route,
+  },
+  objects::army::flag::FlagCloth,
 };
 use rand::prelude::*;
 
@@ -18,18 +23,20 @@ use super::RenderItem;
 pub enum WindowShape {
   Cross,
   CircleCross,
+  Flag,
   Rectangle(f32),
   HalfCurve(f32),
   SquareCross,
 }
 impl WindowShape {
   pub fn rand<R: Rng>(rng: &mut R) -> WindowShape {
-    let i = rng.gen_range(0.0..5.0) * rng.gen_range(0.3..1.0);
+    let i = rng.gen_range(0.0..6.0) * rng.gen_range(0.5..1.0);
     match i as usize {
-      0 => WindowShape::Rectangle(rng.gen_range(0.5..1.0)),
-      1 => WindowShape::Cross,
-      2 => WindowShape::HalfCurve(rng.gen_range(0.0..1.0)),
-      3 => WindowShape::CircleCross,
+      0 => WindowShape::Flag,
+      1 => WindowShape::Rectangle(rng.gen_range(0.5..1.0)),
+      2 => WindowShape::Cross,
+      3 => WindowShape::HalfCurve(rng.gen_range(0.0..1.0)),
+      4 => WindowShape::CircleCross,
       _ => WindowShape::SquareCross,
     }
   }
@@ -40,14 +47,17 @@ impl WindowShape {
       WindowShape::Cross => 0.8 * size,
       WindowShape::HalfCurve(_) => 0.6 * size,
       WindowShape::CircleCross => 1.0 * size,
+      WindowShape::Flag => 1.0 * size,
       WindowShape::SquareCross => 1.0 * size,
     }
   }
 
-  pub fn render(
+  pub fn render<R: Rng>(
     &self,
+    rng: &mut R,
     o: (f32, f32),
     clr: usize,
+    blazonclr: usize,
     size: f32,
     zindex: f32,
     xratio: f32,
@@ -101,6 +111,23 @@ impl WindowShape {
         poly.push(poly[0]);
 
         routes.push((clr, poly.clone()));
+      }
+      WindowShape::Flag => {
+        let filling = rng.gen_range(0.5..1.0);
+        let oscillating = rng.gen_range(0.0..0.3);
+        let cloth = FlagCloth::init(
+          rng,
+          blazonclr,
+          o,
+          PI / 2.,
+          h,
+          h,
+          filling,
+          oscillating,
+        );
+        poly = cloth.polygon();
+        routes.extend(cloth.render_without_paint());
+        should_fill_window = false;
       }
       WindowShape::SquareCross => {
         poly = vec![
@@ -180,9 +207,11 @@ impl WallWindowParams {
   }
 }
 
-pub fn wall_windows(
+pub fn wall_windows<R: Rng>(
+  rng: &mut R,
   params: &WallWindowParams,
   clr: usize,
+  blazonclr: usize,
   zindex: f32,
   polygon: &Vec<(f32, f32)>,
   ratio: f32,
@@ -242,8 +271,10 @@ pub fn wall_windows(
           };
           let o = lerp_point((xleft, origin.1), (xright, origin.1), m);
           items.extend(params.shape.render(
+            rng,
             o,
             clr,
+            blazonclr,
             params.size,
             zindex,
             ratio,

@@ -1,6 +1,7 @@
 use super::{
   boat::{Boat, BoatGlobals},
-  human::{HoldableObject, Human},
+  fire::Fire,
+  human::Human,
 };
 use crate::{
   algo::{
@@ -26,6 +27,7 @@ pub struct BoatArmy {
   pub xflip: bool,
   pub blazon: Blazon,
   pub humans: Vec<Human>,
+  pub fires: Vec<Fire>,
   pub boat: Boat,
 }
 
@@ -94,10 +96,31 @@ impl BoatArmy {
     } else {
       angle_mirrored_on_x(angle)
     };
-    let humans = positions
-      .iter()
-      .enumerate()
-      .flat_map(|(index, &origin)| {
+    let mut humans = vec![];
+    let mut fires = vec![];
+
+    if ctx.destruction_map.get_weight(origin) > 0.1
+      && boat.with_mast
+      && rng.gen_bool(ctx.fire_proba)
+    {
+      let o = (origin.0, origin.1 - rng.gen_range(2.0..3.0) * size);
+      let rad = rng.gen_range(0.5..1.0) * size;
+      fires.push(Fire::init(rng, 1, o, rad));
+    }
+
+    for (index, &origin) in positions.iter().enumerate() {
+      let destruction = ctx.destruction_map.get_weight(origin);
+      if destruction > 0.5 {
+        if rng.gen_bool(0.2 * ctx.fire_proba) {
+          let rad = destruction * rng.gen_range(0.1..0.3) * size;
+          fires.push(Fire::init(
+            rng,
+            1,
+            (origin.0, origin.1 - 0.2 * size),
+            rad,
+          ));
+        }
+      } else {
         let human = spawn_human(
           rng,
           &SpawnHumanArg {
@@ -109,12 +132,12 @@ impl BoatArmy {
             total,
           },
         );
-        if let Some(human) = &human {
+        if let Some(human) = human {
           human.throw_projectiles(ctx);
+          humans.push(human);
         }
-        human
-      })
-      .collect();
+      }
+    }
 
     Self {
       clr,
@@ -126,10 +149,16 @@ impl BoatArmy {
       blazon,
       boat,
       humans,
+      fires,
     }
   }
 
-  pub fn render<R: Rng>(&self, rng: &mut R, mask: &mut PaintMask) -> Polylines {
+  pub fn render<R: Rng>(
+    &self,
+    rng: &mut R,
+    ctx: &mut GlobalCtx,
+    mask: &mut PaintMask,
+  ) -> Polylines {
     let clr = self.clr;
     let boat = &self.boat;
     let humans = &self.humans;
@@ -139,10 +168,16 @@ impl BoatArmy {
     let halo_humans = 0.8;
     let halo_boat = 1.0;
 
+    // FIRES
+    for fire in self.fires.iter() {
+      let rts = fire.render(ctx, mask);
+      routes.extend(rts);
+    }
+
     // HUMANS FOREGROUND
     let mut human_rts = vec![];
     for front in humans.iter() {
-      let rts = front.render_foreground_only(rng, mask);
+      let rts = front.render_foreground_only(rng, ctx, mask);
       human_rts.extend(rts);
     }
     for (_, rt) in &human_rts {
@@ -157,7 +192,7 @@ impl BoatArmy {
     // HUMANS BACKGROUND
     let mut human_rts = vec![];
     for human in humans.iter() {
-      let rts = human.render_background_only(rng, mask);
+      let rts = human.render_background_only(rng, ctx, mask);
       human_rts.extend(rts);
     }
     for (_, rt) in &human_rts {
@@ -185,10 +220,10 @@ impl<R: Rng> Renderable<R> for BoatArmy {
   fn render(
     &self,
     rng: &mut R,
-    _ctx: &mut GlobalCtx,
+    ctx: &mut GlobalCtx,
     paint: &mut PaintMask,
   ) -> Polylines {
-    self.render(rng, paint)
+    self.render(rng, ctx, paint)
   }
 
   fn zorder(&self) -> f32 {

@@ -68,6 +68,7 @@ pub struct GlobalCtx {
   pub defendersclr: usize,
   pub attackersclr: usize,
   pub fireball_color: usize,
+  pub fire_proba: f64,
 
   pub projectiles: Projectiles,
   pub effects: Effects,
@@ -97,10 +98,8 @@ impl GlobalCtx {
 
     let fireball_color = if rng.gen_bool(0.5) { 0 } else { 1 };
 
-    let castle_on_sea = //false && // FIXME TMP
-    rng.gen_bool(0.2);
-    let no_sea = //true|| // FIXME TMP
-    !castle_on_sea && rng.gen_bool(0.2);
+    let castle_on_sea = rng.gen_bool(0.2);
+    let no_sea = !castle_on_sea && rng.gen_bool(0.2);
 
     let mut night_time = paper == DARK_BLUE_PAPER
       || rng.gen_bool(0.5) && paper == BLACK_PAPER
@@ -177,6 +176,15 @@ impl GlobalCtx {
       rng.gen_range(0.5..0.8) * height
     };
 
+    let fire_proba = (rng.gen_range(-1.0f64..1.0) * rng.gen_range(0.0..1.0)
+      + if specials.contains(&Special::Cyclopes) {
+        1.
+      } else {
+        0.
+      })
+    .max(0.01)
+    .min(0.9);
+
     Self {
       is_sandbox,
       castle_on_sea,
@@ -204,6 +212,7 @@ impl GlobalCtx {
       has_leader_been_picked: false,
       rope_len_base: rng.gen_range(0.0..300.0),
       yhorizon,
+      fire_proba,
     }
   }
 
@@ -305,7 +314,8 @@ fn gen_destruction_map<R: Rng>(
 
   let thres = rng.gen_range(-1.0..1.0);
   let sat = rng.gen_range(1.5..2.0);
-  let fulldestruction = rng.gen_range(-1.0f32..2.0).max(0.0);
+  let fulldestruction =
+    rng.gen_range(-5.0f32..2.0).max(0.0) * rng.gen_range(0.0..1.0);
   let warp = rng.gen_range(0.0..20.0) * rng.gen_range(0.0..1.0);
 
   let w = width as f64;

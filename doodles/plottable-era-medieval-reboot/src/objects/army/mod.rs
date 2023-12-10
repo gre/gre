@@ -58,6 +58,7 @@ pub mod catapult;
 pub mod club;
 pub mod convoywalk;
 pub mod dragonhead;
+pub mod fire;
 pub mod firecamp;
 pub mod flag;
 pub mod flyingdragon;
@@ -76,6 +77,7 @@ pub mod rope;
 pub mod shield;
 pub mod spear;
 pub mod sword;
+pub mod torch;
 pub mod trebuchet;
 pub mod trojanhorse;
 pub mod tunnelstructure;
@@ -328,10 +330,12 @@ impl ArmyOnMountain {
           if let Some(castle) = &mountain.castle {
             if rng.gen_bool(climb_attack_proba) {
               let dy = origin.1 - castle.position.1;
-              if dy < 0.05 * width && rng.gen_bool(0.7) {
-                ctx.projectiles.add_attack(AttackOrigin::Ladder(origin));
-              } else {
-                ctx.projectiles.add_attack(AttackOrigin::Rope(origin, 0));
+              if ctx.projectiles.get_attacks_count() < 5 {
+                if dy < 0.05 * width && rng.gen_bool(0.7) {
+                  ctx.projectiles.add_attack(AttackOrigin::Ladder(origin));
+                } else {
+                  ctx.projectiles.add_attack(AttackOrigin::Rope(origin, 0));
+                }
               }
             }
           }

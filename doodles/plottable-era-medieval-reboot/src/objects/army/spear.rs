@@ -66,6 +66,17 @@ impl Spear {
     }
     routes
   }
+
+  pub fn apply_translation_rotation(&mut self, v: (f32, f32), _rot: f32) {
+    self
+      .routes
+      .iter_mut()
+      .for_each(|(_, route)| *route = route_translate_rotate(route, v, 0.));
+    self
+      .polys
+      .iter_mut()
+      .for_each(|poly| *poly = route_translate_rotate(poly, v, 0.));
+  }
 }
 
 impl<R: Rng> Renderable<R> for Spear {
@@ -80,5 +91,9 @@ impl<R: Rng> Renderable<R> for Spear {
 
   fn zorder(&self) -> f32 {
     self.origin.1
+  }
+
+  fn apply_translation_rotation(&mut self, v: (f32, f32), rot: f32) {
+    self.apply_translation_rotation(v, rot);
   }
 }

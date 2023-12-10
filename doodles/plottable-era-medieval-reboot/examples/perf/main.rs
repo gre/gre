@@ -1,4 +1,5 @@
 use greweb::*;
+use instant::Instant;
 use rand::prelude::*;
 use std::collections::HashMap;
 
@@ -14,6 +15,7 @@ fn main() {
 
   let bs = [0; 32];
   let mut rng = StdRng::from_seed(bs);
+  let mut duration_per_hash = vec![];
 
   let jsons = (0..n)
     .map(|_| {
@@ -25,8 +27,19 @@ fn main() {
         .map(|_i| alphabet[rng.gen_range(0..alphabet.len())])
         .collect();
       let hash = format!("oo{}", chars);
-      let code =
-        render(hash, 210.0, 297.0, 5.0, 0.2, fontdata.clone(), false, true);
+      let before = Instant::now();
+      let code = render(
+        hash.clone(),
+        210.0,
+        297.0,
+        5.0,
+        0.2,
+        fontdata.clone(),
+        false,
+        true,
+      );
+      let elapsed = before.elapsed().as_millis();
+      duration_per_hash.push((hash.clone(), elapsed));
       let start = code.find("data-perf='").unwrap() + 11;
       let end = code[start..].find("'").unwrap() + start;
       let perf = &code[start..end];
@@ -61,6 +74,18 @@ fn main() {
       let acc = values.get_mut(&k).unwrap();
       acc.push(v.clone());
     }
+  }
+
+  duration_per_hash.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap());
+
+  for (hash, duration) in duration_per_hash.iter().take(5) {
+    println!("{} = {} ms", hash, duration);
+  }
+  if duration_per_hash.len() > 5 {
+    println!(
+      "median is {} ms",
+      duration_per_hash[duration_per_hash.len() / 2].1
+    );
   }
 
   let mut avgs: Vec<_> = values

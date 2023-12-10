@@ -11,18 +11,21 @@ pub struct PaintMask {
   pub precision: f32,
   pub width: f32,
   pub height: f32,
-  // TODO we should have wi and hi computed instead of these ?
+  pub wi: usize,
+  pub hi: usize,
 }
 
 impl PaintMask {
   pub fn clone_empty(&self) -> Self {
-    let wi = (self.width / self.precision) as usize;
-    let hi = (self.height / self.precision) as usize;
+    let wi = self.wi;
+    let hi = self.hi;
     Self {
       mask: vec![false; wi * hi],
       width: self.width,
       height: self.height,
       precision: self.precision,
+      wi,
+      hi,
     }
   }
 
@@ -39,6 +42,8 @@ impl PaintMask {
       width,
       height,
       precision,
+      wi,
+      hi,
     };
     for x in 0..wi {
       for y in 0..hi {
@@ -59,22 +64,23 @@ impl PaintMask {
       width,
       height,
       precision,
+      wi,
+      hi,
     }
   }
 
   pub fn is_painted(&self, (x, y): (f32, f32)) -> bool {
     let precision = self.precision;
-    let wi = (self.width / precision) as usize;
-    let hi = (self.height / precision) as usize;
+    let wi = self.wi;
+    let hi = self.hi;
     let xi = ((x / precision) as usize).min(wi - 1);
     let yi = ((y / precision) as usize).min(hi - 1);
     self.mask[xi + yi * wi]
   }
 
   pub fn manhattan_distance(&self) -> Vec<usize> {
-    let precision = self.precision;
-    let width = (self.width / precision) as usize;
-    let height = (self.height / precision) as usize;
+    let width = self.wi;
+    let height = self.hi;
     let mut distances = vec![usize::MAX / 2; self.mask.len()];
     // Forward pass
     for y in 0..height {
@@ -122,8 +128,8 @@ impl PaintMask {
     radius: f32,
   ) {
     let threshold = (radius / self.precision) as usize;
-    let wi = (self.width / self.precision) as usize;
-    let hi = (self.height / self.precision) as usize;
+    let wi = self.wi;
+    let hi = self.hi;
     for y in 0..hi {
       for x in 0..wi {
         let i = x + y * wi;
@@ -140,8 +146,8 @@ impl PaintMask {
       || other.precision != self.precision
     {
       // alternative less efficient way when the sizes are different
-      let wi = (self.width / self.precision) as usize;
-      let hi = (self.height / self.precision) as usize;
+      let wi = self.wi;
+      let hi = self.hi;
       for x in 0..wi {
         let xf = x as f32 * self.precision;
         for y in 0..hi {
@@ -164,10 +170,8 @@ impl PaintMask {
 
   pub fn paint_fn<F: Fn((f32, f32)) -> bool>(&mut self, f: F) {
     let precision = self.precision;
-    let width = self.width;
-    let height = self.height;
-    let wi = (width / precision) as usize;
-    let hi = (height / precision) as usize;
+    let wi = self.wi;
+    let hi = self.hi;
     for x in 0..wi {
       for y in 0..hi {
         let j = x + y * wi;
@@ -210,8 +214,8 @@ impl PaintMask {
     let precision = self.precision;
     let width = self.width;
     let height = self.height;
-    let wi = (width / precision) as usize;
-    let hi = (height / precision) as usize;
+    let wi = self.wi;
+    let hi = self.hi;
 
     let mut minx = width;
     let mut miny = height;
@@ -246,10 +250,8 @@ impl PaintMask {
     f: F,
   ) {
     let precision = self.precision;
-    let width = self.width;
-    let height = self.height;
-    let wi = (width / precision) as usize;
-    let hi = (height / precision) as usize;
+    let wi = self.wi;
+    let hi = self.hi;
     for x in 0..wi {
       let range = f(x as f32 * precision);
       let miny = (range.start.max(0.) / precision) as usize;
@@ -297,11 +299,10 @@ impl PaintMask {
     data: &Vec<u8>,
     datawidth: usize,
   ) {
-    let precision = self.precision;
     let ox = (topleft.0 / self.precision).max(0.0) as usize;
     let oy = (topleft.1 / self.precision).max(0.0) as usize;
-    let wi = (self.width / precision) as usize;
-    let hi = (self.height / precision) as usize;
+    let wi = self.wi;
+    let hi = self.hi;
     for (i, &v) in data.iter().enumerate() {
       if v > 0 {
         let dx = i % datawidth;

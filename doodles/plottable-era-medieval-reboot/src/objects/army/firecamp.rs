@@ -10,6 +10,8 @@ use crate::{
 use noise::*;
 use rand::prelude::*;
 
+use super::fire::Fire;
+
 /**
  * LICENSE CC BY-NC-ND 4.0
  * Author: greweb – 2023 – Plottable Era: (II) Medieval
@@ -19,6 +21,7 @@ pub struct Firecamp {
   pub woods: Polylines,
   pub smokes: Polylines,
   pub origin: (f32, f32),
+  pub fire: Option<Fire>,
 }
 
 impl Firecamp {
@@ -43,6 +46,13 @@ impl Firecamp {
       woods.push((clr, grow_as_rectangle(a, b, 0.2 * size)));
     }
     woods.shuffle(rng);
+
+    // Fire
+    let fire = if rng.gen_bool(0.5) {
+      Some(Fire::init(rng, 1, (x, y - 0.3 * size), size))
+    } else {
+      None
+    };
 
     // Smoke
     let mut smokes = vec![];
@@ -82,6 +92,7 @@ impl Firecamp {
       woods,
       smokes,
       origin,
+      fire,
     }
   }
 
@@ -92,6 +103,12 @@ impl Firecamp {
     paint: &mut PaintMask,
   ) -> Polylines {
     let mut routes = vec![];
+
+    if let Some(fire) = &self.fire {
+      let rts = fire.render(ctx, paint);
+      routes.extend(rts);
+    }
+
     for wood in &self.woods {
       let rts = regular_clip(&vec![wood.clone()], paint);
       paint.paint_polygon(&wood.1);

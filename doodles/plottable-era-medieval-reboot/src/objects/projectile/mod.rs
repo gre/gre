@@ -115,6 +115,10 @@ impl Projectiles {
     }
   }
 
+  pub fn get_attacks_count(&self) -> usize {
+    self.attacks.len()
+  }
+
   pub fn add_attack(&mut self, origin: AttackOrigin) {
     self.attacks.push(origin);
   }
@@ -151,8 +155,6 @@ impl Projectiles {
     }
     let mut defs = vec![];
     for origin in self.attacks.drain(..) {
-      // TODO: we could pick a less random attack & favor a range (min..max) which depends on each kind of attack too
-      // also arrows want to hit on humans, not on buildings
       if defs.len() == 0 {
         defs = self.defenses.clone();
         defs.shuffle(rng);
@@ -307,10 +309,10 @@ impl Projectiles {
     }
 
     for rope in self.ropes.iter() {
-      routes.extend(rope.render(rng, &mut removing_area));
+      routes.extend(rope.render(rng, ctx, &mut removing_area));
     }
     for ladder in self.ladders.iter() {
-      routes.extend(ladder.render(rng, &mut removing_area));
+      routes.extend(ladder.render(rng, ctx, &mut removing_area));
     }
 
     routes = regular_clip(&routes, preserve_area);

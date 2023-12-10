@@ -128,7 +128,7 @@ fn make_bartizan<R: Rng>(
   if let Some(floor) = wall.roof_base() {
     params.floor = floor;
   }
-  let roof = Roof::init(&params, &roofparams);
+  let roof = Roof::init(rng, &params, &roofparams);
 
   items.extend(wall.render());
   items.extend(roof.render());

@@ -31,14 +31,12 @@ pub fn sandbox<R: Rng>(
   width: f32,
   height: f32,
 ) {
-  match 4 {
-    //rng.gen_range(0..6) {
-    0 => sandbox_catapult(rng, ctx, paint, routes, width, height),
+  match rng.gen_range(0..5) {
+    0 => sandbox_trebuchet(rng, ctx, paint, routes, width, height),
     1 => sandbox_dragons(rng, ctx, paint, routes, width, height),
-    2 => sandbox_flagmen(rng, ctx, paint, routes, width, height),
+    2 => sandbox_men(rng, ctx, paint, routes, width, height),
     3 => sandbox_boat(rng, ctx, paint, routes, width, height),
-    4 => sandbox_cannon(rng, ctx, paint, routes, width, height),
-    5 => sandbox_trebuchet(rng, ctx, paint, routes, width, height),
+    4 => sandbox_cannon_catapult(rng, ctx, paint, routes, width, height),
     _ => {}
   }
 }
@@ -55,7 +53,7 @@ fn sandbox_dragons<R: Rng>(
   routes.extend(dragons(rng, paint, width, height, 0.0, 0.0, n));
 }
 
-fn sandbox_flagmen<R: Rng>(
+fn sandbox_men<R: Rng>(
   rng: &mut R,
   ctx: &mut GlobalCtx,
   paint: &mut PaintMask,
@@ -67,18 +65,18 @@ fn sandbox_flagmen<R: Rng>(
   let s = rng.gen_range(8.0..20.0);
   let clrmax = rng.gen_range(1..4);
   let delta = rng.gen_range(1..3);
+  let obj = if rng.gen_bool(0.5) {
+    Some(HoldableObject::Flag)
+  } else {
+    Some(HoldableObject::Torch)
+  };
   for _ in 0..rng.gen_range(100..500) {
-    let ang = rng.gen_range(-3.0..3.0)
-      * rng.gen_range(0.0..1.0)
-      * rng.gen_range(0.0..1.0)
-      * rng.gen_range(0.0..1.0)
-      * rng.gen_range(0.0..1.0);
     let o = (
       rng.gen_range(0.1..0.9) * width,
       rng.gen_range(0.1..0.95) * height,
     );
     let xflip = rng.gen_bool(0.5);
-    let lefthand = Some(HoldableObject::Flag);
+    let lefthand = obj;
     let righthand: Option<HoldableObject> = None;
     let head = HeadShape::NAKED;
     let posture = HumanPosture::from_holding(rng, xflip, lefthand, righthand);
@@ -210,7 +208,7 @@ fn sandbox_trebuchet<R: Rng>(
   routes.extend(rts.clone());
 }
 
-fn sandbox_catapult<R: Rng>(
+pub fn sandbox_cannon_catapult<R: Rng>(
   rng: &mut R,
   ctx: &mut GlobalCtx,
   paint: &mut PaintMask,
@@ -218,56 +216,59 @@ fn sandbox_catapult<R: Rng>(
   width: f32,
   height: f32,
 ) {
+  let mut container = Container::new();
   let perlin = Perlin::new(rng.gen());
-  let mut container = Container::new();
-  let general_s = rng.gen_range(0.08..0.12) * width;
-  let xflip = rng.gen_bool(0.5);
+  let general_s =
+    (0.01 + rng.gen_range(0.00..0.01) * rng.gen_range(0.0..1.0)) * width;
   let f = rng.gen_range(1.0..4.0);
-  let amp = rng.gen_range(0.0..2.0);
-  for _ in 0..rng.gen_range(50..200) {
+  let amp = rng.gen_range(0.0..1.0);
+  let f2 = rng.gen_range(0.0..20.0);
+  let f3 = rng.gen_range(0.0..20.0);
+  let threshold = rng.gen_range(-0.5..0.5);
+  for _ in 0..rng.gen_range(100..500) {
     let o = (
-      rng.gen_range(0.15..0.85) * width,
-      rng.gen_range(0.2..0.9) * height,
+      rng.gen_range(0.1..0.9) * width,
+      rng.gen_range(0.1..0.9) * height,
     );
-    let progress = o.1 / height;
+    let xflip = perlin.get([
+      2.0 * o.0 as f64 / width as f64,
+      2.0 * o.1 as f64 / width as f64,
+    ]) > 0.;
+    let size = rng.gen_range(1.0..2.0) * general_s;
+    let clr = ((0.5
+      + 0.5
+        * perlin.get([
+          f2 * o.0 as f64 / width as f64,
+          f2 * o.1 as f64 / width as f64,
+          2.4213,
+        ]))
+      * 3.0) as usize;
     let angle = amp
-      * perlin
-        .get([f * o.0 as f64 / width as f64, f * o.1 as f64 / width as f64])
-        as f32;
-    let size = rng.gen_range(1.0..2.0) * general_s;
-    let clr = rng.gen_range(0..3);
-    let trebuchet = Catapult::init(rng, clr, o, size, angle, xflip, progress);
-    container.add(trebuchet);
-  }
+      * perlin.get([
+        5. / 7.,
+        f * o.0 as f64 / width as f64,
+        f * o.1 as f64 / width as f64,
+      ]) as f32;
 
-  let rts = container.render_with_extra_halo(rng, ctx, paint, 2.0);
-  routes.extend(rts.clone());
-}
-
-pub fn sandbox_cannon<R: Rng>(
-  rng: &mut R,
-  ctx: &mut GlobalCtx,
-  paint: &mut PaintMask,
-  routes: &mut Polylines,
-  width: f32,
-  height: f32,
-) {
-  let mut container = Container::new();
-  let general_s = rng.gen_range(0.02..0.04) * width;
-  for _ in 0..rng.gen_range(10..100) {
-    let xflip = rng.gen_bool(0.5);
-    let o = (
-      rng.gen_range(0.15..0.85) * width,
-      rng.gen_range(0.2..0.9) * height,
-    );
-    let size = rng.gen_range(1.0..2.0) * general_s;
-    let clr = rng.gen_range(0..3);
-    let angle = rng.gen_range(-0.5..0.5)
-      * rng.gen_range(0.0..1.0)
-      * rng.gen_range(0.0..1.0);
-    let obj = Cannon::init(rng, clr, o, size, angle, xflip);
-    obj.throw_projectiles(ctx);
-    container.add(obj);
+    if perlin.get([
+      f3 * o.0 as f64 / width as f64,
+      1. / 0.176,
+      f3 * o.1 as f64 / width as f64,
+    ]) > threshold
+    {
+      let obj = Cannon::init(rng, clr, o, size, angle, xflip);
+      container.add(obj);
+    } else {
+      let progress = 0.5
+        + 0.5
+          * perlin.get([
+            f * o.0 as f64 / width as f64,
+            f * o.1 as f64 / width as f64,
+            1. / 9.,
+          ]) as f32;
+      let obj = Catapult::init(rng, clr, o, 3. * size, angle, xflip, progress);
+      container.add(obj);
+    }
   }
 
   let rts = container.render_with_extra_halo(rng, ctx, paint, 1.0);

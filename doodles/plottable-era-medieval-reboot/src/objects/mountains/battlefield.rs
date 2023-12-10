@@ -137,7 +137,6 @@ impl BattlefieldArea {
       )
     };
 
-    // TODO shield formation case
     // TODO more crazy cases
 
     let s0 = rng.gen();
@@ -240,6 +239,10 @@ impl BattlefieldArea {
             Blazon::Falcon => Some(HoldableObject::Club),
             Blazon::Dragon => Some(HoldableObject::Axe),
           };
+
+          if ctx.night_time && rng.gen_bool(0.05) {
+            rightobj = Some(HoldableObject::Torch);
+          }
           if rng.gen_bool(0.05) {
             rightobj = Some(HoldableObject::Flag);
           }
@@ -345,7 +348,6 @@ impl BattlefieldArea {
           area = Area::Empty;
         }
 
-        // TODO fire in middle of firecamp with people around it?
         if sum > 0.8 * dscale && noise100alt > 0.0 && noise25 > 0.4 {
           area = Area::Hut;
         }
