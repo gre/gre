@@ -107,19 +107,35 @@ impl BattlefieldArea {
 
     let global_dist_delta = rng.gen_range(-20.0..20.0);
     let noise1_dist_amp = rng.gen_range(5.0..30.0);
-
     let attacker_cutoff = rng.gen_range(-0.5..0.5);
 
-    let range_defenders = 0.0..rng.gen_range(0.0..0.2);
-    let range_attackers = rng.gen_range(0.1..0.3)
-      ..0.3
-        + rng.gen_range(-1.0f64..1.0).max(0.0)
-          * rng.gen_range(0.0..1.0)
-          * rng.gen_range(0.0..1.0);
-    let range_archers =
-      rng.gen_range(-0.05..0.0) + 0.5..0.55 + rng.gen_range(0.0..0.1);
-    let range_distance_machines =
-      rng.gen_range(-0.2..0.0) + 0.8..0.9 + rng.gen_range(0.0..0.2);
+    /////// Ranges
+
+    let mut v = 0.0;
+
+    v += rng.gen_range(0.0..0.1) * rng.gen_range(0.0..1.0);
+
+    let range_defenders = v..v + rng.gen_range(0.0..0.3);
+
+    v += rng.gen_range(0.0..0.3);
+    let s = 0.3
+      + rng.gen_range(-1.0f64..1.0).max(0.0)
+        * rng.gen_range(0.0..1.0)
+        * rng.gen_range(0.0..1.0);
+
+    let range_attackers = v..v + s;
+
+    v += rng.gen_range(0.3..1.0) * s;
+    let s = rng.gen_range(0.0..0.3) * rng.gen_range(0.0..1.0);
+
+    let range_archers = v..v + s;
+
+    v += s * rng.gen_range(-0.2..1.5);
+    let s = rng.gen_range(0.0..0.3) * rng.gen_range(0.0..1.0);
+
+    let range_distance_machines = v..v + s;
+
+    ////////
 
     let grid1f = rng.gen_range(3.0..10.0);
     let gridoffx = rng.gen_range(0.0..1.0);

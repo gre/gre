@@ -16,7 +16,7 @@ use crate::{
     },
     shapes::{arc, circle_route, spiral_optimized_with_initial_angle},
   },
-  objects::castle::levels::SpawnableFire,
+  objects::{castle::levels::SpawnableFire, mountains::Moat},
 };
 use rand::prelude::*;
 use std::f32::consts::PI;
@@ -28,8 +28,7 @@ use std::f32::consts::PI;
 
 pub struct WallParams {
   pub with_door: Option<(f32, f32)>,
-  pub with_left_moat: Option<((f32, f32), (f32, f32))>,
-  pub with_right_moat: Option<((f32, f32), (f32, f32))>,
+  pub moats: Vec<Moat>,
   pub fill_to_lowest_y_allowed: bool,
   pub push_left_down: f32,
   pub push_right_down: f32,
@@ -43,8 +42,7 @@ impl WallParams {
       push_left_down: 0.0,
       push_right_down: 0.0,
       with_door: None,
-      with_left_moat: None,
-      with_right_moat: None,
+      moats: vec![],
     }
   }
 }
@@ -185,28 +183,12 @@ impl Wall {
       items.push(door(rng, clr, zorder + 0.2, pos, y1, w, h, scale, closing));
     }
 
-    if let Some((p1, p2)) = wallparams.with_left_moat {
+    for m in &wallparams.moats {
+      let p1 = m.from;
+      let p2 = m.to;
+      let closing = m.closing;
       let ropeh = (h * rng.gen_range(0.5..0.7)).min(2. * (p2.0 - p1.0).abs());
       let rope_top_p = (p1.0, p1.1 - ropeh);
-      let closing =
-        rng.gen_range(-0.5f32..1.0).max(0.0) * rng.gen_range(0.0..1.0);
-      items.push(drawbridge(
-        rng,
-        clr,
-        zorder + 0.2,
-        rope_top_p,
-        p1,
-        p2,
-        scale,
-        closing,
-      ));
-    }
-
-    if let Some((p1, p2)) = wallparams.with_right_moat {
-      let ropeh = (h * rng.gen_range(0.5..0.7)).min(2. * (p2.0 - p1.0).abs());
-      let rope_top_p = (p1.0, p1.1 - ropeh);
-      let closing =
-        rng.gen_range(-0.5f32..1.0).max(0.0) * rng.gen_range(0.0..1.0);
       items.push(drawbridge(
         rng,
         clr,

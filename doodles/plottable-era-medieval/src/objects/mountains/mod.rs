@@ -26,12 +26,19 @@ pub mod wall;
  */
 
 #[derive(Clone)]
+pub struct Moat {
+  pub from: (f32, f32),
+  pub to: (f32, f32),
+  pub closing: f32,
+}
+
+#[derive(Clone)]
 pub struct CastleGrounding {
   // pub ridge: Vec<(f32, f32)>,
   pub position: (f32, f32),
   pub width: f32,
   // (from,to) positions of the path to climb possible moats (on left and/or right of castle)
-  pub moats: Vec<((f32, f32), (f32, f32))>,
+  pub moats: Vec<Moat>,
   pub main_door_pos: Option<(f32, f32)>,
   pub scale: f32,
   pub is_on_water: bool,
@@ -417,8 +424,13 @@ impl MountainsV2 {
                 1.0,
                 3,
               ));
-
-              moats.push((fromp, top));
+              let closing =
+                rng.gen_range(-0.5f32..1.0).max(0.0) * rng.gen_range(0.0..1.0);
+              moats.push(Moat {
+                from: fromp,
+                to: top,
+                closing,
+              });
             }
           }
 

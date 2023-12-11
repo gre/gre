@@ -316,6 +316,8 @@ fn sandbox_convoys<R: Rng>(
 
     routes.push((2, path.clone()));
 
+    let xflip = rng.gen_bool(0.5);
+
     make_random_convoy(
       rng,
       &mut container,
@@ -325,6 +327,7 @@ fn sandbox_convoys<R: Rng>(
       blazonclr,
       scale,
       &path,
+      xflip,
     );
 
     y += rng.gen_range(0.04..0.09) * height;

@@ -182,7 +182,7 @@ impl ArmyOnMountain {
             MountainWall::init(ctx, rng, blazonclr, mainclr, &path, baseh);
           renderables.extend(wall.container);
         }
-      } else {
+      } else if rng.gen_bool(0.5) {
         // we use this path to make a convoy. but we need to check first if there are room for it.
         let len = path.len();
         let checks = (rng.gen_range(4..20)).min(len);
@@ -192,7 +192,8 @@ impl ArmyOnMountain {
           let j = i * (len / checks);
           let (x, y) = path[j];
           let cell = mountains.battlefield.get(x, y);
-          if !matches!(cell, Area::Empty) {
+          if !(matches!(cell, Area::Empty) || matches!(cell, Area::Defender(_)))
+          {
             is_valid = false;
             break;
           }
@@ -200,6 +201,7 @@ impl ArmyOnMountain {
 
         if is_valid {
           let size = rng.gen_range(0.04..0.07) * width;
+          let xflip = rng.gen_bool(0.5);
           make_random_convoy(
             rng,
             &mut renderables,
@@ -209,8 +211,66 @@ impl ArmyOnMountain {
             ctx.defendersclr,
             size,
             &path,
+            xflip,
           );
         }
+      }
+    }
+
+    if let Some(castle) = &mountain.castle {
+      // it's the castle mountain
+      // we will try to also make a convoy entering the castle from a side. if it's possible
+      for m in &castle.moats {
+        if m.closing > 0.05 {
+          continue;
+        }
+
+        let cell = mountains.battlefield.get(m.to.0, m.to.1);
+        if !(matches!(cell, Area::Empty) || matches!(cell, Area::Defender(_))) {
+          continue;
+        }
+
+        let mut path = vec![m.from, m.to];
+        let xlast = m.to.0 + rng.gen_range(1.0..8.0) * (m.to.0 + m.from.0);
+        let ifrom = mountain.lookup_ridge_index(m.to.0);
+        let ilast = mountain.lookup_ridge_index(xlast);
+        if ifrom == ilast {
+          continue;
+        }
+        let ifrom = if ifrom < ilast { ifrom + 1 } else { ifrom - 1 };
+        if ifrom == ilast {
+          continue;
+        }
+        let mut i = ifrom;
+        while i != ilast {
+          let p = mountain.ridge[i];
+          /*
+          let cell = mountains.battlefield.get(p.0, p.1);
+          if !(matches!(cell, Area::Empty) || matches!(cell, Area::Defender(_)))
+          {
+            break;
+          }
+          */
+          path.push(p);
+          if ifrom < ilast {
+            i += 1;
+          } else {
+            i -= 1;
+          }
+        }
+
+        let size = rng.gen_range(0.03..0.06) * width;
+        make_random_convoy(
+          rng,
+          &mut renderables,
+          &mut exclusion_mask,
+          ctx.defenders,
+          mainclr,
+          ctx.defendersclr,
+          size,
+          &path,
+          ifrom < ilast,
+        );
       }
     }
 
@@ -815,6 +875,7 @@ pub fn make_random_convoy<R: Rng>(
   blazonclr: usize,
   size: f32,
   path: &Vec<(f32, f32)>,
+  xflip: bool,
 ) {
   let lookup = PathLookup::init(path.clone());
   let (x, y) = lookup.lookup_percentage(rng.gen_range(0.2..0.8));
@@ -822,7 +883,6 @@ pub fn make_random_convoy<R: Rng>(
   let convoyp = (x, y - 0.3 * size);
   let totalw = (path[path.len() - 1].0 - path[0].0).abs();
 
-  let xflip = rng.gen_bool(0.5);
   let is_relic = rng.gen_bool(0.5);
   let is_human_holders = is_relic && rng.gen_bool(0.7) || rng.gen_bool(0.03);
   let monk_proba = if is_relic {
@@ -860,11 +920,11 @@ pub fn make_random_convoy<R: Rng>(
     let headshape = HeadShape::NAKED;
     let posture = HumanPosture::sit(rng, slope);
     let p = (convoyp.0, convoyp.1 + 0.15 * size);
-    let human = Human::init(
+    let prisoner = Human::init(
       rng, p, size, xflip, blazon, mainclr, blazonclr, posture, headshape,
       lefthand, righthand,
     );
-    renderables.add(human);
+    renderables.add(prisoner);
   }
   let area = VCircle::new(x, y, 4.0 * size);
   exclusion_mask.paint_circle(area.x, area.y, area.r);

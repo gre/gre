@@ -191,7 +191,7 @@ pub fn binary_cut_and_slide(
     });
 
     for poly in &item.polygons {
-      let out = cut_polygon(&poly, a, b);
+      let out: Vec<Vec<(f32, f32)>> = cut_polygon(&poly, a, b);
       for p in out {
         let mut c = (0., 0.);
         for point in p.iter() {
@@ -230,7 +230,8 @@ pub fn binary_cut_and_slide(
       }
     }
 
-    // TODO apply translation to foreign_id, but we will need a foreign_pos (and keep track of rotations too?)
+    // TODO make 2 render items (? also test if we need to alter the zorder depending on function)
+
     items.push(RenderItem {
       routes,
       polygons,

@@ -197,7 +197,7 @@ fn apply_destruction<R: Rng>(
 
   let scale = castleprops.grounding.scale;
   let pushbackbase =
-    destruction * 0.2 * rng.gen_range(0.0..scale) * rng.gen_range(0.0..1.0);
+    destruction * 0.1 * rng.gen_range(0.0..scale) * rng.gen_range(0.0..1.0);
   let pushbackrotbase = rng.gen_range(-1.0..1.0) * rng.gen_range(0.0..1.0);
   let pushbackrotmix = rng.gen_range(0.1..0.9);
   let sliding = scale * rng.gen_range(0.5..2.0);
@@ -513,13 +513,7 @@ fn rec_build<R: Rng>(
         let is_main_floor = l == 0 && rec_level == 0;
         if is_main_floor {
           wallparams.with_door = castleprops.grounding.main_door_pos;
-          for &m in castleprops.grounding.moats.iter() {
-            if m.0 .0 < origin.0 {
-              wallparams.with_left_moat = Some(m);
-            } else {
-              wallparams.with_right_moat = Some(m);
-            }
-          }
+          wallparams.moats = castleprops.grounding.moats.clone();
         }
 
         Box::new(Wall::init(rng, paint, &params, &wallparams))
@@ -647,11 +641,9 @@ fn rec_build<R: Rng>(
     }
   }
 
-  items.sort();
-
-  // items
-
   apply_destruction(&mut items, rng, ctx, castleprops);
+
+  items.sort();
 
   items
 }
@@ -759,36 +751,3 @@ pub fn build_castle<R: Rng>(
 
   routes
 }
-
-/*
-fn building_ropes<R: Rng>(
-  rng: &mut R,
-  paint: &mut PaintMask,
-  polys: &Vec<Vec<(f32, f32)>>,
-  count: usize,
-  clr: usize,
-  width: f32,
-  height: f32,
-) -> Vec<(usize, Vec<(f32, f32)>)> {
-  let weights = polys.iter().map(|_p| rng.gen_range(0.0..1.0)).collect();
-  let mut pts = polys
-    .iter()
-    .map(|p| poly_centroid_weighted(p, &weights))
-    .collect::<Vec<_>>();
-  pts.shuffle(rng);
-  pts.truncate(count);
-  let mut ropes = vec![];
-  for p in pts {
-    let rt = vec![
-      p,
-      (
-        p.0 + 2.0 * rng.gen_range(-1.0..1.0) * width,
-        p.1 + height + rng.gen_range(0.0..50.0),
-      ),
-    ];
-
-    ropes.push((clr, rt));
-  }
-  regular_clip(&ropes, paint)
-}
-*/
