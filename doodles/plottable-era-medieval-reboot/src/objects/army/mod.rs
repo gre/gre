@@ -226,8 +226,6 @@ impl ArmyOnMountain {
           0
         };
 
-    // TODO when it's near the castle, we need to have opportunity to spawn climbing people, but that will need the castle to be solved first..
-
     let catapult_instead_of_cannon_proba = rng.gen_range(0.0..1.0);
     let climb_attack_proba =
       rng.gen_range(-1.0f64..1.0).max(0.0001) * rng.gen_range(0.0..1.0);
@@ -261,9 +259,6 @@ impl ArmyOnMountain {
 
       let area = mountains.battlefield.get(x, y);
       let destruction = ctx.destruction_map.get_weight((x, y));
-      // TODO take destruction into account
-
-      // TODO work on convoy location
 
       let origin = (x, y);
       let mut angle = mountain.slope_for_x(x);
@@ -320,47 +315,71 @@ impl ArmyOnMountain {
 
           ctx.projectiles.add_defense(DefenseTarget::Human(origin));
 
-          let posture = HumanPosture::from_holding(
-            rng,
-            xflip,
-            props.leftobj,
-            props.rightobj,
-          );
+          let decorationratio = 0.3;
+          let foot_offset = 1.0;
+          if destruction > 0.5 {
+            if destruction < 1.0 && rng.gen_bool(1. - destruction as f64) {
+              let horse = Horse::init(
+                origin,
+                size,
+                angle,
+                xflip,
+                mainclr,
+                blazonclr,
+                decorationratio,
+                foot_offset,
+              );
+              renderables.add(horse);
+            }
 
-          let human = Human::init(
-            rng,
-            origin,
-            size,
-            xflip,
-            blazon,
-            mainclr,
-            blazonclr,
-            posture,
-            props.headshape,
-            props.leftobj,
-            props.rightobj,
-          );
+            for obj in vec![props.leftobj, props.rightobj].iter().flatten() {
+              if rng.gen_bool(0.5) {
+                if let Some(o) = obj.as_destructed_renderable(
+                  rng, origin, size, mainclr, blazonclr, blazon,
+                ) {
+                  renderables.push(o);
+                }
+              }
+            }
+          } else {
+            let posture = HumanPosture::from_holding(
+              rng,
+              xflip,
+              props.leftobj,
+              props.rightobj,
+            );
 
-          // TODO in destruction case, we will only have the objects, possibly the horse
-
-          if props.on_horse {
-            let decorationratio = 0.3;
-            let foot_offset = 1.0;
-            let rider = Rider::init(
+            let human = Human::init(
               rng,
               origin,
               size,
-              angle,
               xflip,
+              blazon,
               mainclr,
               blazonclr,
-              decorationratio,
-              foot_offset,
-              human,
+              posture,
+              props.headshape,
+              props.leftobj,
+              props.rightobj,
             );
-            renderables.add(rider);
-          } else {
-            renderables.add(human);
+
+            if props.on_horse {
+              let rider = Rider::init(
+                rng,
+                origin,
+                size,
+                angle,
+                xflip,
+                mainclr,
+                blazonclr,
+                decorationratio,
+                foot_offset,
+                human,
+              );
+              renderables.add(rider);
+            } else {
+              renderables.add(human);
+            }
           }
 
           let proximity = props.proximity * size;
@@ -390,29 +409,6 @@ impl ArmyOnMountain {
           let size = if is_leader { 0.06 } else { 0.04 } * width;
           let xflip = props.oriented_left;
 
-          let posture = HumanPosture::from_holding(
-            rng,
-            xflip,
-            props.leftobj,
-            props.rightobj,
-          );
-
-          let human = Human::init(
-            rng,
-            origin,
-            size,
-            xflip,
-            blazon,
-            mainclr,
-            blazonclr,
-            posture,
-            props.headshape,
-            props.leftobj,
-            props.rightobj,
-          );
-
-          // TODO in destruction case, we will only have the objects, possibly the horse
-
           let decorationratio = 0.3;
           let foot_offset = 1.0;
           if destruction > 0.5 {
@@ -440,6 +436,27 @@ impl ArmyOnMountain {
               }
             }
           } else {
+            let posture = HumanPosture::from_holding(
+              rng,
+              xflip,
+              props.leftobj,
+              props.rightobj,
+            );
+
+            let human = Human::init(
+              rng,
+              origin,
+              size,
+              xflip,
+              blazon,
+              mainclr,
+              blazonclr,
+              posture,
+              props.headshape,
+              props.leftobj,
+              props.rightobj,
+            );
+
             if !mountain.is_behind {
               human.throw_projectiles(ctx);
             }
@@ -512,7 +529,9 @@ impl ArmyOnMountain {
         }
 
         Area::Cyclope => {
-          // TODO only if visible
+          if x < 0.1 * width || x > 0.9 * width {
+            continue;
+          }
           let size = rng.gen_range(0.1..0.2) * width;
           let xflip = rng.gen_bool(0.5);
           let lasering = rng.gen_bool(0.5);
@@ -801,12 +820,13 @@ pub fn make_random_convoy<R: Rng>(
   let (x, y) = lookup.lookup_percentage(rng.gen_range(0.2..0.8));
   let filling = rng.gen_range(1.5..2.5);
   let convoyp = (x, y - 0.3 * size);
+  let totalw = (path[path.len() - 1].0 - path[0].0).abs();
 
   let xflip = rng.gen_bool(0.5);
   let is_relic = rng.gen_bool(0.5);
-  let is_human_holders = is_relic && rng.gen_bool(0.5) || rng.gen_bool(0.03);
+  let is_human_holders = is_relic && rng.gen_bool(0.7) || rng.gen_bool(0.03);
   let monk_proba = if is_relic {
-    rng.gen_range(0.5..1.0)
+    rng.gen_range(0.6..1.0)
   } else {
     rng.gen_range(0.0..0.3)
   };
@@ -865,8 +885,12 @@ pub fn make_random_convoy<R: Rng>(
         v += 2. * minincr;
       }
       let p = lookup.lookup_percentage(v);
-      // TODO monk probability to be near the relic
-      let is_monk = rng.gen_bool(monk_proba);
+
+      let distfactor = (1.0 - 3.0 * (p.1 - convoyp.1).abs() / totalw)
+        .max(0.01)
+        .min(0.99) as f64;
+
+      let is_monk = rng.gen_bool(monk_proba * distfactor);
       if is_monk {
         let monk = Monk::init(rng, p, size, 0.0, xflip, 0, false);
         renderables.add(monk);

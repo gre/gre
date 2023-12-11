@@ -240,7 +240,6 @@ impl PaintMask {
     let mut miny = height;
     let mut maxx = 0.0f32;
     let mut maxy = 0.0f32;
-    // TODO we just need to calculate the boundaries. there are ways to iter more faster without having to check all cells
     for x in 0..wi {
       for y in 0..hi {
         if self.mask[x + y * wi] {

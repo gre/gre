@@ -98,13 +98,7 @@ impl<R: Rng> MountainWall<R> {
         let door = ChineseDoor::init(rng, clr, origin, w, h, 0.);
         container.add(door);
       }
-      // TODO work on this
-      /*
-      else if entrance_door_range.contains(&gap) {
-        let door = EntranceDoor::init(rng, clr, a, b, h);
-        container.add(door);
-      }
-      */
+
       parts.push(all[..i].to_vec());
       parts.push(all[j..].to_vec());
     } else {
@@ -113,7 +107,6 @@ impl<R: Rng> MountainWall<R> {
 
     for part in parts {
       let l = part.len();
-      // TODO opportunity to make an entrance on middle.
       for (i, pos) in part.iter().enumerate() {
         let extremity = i == 0 || i == l - 1;
         let dy = if extremity { -0.4 } else { 0.0 };
@@ -154,73 +147,3 @@ impl<R: Rng> MountainWall<R> {
     Self { container }
   }
 }
-
-/*
-struct EntranceDoor {
-  pub origin: (f32, f32),
-  pub size: f32,
-  pub clr: usize,
-  pub a: (f32, f32),
-  pub b: (f32, f32),
-  pub y: f32,
-}
-impl EntranceDoor {
-  pub fn init<R: Rng>(
-    rng: &mut R,
-    clr: usize,
-    a: (f32, f32),
-    b: (f32, f32),
-    h: f32,
-  ) -> Self {
-    let x1 = a.0;
-    let x2 = b.0;
-    let y = a.1.max(b.1) + 0.5;
-    let size = 0.5 * (x2 - x1).abs();
-    Self {
-      origin: (x1, y),
-      size,
-      clr,
-      a,
-      b,
-      y,
-    }
-  }
-}
-impl<R: Rng> Renderable<R> for EntranceDoor {
-  fn render(&self, _rng: &mut R, _ctx: &mut crate::global::GlobalCtx, paint: &mut PaintMask) -> Polylines {
-    let mut routes = vec![];
-    let origin = self.origin;
-    let size = self.size;
-    let clr = self.clr;
-    let a = self.a;
-    let b = self.b;
-    let y = self.y;
-    let h = 1.4 * size;
-    let w = 0.2 * size;
-    let sh = 0.1 * h;
-
-    for o in vec![a, b] {
-      let mut oy = o.1;
-      while oy > y - h - sh {
-        let door = vec![
-          (o.0 - w, oy),
-          (o.0 - w, oy - sh),
-          (o.0 + w, oy - sh),
-          (o.0 + w, oy),
-        ];
-        paint.paint_polygon(&door);
-        routes.push((clr, door.clone()));
-        oy -= sh;
-      }
-    }
-
-    //paint.paint_polygon(&door);
-    //paint.paint_polyline(&door, 0.5);
-
-    routes
-  }
-  fn yorder(&self) -> f32 {
-    self.origin.1
-  }
-}
-*/

@@ -37,14 +37,15 @@ pub fn sandbox<R: Rng>(
   width: f32,
   height: f32,
 ) {
-  match rng.gen_range(0..7) {
-    0 => sandbox_trebuchet(rng, ctx, paint, routes, width, height),
-    1 => sandbox_dragons(rng, ctx, paint, routes, width, height),
-    2 => sandbox_men(rng, ctx, paint, routes, width, height),
-    3 => sandbox_boat(rng, ctx, paint, routes, width, height),
-    4 => sandbox_cannon_catapult(rng, ctx, paint, routes, width, height),
-    5 => sandbox_animals(rng, ctx, paint, routes, width, height),
-    6 => sandbox_convoys(rng, ctx, paint, routes, width, height),
+  let i = (rng.gen_range(0.0..7.0) * rng.gen_range(0.5..1.0)) as usize;
+  match i {
+    0 => sandbox_dragons(rng, ctx, paint, routes, width, height),
+    1 => sandbox_convoys(rng, ctx, paint, routes, width, height),
+    2 => sandbox_animals(rng, ctx, paint, routes, width, height),
+    3 => sandbox_trebuchet(rng, ctx, paint, routes, width, height),
+    4 => sandbox_men(rng, ctx, paint, routes, width, height),
+    5 => sandbox_boat(rng, ctx, paint, routes, width, height),
+    6 => sandbox_cannon_catapult(rng, ctx, paint, routes, width, height),
     _ => {}
   }
 }
@@ -310,7 +311,7 @@ fn sandbox_convoys<R: Rng>(
 
     let mainclr = 0;
     let blazonclr = 2;
-    let blazon = Blazon::Dragon;
+    let blazon = Blazon::rand(rng);
     let scale = 0.05 * width;
 
     routes.push((2, path.clone()));

@@ -27,8 +27,6 @@ pub trait Renderable<R: Rng> {
   fn apply_translation_rotation(&mut self, _v: (f32, f32), _rot: f32) {}
 }
 
-// FIXME can a Renderable be an implicit Container? like it wants to emit sub renderable... because we want the human shields to be ordered separately.
-
 struct RenderableYOrd<R: Rng> {
   inner: Box<dyn Renderable<R>>,
 }

@@ -384,7 +384,6 @@ impl Human {
       routes.extend(torch.render(ctx, mask));
     }
     routes.extend(regular_clip(&self.weapon_routes, mask));
-    // TODO aren't we supposed to clip this? also to paint the mask actually?!
     self.rendering_pass(rng, mask, &routes)
   }
 

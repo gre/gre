@@ -134,8 +134,6 @@ impl BattlefieldArea {
       )
     };
 
-    // TODO more crazy cases
-
     let s0 = rng.gen();
     let s1 = rng.gen();
     let s2 = rng.gen();

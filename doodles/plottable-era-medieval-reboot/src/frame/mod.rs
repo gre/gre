@@ -69,5 +69,15 @@ pub fn medieval_frame<R: Rng>(
     iterations,
   ));
 
+  // sort routes by angle with center
+  let c = (width / 2., height / 2.);
+  let mut routes = routes
+    .iter()
+    .map(|data| (data, (data.1[0].0 - c.0).atan2(data.1[0].1 - c.1)))
+    .collect::<Vec<_>>();
+  routes.sort_by(|a, b| a.1.partial_cmp(&b.1).unwrap());
+
+  let routes = routes.iter().map(|data| data.0.clone()).collect();
+
   routes
 }

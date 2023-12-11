@@ -115,7 +115,6 @@ fn make_bartizan<R: Rng>(
   params.level_zorder = zorder;
 
   let mut wallparams = WallParams::new();
-  // TODO force the presence of windows. wallparams to include the rng of these
   let push = 0.5 * h;
   wallparams.push_right_down = push * smoothstep(0.5, 0.0, xf);
   wallparams.push_left_down = push * smoothstep(0.5, 1.0, xf);

@@ -1,56 +1,34 @@
-PRIO:
+DEV:
 - battlefield
-  - people with machines & all other new objs
-  - only place machines on opportunated locations (belier on door, cannon on mountain next to castle when possible, catapult and trebuchet far enough)
-- fix castle destruction. fire/smoke that goes with it
-- destruction map to impact battlefield too. we should also have a noise map for where the targets are
-- test density of an extreme case of fire
-
-CASTLE:
-- rework castle
-  - stairs => where we can find some empty space. typically in the big towers.
-  - lights
-- small decoration under the roof of a wall
-
-BATTLEFIELD:
-- organize ArmyOnMountain fight. divide the terrain. rework the code to add more kind of items and people.
-  - we have to chose a count of units to spawn "globally". and we will have only one look to try to spawn where they can be.
-- machines / caravans:
-  - add folks on the machines.
-  - attacker supposed to climp on the belfry
-  - Belfry improvements.
+  - belfry (people, polishes)
   - human managing the cannon, with a torch to fire the canon.
-- blazon & their impact + flags
-  - on shield SHAPE.
-- IMPROVE: helmet variety
-- Palisade:
-  - work on a better entrance
+  - people managing trebuchet and catapult
+  - only place machines on opportunated locations (belier on door, cannon on mountain next to castle when possible, catapult and trebuchet far enough)
+  - improve helmet variety
+- front mountain rework
+  - camp and fire?
+  - animals
+- improve/fix castle destruction. fire/smoke that goes with it
+  - human pos in destruction?
+  - exploding parts, using another polar split technique
+  - remove if something is too far away?
+- rock have possibility to spawn more interesting things?
+  - nest
+  - weapons
+  - an observer / lost person. share code with the front mountain rework logic
+- castle elements
+  - stairs => where we can find some empty space. typically in the big towers.
+  - machicoulis under merlon
+
+
+IMPORTANT POLISHES:
+- buggy axe angle
+- buggy torch angle
+- review all rare cases (specials)
+
+PROTOTYPE TO TEST:
+- test density of an extreme case of fire
+- plot animals
 
 GENERAL:
 - Work on Features
-
-MOUNTAIN:
-- if we can allow castle to be on a mountain and have a mountain next to it where attackers are?
-
-WORK ON DESTRUCTION:
-- facteur de destruction (trous dans la muraille / explosions avec des morceaux en l'air.
-- Slice the object and emit particles that can produce some fire.
-
-FRONT MOUNTAIN:
-- rework spawning. 
-- camp area.
-- animals
-- random obj and materials?
-- ADD random event on the front. maybe a rock from very bottom that makes it "front front"
-  - a warrior watching the scene, raising hands. with weapon.
-  - flags
-  - axe
-
-IDEAS:
-- ADD Random event on rock:
-  - a nest
-  - a weapon
-  - an observer/lost person
-- SPECIAL "zombie"/ghul mode. with the red moon. ref to zelda?
-- SPECIAL merlin? golden, big, stick
-- half mountain with attackers on it that attack the castle on the sea

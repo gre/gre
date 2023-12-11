@@ -37,4 +37,13 @@ pub enum Blazon {
   Falcon,
 }
 
-impl Blazon {}
+impl Blazon {
+  pub fn rand<R: Rng>(rand: &mut R) -> Self {
+    match rand.gen_range(0..3) {
+      0 => Blazon::Lys,
+      1 => Blazon::Dragon,
+      2 => Blazon::Falcon,
+      _ => unreachable!(),
+    }
+  }
+}

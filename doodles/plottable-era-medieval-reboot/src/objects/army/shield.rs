@@ -1,3 +1,5 @@
+use std::f32::consts::PI;
+
 use crate::{
   algo::{
     clipping::regular_clip_polys, paintmask::PaintMask,
@@ -27,7 +29,7 @@ impl Shield {
     size: f32,
     angle: f32,
     xflip: bool,
-    _blazon: Blazon, // TODO
+    blazon: Blazon,
   ) -> Self {
     let mx = if xflip { -1.0 } else { 1.0 };
     let mut routes = Vec::new();
@@ -35,9 +37,15 @@ impl Shield {
     let dy = 0.4 * size;
     let mut route = vec![];
     let mut route2 = vec![];
-    // todo s1 and s2 to be associated to the blazon somehow
-    let s1 = rng.gen_range(0.0..1.0);
-    let s2 = rng.gen_range(0.0..1.0);
+
+    let a = match blazon {
+      Blazon::Dragon => 0.0,
+      Blazon::Falcon => 2.0 * PI / 3.0,
+      Blazon::Lys => -2.0 * PI / 3.0,
+    } + rng.gen_range(-0.5..0.5);
+    let s1 = 0.5 + 0.5 * a.cos();
+    let s2 = 0.5 + 0.5 * a.sin();
+
     for v in vec![
       (0.0, -dy),
       (mx * 0.5 * dx, -dy),
@@ -56,7 +64,6 @@ impl Shield {
     let polygons = vec![route.clone()];
     routes.push((blazonclr, route));
 
-    // TODO either a > or a square, or a circle,... many possibilities
     let tick = rng.gen_range(0.2..0.3);
     let y = rng.gen_range(-0.2..0.0) * dy;
     routes.push((

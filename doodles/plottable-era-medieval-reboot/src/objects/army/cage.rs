@@ -61,9 +61,9 @@ impl Cage {
 
   pub fn render(&self, paint: &mut PaintMask) -> Polylines {
     let routes = regular_clip(&self.routes, paint);
-    if self.size > 10.0 {
+    if self.size > 15.0 {
       for (_, r) in &self.routes {
-        paint.paint_polyline(r, 0.6);
+        paint.paint_polyline(r, 0.3);
       }
     }
     routes
