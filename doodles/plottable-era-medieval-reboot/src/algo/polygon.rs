@@ -181,25 +181,3 @@ pub fn polygons_find_miny(
 
   value
 }
-
-pub fn poly_centroid_weighted(
-  poly: &Vec<(f32, f32)>,
-  weights: &Vec<f32>,
-) -> (f32, f32) {
-  let mut c = (0., 0.);
-  let mut l = poly.len();
-  if same_point(poly[0], poly[l - 1]) {
-    l -= 1;
-  }
-  let mut sum = 0.;
-  for i in 0..l {
-    let a = poly[i];
-    let w = weights[i];
-    c.0 += w * a.0;
-    c.1 += w * a.1;
-    sum += w;
-  }
-  c.0 /= sum;
-  c.1 /= sum;
-  c
-}

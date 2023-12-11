@@ -8,6 +8,7 @@ use super::{
   longbow::{long_bow, LongBow},
   paddle::Paddle,
   shield::Shield,
+  spear::Spear,
   sword::Sword,
   torch::Torch,
 };
@@ -38,6 +39,7 @@ pub struct Human {
   pub paddles: Vec<Paddle>,
   pub flags: Vec<Flag>,
   pub clubs: Vec<Club>,
+  pub spears: Vec<Spear>,
   pub helmet: Option<Helmet>,
   pub mainclr: usize,
   pub blazonclr: usize,
@@ -63,7 +65,7 @@ pub enum HoldableObject {
   Torch,
   LongBow(/*phase: */ f32),
   Paddle(/* ang */ f32),
-  // TODO Lance,
+  Spear,
 }
 
 impl HoldableObject {
@@ -185,6 +187,7 @@ impl Human {
     let mut axes = vec![];
     let mut swords = vec![];
     let mut flags = vec![];
+    let mut spears = vec![];
     let mut clubs = vec![];
     let mut paddles = vec![];
     let mut torches = vec![];
@@ -261,6 +264,10 @@ impl Human {
             );
             flags.push(flag);
           }
+          HoldableObject::Spear => {
+            let spear = Spear::init(mainclr, pos, 0.5 * size, handangle, true);
+            spears.push(spear);
+          }
           HoldableObject::LongBow(phase) => {
             let bow = long_bow(mainclr, pos, size * 0.5, -handangle, phase);
             weapon_routes.extend(bow);
@@ -305,6 +312,7 @@ impl Human {
       clubs,
       torches,
       flags,
+      spears,
       helmet,
       mainclr,
       blazonclr,
@@ -362,6 +370,9 @@ impl Human {
     }
     for sword in self.swords.iter() {
       routes.extend(sword.render(mask));
+    }
+    for spear in self.spears.iter() {
+      routes.extend(spear.render(mask));
     }
     for club in self.clubs.iter() {
       routes.extend(club.render(mask));
@@ -441,8 +452,6 @@ impl Human {
   }
 }
 
-// TODO we need to expand human into a container that can yield the 2 parts
-// but we need to figure out the polyline halo effect...
 impl<R: Rng> Renderable<R> for Human {
   fn render(
     &self,

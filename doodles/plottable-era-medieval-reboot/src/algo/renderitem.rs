@@ -217,7 +217,7 @@ pub fn binary_cut_and_slide(
     let out_of_polys = |p| !polygons_includes_point(&item.polygons, p);
 
     let cut_routes =
-      clip_routes_with_colors(&vec![(clr, vec![a, b])], &out_of_polys, 0.3, 4);
+      clip_routes_with_colors(&vec![(clr, vec![a, b])], &out_of_polys, 1.0, 3);
 
     left_routes.extend(cut_routes.clone());
     right_routes.extend(cut_routes.clone());

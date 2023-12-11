@@ -99,7 +99,7 @@ impl GlobalCtx {
     let fireball_color = if rng.gen_bool(0.5) { 0 } else { 1 };
 
     let castle_on_sea = rng.gen_bool(0.2);
-    let no_sea = !castle_on_sea && rng.gen_bool(0.2);
+    let no_sea = !castle_on_sea && rng.gen_bool(0.15);
 
     let mut night_time = paper == DARK_BLUE_PAPER
       || rng.gen_bool(0.5) && paper == BLACK_PAPER
@@ -114,7 +114,7 @@ impl GlobalCtx {
       }
     }
 
-    let is_sandbox =
+    let is_sandbox = //true||// FIXME
       night_time && rng.gen_bool(0.01) || !night_time && rng.gen_bool(0.001);
 
     let trebuchets_should_shoot = rng.gen_bool(0.3);

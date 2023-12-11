@@ -35,7 +35,6 @@ impl Monk {
     let xdir = if xflip { -1.0 } else { 1.0 };
 
     let humansize = size * 0.5;
-    // TODO carrying will be this. but we need non carrying positions.
     let joints = HumanPosture {
       body_angle: -PI / 2.0,
       head_angle: -PI / 2.0,
@@ -156,6 +155,7 @@ fn rect(
   // consider routes to be polygon for now.
   for (_clr, route) in &routes {
     paint.paint_polygon(&route);
+    paint.paint_polyline(&route, 0.5);
   }
 
   routes

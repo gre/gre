@@ -7,7 +7,6 @@ import mainGLSL from "./shaders/main.glsl";
 import mainDarkGLSL from "./shaders/main-dark.glsl";
 
 Promise.all([
-  new Promise((resolve) => setTimeout(resolve, 2000)),
   import("./pkg"),
   fetch("./PrinceValiant.ttf").then(r => r.arrayBuffer()).then(r => new Uint8Array(r)),
 ]).then(([rust, fontdata]) => {

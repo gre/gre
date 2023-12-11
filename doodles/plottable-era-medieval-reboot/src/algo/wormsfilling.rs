@@ -173,7 +173,7 @@ impl Ord for OrderedFloat {
 // data model that stores values information in 2D
 pub struct WeightMap {
   // TODO performance still aren't great. we need a map{index->weight} where we can easily update by index but also we can easily sort by weight (resorted each time we insert)
-  // FIXME this implementation also cause the Worms Filling to not be deterministic :(
+  // FIXME the usage of HashSet here also cause the Worms Filling to not be deterministic :(
   weights: Vec<f32>,
   weight_index_map: BTreeMap<OrderedFloat, HashSet<usize>>, // Maps weight to a set of indexes
 

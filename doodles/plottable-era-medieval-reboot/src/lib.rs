@@ -364,8 +364,6 @@ pub fn render(
 
   ctx.finalize();
 
-  println!("{}", rng.gen::<f64>());
-
   let feature = ctx.to_feature(&routes);
   let feature_json = serde_json::to_string(&feature).unwrap();
   let palette_json: String = palette.to_json();

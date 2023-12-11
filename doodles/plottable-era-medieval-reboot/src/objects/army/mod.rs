@@ -2,6 +2,7 @@ use self::{
   belfry::Belfry,
   belier::Belier,
   body::HumanPosture,
+  cage::Cage,
   cannon::Cannon,
   car4l::Renault4L,
   catapult::Catapult,
@@ -31,6 +32,7 @@ use crate::{
     moving_average::moving_average_2d,
     packing::VCircle,
     paintmask::PaintMask,
+    pathlookup::PathLookup,
     renderable::{Container, Renderable},
     shapes::circle_route,
   },
@@ -106,6 +108,7 @@ impl ArmyOnMountain {
     index: usize,
   ) -> Vec<(usize, Vec<(f32, f32)>)> {
     let mut debug_circle: Vec<VCircle> = vec![];
+    let mut exclusion_mask = paint.clone_empty_rescaled(1.0);
 
     let ridge = mountain.ridge.clone();
     let first = ridge[0];
@@ -140,51 +143,80 @@ impl ArmyOnMountain {
 
     let has_wall = ctx.specials.contains(&Special::Barricades)
       || rng.gen_bool(0.5) && (ml < 2 || index == ml - 2);
-    if has_wall {
-      let xc = rng.gen_range(0.3..0.7);
-      let w = rng.gen_range(0.3..2.0);
-      let xfrom = (xc - w / 2.0) * width;
-      let xto = (xc + w / 2.0) * width;
-      let minw = 0.2 * width;
-      let yfromp = rng.gen_range(0.1..0.9);
-      let ytop = rng.gen_range(0.1..0.9);
+    let xc = rng.gen_range(0.3..0.7);
+    let w = rng.gen_range(0.3..1.0);
+    let xfrom = (xc - w / 2.0) * width;
+    let xto = (xc + w / 2.0) * width;
+    let minw = 0.2 * width;
+    let yfromp = rng.gen_range(0.1..0.9);
+    let ytop = rng.gen_range(0.1..0.9);
+    let path = mountain
+      .ridge
+      .iter()
+      .enumerate()
+      .filter_map(|(i, p)| {
+        if !(xfrom < p.0 && p.0 < xto) {
+          return None;
+        }
+        let bottomy = if let Some(prevridge) = &prevridge {
+          prevridge[i].1
+        } else {
+          yhorizon
+        };
+        let m = mix(yfromp, ytop, (p.0 - xfrom) / (xto - xfrom));
+        let y = mix(bottomy, p.1, m);
+        if y < yhorizon {
+          Some((p.0, y))
+        } else {
+          None
+        }
+      })
+      .collect::<Vec<_>>();
 
-      let path = mountain
-        .ridge
-        .iter()
-        .enumerate()
-        .filter_map(|(i, p)| {
-          if !(xfrom < p.0 && p.0 < xto) {
-            return None;
-          }
-          let bottomy = if let Some(prevridge) = &prevridge {
-            prevridge[i].1
-          } else {
-            yhorizon
-          };
-          let m = mix(yfromp, ytop, (p.0 - xfrom) / (xto - xfrom));
-          let y = mix(bottomy, p.1, m);
-          if y < yhorizon {
-            Some((p.0, y))
-          } else {
-            None
-          }
-        })
-        .collect::<Vec<_>>();
+    if path.len() > 1 {
+      if has_wall {
+        if path.len() > 1 && (path[path.len() - 1].0 - path[0].0).abs() > minw {
+          let path = moving_average_2d(&path, path.len() / 10);
+          let baseh = rng.gen_range(0.05..0.08) * width;
+          let wall =
+            MountainWall::init(ctx, rng, blazonclr, mainclr, &path, baseh);
+          renderables.extend(wall.container);
+        }
+      } else {
+        // we use this path to make a convoy. but we need to check first if there are room for it.
+        let len = path.len();
+        let checks = (rng.gen_range(4..20)).min(len);
+        let mut is_valid = true;
 
-      if path.len() > 1 && (path[path.len() - 1].0 - path[0].0).abs() > minw {
-        let path = moving_average_2d(&path, path.len() / 10);
-        let baseh = rng.gen_range(0.05..0.08) * width;
-        let wall =
-          MountainWall::init(ctx, rng, blazonclr, mainclr, &path, baseh);
-        renderables.extend(wall.container);
+        for i in 0..checks {
+          let j = i * (len / checks);
+          let (x, y) = path[j];
+          let cell = mountains.battlefield.get(x, y);
+          if !matches!(cell, Area::Empty) {
+            is_valid = false;
+            break;
+          }
+        }
+
+        if is_valid {
+          let size = rng.gen_range(0.04..0.07) * width;
+          make_random_convoy(
+            rng,
+            &mut renderables,
+            &mut exclusion_mask,
+            ctx.defenders,
+            mainclr,
+            ctx.defendersclr,
+            size,
+            &path,
+          );
+        }
       }
     }
 
     let yallowunder = width * 0.02;
     let clr = mainclr;
 
-    let mut exclusion_mask = paint.clone_rescaled(1.0).clone_empty();
     let mut should_spawn_leader = mountain.will_have_the_leader;
     let mut remaining_trebuchets =
       (rng.gen_range(-4.0f32..4.0) * rng.gen_range(0.0..1.0)).max(0.0) as usize
@@ -200,9 +232,12 @@ impl ArmyOnMountain {
     let climb_attack_proba =
       rng.gen_range(-1.0f64..1.0).max(0.0001) * rng.gen_range(0.0..1.0);
 
-    let sampling_skip_if_fails_more_than = 50;
+    let should_skip = rng.gen_bool(0.05)
+      || index % 2 == 1 && rng.gen_bool(mountains.skip_alt_factor);
+
+    let sampling_skip_if_fails_more_than = 100;
     let mut fails = 0;
-    let sampling = 2000;
+    let sampling = if should_skip { 1 } else { 2000 };
     for _ in 0..sampling {
       let xposfactor = rng.gen_range(0.0..1.0);
       let x = mix(first.0, last.0, xposfactor);
@@ -239,39 +274,47 @@ impl ArmyOnMountain {
       angle = angle.max(-maxa).min(maxa);
       // FIXME i think angle is fucked up. eg on catapulte
 
+      let mut spawn_animal = |rng: &mut R| {
+        let proximity = 2.0;
+        if rng.gen_bool(0.2) {
+          let size = rng.gen_range(0.7..1.0) * 0.015 * width;
+          let obj = Armadillo::init(rng, clr, origin, size, -angle);
+          renderables.add(obj);
+          let circle = VCircle::new(x, y - 0.5 * size, proximity * size);
+          debug_circle.push(circle);
+          exclusion_mask.paint_circle(circle.x, circle.y, circle.r);
+        } else if rng.gen_bool(0.4) {
+          let size = rng.gen_range(0.02..0.03) * width;
+          let obj = Fowl::init(rng, clr, origin, size, angle);
+          renderables.add(obj);
+          let circle = VCircle::new(x, y - 0.5 * size, proximity * size);
+          debug_circle.push(circle);
+          exclusion_mask.paint_circle(circle.x, circle.y, circle.r);
+        } else {
+          let size = rng.gen_range(0.02..0.035) * width;
+          let reversex = rng.gen_bool(0.5);
+          let barking = rng.gen_bool(0.5);
+          let obj = Dog::init(rng, clr, origin, size, reversex, barking);
+          renderables.add(obj);
+          let circle = VCircle::new(x, y - 0.5 * size, proximity * size);
+          debug_circle.push(circle);
+          exclusion_mask.paint_circle(circle.x, circle.y, circle.r);
+        };
+      };
+
       match area {
         Area::Empty => {}
 
         Area::Animal => {
-          let proximity = 2.0;
-          if rng.gen_bool(0.2) {
-            let size = rng.gen_range(0.5..1.0) * 0.01 * width;
-            let obj = Armadillo::init(rng, clr, origin, size, angle);
-            renderables.add(obj);
-            let circle = VCircle::new(x, y - 0.5 * size, proximity * size);
-            debug_circle.push(circle);
-            exclusion_mask.paint_circle(circle.x, circle.y, circle.r);
-          } else if rng.gen_bool(0.4) {
-            let size = rng.gen_range(0.01..0.03) * width;
-            let obj = Fowl::init(rng, clr, origin, size, angle);
-            renderables.add(obj);
-            let circle = VCircle::new(x, y - 0.5 * size, proximity * size);
-            debug_circle.push(circle);
-            exclusion_mask.paint_circle(circle.x, circle.y, circle.r);
-          } else {
-            let size = rng.gen_range(0.015..0.035) * width;
-            let reversex = rng.gen_bool(0.5);
-            let barking = rng.gen_bool(0.5);
-            let obj = Dog::init(rng, clr, origin, size, reversex, barking);
-            renderables.add(obj);
-            let circle = VCircle::new(x, y - 0.5 * size, proximity * size);
-            debug_circle.push(circle);
-            exclusion_mask.paint_circle(circle.x, circle.y, circle.r);
-          };
+          spawn_animal(rng);
         }
 
         Area::Defender(props) => {
-          let blazonclr = ctx.defendersclr;
+          let blazonclr = if mountain.is_behind {
+            mountain.clr
+          } else {
+            ctx.defendersclr
+          };
           let size = 0.04 * width;
           let xflip = props.oriented_left;
 
@@ -526,6 +569,11 @@ impl ArmyOnMountain {
         }
 
         Area::Tree(foliage_ratio, bush_width_ratio) => {
+          let animal = rng.gen_bool(0.01);
+          if animal {
+            spawn_animal(rng);
+          }
+
           let trunk_fill_each = rng.gen_range(1.0..10.0);
           let size = mix(
             0.05,
@@ -737,6 +785,172 @@ impl ArmyOnMountain {
 
     */
   }
+}
+
+pub fn make_random_convoy<R: Rng>(
+  rng: &mut R,
+  renderables: &mut Container<R>,
+  exclusion_mask: &mut PaintMask,
+  blazon: Blazon,
+  mainclr: usize,
+  blazonclr: usize,
+  size: f32,
+  path: &Vec<(f32, f32)>,
+) {
+  let lookup = PathLookup::init(path.clone());
+  let (x, y) = lookup.lookup_percentage(rng.gen_range(0.2..0.8));
+  let filling = rng.gen_range(1.5..2.5);
+  let convoyp = (x, y - 0.3 * size);
+
+  let xflip = rng.gen_bool(0.5);
+  let is_relic = rng.gen_bool(0.5);
+  let is_human_holders = is_relic && rng.gen_bool(0.5) || rng.gen_bool(0.03);
+  let monk_proba = if is_relic {
+    rng.gen_range(0.5..1.0)
+  } else {
+    rng.gen_range(0.0..0.3)
+  };
+  let horse_proba = rng.gen_range(0.0..1.0);
+
+  let hold_diff = if is_human_holders {
+    0.5 * size
+  } else {
+    0.9 * size
+  };
+  let xleft = x - hold_diff;
+  let xright = x + hold_diff;
+  let left = lookup.lookup_pos_at_x(xleft);
+  let right = lookup.lookup_pos_at_x(xright);
+  let slope = (right.1 - left.1).atan2(right.0 - left.0);
+
+  let extraratio = if is_human_holders { 0.5 } else { 1.1 };
+  let w = 1.0;
+  let convoy =
+    ConvoyWalk::init(rng, mainclr, convoyp, size, slope, w, extraratio);
+
+  if is_relic {
+    let relic = Relic::init(rng, convoyp, size, slope, filling);
+    renderables.add(relic);
+  } else {
+    let cage = Cage::init(rng, mainclr, convoyp, 0.8 * size, slope);
+    renderables.add(cage);
+
+    let lefthand = None;
+    let righthand = None;
+    let headshape = HeadShape::NAKED;
+    let posture = HumanPosture::sit(rng, slope);
+    let p = (convoyp.0, convoyp.1 + 0.15 * size);
+    let human = Human::init(
+      rng, p, size, xflip, blazon, mainclr, blazonclr, posture, headshape,
+      lefthand, righthand,
+    );
+    renderables.add(human);
+  }
+  let area = VCircle::new(x, y, 4.0 * size);
+  exclusion_mask.paint_circle(area.x, area.y, area.r);
+
+  let mut v = 0.0;
+  let pad = 0.5 * size;
+  let minincr = 0.2 * size / lookup.length();
+  while v <= 1.0 {
+    if rng.gen_bool(0.5) {
+      v += minincr;
+      continue;
+    }
+    let (x, y) = lookup.lookup_percentage(v);
+    let convoy_loc = left.0 - pad < x && x < right.0 + pad;
+    if !convoy_loc {
+      let is_horse = rng.gen_bool(horse_proba);
+      if is_horse {
+        v += 2. * minincr;
+      }
+      let p = lookup.lookup_percentage(v);
+      // TODO monk probability to be near the relic
+      let is_monk = rng.gen_bool(monk_proba);
+      if is_monk {
+        let monk = Monk::init(rng, p, size, 0.0, xflip, 0, false);
+        renderables.add(monk);
+      } else {
+        let lefthand = Some(HoldableObject::Shield);
+        let righthand = Some(if rng.gen_bool(0.8) {
+          HoldableObject::Sword
+        } else {
+          HoldableObject::Flag
+        });
+        let headshape = HeadShape::NAKED;
+        let posture =
+          HumanPosture::from_holding(rng, xflip, lefthand, righthand);
+        let human = Human::init(
+          rng, p, size, xflip, blazon, mainclr, blazonclr, posture, headshape,
+          lefthand, righthand,
+        );
+        if is_horse {
+          let decorationratio = 0.3;
+          let foot_offset = 1.0;
+          let rider = Rider::init(
+            rng,
+            p,
+            size,
+            slope,
+            xflip,
+            mainclr,
+            blazonclr,
+            decorationratio,
+            foot_offset,
+            human,
+          );
+          renderables.add(rider);
+          v += 2. * minincr;
+        } else {
+          renderables.add(human);
+        }
+      }
+      let area = VCircle::new(x, y, size);
+      exclusion_mask.paint_circle(area.x, area.y, area.r);
+    }
+    v += rng.gen_range(0.8..1.4) * minincr;
+  }
+
+  if is_human_holders {
+    for p in vec![left, right] {
+      let monk = Monk::init(rng, p, size, 0.0, xflip, 0, true);
+      renderables.add(monk);
+      let area = VCircle::new(x, y, size);
+      exclusion_mask.paint_circle(area.x, area.y, area.r);
+    }
+  } else {
+    let origin = if xflip { left } else { right };
+    let decorationratio = 0.3;
+    let foot_offset = 1.0;
+    let lefthand = Some(HoldableObject::RaisingUnknown);
+    let righthand = Some(if rng.gen_bool(0.8) {
+      HoldableObject::LongSword
+    } else {
+      HoldableObject::RaisingUnknown
+    });
+    let headshape = HeadShape::NAKED;
+    let posture = HumanPosture::from_holding(rng, xflip, lefthand, righthand);
+    let human = Human::init(
+      rng, origin, size, xflip, blazon, mainclr, blazonclr, posture, headshape,
+      lefthand, righthand,
+    );
+    let angle = 0.0;
+    let horse = Rider::init(
+      rng,
+      origin,
+      size,
+      angle,
+      xflip,
+      mainclr,
+      blazonclr,
+      decorationratio,
+      foot_offset,
+      human,
+    );
+    renderables.add(horse);
+  }
+
+  renderables.add(convoy);
 }
 
 fn montmirail<R: Rng>(

@@ -112,6 +112,7 @@ impl Mountain {
 pub struct MountainsV2 {
   pub mountains: Vec<Mountain>,
   pub battlefield: BattlefieldArea,
+  pub skip_alt_factor: f64,
 }
 
 impl MountainsV2 {
@@ -131,6 +132,8 @@ impl MountainsV2 {
     let perlin = Perlin::new(rng.gen());
     let min_route = 2;
     let mountainpadding = 0.0;
+    let skip_alt_factor = rng.gen_range(-1.0f64..1.5).max(0.001).min(0.99)
+      * rng.gen_range(0.0..1.0);
     let mut height_map: Vec<f32> = Vec::new();
 
     let mut passage = Passage::new(0.5, width, height);
@@ -149,7 +152,7 @@ impl MountainsV2 {
       let mut local_height_map: Vec<f32> = Vec::new();
 
       let h: f32 = rng.gen_range(2.0..6.0);
-      let ampfactor = mix(0.01, 0.1, jf) * rng.gen_range(0.5..1.0);
+      let ampfactor = mix(0.01, 0.1, jf.min(1.0)) * rng.gen_range(0.5..1.0);
       let ynoisefactor = rng.gen_range(0.01..0.1);
       let yincr = if j == 0 {
         rng.gen_range(0.5..1.0)
@@ -485,6 +488,7 @@ impl MountainsV2 {
     Self {
       mountains,
       battlefield,
+      skip_alt_factor,
     }
   }
 }

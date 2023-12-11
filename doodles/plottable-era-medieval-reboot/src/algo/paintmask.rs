@@ -29,6 +29,25 @@ impl PaintMask {
     }
   }
 
+  pub fn clone_empty_rescaled(&self, precision: f32) -> Self {
+    if precision == self.precision {
+      return self.clone();
+    }
+    let width = self.width;
+    let height = self.height;
+    let wi = (width / precision) as usize;
+    let hi = (height / precision) as usize;
+    let next = Self {
+      mask: vec![false; wi * hi],
+      width,
+      height,
+      precision,
+      wi,
+      hi,
+    };
+    next
+  }
+
   pub fn clone_rescaled(&self, precision: f32) -> Self {
     if precision == self.precision {
       return self.clone();
@@ -477,7 +496,12 @@ fn point_in_segment(
   let ba_y = by - ay;
   let dot_pa_ba = pa_x * ba_x + pa_y * ba_y;
   let dot_ba_ba = ba_x * ba_x + ba_y * ba_y;
-  let h = (dot_pa_ba / dot_ba_ba).max(0.0).min(1.0);
+  let mut h = dot_pa_ba / dot_ba_ba;
+  if h < 0.0 {
+    h = 0.0;
+  } else if h > 1.0 {
+    h = 1.0;
+  }
   let h_x = ba_x * h;
   let h_y = ba_y * h;
   let dx = pa_x - h_x;

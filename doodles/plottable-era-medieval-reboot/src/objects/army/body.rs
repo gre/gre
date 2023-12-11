@@ -179,6 +179,37 @@ impl HumanPosture {
       origin_on_feet: true,
     }
   }
+
+  pub fn sit<R: Rng>(rng: &mut R, ang: f32) -> Self {
+    let shoulder_right_angle = -PI / 2.0 + rng.gen_range(0.0..2.0) + ang;
+    let elbow_right_angle =
+      shoulder_right_angle + rng.gen_range(-0.5..0.5) * rng.gen_range(0.0..1.0);
+
+    let shoulder_left_angle = -PI / 2.0 - rng.gen_range(0.0..2.0) + ang;
+    let elbow_left_angle =
+      shoulder_left_angle + rng.gen_range(-0.5..0.5) * rng.gen_range(0.0..1.0);
+
+    let left_arm_bend = rng.gen_range(0.8..1.0);
+    let right_arm_bend = rng.gen_range(0.8..1.0);
+
+    Self {
+      body_angle: -PI / 2.0 + ang,
+      head_angle: -PI / 2.0 + ang,
+      shoulder_right_angle,
+      shoulder_left_angle,
+      elbow_right_angle,
+      elbow_left_angle,
+      hip_right_angle: PI / 2.0 - rng.gen_range(1.8..2.8) + ang,
+      hip_left_angle: PI / 2.0 + rng.gen_range(1.8..2.8) + ang,
+      knee_right_angle: PI / 2.0 + ang,
+      knee_left_angle: PI / 2.0 + ang,
+      left_arm_bend,
+      right_arm_bend,
+      left_leg_bend: 1.0,
+      right_leg_bend: 1.0,
+      origin_on_feet: true,
+    }
+  }
 }
 
 #[derive(Clone, Copy)]

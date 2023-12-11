@@ -197,11 +197,11 @@ fn apply_destruction<R: Rng>(
 
   let scale = castleprops.grounding.scale;
   let pushbackbase =
-    destruction * rng.gen_range(0.0..scale) * rng.gen_range(0.0..1.0);
+    destruction * 0.2 * rng.gen_range(0.0..scale) * rng.gen_range(0.0..1.0);
   let pushbackrotbase = rng.gen_range(-1.0..1.0) * rng.gen_range(0.0..1.0);
   let pushbackrotmix = rng.gen_range(0.1..0.9);
   let sliding = scale * rng.gen_range(0.5..2.0);
-  let increment_base = rng.gen_range(2.0..50.0);
+  let increment_base = rng.gen_range(4.0..50.0);
   let o = multicut_along_line(
     rng,
     &items,
@@ -553,7 +553,7 @@ fn rec_build<R: Rng>(
     for s in level.possible_fire_start_positions() {
       let destr = ctx.destruction_map.get_weight(s.pos);
       if destr > 0.1 && rng.gen_bool(ctx.fire_proba) {
-        let rad = (rng.gen_range(0.8..1.2) * destr * s.radius).min(10.0);
+        let rad = (rng.gen_range(0.5..1.2) * destr * s.radius).min(10.0);
         let fire = Fire::init(rng, 1, s.pos, rad);
         let id = objects.len();
         objects.insert(id, Box::new(fire));

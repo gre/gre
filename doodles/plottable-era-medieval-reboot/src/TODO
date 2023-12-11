@@ -1,37 +1,27 @@
 PRIO:
 - battlefield
+  - people with machines & all other new objs
   - only place machines on opportunated locations (belier on door, cannon on mountain next to castle when possible, catapult and trebuchet far enough)
-  - path of army / convoy
-  - battlefield extra details. people with machines & all other new objs
-- castle destruction. fire/smoke that goes with it
-- castle extra details (illumination,..)
+- fix castle destruction. fire/smoke that goes with it
 - destruction map to impact battlefield too. we should also have a noise map for where the targets are
-- fix position of Chinese Door
 - test density of an extreme case of fire
 
 CASTLE:
 - rework castle
   - stairs => where we can find some empty space. typically in the big towers.
   - lights
+- small decoration under the roof of a wall
 
 BATTLEFIELD:
 - organize ArmyOnMountain fight. divide the terrain. rework the code to add more kind of items and people.
   - we have to chose a count of units to spawn "globally". and we will have only one look to try to spawn where they can be.
 - machines / caravans:
   - add folks on the machines.
-  - do something with Cage. army transporting someone.
-  - have a horse caravan version. where we can put relique / cage..
   - attacker supposed to climp on the belfry
   - Belfry improvements.
   - human managing the cannon, with a torch to fire the canon.
-- MONKS:
-  - SPECIAL merlin? golden, big, stick
-  - merge Monk into Human. we need a concept of HoldingObject::Foreign
-  - more monks around the relics. it should form a travel line.
 - blazon & their impact + flags
   - on shield SHAPE.
-  - on boat/belier head
-- ADD: lanciers
 - IMPROVE: helmet variety
 - Palisade:
   - work on a better entrance
@@ -43,16 +33,13 @@ MOUNTAIN:
 - if we can allow castle to be on a mountain and have a mountain next to it where attackers are?
 
 WORK ON DESTRUCTION:
-- On the whole scene. Impacts all places.
 - facteur de destruction (trous dans la muraille / explosions avec des morceaux en l'air.
-- fire & smoke
 - Slice the object and emit particles that can produce some fire.
-- Dead battle field. (remains of weapons and flaks in the ground)
 
 FRONT MOUNTAIN:
 - rework spawning. 
 - camp area.
-- animals?
+- animals
 - random obj and materials?
 - ADD random event on the front. maybe a rock from very bottom that makes it "front front"
   - a warrior watching the scene, raising hands. with weapon.
@@ -60,10 +47,10 @@ FRONT MOUNTAIN:
   - axe
 
 IDEAS:
-- night time illumination: castle lights, attacker torches, firecamp
 - ADD Random event on rock:
   - a nest
   - a weapon
   - an observer/lost person
 - SPECIAL "zombie"/ghul mode. with the red moon. ref to zelda?
+- SPECIAL merlin? golden, big, stick
 - half mountain with attackers on it that attack the castle on the sea

@@ -66,7 +66,7 @@ impl Horse {
     let blazonclr = self.blazonclr;
     let foot_offset = self.foot_offset;
 
-    let mut highlight_paint = mask.clone_empty();
+    let mut highlight_paint = mask.clone_empty_rescaled(1.0);
     let mut highlighted: Vec<Polyline> = vec![];
 
     let xdir = if xflip { -1.0 } else { 1.0 };

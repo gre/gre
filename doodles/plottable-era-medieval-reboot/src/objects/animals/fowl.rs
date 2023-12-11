@@ -31,8 +31,10 @@ impl Fowl {
 
     let mut lead = vec![];
 
+    let rep = (1 + (0.08 * scale) as usize).min(3);
+
     let amp = 0.1;
-    for _i in 0..4 {
+    for _i in 0..rep {
       lead.push((
         rng.gen_range(-1.0..1.0) * amp,
         -0.6 * rng.gen_range(-1.0..1.0) * amp,
@@ -45,7 +47,7 @@ impl Fowl {
 
     let from = rng.gen_range(0.35..0.5);
     let to = rng.gen_range(0.1..0.25);
-    let count = (scale * rng.gen_range(1.0..2.0)) as usize;
+    let count = (scale * rng.gen_range(0.8..1.4)) as usize;
     let mut path = Vec::new();
     for (i, l) in lead.iter().enumerate() {
       let percent = i as f32 / ((lead.len() - 1) as f32);
@@ -65,7 +67,7 @@ impl Fowl {
         let ang = PI / 2.0 + a + 0.2 * i;
         path.push((amp * ang.cos(), amp * ang.sin()));
       }
-      for _i in 0..3 {
+      for _i in 0..rep {
         routes.push(shake(path.clone(), 0.005 * scale, rng));
       }
     }

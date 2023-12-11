@@ -29,6 +29,8 @@ impl Dog {
   ) -> Self {
     let mut routes = vec![];
 
+    let rep = (1 + (0.5 * scale) as usize).min(3);
+
     let pattes_bas_x = vec![
       rng.gen_range(-0.5..-0.3),
       rng.gen_range(-0.3..-0.1),
@@ -57,7 +59,7 @@ impl Dog {
       .collect();
     let ybottom = 0.0;
     let ytop = -0.3;
-    for i in 0..4 {
+    for i in 0..rep {
       let bottom = (pattes_bas_x[i], ybottom);
       let top = (pattes_haut_x[i], ytop);
       let p = path_subdivide_to_curve(&vec![bottom, top], 1, 0.8);

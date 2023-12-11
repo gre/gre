@@ -59,7 +59,6 @@ pub enum Area {
   Cyclope,
   Hut,
   Firecamp,
-  // Relic?
 }
 
 pub struct BattlefieldArea {
@@ -67,8 +66,6 @@ pub struct BattlefieldArea {
   precision: f32,
   wi: usize,
   hi: usize,
-  // + determine paths of travels?
-  // + determine the palisade?
 }
 
 impl BattlefieldArea {
@@ -246,6 +243,9 @@ impl BattlefieldArea {
           if rng.gen_bool(0.05) {
             rightobj = Some(HoldableObject::Flag);
           }
+          if rng.gen_bool(0.05) {
+            rightobj = Some(HoldableObject::Spear);
+          }
           candidates.push(Area::Attacker(HumanProps {
             proximity: 1.0,
             oriented_left,
@@ -318,6 +318,8 @@ impl BattlefieldArea {
             leftobj: Some(HoldableObject::Shield),
             rightobj: if rng.gen_bool(0.05) {
               Some(HoldableObject::Flag)
+            } else if rng.gen_bool(0.05) {
+              Some(HoldableObject::Spear)
             } else {
               Some(HoldableObject::Sword)
             },

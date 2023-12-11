@@ -77,7 +77,7 @@ impl Sword {
     polys.push(poly3);
     routes.push(route);
 
-    // FIXME aren't we doing it twice?!
+    // NB BUG: we are doing it twice but the whole project relies on this =)
 
     let routes = routes
       .iter()

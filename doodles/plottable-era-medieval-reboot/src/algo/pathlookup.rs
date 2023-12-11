@@ -67,6 +67,19 @@ impl PathLookup {
     self.lookup_pos(l * self.length)
   }
 
+  pub fn lookup_pos_at_x(&self, x: f32) -> (f32, f32) {
+    let path = &self.path;
+    for i in 0..path.len() - 1 {
+      let a = path[i];
+      let b = path[i + 1];
+      if a.0 <= x && x <= b.0 {
+        let m = (x - a.0) / (b.0 - a.0);
+        return (x, a.1 + m * (b.1 - a.1));
+      }
+    }
+    return path[path.len() - 1];
+  }
+
   pub fn lookup_pos(&self, l: f32) -> (f32, f32) {
     let path = &self.path;
     if l < 0.0 {

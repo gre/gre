@@ -30,6 +30,8 @@ impl Armadillo {
   ) -> Self {
     let mut routes = vec![];
 
+    let rep: usize = (1 + (0.08 * scale) as usize).min(3);
+
     let c = (0.0, 0.0);
     let mut basey = -10.0;
 
@@ -78,7 +80,7 @@ impl Armadillo {
       let a = PI / 2.0 - 0.5 * (i as f32 - 1.5)
         + rng.gen_range(-1.0..1.0) * rng.gen_range(0.0..1.0);
       let a2 = a + rng.gen_range(-0.4..0.2) * rng.gen_range(0.0..1.0);
-      for _j in 0..3 {
+      for _j in 0..rep {
         let mut route = vec![];
         let o = (
           origin.0 + rng.gen_range(-0.1..0.1),
@@ -101,7 +103,7 @@ impl Armadillo {
     let headorigin1 = bodypoints[3][2];
     let headorigin2 = bodypoints[3][1];
     // ears
-    for _i in 0..4 {
+    for _i in 0..rep {
       let mut line = vec![];
       let o = (
         headorigin1.0 + rng.gen_range(-0.1..0.3) * 0.1 * scale,
@@ -117,7 +119,7 @@ impl Armadillo {
     }
 
     let hmul = rng.gen_range(0.8..1.2);
-    let count = (3.0 + scale) as usize;
+    let count = (3.0 + 0.5 * scale) as usize;
     let ang1 = rng.gen_range(0.5..0.8f32);
     let ang1amp = rng.gen_range(0.1..0.4);
     let ang2 = ang1 + rng.gen_range(0.0..0.3) * rng.gen_range(0.0..1.0);
@@ -151,7 +153,7 @@ impl Armadillo {
     ];
     let tailoriginbase =
       lerp_point(bodypoints[0][2], bodypoints[0][1], rng.gen_range(0.0..0.7));
-    for _i in 0..3 {
+    for _i in 0..rep {
       let tailorigin =
         lerp_point(bodypoints[0][2], bodypoints[0][1], rng.gen_range(0.0..0.7));
       let mut l = vec![];

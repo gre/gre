@@ -38,15 +38,17 @@ impl Fire {
     let dr = (rad / 6.0).max(0.5);
     let approx = (rad / 10.0).max(0.2);
     let mut rt = spiral_optimized(flamex, flamey, rad, dr, approx);
+    let ydisp = rng.gen_range(0.5..1.0);
     for p in &mut rt {
       p.0 += 5.0 * rad * rng.gen_range(-0.05..0.05);
       p.1 += 5.0
         * rad
+        * ydisp
         * rng.gen_range(-1.0..0.05)
         * rng.gen_range(0.0..1.0)
         * rng.gen_range(0.0..1.0);
     }
-    //    rt = step_polyline(&rt, 0.3);
+    // rt = step_polyline(&rt, 0.3);
 
     flame_routes.push((flameclr, rt));
     flame_polys.push(circle_route((flamex, flamey), rad + 0.5, 16));

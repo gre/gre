@@ -86,7 +86,7 @@ pub fn resolve_trajectory_path(
   path.push(t);
 
   if curvy_factor != 0.0 {
-    path = step_polyline(&path, 1.0);
+    path = step_polyline(&path, 5.0);
     let plen = path.len();
     path = path
       .iter()

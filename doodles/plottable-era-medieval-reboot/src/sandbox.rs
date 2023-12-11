@@ -1,7 +1,11 @@
 use crate::{
-  algo::{paintmask::PaintMask, polylines::Polylines, renderable::Container},
+  algo::{
+    packing::VCircle, paintmask::PaintMask, pathlookup::PathLookup,
+    polylines::Polylines, renderable::*,
+  },
   global::GlobalCtx,
   objects::{
+    animals::{armadillo::Armadillo, dog::Dog, fowl::Fowl},
     army::{
       boat::BoatGlobals,
       boatarmy::BoatArmy,
@@ -9,8 +13,10 @@ use crate::{
       cannon::Cannon,
       catapult::Catapult,
       human::{HeadShape, HoldableObject, Human},
+      make_random_convoy,
       trebuchet::Trebuchet,
     },
+    blazon::Blazon,
     sky::dragons::dragons,
   },
 };
@@ -31,12 +37,14 @@ pub fn sandbox<R: Rng>(
   width: f32,
   height: f32,
 ) {
-  match rng.gen_range(0..5) {
+  match rng.gen_range(0..7) {
     0 => sandbox_trebuchet(rng, ctx, paint, routes, width, height),
     1 => sandbox_dragons(rng, ctx, paint, routes, width, height),
     2 => sandbox_men(rng, ctx, paint, routes, width, height),
     3 => sandbox_boat(rng, ctx, paint, routes, width, height),
     4 => sandbox_cannon_catapult(rng, ctx, paint, routes, width, height),
+    5 => sandbox_animals(rng, ctx, paint, routes, width, height),
+    6 => sandbox_convoys(rng, ctx, paint, routes, width, height),
     _ => {}
   }
 }
@@ -272,5 +280,124 @@ pub fn sandbox_cannon_catapult<R: Rng>(
   }
 
   let rts = container.render_with_extra_halo(rng, ctx, paint, 1.0);
+  routes.extend(rts.clone());
+}
+
+fn sandbox_convoys<R: Rng>(
+  rng: &mut R,
+  ctx: &mut GlobalCtx,
+  paint: &mut PaintMask,
+  routes: &mut Polylines,
+  width: f32,
+  height: f32,
+) {
+  let mut container = Container::new();
+  let mut exclusion_mask = paint.clone_empty_rescaled(2.0);
+
+  let mut y = 0.12 * height;
+  while y < 0.9 * height {
+    let mut path = vec![];
+    let mut x = 0.1 * width;
+    while x < 0.9 * width {
+      path.push((
+        x,
+        y + height * rng.gen_range(-0.05..0.05) * rng.gen_range(0.0..1.0),
+      ));
+      x += rng.gen_range(0.08..0.15) * width;
+    }
+    let l = path.len() - 1;
+    path[l].0 = 0.9 * width;
+
+    let mainclr = 0;
+    let blazonclr = 2;
+    let blazon = Blazon::Dragon;
+    let scale = 0.05 * width;
+
+    routes.push((2, path.clone()));
+
+    make_random_convoy(
+      rng,
+      &mut container,
+      &mut exclusion_mask,
+      blazon,
+      mainclr,
+      blazonclr,
+      scale,
+      &path,
+    );
+
+    y += rng.gen_range(0.04..0.09) * height;
+  }
+
+  let rts = container.render(rng, ctx, paint);
+  routes.extend(rts.clone());
+}
+
+fn sandbox_animals<R: Rng>(
+  rng: &mut R,
+  ctx: &mut GlobalCtx,
+  paint: &mut PaintMask,
+  routes: &mut Polylines,
+  width: f32,
+  height: f32,
+) {
+  let mut container = Container::new();
+  let mut exclusion_mask = paint.clone_empty_rescaled(2.0);
+
+  let mut y = 0.12 * height;
+  while y < 0.9 * height {
+    let mut path = vec![];
+    let mut x = 0.1 * width;
+    while x < 0.9 * width {
+      path.push((
+        x,
+        y + height * rng.gen_range(-0.05..0.05) * rng.gen_range(0.0..1.0),
+      ));
+      x += rng.gen_range(0.08..0.15) * width;
+    }
+    let l = path.len() - 1;
+    path[l].0 = 0.9 * width;
+
+    // routes.push((2, path.clone()));
+
+    let reversex = rng.gen_bool(0.5);
+
+    let scale = rng.gen_range(0.04..0.05) * width;
+    let lookup = PathLookup::init(path);
+    let di = rng.gen_range(0.6..0.8) * scale / lookup.length();
+    let mut i = di;
+    let r1 = rng.gen_range(0.0..1.0) * rng.gen_range(0.0..1.0);
+    let r2 = rng.gen_range(0.0..1.0);
+    while i < 1.0 - di {
+      let origin = lookup.lookup_percentage(i);
+      let angle = lookup.lookup_angle(i * lookup.length());
+      let proximity = 2.0;
+      let clr = rng.gen_range(0..3);
+      let size = rng.gen_range(0.5..1.0) * scale;
+      if rng.gen_bool(r1) {
+        let obj = Armadillo::init(rng, clr, origin, 0.3 * size, -angle);
+        container.add(obj);
+        let circle = VCircle::new(x, y - 0.5 * size, proximity * size);
+        exclusion_mask.paint_circle(circle.x, circle.y, circle.r);
+      } else if rng.gen_bool(r2) {
+        let obj = Fowl::init(rng, clr, origin, 0.6 * size, angle);
+        container.add(obj);
+        let circle = VCircle::new(x, y - 0.5 * size, proximity * size);
+        exclusion_mask.paint_circle(circle.x, circle.y, circle.r);
+      } else {
+        let barking = rng.gen_bool(0.5);
+        let obj = Dog::init(rng, clr, origin, 0.8 * size, reversex, barking);
+        container.add(obj);
+        let circle = VCircle::new(x, y - 0.5 * size, proximity * size);
+        exclusion_mask.paint_circle(circle.x, circle.y, circle.r);
+      };
+
+      i += di * rng.gen_range(1.0..1.5);
+    }
+
+    y += rng.gen_range(0.04..0.09) * height;
+  }
+
+  let rts = container.render(rng, ctx, paint);
   routes.extend(rts.clone());
 }

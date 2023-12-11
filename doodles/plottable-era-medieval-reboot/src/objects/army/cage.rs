@@ -1,7 +1,9 @@
 use crate::algo::{
   clipping::regular_clip,
+  math1d::mix,
   paintmask::PaintMask,
   polylines::{route_translate_rotate, Polylines},
+  renderable::Renderable,
 };
 use rand::prelude::*;
 
@@ -12,6 +14,8 @@ use rand::prelude::*;
 
 pub struct Cage {
   pub routes: Polylines,
+  pub origin: (f32, f32),
+  pub size: f32,
 }
 
 impl Cage {
@@ -29,35 +33,54 @@ impl Cage {
     let y1 = 0.0;
     let y2 = -size;
 
-    let dx = rng.gen_range(0.15..0.2);
-    let dy = rng.gen_range(0.2..0.4);
-
-    let mut x = x1 - rng.gen_range(0.0..dx) * 0.5;
-    while x <= x2 {
+    let xsplits =
+      2 + (size / (rng.gen_range(0.1..0.2) * size).max(2.0)) as usize;
+    for xi in 0..xsplits {
+      let x = mix(x1, x2, xi as f32 / (xsplits - 1) as f32);
       routes.push((
         clr,
         route_translate_rotate(&vec![(x, y1), (x, y2)], origin, -angle),
       ));
-      x += rng.gen_range(0.1..0.15) * size;
     }
 
-    let mut y = y1 + rng.gen_range(0.0..dy) * 0.5;
-    while y >= y2 {
+    let mut y = y2;
+    while y <= y1 {
       routes.push((
         clr,
         route_translate_rotate(&vec![(x1, y), (x2, y)], origin, -angle),
       ));
-      y -= rng.gen_range(0.1..0.15) * size;
+      y += (rng.gen_range(0.1..0.2) * size).max(2.0);
     }
 
-    Self { routes }
+    Self {
+      routes,
+      origin,
+      size,
+    }
   }
 
   pub fn render(&self, paint: &mut PaintMask) -> Polylines {
     let routes = regular_clip(&self.routes, paint);
-    for (_, r) in &self.routes {
-      paint.paint_polyline(r, 0.5);
+    if self.size > 10.0 {
+      for (_, r) in &self.routes {
+        paint.paint_polyline(r, 0.6);
+      }
     }
     routes
+  }
+}
+
+impl<R: Rng> Renderable<R> for Cage {
+  fn render(
+    &self,
+    _rng: &mut R,
+    _ctx: &mut crate::global::GlobalCtx,
+    paint: &mut PaintMask,
+  ) -> Polylines {
+    self.render(paint)
+  }
+
+  fn zorder(&self) -> f32 {
+    self.origin.1 + 0.2 * self.size
   }
 }

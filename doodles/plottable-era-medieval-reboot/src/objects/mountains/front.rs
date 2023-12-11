@@ -96,6 +96,7 @@ impl FrontMountains {
     // add people
     // add rand objects...
     // use the Container
+    // animals
 
     if ctx.specials.contains(&Special::Chinese) {
       // FIXME BUGGY positioning. we want it on the mountain. need to do proper lookup like in the other mountains
@@ -190,6 +191,7 @@ impl FrontMountains {
       let lefthand = objs[0];
       let righthand = objs[1];
       let headshape = HeadShape::NAKED;
+      // TODO try .sit
       let posture = HumanPosture::hand_risen(rng);
       let human = Human::init(
         rng, o, size, xflip, blazon, mainclr, blazonclr, posture, headshape,
