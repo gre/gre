@@ -195,12 +195,12 @@ fn apply_destruction<R: Rng>(
     return;
   }
 
-  let scale = castleprops.grounding.scale;
+  let scale = castleprops.grounding.scale.min(0.3 * ctx.width);
   let pushbackbase =
     destruction * 0.1 * rng.gen_range(0.0..scale) * rng.gen_range(0.0..1.0);
   let pushbackrotbase = rng.gen_range(-1.0..1.0) * rng.gen_range(0.0..1.0);
   let pushbackrotmix = rng.gen_range(0.1..0.9);
-  let sliding = scale * rng.gen_range(0.5..2.0);
+  let sliding = scale * rng.gen_range(0.0..0.8);
   let increment_base = rng.gen_range(4.0..50.0);
   let o = multicut_along_line(
     rng,
@@ -641,7 +641,9 @@ fn rec_build<R: Rng>(
     }
   }
 
-  apply_destruction(&mut items, rng, ctx, castleprops);
+  if rng.gen_bool(0.3) {
+    apply_destruction(&mut items, rng, ctx, castleprops);
+  }
 
   items.sort();
 

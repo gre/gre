@@ -51,9 +51,10 @@ pub struct Human {
   pub xflip: bool,
   pub lefthand: Option<HoldableObject>,
   pub righthand: Option<HoldableObject>,
+  pub ropes: Polylines,
 }
 
-#[derive(Clone, Copy, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub enum HoldableObject {
   RaisingUnknown,
   Shield,
@@ -150,7 +151,7 @@ impl HoldableObject {
   }
 }
 
-#[derive(Clone, Copy, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub enum HeadShape {
   NAKED,
   HELMET,
@@ -215,14 +216,14 @@ impl Human {
             shields.push(shield);
           }
           HoldableObject::Axe => {
-            let axeang = handangle - PI / 2.0; // - xdir * rng.gen_range(0.0..1.0);
-            let s = 0.4 * size;
-            let a = axeang - PI / 2.0;
+            let s = 0.5 * size;
+            let axeang = -handangle;
             let handle = 0.3 * xdir;
+            let a = axeang - PI / 2.0;
             let dx = a.cos() * s * handle;
             let dy = a.sin() * s * handle;
             let o = (pos.0 + dx, pos.1 + dy);
-            let axe = Axe::init(rng, mainclr, o, s, axeang, (false, xflip));
+            let axe = Axe::init(rng, mainclr, o, s, -handangle, (false, xflip));
             axes.push(axe);
           }
           HoldableObject::Sword => {
@@ -233,7 +234,7 @@ impl Human {
           }
           HoldableObject::Torch => {
             let s = size * rng.gen_range(0.4..0.5);
-            let torch = Torch::init(rng, mainclr, 1, pos, handangle, s);
+            let torch = Torch::init(rng, mainclr, 1, pos, -handangle, s);
             torches.push(torch);
           }
           HoldableObject::Club => {
@@ -324,6 +325,7 @@ impl Human {
       xflip,
       lefthand,
       righthand,
+      ropes: vec![],
     }
   }
 
@@ -338,6 +340,12 @@ impl Human {
     let xmul = if self.xflip { -1.0 } else { 1.0 };
     let (dx, dy) = p_r((-0.25 * size, -0.1 * size * xmul), a);
     (x + dx, y + dy)
+  }
+
+  pub fn attach_rope(&mut self, clr: usize, o: (f32, f32)) {
+    self
+      .ropes
+      .push((clr, vec![o, self.body.hand_right_pos_angle().0]));
   }
 
   fn rendering_pass<R: Rng>(
@@ -430,12 +438,14 @@ impl Human {
     mask: &mut PaintMask,
   ) -> Vec<(usize, Vec<(f32, f32)>)> {
     let mut routes = vec![];
+    let ropes = regular_clip(&self.ropes, mask);
     routes.extend(self.render_foreground_only(rng, ctx, mask));
     routes.extend(self.render_background_only(rng, ctx, mask));
     let strokew = (self.body.height * 0.15).max(2.0 * mask.precision).min(1.5);
     for (_, route) in routes.iter() {
       mask.paint_polyline(route, strokew);
     }
+    routes.extend(ropes);
     routes
   }
 

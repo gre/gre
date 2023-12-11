@@ -115,9 +115,9 @@ impl Palette {
         (colors, BLACK_PAPER)
       }
       1 => {
-        let base = if rng.gen_bool(0.85) {
+        let mut base = if rng.gen_bool(0.85) {
           BLACK
-        } else if rng.gen_bool(0.25) {
+        } else if rng.gen_bool(0.2) {
           INAHO
         } else if rng.gen_bool(0.4) {
           INDIGO
@@ -128,11 +128,18 @@ impl Palette {
         } else {
           IMPERIAL_PURPLE
         };
+        if rng.gen_bool(0.01) {
+          base = SPRING_GREEN;
+        }
+        if rng.gen_bool(0.01) {
+          base = EVERGREEN;
+        }
+
         let sun = if rng.gen_bool(0.7) {
           AMBER
         } else if rng.gen_bool(0.6) {
           POPPY_RED
-        } else if rng.gen_bool(0.4) {
+        } else if rng.gen_bool(0.3) {
           INAHO
         } else if rng.gen_bool(0.5) {
           PINK
@@ -147,7 +154,7 @@ impl Palette {
               FIRE_AND_ICE
             } else if rng.gen_bool(0.4) {
               TURQUOISE
-            } else if rng.gen_bool(0.4) {
+            } else if rng.gen_bool(0.3) {
               INAHO
             } else if rng.gen_bool(0.3) {
               MOONSTONE
@@ -158,8 +165,10 @@ impl Palette {
           Blazon::Dragon => {
             if rng.gen_bool(0.7) {
               POPPY_RED
-            } else if rng.gen_bool(0.7) {
+            } else if rng.gen_bool(0.5) {
               PUMPKIN
+            } else if rng.gen_bool(0.7) {
+              PINK
             } else {
               RED_DRAGON
             }

@@ -69,16 +69,11 @@ pub struct GlobalCtx {
   pub attackersclr: usize,
   pub fireball_color: usize,
   pub fire_proba: f64,
-
+  pub arbitrary_convoys_proba: f64,
   pub projectiles: Projectiles,
   pub effects: Effects,
-
-  // stats that we need to cleanup at the end & for the features
   pub nb_cyclopes: usize,
-  pub nb_castle_siege_machine: usize,
-
   pub is_sandbox: bool,
-
   pub has_leader_been_picked: bool,
 }
 
@@ -100,6 +95,8 @@ impl GlobalCtx {
 
     let castle_on_sea = rng.gen_bool(0.2);
     let no_sea = !castle_on_sea && rng.gen_bool(0.15);
+    let no_sea = true;
+    let castle_on_sea = false;
 
     let mut night_time = paper == DARK_BLUE_PAPER
       || rng.gen_bool(0.5) && paper == BLACK_PAPER
@@ -156,7 +153,9 @@ impl GlobalCtx {
         specials.insert(Special::TrojanHorse);
       } else if rng.gen_bool(0.01) {
         let c = c[1];
-        if c == GOLD_GEL || c == AMBER {
+        if (c == GOLD_GEL || c == AMBER)
+          && !specials.contains(&Special::Barricades)
+        {
           specials.insert(Special::Montmirail);
         }
       } else if rng.gen_bool(0.05) && matches!(defenders, Blazon::Dragon) {
@@ -185,6 +184,9 @@ impl GlobalCtx {
     .max(0.01)
     .min(0.9);
 
+    let arbitrary_convoys_proba =
+      rng.gen_range(0.0..1.0) * rng.gen_range(0.0..1.0);
+
     Self {
       is_sandbox,
       castle_on_sea,
@@ -206,13 +208,13 @@ impl GlobalCtx {
       defendersclr,
       attackersclr,
       nb_cyclopes: 0,
-      nb_castle_siege_machine: 0,
       trebuchets_should_shoot,
       archers_should_shoot,
       has_leader_been_picked: false,
       rope_len_base: rng.gen_range(0.0..300.0),
       yhorizon,
       fire_proba,
+      arbitrary_convoys_proba,
     }
   }
 

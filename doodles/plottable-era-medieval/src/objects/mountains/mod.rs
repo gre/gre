@@ -1,3 +1,5 @@
+use std::f32::consts::PI;
+
 use crate::{
   algo::{
     clipping::{clip_routes_with_colors, regular_clip},
@@ -30,6 +32,8 @@ pub struct Moat {
   pub from: (f32, f32),
   pub to: (f32, f32),
   pub closing: f32,
+  pub can_belfry_attack: bool,
+  pub can_convoy_enter: bool,
 }
 
 #[derive(Clone)]
@@ -112,7 +116,12 @@ impl Mountain {
     if dx <= 0.0 {
       return 0.0;
     }
-    dy.atan2(dx)
+    let mut a = dy.atan2(dx);
+    // between -PI and PI
+    if a > PI {
+      a -= 2.0 * PI;
+    }
+    a
   }
 }
 
@@ -426,33 +435,38 @@ impl MountainsV2 {
               ));
               let closing =
                 rng.gen_range(-0.5f32..1.0).max(0.0) * rng.gen_range(0.0..1.0);
+              let can_convoy_enter = closing < 0.1;
+              let can_belfry_attack = !can_convoy_enter;
               moats.push(Moat {
                 from: fromp,
                 to: top,
                 closing,
+                can_belfry_attack,
+                can_convoy_enter,
               });
             }
           }
 
-          let main_door_pos =
-            if rng.gen_bool(if moats.len() > 0 { 0.1 } else { 0.8 }) {
-              let xpad = 0.2 * castlewidth;
-              let xfrom = castlepos.0 - castlewidth / 2.0 + xpad;
-              let xto = castlepos.0 + castlewidth / 2.0 - xpad;
-              let xstep = 0.05 * castlewidth;
-              let mut x = xfrom;
-              let mut best: Option<(f32, f32)> = None;
-              while x <= xto {
-                let y = lookup_ridge(&ridge, x);
-                if y < best.map(|p| p.1).unwrap_or(yhorizon) {
-                  best = Some((x, y));
-                }
-                x += xstep;
+          let main_door_pos = if true||// FIXME TMP
+            rng.gen_bool(if moats.len() > 0 { 0.1 } else { 0.8 })
+          {
+            let xpad = 0.2 * castlewidth;
+            let xfrom = castlepos.0 - castlewidth / 2.0 + xpad;
+            let xto = castlepos.0 + castlewidth / 2.0 - xpad;
+            let xstep = 0.05 * castlewidth;
+            let mut x = xfrom;
+            let mut best: Option<(f32, f32)> = None;
+            while x <= xto {
+              let y = lookup_ridge(&ridge, x);
+              if y < best.map(|p| p.1).unwrap_or(yhorizon) {
+                best = Some((x, y));
               }
-              best
-            } else {
-              None
-            };
+              x += xstep;
+            }
+            best
+          } else {
+            None
+          };
 
           Some(CastleGrounding {
             position: castlepos,

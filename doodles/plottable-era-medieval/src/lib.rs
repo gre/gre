@@ -110,7 +110,8 @@ pub fn render(
 
   if !ctx.is_sandbox || rng.gen_bool(0.2) {
     perf.span("framing", &decoration_routes);
-    let golden_frame = palette.inks[1] == GOLD_GEL && rng.gen_bool(0.3);
+    let golden_frame =
+      palette.inks[1] == GOLD_GEL && rng.gen_bool(0.3) || rng.gen_bool(0.01);
     let clr = if golden_frame { 1 } else { 0 };
     decoration_routes.extend(medieval_frame(
       &mut rng, &ctx, &mut paint, width, height, pad, framingw, clr,

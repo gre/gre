@@ -71,6 +71,8 @@ impl HumanPosture {
       origin_on_feet: false,
     }
   }
+
+  // the code produced here has been very empirically tuned based on my needs.
   pub fn from_holding<R: Rng>(
     rng: &mut R,
     xflip: bool,
@@ -105,6 +107,7 @@ impl HumanPosture {
     let shoulder_left_angle = -PI / 2.0
       + match lefthand {
         None => -xdir * PI * 0.8,
+        Some(HoldableObject::Torch) => -xdir * PI * rng.gen_range(0.1..0.4),
         _ => {
           -xdir
             * (PI / 2.0)

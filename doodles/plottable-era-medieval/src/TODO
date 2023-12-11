@@ -1,30 +1,27 @@
 DEV:
 - battlefield
   - belfry (people, polishes)
-  - human managing the cannon, with a torch to fire the canon.
-  - people managing trebuchet and catapult
-  - only place machines on opportunated locations (belier on door, cannon on mountain next to castle when possible, catapult and trebuchet far enough)
-  - improve helmet variety
 - front mountain rework
   - camp and fire?
   - animals
-- improve/fix castle destruction. fire/smoke that goes with it
-  - human pos in destruction?
-  - exploding parts, using another polar split technique
-  - remove if something is too far away?
 - rock have possibility to spawn more interesting things?
   - nest
   - weapons
   - an observer / lost person. share code with the front mountain rework logic
+- improve/fix castle destruction. fire/smoke that goes with it
+  - human pos in destruction?
+  - exploding parts, using another polar split technique
+  - remove if something is too far away?
 - castle elements
   - stairs => where we can find some empty space. typically in the big towers.
   - machicoulis under merlon
-- reflect sea objects on the sea too + shadow it creates
+- SEA
+  - reflect sea objects on the sea too + shadow it creates
 
 IMPORTANT POLISHES:
-- buggy axe angle
-- buggy torch angle
 - review all rare cases (specials)
+- improve helmet variety
+- palette review. should we favorize some combination?
 
 PROTOTYPE TO TEST:
 - test density of an extreme case of fire

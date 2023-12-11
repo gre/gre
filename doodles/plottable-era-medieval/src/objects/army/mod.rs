@@ -33,6 +33,7 @@ use crate::{
     packing::VCircle,
     paintmask::PaintMask,
     pathlookup::PathLookup,
+    polylines::step_polyline,
     renderable::{Container, Renderable},
     shapes::circle_route,
   },
@@ -107,6 +108,8 @@ impl ArmyOnMountain {
     mountains: &MountainsV2,
     index: usize,
   ) -> Vec<(usize, Vec<(f32, f32)>)> {
+    let mut routes = vec![];
+
     let mut debug_circle: Vec<VCircle> = vec![];
     let mut exclusion_mask = paint.clone_empty_rescaled(1.0);
 
@@ -174,7 +177,7 @@ impl ArmyOnMountain {
       .collect::<Vec<_>>();
 
     if path.len() > 1 {
-      if has_wall {
+      if has_wall && !ctx.specials.contains(&Special::TrojanHorse) {
         if path.len() > 1 && (path[path.len() - 1].0 - path[0].0).abs() > minw {
           let path = moving_average_2d(&path, path.len() / 10);
           let baseh = rng.gen_range(0.05..0.08) * width;
@@ -182,7 +185,7 @@ impl ArmyOnMountain {
             MountainWall::init(ctx, rng, blazonclr, mainclr, &path, baseh);
           renderables.extend(wall.container);
         }
-      } else if rng.gen_bool(0.5) {
+      } else if rng.gen_bool(ctx.arbitrary_convoys_proba) {
         // we use this path to make a convoy. but we need to check first if there are room for it.
         let len = path.len();
         let checks = (rng.gen_range(4..20)).min(len);
@@ -200,7 +203,7 @@ impl ArmyOnMountain {
         }
 
         if is_valid {
-          let size = rng.gen_range(0.04..0.07) * width;
+          let size = rng.gen_range(0.04..0.06) * width;
           let xflip = rng.gen_bool(0.5);
           make_random_convoy(
             rng,
@@ -221,7 +224,7 @@ impl ArmyOnMountain {
       // it's the castle mountain
       // we will try to also make a convoy entering the castle from a side. if it's possible
       for m in &castle.moats {
-        if m.closing > 0.05 {
+        if !m.can_convoy_enter {
           continue;
         }
 
@@ -271,6 +274,129 @@ impl ArmyOnMountain {
           &path,
           ifrom < ilast,
         );
+      }
+
+      // opportunity to spawn a belier on the door
+      if let Some(door) = castle.main_door_pos {
+        let stability = mountain.ground_stability((door.0, door.1 + 5.0), 4.0);
+        let cell = mountains.battlefield.get(door.0, door.1);
+        if stability > 0.5
+          && (matches!(cell, Area::Empty) || matches!(cell, Area::Attacker(_)))
+        {
+          let xflip = door.0 < castle.position.0;
+          let triangle_structure = rng.gen_bool(0.7);
+          let s = rng.gen_range(0.1..0.13) * width;
+
+          let dx = if xflip { 0.5 * s } else { -0.5 * s };
+          let o = mountain.ridge_pos_for_x(door.0 + dx);
+          let slope = mountain.slope_for_x(o.0);
+
+          let is_belier = rng.gen_bool(0.8);
+          if is_belier {
+            let machine = Belier::init(
+              rng,
+              mainclr,
+              o,
+              s,
+              slope.max(-1.0).min(1.0),
+              xflip,
+              triangle_structure,
+            );
+            for pos in machine.human_positions() {
+              let size = 0.5 * s;
+              let headshape = HeadShape::NAKED;
+              let leftobj = Some(HoldableObject::RaisingUnknown);
+              let rightobj = Some(HoldableObject::RaisingUnknown);
+              let posture =
+                HumanPosture::from_holding(rng, false, leftobj, rightobj);
+              let warrior = Human::init(
+                rng, pos, size, xflip, blazon, mainclr, blazonclr, posture,
+                headshape, leftobj, rightobj,
+              );
+              renderables.add(warrior);
+            }
+            renderables.add(machine);
+          } else {
+            // fallback to triangle structure
+            let h = rng.gen_range(0.3..0.5) * s;
+            let w = rng.gen_range(1.0..2.0) * s;
+            let machine = TunnelStructure::init(rng, mainclr, o, slope, h, w);
+            renderables.add(machine);
+
+            let acos = slope.cos();
+            let asin = slope.sin();
+            let v1 = 0.5;
+            let v2 = 0.5;
+            let xflip = slope > 0.;
+            let (v1, v2) = if xflip { (v1, v2) } else { (v2, v1) };
+            let mvdown = 0.18;
+            let dx = -mvdown * w * asin;
+            let dy = mvdown * w * acos;
+            let p1 = (o.0 + v1 * w * acos + dx, o.1 + v1 * w * asin + dy);
+            let p2 = (o.0 - v2 * w * acos + dx, o.1 - v2 * w * asin + dy);
+            let step = rng.gen_range(0.1..0.15) * s;
+            for p in step_polyline(&vec![p1, p2], step) {
+              if rng.gen_bool(0.3) {
+                continue;
+              }
+              let size = rng.gen_range(0.3..0.4) * s;
+              let headshape = HeadShape::HELMET;
+              let leftobj = Some(HoldableObject::Shield);
+              let rightobj = Some(HoldableObject::Sword);
+              let posture = HumanPosture::sit(rng, slope);
+              let origin = p;
+              let warrior = Human::init(
+                rng, origin, size, xflip, blazon, mainclr, blazonclr, posture,
+                headshape, leftobj, rightobj,
+              );
+              renderables.add(warrior);
+            }
+          }
+
+          let area = VCircle::new(o.0, o.1, s);
+          debug_circle.push(area);
+          exclusion_mask.paint_circle(area.x, area.y, area.r);
+        }
+      }
+
+      // opportunity to spawn a belfry
+      for m in &castle.moats {
+        if !m.can_belfry_attack {
+          continue;
+        }
+        let cell = mountains.battlefield.get(m.to.0, m.to.1);
+        if !(matches!(cell, Area::Empty) || matches!(cell, Area::Attacker(_))) {
+          continue;
+        }
+        let h = ctx.width * rng.gen_range(0.08..0.12);
+        let bridge_width = rng.gen_range(0.3..0.5) * h;
+        let bridge_opening = rng.gen_range(0.5f32..2.0).min(1.0);
+        let clr = mainclr;
+        let origin = m.to;
+        let xflip = m.to.0 > castle.position.0;
+        let x2 = origin.0 + m.to.0 - m.from.0;
+        let o2 = mountain.ridge_pos_for_x(x2);
+        let dx = o2.0 - origin.0;
+        let dy = o2.1 - origin.1;
+        let slope = dy.abs() / dx.abs();
+        if slope > 0.2 {
+          continue;
+        }
+        renderables.add(Belfry::init(
+          rng,
+          clr,
+          origin,
+          h,
+          bridge_width,
+          bridge_opening,
+          xflip,
+        ));
+
+        // TODO spawn people
+
+        let area = VCircle::new(origin.0, origin.1, h);
+        debug_circle.push(area);
+        exclusion_mask.paint_circle(area.x, area.y, area.r);
       }
     }
 
@@ -327,7 +453,6 @@ impl ArmyOnMountain {
       }
       let maxa = 0.8;
       angle = angle.max(-maxa).min(maxa);
-      // FIXME i think angle is fucked up. eg on catapulte
 
       let mut spawn_animal = |rng: &mut R| {
         let proximity = 2.0;
@@ -543,10 +668,8 @@ impl ArmyOnMountain {
             }
           }
 
-          let proximity = (if is_leader { 2.0 } else { 1.0 })
-            //* (if props.on_horse { 2.0 } else { 1.0 })
-            * props.proximity
-            * size;
+          let proximity =
+            (if is_leader { 2.0 } else { 1.0 }) * props.proximity * size;
           let circle = VCircle::new(x, y - 0.5 * size, proximity);
           debug_circle.push(circle);
           exclusion_mask.paint_circle(circle.x, circle.y, circle.r);
@@ -558,7 +681,6 @@ impl ArmyOnMountain {
             continue;
           }
 
-          // TODO spawn people
           let angle = 0.3 * angle;
           let xflip = props.oriented_left;
           if rng.gen_bool(catapult_instead_of_cannon_proba) {
@@ -566,10 +688,31 @@ impl ArmyOnMountain {
             let size = rng.gen_range(0.04..0.06) * width;
             let catapult =
               Catapult::init(rng, clr, origin, size, angle, xflip, progress);
-
             catapult.throw_projectiles(ctx);
-
             renderables.add(catapult);
+
+            for _ in 0..rng.gen_range(1..4) {
+              let righthand = None;
+              let lefthand = None;
+              let headshape = HeadShape::HELMET;
+              let posture =
+                HumanPosture::from_holding(rng, xflip, lefthand, righthand);
+
+              let x = origin.0
+                + rng.gen_range(1.0..2.0)
+                  * size
+                  * if xflip { -1.0 } else { 1.0 };
+              let p = mountain.ridge_pos_for_x(x);
+              let y = (origin.1 + rng.gen_range(-0.1..0.3) * size).max(p.1);
+              let origin = (x, y);
+              let size = 0.7 * size;
+              let xflip = !xflip;
+              let human = Human::init(
+                rng, origin, size, xflip, blazon, mainclr, blazonclr, posture,
+                headshape, lefthand, righthand,
+              );
+              renderables.add(human);
+            }
 
             let circle = VCircle::new(x, y - 0.5 * size, 1.5 * size);
             debug_circle.push(circle);
@@ -577,14 +720,32 @@ impl ArmyOnMountain {
           } else {
             let size = rng.gen_range(0.01..0.015) * width;
             let cannon = Cannon::init(rng, clr, origin, size, angle, xflip);
-
             cannon.throw_projectiles(ctx);
-
             renderables.add(cannon);
-
             let circle = VCircle::new(x, y - 0.5 * size, 3.0 * size);
             debug_circle.push(circle);
             exclusion_mask.paint_circle(circle.x, circle.y, circle.r);
+
+            let righthand = None;
+            let lefthand = Some(HoldableObject::Torch);
+            let headshape = HeadShape::HELMET;
+            let posture =
+              HumanPosture::from_holding(rng, xflip, lefthand, righthand);
+
+            let origin = (
+              origin.0
+                + rng.gen_range(2.4..2.6)
+                  * size
+                  * if xflip { -1.0 } else { 1.0 },
+              origin.1 + rng.gen_range(0.8..1.2) * size,
+            );
+            let size = 3.0 * size;
+            let xflip = !xflip;
+            let human = Human::init(
+              rng, origin, size, xflip, blazon, mainclr, blazonclr, posture,
+              headshape, lefthand, righthand,
+            );
+            renderables.add(human);
           }
         }
 
@@ -674,7 +835,8 @@ impl ArmyOnMountain {
           );
           renderables.add(tree);
 
-          let area = VCircle::new(x, y - 0.3 * size, 0.3 * size);
+          let area =
+            VCircle::new(x, y - 0.3 * size, rng.gen_range(0.3..0.4) * size);
           debug_circle.push(area);
           exclusion_mask.paint_circle(area.x, area.y, area.r);
         }
@@ -707,67 +869,6 @@ impl ArmyOnMountain {
           exclusion_mask.paint_circle(area.x, area.y, area.r);
         }
 
-        Area::CastleSiegeMachine(props) => {
-          if ctx.nb_castle_siege_machine > 2 {
-            continue;
-          }
-
-          let stability = mountain.ground_stability(origin, 5.0);
-          if stability < 0.5 {
-            continue;
-          }
-
-          // TODO spawn people
-          let h = rng.gen_range(0.05..0.1) * width;
-          let xflip = props.oriented_left;
-          if rng.gen_bool(0.5) {
-            let triangle_structure = rng.gen_bool(0.7);
-            let s = rng.gen_range(0.1..0.13) * width;
-
-            let o = (x, y - 0.3 * h);
-            let machine =
-              Belier::init(rng, clr, o, s, 0.0, xflip, triangle_structure);
-
-            for pos in machine.human_positions() {
-              let size = 0.5 * s;
-              let headshape = HeadShape::NAKED;
-              let leftobj = Some(HoldableObject::RaisingUnknown);
-              let rightobj = Some(HoldableObject::RaisingUnknown);
-              let posture =
-                HumanPosture::from_holding(rng, false, leftobj, rightobj);
-              let warrior = Human::init(
-                rng, pos, size, xflip, blazon, mainclr, blazonclr, posture,
-                headshape, leftobj, rightobj,
-              );
-              renderables.add(warrior);
-            }
-            renderables.add(machine);
-          } else if rng.gen_bool(0.5) {
-            let bridge_width = rng.gen_range(0.3..0.6) * h;
-            let bridge_opening = rng.gen_range(0.0f32..2.0).min(1.0);
-            renderables.add(Belfry::init(
-              rng,
-              clr,
-              origin,
-              h,
-              bridge_width,
-              bridge_opening,
-              xflip,
-            ));
-          } else {
-            let h = width * 0.05;
-            let w = width * rng.gen_range(0.1..0.25);
-            let machine = TunnelStructure::init(rng, clr, origin, 0.0, h, w);
-            renderables.add(machine);
-          }
-
-          let area = VCircle::new(x, y - 0.3 * h, h);
-          debug_circle.push(area);
-          exclusion_mask.paint_circle(area.x, area.y, area.r);
-
-          ctx.nb_castle_siege_machine += 1;
-        }
-
         Area::DistantSiegeMachine(props) => {
           if remaining_trebuchets == 0 {
             continue;
@@ -778,8 +879,6 @@ impl ArmyOnMountain {
             continue;
           }
 
-          // TODO spawn people
-
           let height = rng.gen_range(0.08..0.12) * width;
           let action_percent =
             if ctx.trebuchets_should_shoot && !mountain.is_behind {
@@ -788,14 +887,22 @@ impl ArmyOnMountain {
               0.0
             };
           let xflip = props.oriented_left;
-          let clr = mainclr;
 
-          let trebuchet =
-            Trebuchet::init(rng, origin, height, action_percent, xflip, clr);
+          let ylimit_for_x = |x| mountain.ridge_pos_for_x(x).1;
 
-          trebuchet.throw_projectiles(ctx);
-
-          renderables.add(trebuchet);
+          spawn_trebuchet(
+            rng,
+            ctx,
+            &mut renderables,
+            action_percent,
+            height,
+            xflip,
+            origin,
+            &ylimit_for_x,
+            blazon,
+            mainclr,
+            blazonclr,
+          );
 
           let area = VCircle::new(x, y - 0.3 * height, height);
           debug_circle.push(area);
@@ -804,8 +911,6 @@ impl ArmyOnMountain {
         }
       }
     }
-
-    let mut routes = vec![];
 
     routes.extend(renderables.render(rng, ctx, paint));
 
@@ -1088,4 +1193,47 @@ fn montmirail<R: Rng>(
   );
   renderables.add(godefroy);
   renderables.add(car);
+}
+
+pub fn spawn_trebuchet<R: Rng>(
+  rng: &mut R,
+  ctx: &mut GlobalCtx,
+  renderables: &mut Container<R>,
+  action_percent: f32,
+  height: f32,
+  xflip: bool,
+  origin: (f32, f32),
+  ylimit_for_x: impl Fn(f32) -> f32,
+  blazon: Blazon,
+  mainclr: usize,
+  blazonclr: usize,
+) {
+  let clr = mainclr;
+  let trebuchet =
+    Trebuchet::init(rng, origin, height, action_percent, xflip, clr);
+  trebuchet.throw_projectiles(ctx);
+  let wc = trebuchet.get_wheel_center();
+  renderables.add(trebuchet);
+
+  for i in 0..rng.gen_range(1..7) {
+    let righthand = None;
+    let lefthand = None;
+    let headshape = HeadShape::HELMET;
+    let posture = HumanPosture::from_holding(rng, xflip, lefthand, righthand);
+
+    let x = origin.0
+      + rng.gen_range(0.8..1.5) * height * if xflip { 1.0 } else { -1.0 };
+    let limit = ylimit_for_x(x);
+    let y = (origin.1 + rng.gen_range(-0.2..0.3) * height).max(limit);
+    let origin = (x, y);
+    let size = 0.5 * height;
+    let mut human = Human::init(
+      rng, origin, size, xflip, blazon, mainclr, blazonclr, posture, headshape,
+      lefthand, righthand,
+    );
+    if i == 0 || rng.gen_bool(0.2) {
+      human.attach_rope(mainclr, wc);
+    }
+    renderables.add(human);
+  }
 }

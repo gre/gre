@@ -20,7 +20,7 @@ use rand::prelude::*;
  * Author: greweb – 2023 – Plottable Era: (II) Medieval
  */
 
-#[derive(Clone, Copy, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct HumanProps {
   pub proximity: f32, // multiplicator that controls density units can be
   pub oriented_left: bool,
@@ -30,31 +30,25 @@ pub struct HumanProps {
   pub rightobj: Option<HoldableObject>,
 }
 
-#[derive(Clone, Copy, PartialEq)]
-pub struct CastleSiegeMachineProps {
-  pub oriented_left: bool,
-}
-
-#[derive(Clone, Copy, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct DistantSiegeMachineProps {
   pub oriented_left: bool,
   pub action_percent: f32,
 }
 
-#[derive(Clone, Copy, PartialEq)]
-pub struct CannonProps {
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct DirSiegeProps {
   pub oriented_left: bool,
 }
 
-#[derive(Clone, Copy, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub enum Area {
   Defender(HumanProps),
   Empty,
   Animal,
   Tree(f32, f32),
   Attacker(HumanProps),
-  DirectionalSiegeMachine(CannonProps),
-  CastleSiegeMachine(CastleSiegeMachineProps),
+  DirectionalSiegeMachine(DirSiegeProps),
   DistantSiegeMachine(DistantSiegeMachineProps), // spawn machines + their humans
   Cyclope,
   Hut,
@@ -299,14 +293,13 @@ impl BattlefieldArea {
           area = candidates[rng.gen_range(0..candidates.len())];
         }
 
-        if noise200 < -0.2 && noise50 > 0.0 && dcastle < 20.0 {
-          area = Area::CastleSiegeMachine(CastleSiegeMachineProps {
-            oriented_left: rng.gen(),
-          });
-        }
+        let n1 =
+          rng.gen_range(-0.5..0.5) * rng.gen_range(0.0f64..1.0).powf(10.0);
+        let n2 = -0.2
+          + rng.gen_range(-0.5..0.5) * rng.gen_range(0.0f64..1.0).powf(10.0);
 
-        if noise200 > 0.0
-          && noise50 < -0.2
+        if noise200 > n1
+          && noise50 < n2
           && matches!(area, Area::Attacker(_))
           && (0.1..0.9).contains(&xratio)
         {
@@ -317,7 +310,7 @@ impl BattlefieldArea {
           {
             if distance_angles(a as f32, castle_angle) < accepted_dist {
               area =
-                Area::DirectionalSiegeMachine(CannonProps { oriented_left });
+                Area::DirectionalSiegeMachine(DirSiegeProps { oriented_left });
             }
           }
         }
@@ -343,7 +336,6 @@ impl BattlefieldArea {
         if no_attackers
           && (matches!(area, Area::Attacker(_))
             || matches!(area, Area::DistantSiegeMachine(_))
-            || matches!(area, Area::CastleSiegeMachine(_))
             || matches!(area, Area::DirectionalSiegeMachine(_)))
         {
           area = Area::Defender(HumanProps {
@@ -389,17 +381,6 @@ impl BattlefieldArea {
         {
           area = Area::Cyclope;
         }
-
-        /*
-        area = if (xf / 210. - 0.5).abs() < 0.05 {
-          let foliage_ratio =
-            (0.5 + 0.6 * (noise400 + noise12)).max(0.4).min(0.8) as f32;
-          let bush_width_ratio = mix(0.3, 1.0, 0.5 + 0.5 * noise25 as f32);
-          Area::Tree(foliage_ratio, bush_width_ratio)
-        } else {
-          Area::Empty
-        };
-        */
 
         cells[i] = area;
       }

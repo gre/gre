@@ -65,8 +65,12 @@ impl Ladder {
     let to = lookup.length() - pad;
     let mut l = from;
     let xflip = false;
-    let diffbase = rng.gen_range(0.4..1.4);
+    let diffbase = rng.gen_range(0.3..1.0);
     while l < to {
+      if rng.gen_bool(0.5) {
+        l += 2. * diffbase;
+        continue;
+      }
       let p = lookup.lookup_pos(l);
       let angle = lookup.lookup_angle(l);
       let posture = HumanPosture::climbing(rng, angle, 0.0);
@@ -90,12 +94,7 @@ impl Ladder {
         headshape, lefthand, righthand,
       );
       humans.push(human);
-      l += humansize
-        * (diffbase
-          + rng.gen_range(0.0..4.0)
-            * rng.gen_range(0.0..1.0)
-            * rng.gen_range(0.0..1.0)
-            * rng.gen_range(0.0..1.0));
+      l += humansize * diffbase * rng.gen_range(0.8..1.2);
     }
 
     Self {

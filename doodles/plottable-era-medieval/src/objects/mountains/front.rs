@@ -190,9 +190,13 @@ impl FrontMountains {
         .collect::<Vec<_>>();
       let lefthand = objs[0];
       let righthand = objs[1];
+
       let headshape = HeadShape::NAKED;
-      // TODO try .sit
-      let posture = HumanPosture::hand_risen(rng);
+      let posture = if rng.gen_bool(0.8) {
+        HumanPosture::hand_risen(rng)
+      } else {
+        HumanPosture::sit(rng, 0.0)
+      };
       let human = Human::init(
         rng, o, size, xflip, blazon, mainclr, blazonclr, posture, headshape,
         lefthand, righthand,

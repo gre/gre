@@ -24,6 +24,7 @@ pub struct Trebuchet {
   basket_position: (f32, f32),
   origin: (f32, f32),
   action_percent: f32,
+  wheel_center: (f32, f32),
 }
 
 impl Trebuchet {
@@ -415,11 +416,16 @@ impl Trebuchet {
       basket_position,
       origin,
       action_percent,
+      wheel_center,
     }
   }
 
   pub fn get_basket_position(&self) -> (f32, f32) {
     self.basket_position
+  }
+
+  pub fn get_wheel_center(&self) -> (f32, f32) {
+    self.wheel_center
   }
 
   pub fn render(&self, paint: &mut PaintMask) -> Polylines {

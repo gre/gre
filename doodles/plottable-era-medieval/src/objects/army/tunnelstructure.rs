@@ -60,7 +60,7 @@ impl TunnelStructure {
 
     let mut routes = Polylines::new();
     for poly in polys {
-      let mut rt = route_translate_rotate(&poly, origin, angle);
+      let mut rt = route_translate_rotate(&poly, origin, -angle);
       rt.push(rt[0]);
       routes.push((clr, rt));
     }
@@ -74,7 +74,7 @@ impl TunnelStructure {
     o.0 += a.cos() * h / 2.0;
     o.1 += a.sin() * h / 2.0;
     let wheelplat =
-      WheeledPlatform::init(o, wh, w, angle, wheel_pad, wheel_count, clr);
+      WheeledPlatform::init(o, wh, w, -angle, wheel_pad, wheel_count, clr);
 
     Self {
       routes,
@@ -84,14 +84,20 @@ impl TunnelStructure {
     }
   }
 
-  pub fn render(&self, paint: &mut PaintMask) -> Polylines {
+  pub fn render<R: Rng>(
+    &self,
+    rng: &mut R,
+    paint: &mut PaintMask,
+  ) -> Polylines {
     let mut out = vec![];
     out.extend(self.wheelplat.render(paint));
 
     let rts = regular_clip(&self.routes, paint);
     out.extend(rts);
     for (_, route) in &self.routes {
-      paint.paint_polygon(route);
+      if rng.gen_bool(0.3) {
+        paint.paint_polygon(route);
+      }
       paint.paint_polyline(route, 1.0);
     }
 
@@ -102,11 +108,11 @@ impl TunnelStructure {
 impl<R: Rng> Renderable<R> for TunnelStructure {
   fn render(
     &self,
-    _rng: &mut R,
+    rng: &mut R,
     _ctx: &mut crate::global::GlobalCtx,
     paint: &mut PaintMask,
   ) -> Polylines {
-    self.render(paint)
+    self.render(rng, paint)
   }
 
   fn zorder(&self) -> f32 {
