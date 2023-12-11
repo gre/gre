@@ -13,13 +13,15 @@ use super::polylines::Polylines;
  * Author: greweb – 2023 – Plottable Era: (II) Medieval
  */
 
-// it's like a Renderable item, but we need to work with polygon for the destruction logic.
+// it's like a Renderable item, but with a focus on polygon like shapes that can be slices and explored into parts (for the destruction logic)
 #[derive(Clone)]
 pub struct RenderItem {
   pub routes: Polylines,
   pub polygons: Vec<Vec<(f32, f32)>>,
   pub zorder: f32,
-  // hack in order to return other things that aren't fitting in here
+  // sometimes, the objects are not designed to fit into the polygons realm / uses diff paradigm,
+  // so to connect both worlds, a special object will store the object with an id.
+  // it's a ForeignObject in order to track the possible translation and rotation
   pub foreign: Option<ForeignObject>,
 }
 
@@ -154,13 +156,11 @@ pub fn binary_cut_and_slide(
 
   let is_left =
     |(x, y)| (x - center.0) * (b.1 - a.1) - (y - center.1) * (b.0 - a.0) > 0.0;
-
   let is_right = |p| !is_left(p);
 
   let project = |(x, y), leftmul| {
     let local = (x - center.0, y - center.1);
     let local = p_r(local, pushback_rotation * leftmul);
-
     (
       center.0 + local.0 + (sliding * dx - pushback * dy) * leftmul,
       center.1 + local.1 + (sliding * dy + pushback * dx) * leftmul,
@@ -169,21 +169,15 @@ pub fn binary_cut_and_slide(
 
   let mut items = vec![];
   for item in items_in.iter() {
-    let mut polygons = vec![];
-    let mut routes = vec![];
+    let mut polygons_left = vec![];
+    let mut polygons_right = vec![];
     let foreign = item.foreign.clone().map(|f| {
       let mut f = f.clone();
-      let leftmul = if is_left(f.current_absolute_pos) {
-        1.0
-      } else {
-        -1.0
-      };
+      let pos = f.current_absolute_pos;
+      let leftmul = if is_left(pos) { 1.0 } else { -1.0 };
       f.rotation += pushback_rotation * leftmul;
-      let newp = project(f.current_absolute_pos, leftmul);
-      let diff = (
-        newp.0 - f.current_absolute_pos.0,
-        newp.1 - f.current_absolute_pos.1,
-      );
+      let newp = project(pos, leftmul);
+      let diff = (newp.0 - pos.0, newp.1 - pos.1);
       f.translation.0 += diff.0;
       f.translation.1 += diff.1;
       f.current_absolute_pos = newp;
@@ -201,18 +195,21 @@ pub fn binary_cut_and_slide(
         let len = p.len() as f32;
         c = (c.0 / len, c.1 / len);
 
-        let leftmul = if is_left(c) { 1.0 } else { -1.0 };
-
+        let left = is_left(c);
+        let leftmul = if left { 1.0 } else { -1.0 };
         let p = p.iter().map(|&p| project(p, leftmul)).collect();
-
-        polygons.push(p);
+        if left {
+          polygons_left.push(p);
+        } else {
+          polygons_right.push(p);
+        }
       }
     }
 
     let mut left_routes =
-      clip_routes_with_colors(&item.routes, &is_right, 0.3, 4);
+      clip_routes_with_colors(&item.routes, &is_right, 0.5, 4);
     let mut right_routes =
-      clip_routes_with_colors(&item.routes, &is_left, 0.3, 4);
+      clip_routes_with_colors(&item.routes, &is_left, 0.5, 4);
 
     let out_of_polys = |p| !polygons_includes_point(&item.polygons, p);
 
@@ -222,22 +219,46 @@ pub fn binary_cut_and_slide(
     left_routes.extend(cut_routes.clone());
     right_routes.extend(cut_routes.clone());
 
-    let data = vec![(1.0, left_routes), (-1.0, right_routes)];
-    for (leftmul, rts) in data {
-      for (clr, rt) in rts {
-        let newrt = rt.iter().map(|&p| project(p, leftmul)).collect();
-        routes.push((clr, newrt));
+    for (_, rt) in &mut left_routes {
+      for p in rt {
+        *p = project(*p, 1.0);
       }
     }
 
-    // TODO make 2 render items (? also test if we need to alter the zorder depending on function)
+    for (_, rt) in &mut right_routes {
+      for p in rt {
+        *p = project(*p, -1.0);
+      }
+    }
 
-    items.push(RenderItem {
-      routes,
-      polygons,
-      zorder: item.zorder,
-      foreign,
-    });
+    let zorder = item.zorder;
+
+    if left_routes.len() > 0 {
+      items.push(RenderItem {
+        routes: left_routes,
+        polygons: polygons_left,
+        zorder,
+        foreign: None,
+      });
+    }
+
+    if right_routes.len() > 0 {
+      items.push(RenderItem {
+        routes: right_routes,
+        polygons: polygons_right,
+        zorder,
+        foreign: None,
+      });
+    }
+
+    if foreign.is_some() {
+      items.push(RenderItem {
+        routes: vec![],
+        polygons: vec![],
+        zorder,
+        foreign,
+      });
+    }
   }
 
   items

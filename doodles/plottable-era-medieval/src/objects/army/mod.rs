@@ -259,7 +259,7 @@ impl ArmyOnMountain {
           }
         }
 
-        let size = rng.gen_range(0.03..0.06) * width;
+        let size = rng.gen_range(0.03..0.05) * width;
         make_random_convoy(
           rng,
           &mut renderables,
