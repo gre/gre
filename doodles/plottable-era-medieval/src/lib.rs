@@ -149,23 +149,25 @@ pub fn render(
     let yhorizon = ctx.yhorizon;
 
     //  mountains
-    perf.span("mountains_front", &routes);
-    let ystart = if ctx.no_sea {
-      rng.gen_range(0.7..1.0) * height
-    } else {
-      mix(yhorizon, height, rng.gen_range(0.0..1.0))
-    };
+    if rng.gen_bool(0.3) {
+      perf.span("mountains_front", &routes);
+      let ybase = height - pad - framingw;
+      let ystart = if ctx.no_sea {
+        (rng.gen_range(0.7..1.0) * height).min(ybase - 0.05 * height)
+      } else {
+        mix(yhorizon, ybase, rng.gen_range(-0.2..0.9))
+      };
 
-    let ybase = height - pad;
-    let clr = 0;
-    let mut mountains = FrontMountains {
-      clr,
-      ybase,
-      ystart,
-      width,
-    };
-    routes.extend(mountains.render(&mut ctx, &mut rng, &mut paint));
-    perf.span_end("mountains_front", &routes);
+      let clr = 0;
+      let mut mountains = FrontMountains {
+        clr,
+        ybase,
+        ystart,
+        width,
+      };
+      routes.extend(mountains.render(&mut ctx, &mut rng, &mut paint));
+      perf.span_end("mountains_front", &routes);
+    }
 
     let sea_data = if !ctx.no_sea {
       perf.span("sea", &vec![]);

@@ -1,7 +1,7 @@
 # Plottable Era: (II) Medieval
 
 <!--
-digital price: 80tz -> 20tz
+digital price: 20tz
 redeem price: 80tz
 tags: physical, phygital, irl, redeemables, plottable, rust, wasm, plot
 -->
@@ -12,9 +12,6 @@ tags: physical, phygital, irl, redeemables, plottable, rust, wasm, plot
 
 <!--
 Each NFT is a recipe to a physical plot (A4) and utilizes the Redeemables feature of fxhash, allowing owners to unlock a physical plot directly coming from @greweb's pen plotter.
-
-- TIER 1 plots are offered! (Redeem price will be refunded)
-- TIER 2 can proceed to the Redeem with the physical cost price (paper, ink, shipping)
 
 The NFT serves as the key to obtaining a physically plottable art piece. It exports an SVG file that can be used for plotting with pens. Plotter artists have the freedom to utilize their own materials and ship the completed artwork to collectors, provided they possess the NFT at the time of the request. To obtain the .SVG file, simply drag and drop it into a folder or right-click and save.
 

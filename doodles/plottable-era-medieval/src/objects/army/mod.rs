@@ -509,31 +509,16 @@ impl ArmyOnMountain {
       angle = angle.max(-maxa).min(maxa);
 
       let mut spawn_animal = |rng: &mut R| {
-        let proximity = 2.0;
-        if rng.gen_bool(0.2) {
-          let size = rng.gen_range(0.7..1.0) * 0.015 * width;
-          let obj = Armadillo::init(rng, clr, origin, size, -angle);
-          renderables.add(obj);
-          let circle = VCircle::new(x, y - 0.5 * size, proximity * size);
-          debug_circle.push(circle);
-          exclusion_mask.paint_circle(circle.x, circle.y, circle.r);
-        } else if rng.gen_bool(0.4) {
-          let size = rng.gen_range(0.02..0.03) * width;
-          let obj = Fowl::init(rng, clr, origin, size, angle);
-          renderables.add(obj);
-          let circle = VCircle::new(x, y - 0.5 * size, proximity * size);
-          debug_circle.push(circle);
-          exclusion_mask.paint_circle(circle.x, circle.y, circle.r);
-        } else {
-          let size = rng.gen_range(0.02..0.035) * width;
-          let reversex = rng.gen_bool(0.5);
-          let barking = rng.gen_bool(0.5);
-          let obj = Dog::init(rng, clr, origin, size, reversex, barking);
-          renderables.add(obj);
-          let circle = VCircle::new(x, y - 0.5 * size, proximity * size);
-          debug_circle.push(circle);
-          exclusion_mask.paint_circle(circle.x, circle.y, circle.r);
-        };
+        let size = rng.gen_range(0.02..0.03) * width;
+        spawn_animal(
+          rng,
+          &mut renderables,
+          &mut exclusion_mask,
+          origin,
+          size,
+          angle,
+          mainclr,
+        );
       };
 
       match area {
@@ -1290,4 +1275,36 @@ pub fn spawn_trebuchet<R: Rng>(
     }
     renderables.add(human);
   }
+}
+
+pub fn spawn_animal<R: Rng>(
+  rng: &mut R,
+  renderables: &mut Container<R>,
+  exclusion_mask: &mut PaintMask,
+  origin: (f32, f32),
+  size: f32,
+  angle: f32,
+  clr: usize,
+) {
+  let (x, y) = origin;
+  let proximity = 2.0;
+  if rng.gen_bool(0.2) {
+    let size = size / 2.0;
+    let obj = Armadillo::init(rng, clr, origin, size, -angle);
+    renderables.add(obj);
+    let circle = VCircle::new(x, y - 0.5 * size, proximity * size);
+    exclusion_mask.paint_circle(circle.x, circle.y, circle.r);
+  } else if rng.gen_bool(0.4) {
+    let obj = Fowl::init(rng, clr, origin, size, angle);
+    renderables.add(obj);
+    let circle = VCircle::new(x, y - 0.5 * size, proximity * size);
+    exclusion_mask.paint_circle(circle.x, circle.y, circle.r);
+  } else {
+    let reversex = rng.gen_bool(0.5);
+    let barking = rng.gen_bool(0.5);
+    let obj = Dog::init(rng, clr, origin, size, reversex, barking);
+    renderables.add(obj);
+    let circle = VCircle::new(x, y - 0.5 * size, proximity * size);
+    exclusion_mask.paint_circle(circle.x, circle.y, circle.r);
+  };
 }

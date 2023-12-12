@@ -1,11 +1,4 @@
 DEV:
-- front mountain rework
-  - camp and fire?
-  - animals
-- rock have possibility to spawn more interesting things?
-  - nest
-  - weapons
-  - an observer / lost person. share code with the front mountain rework logic
 - improve/fix castle destruction. fire/smoke that goes with it
   - human pos in destruction?
   - exploding parts, using another polar split technique
@@ -18,12 +11,7 @@ DEV:
 
 IMPORTANT POLISHES:
 - review all rare cases (specials)
-- improve helmet variety
 - palette review. should we favorize some combination?
-
-PROTOTYPE TO TEST:
-- test density of an extreme case of fire
-- plot animals
 
 GENERAL:
 - Work on Features

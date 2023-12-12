@@ -7,6 +7,7 @@ use super::{
     sword::Sword,
   },
   blazon::Blazon,
+  castle::chinesedoor::ChineseDoor,
   rock::Rock,
 };
 use crate::{
@@ -115,6 +116,7 @@ impl Sea {
     let mut should_set_excalibur = rng.gen_bool(0.1) && ctx.specials.is_empty();
 
     let tries = 10;
+    let mut nb_rocks = 0;
     for _ in 0..rocks_count {
       for _ in 0..tries {
         let x = width * rng.gen_range(0.0..1.0);
@@ -151,6 +153,8 @@ impl Sea {
         let mut rock =
           Rock::init(rng, origin, size, rockclr, count_poly, elevation);
 
+        nb_rocks += 1;
+
         rock.spawn_on_top(rng, &mut |rng: &mut R, o: (f32, f32), s, a| {
           if !(0.3..0.7).contains(&(o.0 / width)) {
             return None;
@@ -175,6 +179,18 @@ impl Sea {
         sea_shapes.add(rock);
         break;
       }
+    }
+
+    if nb_rocks < 2 && ctx.specials.contains(&Special::Chinese) {
+      let x = width * rng.gen_range(0.2..0.8);
+      let y = mix(self.yhorizon, height, rng.gen_range(0.0..0.5));
+      let o = (x, y);
+      let h = rng.gen_range(0.1..0.2) * width;
+      let w = h * rng.gen_range(1.5..2.0);
+      let angle = 0.0;
+      let clr = if rng.gen_bool(0.05) { 1 } else { 0 };
+      let door = ChineseDoor::init(rng, clr, o, w, h, angle);
+      sea_shapes.add(door);
     }
 
     // Place boats
