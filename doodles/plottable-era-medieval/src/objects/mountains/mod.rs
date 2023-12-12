@@ -447,26 +447,25 @@ impl MountainsV2 {
             }
           }
 
-          let main_door_pos = if true||// FIXME TMP
-            rng.gen_bool(if moats.len() > 0 { 0.1 } else { 0.8 })
-          {
-            let xpad = 0.2 * castlewidth;
-            let xfrom = castlepos.0 - castlewidth / 2.0 + xpad;
-            let xto = castlepos.0 + castlewidth / 2.0 - xpad;
-            let xstep = 0.05 * castlewidth;
-            let mut x = xfrom;
-            let mut best: Option<(f32, f32)> = None;
-            while x <= xto {
-              let y = lookup_ridge(&ridge, x);
-              if y < best.map(|p| p.1).unwrap_or(yhorizon) {
-                best = Some((x, y));
+          let main_door_pos =
+            if rng.gen_bool(if moats.len() > 0 { 0.1 } else { 0.8 }) {
+              let xpad = 0.2 * castlewidth;
+              let xfrom = castlepos.0 - castlewidth / 2.0 + xpad;
+              let xto = castlepos.0 + castlewidth / 2.0 - xpad;
+              let xstep = 0.05 * castlewidth;
+              let mut x = xfrom;
+              let mut best: Option<(f32, f32)> = None;
+              while x <= xto {
+                let y = lookup_ridge(&ridge, x);
+                if y < best.map(|p| p.1).unwrap_or(yhorizon) {
+                  best = Some((x, y));
+                }
+                x += xstep;
               }
-              x += xstep;
-            }
-            best
-          } else {
-            None
-          };
+              best
+            } else {
+              None
+            };
 
           Some(CastleGrounding {
             position: castlepos,

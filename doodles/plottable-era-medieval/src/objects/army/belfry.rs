@@ -33,13 +33,11 @@ pub struct Belfry {
   pub floors: Vec<Floor>,
   pub routes: Polylines,
   pub origin: (f32, f32),
+  pub bridge: ((f32, f32), (f32, f32)),
+  pub climb_path: Vec<(f32, f32)>,
 }
 
 impl Belfry {
-  // FIXME: better roof
-  // IDEA: wheel on the top for the people to be on. connect the rope of the bridge to it.
-  // IDEA: a ladder in the middle?
-  // ?? IDEA: 2d plank style like in drawings https://www.cathares.org/dossiers-histoire-patrimoine/assets/images/machine-de-guerre-moyen-age-beffroi-tour-mobile-bois-dessin-philippe-contal-1-800x600.jpg + dot for the nails
   pub fn init<R: Rng>(
     rng: &mut R,
     clr: usize,
@@ -65,7 +63,6 @@ impl Belfry {
 
     // wheels
     let wheels = vec![origin, (origin.0 - w * xmul, origin.1)];
-    // TODO middle wheel?
     for wheel in wheels {
       let route = circle_route(wheel, wheel_radius, 12);
       routes.push(route.clone());
@@ -137,6 +134,8 @@ impl Belfry {
 
     // each time a floor is too x distance to the previous, we spawn a pole between that floor and the ground
 
+    let mut climb_path = vec![];
+
     let mut bridge_h = rng.gen_range(0.7..0.85) * height;
     let bridgey = origin.1 - bridge_h;
     for f in floors.iter().rev() {
@@ -157,6 +156,8 @@ impl Belfry {
     ]);
 
     for (i, floor) in floors.iter().enumerate() {
+      climb_path.push(floor.position);
+
       let (x, y) = floor.position;
       let h = floor.height;
       let is_roof = i == floors.len() - 1;
@@ -206,7 +207,7 @@ impl Belfry {
               rev = !rev;
             }
             routes.push(route);
-          } // TODO we could have different plank orientations?
+          }
         }
         match floor.structure_pattern {
           StructurePattern::None => {}
@@ -247,8 +248,6 @@ impl Belfry {
     let asin = ang.sin();
     let acos = ang.cos();
 
-    // TODO should we have anchor0 from where the rope is attached on a wheel?
-    // TODO where is anchor1?
     let anchor1 = (main_pole_x, origin.1 - height);
     let bw = rng.gen_range(0.7..0.9) * bridge_width;
     let anchor2 =
@@ -270,6 +269,15 @@ impl Belfry {
       routes.push(route);
     }
 
+    let bridge_from = (origin.0 + dx, origin.1 - bridge_h);
+    let bridge = (
+      bridge_from,
+      (
+        bridge_from.0 + bridge_width * acos * xmul,
+        bridge_from.1 + bridge_width * asin,
+      ),
+    );
+
     let mut out = vec![];
     for route in routes {
       out.push((clr, route));
@@ -279,7 +287,17 @@ impl Belfry {
       floors,
       routes: out,
       origin,
+      bridge,
+      climb_path,
     }
+  }
+
+  pub fn get_bridge(&self) -> ((f32, f32), (f32, f32)) {
+    self.bridge
+  }
+
+  pub fn get_climb_path(&self) -> Vec<(f32, f32)> {
+    self.climb_path.clone()
   }
 }
 

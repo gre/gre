@@ -95,8 +95,6 @@ impl GlobalCtx {
 
     let castle_on_sea = rng.gen_bool(0.2);
     let no_sea = !castle_on_sea && rng.gen_bool(0.15);
-    let no_sea = true;
-    let castle_on_sea = false;
 
     let mut night_time = paper == DARK_BLUE_PAPER
       || rng.gen_bool(0.5) && paper == BLACK_PAPER

@@ -28,12 +28,12 @@ use super::{
 use crate::{
   algo::{
     math1d::mix,
-    math2d::lookup_ridge,
+    math2d::{lerp_point, lookup_ridge},
     moving_average::moving_average_2d,
     packing::VCircle,
     paintmask::PaintMask,
     pathlookup::PathLookup,
-    polylines::step_polyline,
+    polylines::{shake, step_polyline},
     renderable::{Container, Renderable},
     shapes::circle_route,
   },
@@ -382,7 +382,7 @@ impl ArmyOnMountain {
         if slope > 0.2 {
           continue;
         }
-        renderables.add(Belfry::init(
+        let belfry = Belfry::init(
           rng,
           clr,
           origin,
@@ -390,10 +390,64 @@ impl ArmyOnMountain {
           bridge_width,
           bridge_opening,
           xflip,
+        );
+        routes.push((2, belfry.get_climb_path()));
+
+        let mut positions = vec![];
+        let humansize = 0.4 * h;
+        let humangap = 0.1 * h;
+
+        positions.extend(shake(
+          step_polyline(&belfry.get_climb_path(), humangap),
+          0.1 * humansize,
+          rng,
         ));
 
-        // TODO spawn people
+        if bridge_opening > 0.8 {
+          let (a, b) = belfry.get_bridge();
+          for _ in 0..3 {
+            let mut mid = lerp_point(a, b, rng.gen_range(0.0..1.0));
+            mid.1 += 0.0 * humansize;
+            positions.push(mid);
+          }
+        }
+        let humanmaxdist = rng.gen_range(0.3..0.6) * ctx.width;
+        let dir = if xflip { 1.0 } else { -1.0 };
+        let mut v = 0.4 * h;
+        while v < humanmaxdist {
+          let x = origin.0 + dir * v;
+          let mut p = mountain.ridge_pos_for_x(x);
+          p.1 += rng.gen_range(0.0..0.2) * humansize;
+          positions.push(p);
+          v += humangap;
+        }
 
+        for p in positions {
+          let proba = mix(
+            rng.gen_range(0.0..1.0),
+            (p.0 - origin.0).abs() / humanmaxdist,
+            rng.gen_range(0.5..1.0),
+          )
+          .max(0.01)
+          .min(0.99) as f64;
+          if rng.gen_bool(proba) {
+            continue;
+          }
+          let size = humansize;
+          let headshape = HeadShape::HELMET;
+          let leftobj = Some(HoldableObject::Shield);
+          let rightobj = Some(HoldableObject::Sword);
+          let posture =
+            HumanPosture::from_holding(rng, xflip, leftobj, rightobj);
+          let origin = p;
+          let warrior = Human::init(
+            rng, origin, size, xflip, blazon, mainclr, blazonclr, posture,
+            headshape, leftobj, rightobj,
+          );
+          renderables.add(warrior);
+        }
+
+        renderables.add(belfry);
         let area = VCircle::new(origin.0, origin.1, h);
         debug_circle.push(area);
         exclusion_mask.paint_circle(area.x, area.y, area.r);
