@@ -17,7 +17,7 @@ use crate::{
     paintmask::PaintMask,
     passage::Passage,
     polylines::{slice_polylines, Polylines},
-    renderable::{as_box_renderable, Container, Renderable},
+    renderable::{as_box_renderable, Container},
   },
   global::{GlobalCtx, Special},
   objects::sea::sauron::SauronEye,
