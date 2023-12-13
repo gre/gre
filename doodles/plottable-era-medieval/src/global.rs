@@ -126,37 +126,48 @@ impl GlobalCtx {
     }
 
     let mut specials = HashSet::new();
+
     if is_sandbox {
       specials.insert(Special::Sandbox);
     } else {
-      if rng.gen_bool(0.02) {
+      if rng.gen_bool(0.03) && !castle_on_sea {
         specials.insert(Special::Barricades);
-      } else if rng.gen_bool(0.01) && matches!(attackers, Blazon::Falcon) {
+      } else if rng.gen_bool(0.02) && matches!(attackers, Blazon::Falcon) {
         specials.insert(Special::EaglesAttack);
-      } else if trebuchets_should_shoot && rng.gen_bool(0.05) {
+      } else if trebuchets_should_shoot && rng.gen_bool(0.06) && !castle_on_sea
+      {
         specials.insert(Special::Trebuchets);
-      } else if rng.gen_bool(0.01) {
+      } else if rng.gen_bool(0.02) && !castle_on_sea {
         specials.insert(Special::Cyclopes);
       }
 
       let dragon_proba_mul = if paper == RED_PAPER { 1.0 } else { 0.08 };
 
-      if rng.gen_bool(0.4 * dragon_proba_mul)
+      if rng.gen_bool(0.5 * dragon_proba_mul)
         && matches!(attackers, Blazon::Dragon)
-        || rng.gen_bool(0.1 * dragon_proba_mul)
+        || rng.gen_bool(0.15 * dragon_proba_mul)
           && matches!(attackers, Blazon::Lys)
       {
         specials.insert(Special::Dragon(rng.gen_range(1..4)));
-      } else if rng.gen_bool(0.01) && !no_sea {
+      } else if rng.gen_bool(0.01)
+        && !no_sea
+        && !castle_on_sea
+        && specials.is_empty()
+      {
         specials.insert(Special::TrojanHorse);
-      } else if rng.gen_bool(0.01) {
+      } else if rng.gen_bool(0.02) {
         let c = c[1];
         if (c == GOLD_GEL || c == AMBER)
           && !specials.contains(&Special::Barricades)
+          && !no_sea
+          && !castle_on_sea
         {
           specials.insert(Special::Montmirail);
         }
-      } else if rng.gen_bool(0.05) && matches!(defenders, Blazon::Dragon) {
+      } else if rng.gen_bool(0.05)
+        && matches!(defenders, Blazon::Dragon)
+        && !castle_on_sea
+      {
         specials.insert(Special::Chinese);
       }
     }

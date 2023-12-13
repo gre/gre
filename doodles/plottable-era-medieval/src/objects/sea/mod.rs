@@ -165,7 +165,7 @@ impl Sea {
             Some(as_box_renderable(Sword::init(rng, o, s, a, clr)))
           } else {
             let dy = origin.1 - o.1;
-            if rng.gen_bool(0.08) && dy > 0.3 * width {
+            if rng.gen_bool(0.12) && dy > 0.3 * width {
               let sauron = SauronEye::init(rng, paint, rockclr, 1, o, s);
               ctx.specials.insert(Special::Sauroned);
               return Some(as_box_renderable(sauron));

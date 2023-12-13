@@ -83,6 +83,9 @@ pub fn render(
 
   perf.span_end("init", &routes);
 
+  let golden_frame =
+    palette.inks[1] == GOLD_GEL && rng.gen_bool(0.3) || rng.gen_bool(0.02);
+
   if !ctx.is_sandbox {
     perf.span("epic title", &decoration_routes);
     let txt = epic_title(&mut rng, &ctx);
@@ -90,6 +93,11 @@ pub fn render(
     let iterations = 5000;
     let density = 4.0;
     let growpad = 2.0;
+    let clr = if golden_frame && rng.gen_bool(0.5) || rng.gen_bool(0.01) {
+      1
+    } else {
+      0
+    };
     decoration_routes.extend(draw_font_with_worms_filling(
       &mut rng,
       &mut font,
@@ -100,7 +108,7 @@ pub fn render(
         height - pad - framingw - 1.8 * fontsize,
       ),
       txt.as_str(),
-      0,
+      clr,
       iterations,
       density,
       growpad,
@@ -110,8 +118,6 @@ pub fn render(
 
   if !ctx.is_sandbox || rng.gen_bool(0.2) {
     perf.span("framing", &decoration_routes);
-    let golden_frame =
-      palette.inks[1] == GOLD_GEL && rng.gen_bool(0.3) || rng.gen_bool(0.01);
     let clr = if golden_frame { 1 } else { 0 };
     decoration_routes.extend(medieval_frame(
       &mut rng, &ctx, &mut paint, width, height, pad, framingw, clr,
@@ -148,7 +154,7 @@ pub fn render(
     let mask_with_framing = paint.clone();
     let yhorizon = ctx.yhorizon;
 
-    //  mountains
+    //  front mountains
     if rng.gen_bool(0.3) {
       perf.span("mountains_front", &routes);
       let ybase = height - pad - framingw;
@@ -233,7 +239,7 @@ pub fn render(
       let ymax = mix(
         0.0,
         mix(yhorizon, 0.5 * height, rng.gen_range(0.2..0.7)),
-        rng.gen_range(if ctx.no_sea { 0.3 } else { 0.5 }..0.7),
+        rng.gen_range(if ctx.no_sea { 0.3 } else { 0.5 }..1.0),
       );
       let count =
         2 + (rng.gen_range(0.0..10.0) * rng.gen_range(0.0..1.0)) as usize;
@@ -363,8 +369,6 @@ pub fn render(
 
   perf.span("finalize", &vec![]);
 
-  // routes.extend(debug_weight_map(&ctx.destruction_map, 2, 0.0, 1.0));
-
   ctx.finalize();
 
   let feature = ctx.to_feature(&routes);
@@ -395,47 +399,3 @@ pub fn render(
 
   svg
 }
-
-/*
-fn debug_weight_map(
-  weightmap: &WeightMap,
-  clr: usize,
-  from: f32,
-  to: f32,
-) -> Polylines {
-  let mut routes = vec![];
-
-  let mut x = 0.0;
-  while x < weightmap.width {
-    let mut y = 0.0;
-    while y < weightmap.height {
-      let w = weightmap.get_weight((x, y));
-      let v = smoothstep(from, to, w);
-      if v > 0.0 {
-        let xc = x + 0.5 * weightmap.precision;
-        let yc = y + 0.5 * weightmap.precision;
-        let s = v * 0.5 * weightmap.precision;
-
-        let mut r = s;
-        while r > 0.0 {
-          routes.push((
-            clr,
-            vec![
-              (xc - r, yc - r),
-              (xc + r, yc - r),
-              (xc + r, yc + r),
-              (xc - r, yc + r),
-              (xc - r, yc - r),
-            ],
-          ));
-          r -= 0.8;
-        }
-      }
-      y += weightmap.precision;
-    }
-    x += weightmap.precision;
-  }
-
-  routes
-}
-*/

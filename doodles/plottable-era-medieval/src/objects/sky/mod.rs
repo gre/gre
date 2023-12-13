@@ -164,7 +164,11 @@ impl MedievalSky {
         * rng.gen_range(0.0..1.0);
 
       let perlin = Perlin::new(rng.gen());
-      let clr = if rng.gen_bool(0.1) { 0 } else { 1 };
+      let clr = if rng.gen_bool(0.1) && ctx.palette.paper.is_dark() {
+        0
+      } else {
+        1
+      };
       for c in circles {
         let v = perlin.get([c.x as f64 * f, c.y as f64 * f * 3.0]) as f32
           - smoothstep(pad, bound1.3, c.y) * 0.2
@@ -291,7 +295,8 @@ impl MedievalSky {
     }
 
     // sun
-    let dr = if rng.gen_bool(0.1) { 1.0 } else { 0.5 };
+    let dr =
+      if rng.gen_bool(0.1) { 1.0 } else { 0.5 } + rng.gen_range(0.0..0.1);
     if should_moon {
       let phase = 0.5
         + rng.gen_range(0.02..0.3) * if rng.gen_bool(0.5) { 1.0 } else { -1.0 };

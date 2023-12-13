@@ -125,7 +125,12 @@ impl BattlefieldArea {
     let range_archers = v..v + s;
 
     v += s * rng.gen_range(-0.2..1.5);
-    let s = rng.gen_range(0.0..0.3) * rng.gen_range(0.0..1.0);
+    let mut s = rng.gen_range(0.0..0.3) * rng.gen_range(0.0..1.0);
+
+    if ctx.specials.contains(&Special::Trebuchets) {
+      v = 0.4;
+      s = 1.0;
+    }
 
     let range_distance_machines = v..v + s;
 
@@ -238,7 +243,7 @@ impl BattlefieldArea {
           }));
         }
 
-        if range_attackers.contains(&r) {
+        if !no_attackers && range_attackers.contains(&r) {
           let mut rightobj = match ctx.attackers {
             Blazon::Lys => Some(HoldableObject::Sword),
             Blazon::Falcon => Some(HoldableObject::Club),
@@ -264,7 +269,7 @@ impl BattlefieldArea {
           }));
         }
 
-        if range_archers.contains(&r) {
+        if !no_attackers && range_archers.contains(&r) {
           let mut rightobj =
             Some(HoldableObject::LongBow(rng.gen_range(0.0..1.0)));
           if rng.gen_bool(0.05) {
@@ -279,7 +284,7 @@ impl BattlefieldArea {
             rightobj,
           }));
         }
-        if range_distance_machines.contains(&r) {
+        if !no_attackers && range_distance_machines.contains(&r) {
           candidates.push(Area::DistantSiegeMachine(
             DistantSiegeMachineProps {
               oriented_left,
@@ -298,7 +303,8 @@ impl BattlefieldArea {
         let n2 = -0.2
           + rng.gen_range(-0.5..0.5) * rng.gen_range(0.0f64..1.0).powf(10.0);
 
-        if noise200 > n1
+        if !no_attackers
+          && noise200 > n1
           && noise50 < n2
           && matches!(area, Area::Attacker(_))
           && (0.1..0.9).contains(&xratio)
@@ -316,7 +322,10 @@ impl BattlefieldArea {
         }
 
         // spawn organized units
-        if grid1p.0 % unitmod.0 == 0 && grid1p.1 % unitmod.1 == 0 {
+        if !no_attackers
+          && grid1p.0 % unitmod.0 == 0
+          && grid1p.1 % unitmod.1 == 0
+        {
           area = Area::Attacker(HumanProps {
             proximity: 0.25,
             oriented_left,
@@ -356,7 +365,11 @@ impl BattlefieldArea {
           area = Area::Empty;
         }
 
-        if sum > 0.8 * dscale && noise100alt > 0.0 && noise25 > 0.4 {
+        if !no_attackers
+          && sum > 0.8 * dscale
+          && noise100alt > 0.0
+          && noise25 > 0.4
+        {
           area = Area::Hut;
         }
         if area == Area::Hut

@@ -180,8 +180,9 @@ fn spawn_things<R: Rng>(
       nb_man -= 1;
 
       let o = (x, y);
-      let size = mix(0.1, 0.15, yoff)
+      let size = mix(0.09, 0.14, yoff)
         * width
+        * rng.gen_range(0.8..1.0)
         * (if nb_trebuchets == 0 { 1.5 } else { 1.0 });
       let xflip = rng.gen_bool(0.5);
       let blazon = ctx.attackers;
@@ -201,14 +202,14 @@ fn spawn_things<R: Rng>(
       }
     } else if nb_man == 0 {
       if nb_fire > 0 {
-        let size = mix(0.01, 0.02, yoff) * width;
+        let size = mix(0.01, 0.02, yoff) * width * rng.gen_range(0.8..1.0);
         let smokel = size * rng.gen_range(4.0..12.0);
         let camp = Firecamp::init(rng, ctx, mainclr, origin, size, smokel);
         exclusion_mask.paint_circle(x, y, size);
         container.add(camp);
         nb_fire -= 1;
       } else if nb_animals > 0 {
-        let size = mix(0.05, 0.1, yoff) * width;
+        let size = mix(0.05, 0.1, yoff) * width * rng.gen_range(0.8..1.0);
         spawn_animal(
           rng,
           &mut container,
@@ -222,7 +223,7 @@ fn spawn_things<R: Rng>(
       } else if nb_trebuchets > 0 {
         nb_trebuchets -= 1;
 
-        let height = mix(0.15, 0.26, yoff) * width;
+        let height = mix(0.15, 0.26, yoff) * width * rng.gen_range(0.8..1.0);
         let action_percent = if !ctx.trebuchets_should_shoot {
           0.0
         } else {

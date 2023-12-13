@@ -136,11 +136,6 @@ impl PaintMask {
     distances
   }
 
-  pub fn dilate_manhattan(&mut self, radius: f32) {
-    let distances = self.manhattan_distance();
-    self.assign_data_lower_than_threshold(&distances, radius);
-  }
-
   pub fn assign_data_lower_than_threshold(
     &mut self,
     data: &Vec<usize>,

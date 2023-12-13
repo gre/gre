@@ -128,6 +128,12 @@ pub struct Ink(
 #[derive(Clone, Copy, Serialize, PartialEq)]
 pub struct Paper(pub &'static str, pub &'static str, pub bool);
 
+impl Paper {
+  pub fn is_dark(&self) -> bool {
+    self.2
+  }
+}
+
 pub fn make_layers_from_routes_colors(
   routes: &Vec<(usize, Vec<(f32, f32)>)>,
   colors: &Vec<Ink>,

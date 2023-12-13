@@ -53,6 +53,8 @@ Promise.all([
     document.body.appendChild(effectsHotImg);
     document.body.appendChild(effectsWaterImg);
     */
+    console.table(props);
+    console.log(hash);
   }
 
   // Generate the WebGL

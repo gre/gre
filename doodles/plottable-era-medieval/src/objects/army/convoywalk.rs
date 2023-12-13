@@ -21,6 +21,7 @@ pub struct ConvoyWalk {
   pub wheelp: (f32, f32),
   pub wheelr: f32,
   pub origin: (f32, f32),
+  pub clr: usize,
 }
 
 impl ConvoyWalk {
@@ -92,6 +93,7 @@ impl ConvoyWalk {
       wheelp,
       wheelr,
       origin,
+      clr,
     }
   }
 
@@ -101,7 +103,7 @@ impl ConvoyWalk {
       paint.paint_polyline(poly, 0.6);
     }
 
-    routes.extend(wheel(paint, self.wheelp, self.wheelr, 0.6, 0));
+    routes.extend(wheel(paint, self.wheelp, self.wheelr, 0.6, self.clr));
 
     routes.extend(regular_clip(&self.bgroutes, paint));
     for (_, poly) in self.bgroutes.iter() {

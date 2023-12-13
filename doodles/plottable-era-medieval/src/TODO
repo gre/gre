@@ -1,5 +1,6 @@
 DEV:
 - improve/fix castle destruction. fire/smoke that goes with it
+  - base d'une tour quand c'est pas au sol doit être relié par un trait
   - human pos in destruction?
   - exploding parts, using another polar split technique
   - remove if something is too far away?
@@ -8,10 +9,3 @@ DEV:
   - machicoulis under merlon
 - SEA
   - reflect sea objects on the sea too + shadow it creates
-
-IMPORTANT POLISHES:
-- review all rare cases (specials)
-- palette review. should we favorize some combination?
-
-GENERAL:
-- Work on Features

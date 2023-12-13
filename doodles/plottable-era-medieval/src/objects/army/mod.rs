@@ -121,10 +121,16 @@ impl ArmyOnMountain {
     let blazon = self.blazon;
     let mut renderables = Container::new();
 
-    let mainclr = mountain.clr;
     let blazonclr = if mountain.is_behind { mountain.clr } else { 2 };
+    let mainclr = mountain.clr;
 
     if ctx.specials.contains(&Special::Montmirail) && index == 0 {
+      let secondclr = if rng.gen_bool(0.2) { 2 } else { 1 };
+      let mainclr = if rng.gen_bool(0.5) {
+        mountain.clr
+      } else {
+        secondclr
+      };
       montmirail(
         rng,
         &mut renderables,
@@ -133,7 +139,7 @@ impl ArmyOnMountain {
         width,
         blazon,
         mainclr,
-        blazonclr,
+        secondclr,
       );
     }
 
@@ -205,13 +211,18 @@ impl ArmyOnMountain {
         if is_valid {
           let size = rng.gen_range(0.04..0.06) * width;
           let xflip = rng.gen_bool(0.5);
+          let blazonclr = if mountain.is_behind {
+            mountain.clr
+          } else {
+            ctx.defendersclr
+          };
           make_random_convoy(
             rng,
             &mut renderables,
             &mut exclusion_mask,
             ctx.defenders,
             mainclr,
-            ctx.defendersclr,
+            blazonclr,
             size,
             &path,
             xflip,
@@ -263,13 +274,18 @@ impl ArmyOnMountain {
         }
 
         let size = rng.gen_range(0.03..0.05) * width;
+        let blazonclr = if mountain.is_behind {
+          mountain.clr
+        } else {
+          ctx.defendersclr
+        };
         make_random_convoy(
           rng,
           &mut renderables,
           &mut exclusion_mask,
           ctx.defenders,
           mainclr,
-          ctx.defendersclr,
+          blazonclr,
           size,
           &path,
           ifrom < ilast,
@@ -461,7 +477,7 @@ impl ArmyOnMountain {
     let mut remaining_trebuchets =
       (rng.gen_range(-4.0f32..4.0) * rng.gen_range(0.0..1.0)).max(0.0) as usize
         + if ctx.specials.contains(&Special::Trebuchets) {
-          10
+          100
         } else {
           0
         };
@@ -960,53 +976,6 @@ impl ArmyOnMountain {
     }
 
     routes
-
-    /*
-
-      // relic convoy
-      if rng.gen_bool(0.05) {
-        let x = mix(first.0, last.0, rng.gen_range(0.0..1.0));
-        let y = lookup_ridge(&ridge, x);
-        let relicsize = rng.gen_range(0.05..0.07) * width;
-        let y = y - relicsize * 0.2;
-        let ang = 0.0;
-        let filling = 2.0;
-
-        let extraratio = rng.gen_range(0.3..0.6);
-
-        let convoy = ConvoyWalk::init(
-          rng,
-          mainclr,
-          (x, y),
-          relicsize,
-          ang,
-          1.0,
-          extraratio,
-        );
-
-        let mut monks = vec![];
-
-        for p in vec![convoy.left, convoy.right] {
-          let p = (p.0, p.1 + relicsize * 0.4);
-          let monk = Monk::init(rng, p, relicsize, 0.0, false, 0, true);
-          monks.push(monk);
-        }
-
-        let relic = Relic::init(rng, (x, y), relicsize, ang, filling);
-
-        let area = VCircle::new(x, y, 4.0 * relicsize);
-        debug_circle.push(area);
-        exclusion_mask.paint_circle(area.x, area.y, area.r);
-
-        renderables.add(convoy);
-        renderables.add(relic);
-        for monk in monks {
-          renderables.add(monk);
-        }
-      }
-
-
-    */
   }
 }
 
@@ -1096,7 +1065,7 @@ pub fn make_random_convoy<R: Rng>(
 
       let is_monk = rng.gen_bool(monk_proba * distfactor);
       if is_monk {
-        let monk = Monk::init(rng, p, size, 0.0, xflip, 0, false);
+        let monk = Monk::init(rng, p, size, 0.0, xflip, mainclr, false);
         renderables.add(monk);
       } else {
         let lefthand = Some(HoldableObject::Shield);
@@ -1141,7 +1110,7 @@ pub fn make_random_convoy<R: Rng>(
 
   if is_human_holders {
     for p in vec![left, right] {
-      let monk = Monk::init(rng, p, size, 0.0, xflip, 0, true);
+      let monk = Monk::init(rng, p, size, 0.0, xflip, mainclr, true);
       renderables.add(monk);
       let area = VCircle::new(x, y, size);
       exclusion_mask.paint_circle(area.x, area.y, area.r);
@@ -1189,7 +1158,7 @@ fn montmirail<R: Rng>(
   width: f32,
   blazon: Blazon,
   mainclr: usize,
-  blazonclr: usize,
+  secondclr: usize,
 ) {
   let first = ridge[0];
   let last = ridge[ridge.len() - 1];
@@ -1197,7 +1166,7 @@ fn montmirail<R: Rng>(
   let y = mix(lookup_ridge(&ridge, x), yhorizon, rng.gen_range(0.0..0.7));
   let origin = (x, y);
   let size = rng.gen_range(0.05..0.1) * width;
-  let car = Renault4L::init(rng, 1, origin, size, 0.0);
+  let car = Renault4L::init(rng, secondclr, origin, size, 0.0);
   let leftobj = None;
   let rightobj = Some(HoldableObject::Club);
   let posture = HumanPosture::from_holding(rng, false, leftobj, rightobj);
@@ -1208,7 +1177,7 @@ fn montmirail<R: Rng>(
     false,
     blazon,
     mainclr,
-    blazonclr,
+    secondclr,
     posture,
     HeadShape::NAKED,
     leftobj,
@@ -1224,7 +1193,7 @@ fn montmirail<R: Rng>(
     false,
     blazon,
     mainclr,
-    blazonclr,
+    secondclr,
     posture,
     HeadShape::HELMET,
     None,

@@ -152,7 +152,7 @@ impl Beach {
     if ctx.specials.contains(&Special::TrojanHorse) {
       let origin = (
         width * rng.gen_range(0.3..0.7),
-        self.yhorizon - rng.gen_range(0.0..0.04) * paint.height,
+        self.yhorizon - rng.gen_range(0.0..0.02) * paint.height,
       );
       let xflip = rng.gen_bool(0.5);
       let size = rng.gen_range(0.1..0.2) * paint.height;

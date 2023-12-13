@@ -63,14 +63,9 @@ pub fn draw_font_with_worms_filling<R: Rng>(
     iterations,
   ));
 
-  let newprec = 0.5 * growpad;
-  if drawing.precision < newprec {
-    drawing = drawing.clone_rescaled(newprec);
+  for (_, rt) in &routes {
+    drawing.paint_polyline(rt, growpad);
   }
-  drawing.dilate_manhattan(growpad);
-
-  // we don't need collision
-  // routes = regular_clip(&routes, paint);
 
   paint.paint(&drawing);
 
