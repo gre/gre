@@ -179,7 +179,7 @@ pub fn render(
       perf.span("sea", &vec![]);
       let mut sea = Sea::from(&paint, yhorizon, attacker_house);
       let sea_routes = sea.render(&mut ctx, &mut rng, &mut paint);
-      perf.span_end("sea", &sea_routes);
+      perf.span_end("sea", &sea_routes.routes);
       let mut water = sea.sea_mask.clone();
       water.reverse();
       ctx.effects.water.paint(&water);
@@ -353,11 +353,12 @@ pub fn render(
         &mut rng,
         &mut paint,
         &routes,
+        &sea_routes,
         probability_par_color,
       ));
       perf.span_end("reflect_shapes", &routes);
 
-      routes.extend(sea_routes);
+      routes.extend(sea_routes.routes);
     }
 
     perf.span("projectiles", &routes);

@@ -16,7 +16,7 @@ use crate::{
     math1d::mix,
     paintmask::PaintMask,
     passage::Passage,
-    polylines::slice_polylines,
+    polylines::{slice_polylines, Polylines},
     renderable::{as_box_renderable, Container, Renderable},
   },
   global::{GlobalCtx, Special},
@@ -40,6 +40,19 @@ pub struct Sea {
   pub blazon: Blazon,
 }
 
+pub struct SeaReflectableObject {
+  pub routes: Vec<(usize, Vec<(f32, f32)>)>,
+  pub ybase: f32,
+  pub xcenter: f32,
+  pub width: f32,
+  pub height: f32,
+}
+
+pub struct SeaRendered {
+  pub routes: Vec<(usize, Vec<(f32, f32)>)>,
+  pub objects: Vec<SeaReflectableObject>,
+}
+
 impl Sea {
   pub fn from(paint: &PaintMask, yhorizon: f32, blazon: Blazon) -> Self {
     let mut sea_mask = paint.clone();
@@ -57,10 +70,13 @@ impl Sea {
     rng: &mut R,
     paint: &mut PaintMask,
     reflectables: &Vec<(usize, Vec<(f32, f32)>)>,
-    probability_par_color: Vec<f32>,
+    // TODO we need to filter out the doors
+    sea_routes: &SeaRendered,
+    probability_per_color: Vec<f32>,
   ) -> Vec<(usize, Vec<(f32, f32)>)> {
     let mut routes = vec![];
-    let mut passage = Passage::new(0.5, paint.width, paint.height);
+    let prec = 0.5;
+    let mut passage = Passage::new(prec, paint.width, paint.height);
     let is_below_sea_level = |(_x, y): (f32, f32)| y > self.yhorizon;
     let reflectables =
       clip_routes_with_colors(&reflectables, &is_below_sea_level, 0.5, 3);
@@ -71,15 +87,56 @@ impl Sea {
     let ydisplacement = rng.gen_range(0.1..0.2) * paint.height;
     let xdisplacement = rng.gen_range(0.1..0.3) * paint.width;
 
+    let max_passage = 3;
+    let boundaries = (0.0, 0.0, paint.width, paint.height);
+
+    for obj in &sea_routes.objects {
+      let ratio = obj.width / paint.width;
+      routes.extend(reflect_shapes(
+        rng,
+        &obj.routes,
+        &mut passage,
+        &probability_per_color,
+        stroke_len_base * ratio.max(0.4),
+        obj.ybase,
+        boundaries,
+        max_passage,
+        xdisplacement * ratio,
+        ydisplacement * ratio,
+        ydistortion,
+      ));
+
+      // shadow under the object
+      let w = obj.width;
+      let h = obj.height;
+      let mut x = obj.xcenter - w / 2.0;
+      let xmax = x + w;
+      while x < xmax {
+        let mut y = obj.ybase; // - h / 2.0;
+        let ymax = y + h / 2.0;
+        let dx = (x - obj.xcenter) / (w / 2.0);
+        while y < ymax {
+          let dy = (y - obj.ybase) / (h / 2.0);
+          let d = dx * dx + dy * dy;
+          if d < 1.0 {
+            let v = max_passage + 1;
+            passage.set((x, y), v);
+          }
+          y += prec;
+        }
+        x += prec;
+      }
+    }
+
     routes.extend(reflect_shapes(
       rng,
       &reflectables,
       &mut passage,
-      probability_par_color,
+      &probability_per_color,
       stroke_len_base,
       self.yhorizon,
-      (0.0, 0.0, paint.width, paint.height),
-      3,
+      boundaries,
+      max_passage,
       xdisplacement,
       ydisplacement,
       ydistortion,
@@ -93,7 +150,7 @@ impl Sea {
     ctx: &mut GlobalCtx,
     rng: &mut R,
     paint: &mut PaintMask,
-  ) -> Vec<(usize, Vec<(f32, f32)>)> {
+  ) -> SeaRendered {
     let width = paint.width;
     let height = paint.height;
 
@@ -169,8 +226,6 @@ impl Sea {
               let sauron = SauronEye::init(rng, paint, rockclr, 1, o, s);
               ctx.specials.insert(Special::Sauroned);
               return Some(as_box_renderable(sauron));
-            } else if dy > 0.15 * width {
-              // opportunity for some other random stuff
             }
             None
           }
@@ -371,9 +426,44 @@ impl Sea {
       }
     }
 
-    let mut routes = vec![];
-    routes.extend(sea_shapes.render(rng, ctx, paint));
-    routes
+    let mut objects = vec![];
+    let mut visitor = |rts: &Polylines, ybase: f32| {
+      let firstp = rts.get(0).and_then(|(_, r)| r.get(0));
+      if let Some(firstp) = firstp {
+        let mut minx = firstp.0;
+        let mut maxx = firstp.0;
+        let mut miny = firstp.1;
+        let mut maxy = firstp.1;
+        for (_, r) in rts {
+          for p in r {
+            minx = minx.min(p.0);
+            maxx = maxx.max(p.0);
+            miny = miny.min(p.1);
+            maxy = maxy.max(p.1);
+          }
+        }
+        let width = maxx - minx;
+        let height = maxy - miny;
+        let xcenter = minx + width / 2.0;
+        objects.push(SeaReflectableObject {
+          routes: rts.clone(),
+          ybase,
+          xcenter,
+          width,
+          height,
+        });
+      }
+    };
+
+    let routes = sea_shapes.render_with_visitor(
+      rng,
+      ctx,
+      paint,
+      &|r| !r.sea_reflectable_is_disabled(),
+      &mut visitor,
+    );
+
+    SeaRendered { routes, objects }
   }
 }
 
@@ -381,7 +471,7 @@ fn reflect_shapes<R: Rng>(
   rng: &mut R,
   reflectables: &Vec<(usize, Vec<(f32, f32)>)>,
   passage: &mut Passage,
-  probability_per_color: Vec<f32>,
+  probability_per_color: &Vec<f32>,
   stroke_len_base: f32,
   ycenter: f32,
   boundaries: (f32, f32, f32, f32),

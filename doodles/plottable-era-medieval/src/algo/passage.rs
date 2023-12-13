@@ -37,6 +37,11 @@ impl Passage {
     v
   }
 
+  pub fn set(self: &mut Self, p: (f32, f32), v: usize) {
+    let i = self.index(p);
+    self.counters[i] = v;
+  }
+
   pub fn get(self: &Self, p: (f32, f32)) -> usize {
     let i = self.index(p);
     self.counters[i]

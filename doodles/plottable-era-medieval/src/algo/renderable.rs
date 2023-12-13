@@ -24,6 +24,10 @@ pub trait Renderable<R: Rng> {
     None
   }
 
+  fn sea_reflectable_is_disabled(&self) -> bool {
+    false
+  }
+
   fn apply_translation_rotation(&mut self, _v: (f32, f32), _rot: f32) {}
 }
 
@@ -115,6 +119,24 @@ impl<R: Rng> Container<R> {
     routes
   }
   */
+  pub fn render_with_visitor(
+    &self,
+    rng: &mut R,
+    ctx: &mut GlobalCtx,
+    paint: &mut PaintMask,
+    should_visit: &dyn Fn(&Box<dyn Renderable<R>>) -> bool,
+    visitor: &mut dyn FnMut(&Polylines, f32),
+  ) -> Polylines {
+    let mut routes = vec![];
+    for e in &self.elements {
+      let rts = e.inner.render(rng, ctx, paint);
+      if should_visit(&e.inner) {
+        visitor(&rts, e.inner.zorder());
+      }
+      routes.extend(rts);
+    }
+    routes
+  }
 
   pub fn render_with_extra_halo(
     &self,

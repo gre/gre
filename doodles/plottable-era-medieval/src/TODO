@@ -7,5 +7,3 @@ DEV:
 - castle elements
   - stairs => where we can find some empty space. typically in the big towers.
   - machicoulis under merlon
-- SEA
-  - reflect sea objects on the sea too + shadow it creates

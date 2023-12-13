@@ -2,7 +2,7 @@ use crate::{
   algo::{
     clipping::regular_clip,
     paintmask::PaintMask,
-    polylines::{Polyline, Polylines},
+    polylines::{step_polyline, Polyline, Polylines},
     renderable::Renderable,
     shapes::{circle_route, spiral_optimized},
   },
@@ -48,7 +48,7 @@ impl Fire {
         * rng.gen_range(0.0..1.0)
         * rng.gen_range(0.0..1.0);
     }
-    // rt = step_polyline(&rt, 0.3);
+    rt = step_polyline(&rt, 0.5);
 
     flame_routes.push((flameclr, rt));
     flame_polys.push(circle_route((flamex, flamey), rad + 0.5, 16));

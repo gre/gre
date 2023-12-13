@@ -87,4 +87,8 @@ impl<R: Rng> Renderable<R> for ChineseDoor {
   fn zorder(&self) -> f32 {
     self.origin.1
   }
+
+  fn sea_reflectable_is_disabled(&self) -> bool {
+    true
+  }
 }
