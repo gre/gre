@@ -14,8 +14,6 @@ pub struct Merlon {
   rope_attachment_positions: Vec<(f32, f32)>,
 }
 
-// TODO merlon should draw under also to create a nice rendering of the machicoulis
-
 impl Merlon {
   pub fn max_allowed_width(_scale: f32) -> f32 {
     f32::INFINITY

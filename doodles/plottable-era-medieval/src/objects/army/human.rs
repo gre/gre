@@ -477,7 +477,6 @@ impl<R: Rng> Renderable<R> for Human {
 
   fn apply_translation_rotation(&mut self, v: (f32, f32), rot: f32) {
     self.body.apply_translation_rotation(v, rot);
-    // FIXME implement this for all objects...
   }
 
   fn as_human(&self) -> Option<&Human> {

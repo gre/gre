@@ -149,16 +149,6 @@ fn apply_destruction<R: Rng>(
   ctx: &mut GlobalCtx,
   castleprops: &GlobalCastleProperties,
 ) {
-  // Apply destructions
-  // TODO work on the destruction of items with the destruction map
-  // we need to somehow preserve the items but move them as we go slicing things. might be tricky.
-  // cheap idea for destruction is to use worms filling and balance between real stroke and worms filling to have natural fragment that will appear...
-  // TODO we need to be able to define the rule of specific RenderItems
-  // typically some of the items shouldn't be cut.. (columns ones)
-  // also how to impl the ropes?
-  // We also need to preserve the location of foreign objects
-  // also i want to implement some destructed part that "expode out"
-
   let from;
   let to;
   {
@@ -216,20 +206,6 @@ fn apply_destruction<R: Rng>(
   );
 
   *items = o;
-
-  // make ropes behind the construction
-  /*
-  let count = rng.gen_range(3..16);
-  routes.extend(building_ropes(
-    rng,
-    paint,
-    &vec![],
-    count,
-    0,
-    2.0 * castleprops.grounding.width,
-    50.0,
-  ));
-  */
 }
 
 fn rec_build<R: Rng>(

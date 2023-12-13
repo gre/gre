@@ -897,8 +897,6 @@ impl ArmyOnMountain {
         }
 
         Area::Hut => {
-          // TODO spawn people
-
           let size = rng.gen_range(0.05..0.08) * width;
           let flagtoright = rng.gen_bool(0.5);
           let cloth_height_factor = rng.gen_range(0.2..0.5);

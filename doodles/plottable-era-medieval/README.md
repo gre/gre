@@ -28,7 +28,7 @@ For those interested in the technical details, this work was created using WebGL
 
 When working on a generator, I need to test a lot of cases to ensure all cases are physical possible without pen plotter density issues. Here are some of them:
 
-...
+COMING SOON...
 
 ## License
 
@@ -41,14 +41,86 @@ CC BY-NC-ND 4.0
 
 ## Features
 
-### Landscape
+These are the public "features" of the generator and their theorical probability of occurence.
 
-### Elements
+### Castle
+
+```
+Castle
+	77%: "Regular"
+	20%: "On The Sea"
+	3%: "Huge"
+```
+
+### Day Time
+
+```
+Day Time
+	73%: "Day"
+	27%: "Night"
+```
+
+### Specials
+
+Specials are special events that can happen in the scene. They are not mutually exclusive.
+
+```
+specials
+	88.5%: (none)
+	2.3%: "Barricades"
+	1.7%: "Dragon"
+	1.3%: "Trebuchets"
+	1.2%: "Chinese"
+	0.9%: "Cyclopes"
+	0.9%: "Excalibur"
+	0.7%: "Sauroned"
+	0.7%: "Montmirail"
+	0.6%: "TrojanHorse"
+	0.6%: "EaglesAttack"
+	0.4%: "Sandbox"
+...sub 0.1% to get any combination of 2 or more specials.
+```
 
 ### Pen and papers
 
 The generator uses a generative palette mapped to inks, ruled by the paper used underneath: `Black` paper will be used with gel pens, `Blue` paper will be used mainly with black and white and `White` paper is a regular paper to use with fountain pen inks. There are also some other rare paper cases.
 
+
 ```
-TODO
+Paper
+	37%: "White"
+	36%: "Black"
+	17%: "Dark Blue"
+	7%: "Blue"
+	2%: "Grey"
+	1%: "Red"
+```
+
+```
+Inks Count
+	50%: 3
+	34%: 2
+	16%: 1
+```
+
+```
+Inks
+	16%: "Gold Gel, White Gel"
+	14%: "White Gel"
+	9%: "Black, White Gel"
+	7%: "Gold Gel, Silver Gel, White Gel"
+	7%: "Gold Gel, Red Gel, White Gel"
+	5%: "Amber, Black, Poppy Red"
+	4%: "Amber, Black, Sailor Sei-boku"
+	3%: "Amber, Black, Soft Mint"
+	2%: "Silver Gel, White Gel"
+	2%: "Red Gel, White Gel"
+	1%: "Black"
+	1%: "Black, Poppy Red"
+	1%: "Amber, Black"
+	1%: "Amber, Black, Spring Green"
+	1%: "Amber, Aurora Borealis, Black"
+	1%: "Black, Poppy Red, Sailor Sei-boku"
+	1%: "Blue Gel, Gold Gel, White Gel"
+...many others
 ```

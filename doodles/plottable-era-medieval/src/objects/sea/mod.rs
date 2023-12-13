@@ -70,7 +70,6 @@ impl Sea {
     rng: &mut R,
     paint: &mut PaintMask,
     reflectables: &Vec<(usize, Vec<(f32, f32)>)>,
-    // TODO we need to filter out the doors
     sea_routes: &SeaRendered,
     probability_per_color: Vec<f32>,
   ) -> Vec<(usize, Vec<(f32, f32)>)> {

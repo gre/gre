@@ -103,6 +103,8 @@ Promise.all([
     alignItems: CENTER,
     justifyContent: CENTER,
     backgroundColor: palette.paper[1],
+    height: "100vh",
+    overflow: "hidden"
   });
 
   let container = createElement("div");

@@ -32,7 +32,6 @@ pub struct WallParams {
   pub fill_to_lowest_y_allowed: bool,
   pub push_left_down: f32,
   pub push_right_down: f32,
-  // TODO stairs with a door entrance in castle
 }
 
 impl WallParams {
