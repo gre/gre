@@ -1,9 +1,0 @@
-DEV:
-- improve/fix castle destruction. fire/smoke that goes with it
-  - base d'une tour quand c'est pas au sol doit être relié par un trait
-  - human pos in destruction?
-  - exploding parts, using another polar split technique
-  - remove if something is too far away?
-- castle elements
-  - stairs => where we can find some empty space. typically in the big towers.
-  - machicoulis under merlon
