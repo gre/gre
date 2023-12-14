@@ -9,13 +9,7 @@ tags:
 
 Following last year tradition with ["L'homme et la machine" (2022)](/plots/848) and [Generative Nano S+ collection (2021)](https://greweb.me/gnsp), this year I've gone a step further by crafting 144 unique physical postcards offered to my colleagues at Ledger (distributed to Paris, Vierzon, London and Portland offices).
 
-They all form this physical animation:
-
-<video src="https://assets.objkt.media/file/assets-003/QmP2AaeYCuPrRYPDtm4Mdajn9MMRCUG1wyHH98W2rM5Ae4/artifact"
-        width="100%"
-        loop
-        autoPlay
-        muted></video>
+They all form this physical animation: https://objkt.com/asset/KT1AZYsEjt8HFEXWZUjGVfBxtzKPobNo3x1t/16
 
 This project is an artistic interpretation of videos from the Ledger commercial featuring the Ledger Nano X. The artwork is physically realized by using pen plotting with white gel on black paper. I have created a video by compiling the 144 frames of the plot, using the stop-motion animation technique.
 
