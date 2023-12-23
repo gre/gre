@@ -11,6 +11,6 @@ fn main() {
     .map(|_i| alphabet[rng.gen_range(0..alphabet.len())])
     .collect();
   let hash = format!("oo{}", chars);
-  let code = render(hash, 210.0, 297.0, 10.0, false);
+  let code = render(hash, 210.0, 297.0, 5.0, 0.2, false, true);
   std::fs::write("image.svg", code).expect("Unable to write file");
 }

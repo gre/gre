@@ -1,3 +1,5 @@
+use std::f32::consts::PI;
+
 use palette::Palette;
 /**
  * LICENSE CC BY-NC-ND 4.0
@@ -7,8 +9,8 @@ use rand::prelude::*;
 use serde::Serialize;
 use serde_json::json;
 use wasm_bindgen::prelude::*;
-mod fxhash;
-use fxhash::*;
+mod koda;
+use koda::*;
 mod svgplot;
 use svgplot::*;
 mod performance;
@@ -46,19 +48,18 @@ pub fn render(
 
   let mut routes = vec![];
 
-  for _i in 0..50 {
+  for _ in 0..40 {
+    let s =
+      pad + rng.gen_range(pad..(width / 2. - pad)) * rng.gen_range(0.1..0.9);
     routes.push((
       rng.gen_range(0..palette.inks.len()),
-      vec![
-        (
-          rng.gen_range(pad..(width - pad)),
-          rng.gen_range(pad..(height - pad)),
-        ),
-        (
-          rng.gen_range(pad..(width - pad)),
-          rng.gen_range(pad..(height - pad)),
-        ),
-      ],
+      spiral_optimized(
+        rng.gen_range(s..(width - s)),
+        rng.gen_range(s..(height - s)),
+        s - pad,
+        rng.gen_range(0.8..2.4),
+        0.5,
+      ),
     ));
   }
 
@@ -94,4 +95,38 @@ pub fn render(
   );
 
   svg
+}
+
+fn euclidian_dist((x1, y1): (f32, f32), (x2, y2): (f32, f32)) -> f32 {
+  let dx = x1 - x2;
+  let dy = y1 - y2;
+  return (dx * dx + dy * dy).sqrt();
+}
+
+fn spiral_optimized(
+  x: f32,
+  y: f32,
+  radius: f32,
+  dr: f32,
+  approx: f32,
+) -> Vec<(f32, f32)> {
+  let two_pi = 2.0 * PI;
+  let mut route = Vec::new();
+  let mut r = radius;
+  let mut last = (0., 0.);
+  let mut a = 0f32;
+  loop {
+    let p = (x + r * a.cos(), y + r * a.sin());
+    if route.is_empty() || euclidian_dist(last, p) > approx {
+      last = p;
+      route.push(p);
+    }
+    let da = 0.2 / (r + 8.0); // bigger radius is more we have to do angle iterations
+    a = (a + da) % two_pi;
+    r -= dr * da / two_pi;
+    if r < 0.05 {
+      break;
+    }
+  }
+  route
 }

@@ -17,14 +17,11 @@ fn main() {
     .into_par_iter()
     .map(|_| {
       let mut rng = rand::thread_rng();
-      let alphabet: Vec<char> =
-        "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ"
-          .chars()
-          .collect();
-      let chars: String = (0..49)
+      let alphabet: Vec<char> = "123456789abcdef".chars().collect();
+      let chars: String = (0..64)
         .map(|_i| alphabet[rng.gen_range(0..alphabet.len())])
         .collect();
-      let hash = format!("oo{}", chars);
+      let hash = format!("0x{}", chars);
       println!("{}", hash);
       let code = render(
         hash, 210.0, 297.0, 5.0,

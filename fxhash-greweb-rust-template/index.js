@@ -6,17 +6,25 @@ import paperGLSL from "./shaders/paper.glsl";
 import mainGLSL from "./shaders/main.glsl";
 import mainDarkGLSL from "./shaders/main-dark.glsl";
 
-import("./pkg").then((module) => {
+import("./pkg").then((rust) => {
   const hash = $fx.hash;
   const width = 210;
   const height = 297;
   const pad = 10;
+  const precision = 0.2;
+  const debug = new URLSearchParams(window.location.search).has("debug");
 
   // Generate the SVG
 
   const prev = Date.now();
-  const svg = module.render(hash, width, height, pad, true);
+  const svg = rust.render(hash, width, height, pad, precision, true, debug);
   console.log("generated in " + (Date.now() - prev) + "ms");
+
+
+  if (debug) {
+    const perf = JSON.parse(svg.match("data-perf='([^']+)'")[1]);
+    console.table(perf.per_label);
+  }
 
   const palette = JSON.parse(svg.match("data-palette='([^']+)'")[1]);
 
@@ -28,6 +36,11 @@ import("./pkg").then((module) => {
     }
   }
   $fx.features(props);
+
+  if (debug) {
+    console.table(props);
+    console.log(hash);
+  }
 
   // Generate the WebGL
 

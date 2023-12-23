@@ -1,0 +1,23 @@
+{
+  "private": true,
+  "name": "greweb",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "webpack -w",
+    "server": "ws -d dist",
+    "clean": "rm -rf dist pkg target",
+    "export-zip": "rm -f dist.zip; cd dist && zip -r ../dist.zip *",
+    "build": "npm run clean && webpack && npm run export-zip"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gre/gre.git"
+  },
+  "devDependencies": {
+    "@wasm-tool/wasm-pack-plugin": "^1.7.0",
+    "copy-webpack-plugin": "^11.0.0",
+    "local-web-server": "^5.3.0",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4"
+  }
+}
