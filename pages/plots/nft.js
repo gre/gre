@@ -191,24 +191,17 @@ const choices = [
   {
     id: "tezos",
     name: "Tezos",
-    allEditions: true,
-    /*
     address: "greweb.tez",
     addressReal: "tz1cgQAQfECg5bPASYTMyJ9QJQjSUi8rfL67",
-    amount: "25 tz",
+    amount: "80 tz",
     tokenNftURL:
       "https://objkt.com/asset/KT1EhesmoVKQ3qTjG9V2MmYxQn7HVtozk3RP/0",
     collections: [
       {
-        url: "https://www.fxhash.xyz/generative/24533",
-        description: "Plottable Sliced Spiral is FREE if you are the initial minter (fill the form without sending)"
-      },
-      {
         url: "https://www.fxhash.xyz/u/greweb",
-        description: "Any Plottable work from fxhash.xyz/u/greweb",
+        description: "IF NOT REDEEMABLE, any Plottable work from fxhash.xyz/u/greweb",
       },
     ],
-    */
   },
   {
     id: "stargaze",
