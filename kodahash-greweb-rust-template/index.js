@@ -63,15 +63,18 @@ import("./pkg").then((rust) => {
     overflow: "hidden",
   });
 
-  let bgImage = createElement("img");
-  bgImage.src = makeSVGDataImage(
+  const svgMapped =
     svg
       .replace("background:white", `background:${palette.paper[1]}`)
       .replace(/opacity="[^"]*"/g, 'style="mix-blend-mode: multiply"')
       .replace(/#0FF/g, palette.primary[1])
       .replace(/#F0F/g, palette.secondary[1])
-      .replace(/#FF0/g, palette.third[1]),
-  );
+      .replace(/#FF0/g, palette.third[1]);
+
+  const svgUri = makeSVGDataImage(svgMapped);
+
+  let bgImage = createElement("img");
+  bgImage.src = svgUri;
   assign(bgImage.style, {
     top: 0,
     left: 0,
@@ -80,6 +83,24 @@ import("./pkg").then((rust) => {
   });
 
   append(BODY, bgImage);
+
+  function exportOutput() {
+    const canvas = document.createElement("canvas");
+    const upscale = 4;
+    canvas.width = upscale * width;
+    canvas.height = upscale * height;
+    const ctx = canvas.getContext("2d");
+    const img = new Image();
+    img.onload = () => {
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      $koda.saveImagePNG(canvas.toDataURL("image/png"));
+    }
+    img.src = svgUri;
+    img.width = upscale * width;
+    img.height = upscale * height;
+  }
+
+  exportOutput()
 
   // global helpers
   function camelCaseFeature(key) {

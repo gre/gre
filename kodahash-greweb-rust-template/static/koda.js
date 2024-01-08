@@ -21,9 +21,28 @@ window.$koda = (() => {
   if (!hash) {
     console.error("hash must be provided in query string OR set debug=1");
   }
+
+  function saveImagePNG(imageDataURL) {
+    console.log('Talking');
+    let message = {
+      id: Date.now(),
+      type: 'kodahash/render/completed',
+      payload: {
+        hash: hash,
+        type: 'image/png',
+        image: imageDataURL,
+        search: location.search,
+        attributes: []
+      }
+    };
+    console.log('Sending', message);
+    if (window.parent) window.parent.postMessage(message, "*");
+  }
+
   return {
     debug,
     hash,
+    saveImagePNG,
     features(_props) {
       // not currently supported by the platform?
     },
