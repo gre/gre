@@ -208,7 +208,7 @@ const choices = [
     name: "Stargaze",
     address: "stars15rce70qlpcztvvekjwpv4fx3s5k2ujjeedm5ng",
     addressReal: "stars15rce70qlpcztvvekjwpv4fx3s5k2ujjeedm5ng",
-    amount: "4000 STARS",
+    amount: "1600 STARS",
     collections: [
       {
         url: "https://stargaze.zone",
