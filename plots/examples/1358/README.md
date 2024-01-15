@@ -1,7 +1,7 @@
 ---
 date: "2024-01-15"
 title: "1007 bytes of self-plottable code"
-rootFile: index.mjs
+rootFile: m.mjs
 image: /images/plots/1358.jpg
 tweet: https://twitter.com/greweb/status/1746643014930292763
 tags:
