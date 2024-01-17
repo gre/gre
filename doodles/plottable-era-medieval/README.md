@@ -1,21 +1,8 @@
 # Plottable Era: (II) Medieval
 
-<!--
-digital price: 20tz
-redeem price: 80tz
-tags: physical, phygital, irl, redeemables, plottable, rust, wasm, plot
--->
-
-**Collection will be released soon on https://www.fxhash.xyz/u/greweb**
+**The collection has been released on https://www.fxhash.xyz/u/greweb**
 
 'Plottable Era: (II) Medieval' is the second generator in the "Era" generators series, highlighting different periods and civilizations. Following "Primitive", this new series shows epic battle in a medieval scenery with mountains, castles, and ships.
-
-<!--
-Each NFT is a recipe to a physical plot (A4) and utilizes the Redeemables feature of fxhash, allowing owners to unlock a physical plot directly coming from @greweb's pen plotter.
-
-The NFT serves as the key to obtaining a physically plottable art piece. It exports an SVG file that can be used for plotting with pens. Plotter artists have the freedom to utilize their own materials and ship the completed artwork to collectors, provided they possess the NFT at the time of the request. To obtain the .SVG file, simply drag and drop it into a folder or right-click and save.
-
-For those interested in the technical details, this work was created using WebGL + Rust + WASM and is licensed under CC BY-SA 4.0. Additional information and the source code for this piece can be found at this link: https://github.com/gre/gre/tree/master/doodles/plottable-era-medieval -->
 
 ## Technical notes
 
