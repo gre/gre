@@ -1,0 +1,10 @@
+/node_modules/
+/build
+/dist
+dist.zip
+/target
+**/*.rs.bk
+bin/
+wasm-pack.log
+image.svg
+.DS_Store

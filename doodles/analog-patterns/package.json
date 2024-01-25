@@ -1,0 +1,30 @@
+{
+  "name": "main",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "start": "http-server dist -c-1",
+    "build": "./scripts/build.sh",
+    "deploy": "surge dist grewebpajon2023.surge.sh"
+  },
+  "devDependencies": {
+    "@babel/core": "7",
+    "@babel/preset-env": "7",
+    "@babel/preset-react": "7",
+    "http-server": "^14.1.1",
+    "prettier": "^2.8.8",
+    "webpack": "5",
+    "webpack-cli": "^5.1.0"
+  },
+  "dependencies": {
+    "babel-loader": "8",
+    "base64-inline-loader": "^2.0.1",
+    "buffer": "^6.0.3",
+    "color": "^4.2.3",
+    "gl-react": "^5.2.0",
+    "gl-react-dom": "^5.2.1",
+    "react": "^18.2.0",
+    "react-cool-dimensions": "^3.0.1",
+    "react-dom": "^18.2.0"
+  }
+}

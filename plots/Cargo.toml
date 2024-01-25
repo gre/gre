@@ -11,6 +11,7 @@ name = "gre"
 path = "src/lib.rs"
 
 [dependencies]
+rapier2d = "0.17"
 lyon = "0.17"
 travelling_salesman = "1.0"
 voronoi = "0.1"
