@@ -1,6 +1,6 @@
 ---
 date: "2024-01-24"
-title: "Genuary24: screensaver"
+title: "Genuary24: Klein bottle"
 image: /images/plots/1368.jpg
 tweet: https://twitter.com/greweb/status/1752952974526026209
 tags:
