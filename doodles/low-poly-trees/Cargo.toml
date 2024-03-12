@@ -1,0 +1,28 @@
+[package]
+name = "greweb"
+version = "0.1.0"
+authors = ["greweb <greweb@protonmail.com>"]
+edition = "2018"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dev-dependencies]
+rayon = "1.8"
+
+[dependencies]
+bs58 = "0.5"
+rand = "0.8"
+chull = "*"
+stl = "*"
+noise = "*"
+nalgebra = "*"
+getrandom = { version = "0.2", features = ["js"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+wasm-bindgen = { version = "0.2.88", features = ["serde-serialize"] }
+instant = { version = "0.1", features = [ "wasm-bindgen" ] }
+
+[profile.release]
+# Tell `rustc` to optimize for small code size.
+opt-level = "s"
