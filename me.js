@@ -24,6 +24,14 @@ export default {
       highlighted: true,
     },
     {
+      id: "warpcast",
+      url: "https://warpcast.com/greweb",
+      icon: "/icons/w.svg",
+      text: "@greweb",
+      color: "#472a91",
+      highlighted: true,
+    },
+    {
       id: "instagram",
       url: "https://instagram.com/greweb",
       icon: "/icons/instagram.svg",
