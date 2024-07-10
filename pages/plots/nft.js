@@ -512,7 +512,9 @@ export default function Home({ tag }) {
                     Provide the shipping address and proof of transaction:
                     <div style={{ padding: "0em " + padding }}>
                       <p>
-                        <CTA href="https://forms.gle/JWUfuAjochGQ9BQu7">
+                        <CTA onClick={() => {
+                          alert("BEWARE I will not be able to ship the plot before August 2025")
+                        }} href="https://forms.gle/JWUfuAjochGQ9BQu7">
                           Fill this Google Form
                         </CTA>
                       </p>
