@@ -358,6 +358,13 @@ export default function Home({ tag }) {
           `}</style>
 
           <Content>
+
+            <div>
+              <h2>Important: plot requests will be resumed on August 2025</h2>
+              <h3>I am currently traveling in Asia 🫶</h3>
+              <img src="/images/plots/1378.jpg" width="100%" />
+            </div>
+
             <div
               ref={observe}
               style={{
