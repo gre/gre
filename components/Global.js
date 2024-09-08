@@ -1,9 +1,12 @@
 import React from "react";
 import HttpsRedirect from "react-https-redirect";
+import { TravelInfoBanner } from "./TravelInfoBanner";
 
 export function Global({ children }) {
   return (
     <HttpsRedirect>
+      <TravelInfoBanner />
+
       {children}
 
       <style jsx global>{`
