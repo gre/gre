@@ -49,6 +49,7 @@ fn art(opts: &Opts) -> Vec<Group> {
     opts.circle_pad,
     opts.circle_min,
   );
+  println!("{} circles", circles.len());
   circles.push(bounds_container);
 
   let ppad = 2.0;
