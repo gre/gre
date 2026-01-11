@@ -16,7 +16,7 @@ function Render({ index, width, height }) {
   useEffect(() => {
     const c = regl(ref.current);
     const frameTime = (_, o) => o.time;
-    const onFrame = () => {};
+    const onFrame = () => { };
     const createCanvas = (w, h) => {
       const canvas = document.createElement("canvas");
       canvas.width = w;
@@ -123,7 +123,7 @@ export default function Home() {
         <title>greweb.me – {title}</title>
         <link rel="icon" href="/favicon.ico" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="author" content="Gaëtan Renaudeau" />
+        <meta name="author" content="greweb" />
         <meta name="keywords" content={"nft, collection"} />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@greweb" />

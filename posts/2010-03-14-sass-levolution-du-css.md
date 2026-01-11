@@ -1,6 +1,6 @@
 ---
 title: "SASS : l'évolution du CSS pour Play, Rails ou autres"
-author: Gaetan
+author: greweb
 layout: post
 permalink: /2010/03/sass-levolution-du-css/
 tags:

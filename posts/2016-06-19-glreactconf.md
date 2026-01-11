@@ -1,6 +1,6 @@
 ---
 title: Universal GL Effects for Web and Native
-author: Gaetan
+author: greweb
 layout: post
 tags:
   - react

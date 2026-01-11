@@ -2,7 +2,7 @@
 title: Blender as a 2D game level editor – Proof Of Concept
 description: Here is how you can design and export your 2D game map with Blender (both the logic and the graphics).
 thumbnail: /images/2012/04/map1.png
-author: Gaetan
+author: greweb
 layout: post
 permalink: /2012/04/blender-as-a-2d-game-map-editor-proof-of-concept/
 tags:

@@ -2,7 +2,7 @@
 title: CSS-selector-based templating system for scalable JavaScript applications
 description: In this article, we will focus on the power of CSS as a descriptive language, current template system approach and their problems with modularity and extensibility, and try to mix both features from the concept to a concrete implementation.
 thumbnail: /images/2012/02/218px-Mir_diagram-fr.svg_.png
-author: Gaetan
+author: greweb
 layout: post
 permalink: /2012/02/css-selector-based-templating-example-with-javascript/
 tags:
@@ -11,8 +11,8 @@ tags:
   - templating
 ---
 
- [2]: http://sliderjs.org/
- [3]: http://www.ubelly.com/2011/11/scalablejs/
+[2]: http://sliderjs.org/
+[3]: http://www.ubelly.com/2011/11/scalablejs/
 
 <img src="/images/2012/02/218px-Mir_diagram-fr.svg_.png" alt="" class="thumbnail-left" />
 
@@ -38,10 +38,11 @@ Let’s focus on some advantages of this descriptive language:
 
 ### A CSS rule is independant from others.
 
-The order of CSS rules *(selector declarations)* **really** does not matter.  
+The order of CSS rules _(selector declarations)_ **really** does not matter.  
 The priority between CSS rules is based on the selector itself and not on their arrangement.
 
-### You can “mix” CSS rule 
+### You can “mix” CSS rule
+
 2 CSS rules can have the same CSS selector. An element can be matched with multiple CSS rules. CSS rules are merged, it’s called the cascading.  
 This is the most important feature of CSS.  
 It implies a very modular and extensible language.
@@ -49,16 +50,16 @@ It implies a very modular and extensible language.
 #### Example
 
 ```css
-a {   
-  color: #33CC00;  
-  text-decoration: none;  
-}  
-a:hover { text-decoration: underline; }  
-#articles {  
-  font-size: 12px;  
-}  
-#articles a {  
-  color: red; /* overriding the generic color of a */  
+a {
+  color: #33CC00;
+  text-decoration: none;
+}
+a:hover { text-decoration: underline; }
+#articles {
+  font-size: 12px;
+}
+#articles a {
+  color: red; /* overriding the generic color of a */
 }
 ```
 
@@ -66,19 +67,19 @@ a:hover { text-decoration: underline; }
 
 Most of template system are based on inherence between templates.
 
-*   You have usually an “inclusion” approach: a template will “include” multiple external template. *(Many template into Many template)*
-*   And an “extension” approach: You define in a main template an area where you can append a template. Others templates “extend” your main template. *(One main template for Many template)*
+- You have usually an “inclusion” approach: a template will “include” multiple external template. _(Many template into Many template)_
+- And an “extension” approach: You define in a main template an area where you can append a template. Others templates “extend” your main template. _(One main template for Many template)_
 
 These approaches aims to factorize template codes and that’s great.
 
 But it doesn’t fit my needs:
 
-*   It brings **dependencies between templates**. 
-*   If you add a new template, you have to modify existing templates.  
-    If your application tend to go modules based, this is going to be unmaintainable. 
+- It brings **dependencies between templates**.
+- If you add a new template, you have to modify existing templates.  
+  If your application tend to go modules based, this is going to be unmaintainable.
 
 > **web application module (n)**  
-> 1 : an independent unit of functionality that is part of the total structure of a web application 
+> 1 : an independent unit of functionality that is part of the total structure of a web application
 
 ### A solution for scalable applications and libraries
 
@@ -172,7 +173,7 @@ with **parameters** `me = "greweb"`
 
 ### Advanced example
 
-This is another example with a slider. 
+This is another example with a slider.
 
 Let’s conceptually imagine the following template language:
 
@@ -230,7 +231,9 @@ combined with some parameters, it will result
 ```html
 <div class="slider">
   <div class="slides">
-    <div class="slide"><a href=".."><img src=".."/><span class="caption">...</span></a></div>
+    <div class="slide">
+      <a href=".."><img src=".." /><span class="caption">...</span></a>
+    </div>
     <div class="slide">...</div>
     <div class="slide">...</div>
     <canvas class="slides"></canvas>
@@ -241,7 +244,7 @@ combined with some parameters, it will result
       <a href="javascript:;" class="page">1</a>
       <a href="javascript:;" class="page">2</a>
       <a href="javascript:;" class="page">3</a>
-    </div>                                                                      
+    </div>
     <a href="javascript:;" class="nextSlide">next</a>
   </div>
 </div>
@@ -251,12 +254,11 @@ Of-course we could also do this programmatically with DOM. But see the benefit o
 
 You should keep in mind that **the order of rules definition does not matter**. In that’s sense, it is **a mixable, extensible, modular and loosely-coupled template system**.
 
-
 ### More about this POC
 
 Unlike CSS, **two same rules aren’t merged but are appended**.
 
-The ***priority*** governs the order of append. The higher the value is, the sooner it is appended to the containers selected by the CSS selector.
+The **_priority_** governs the order of append. The higher the value is, the sooner it is appended to the containers selected by the CSS selector.
 
 As you can see, there is a **micro-templating** inside each rule. For this example, it looks like the John Resig ‘s Micro Templating.
 
@@ -318,7 +320,7 @@ sort rules by priority.
   - if the selector is @root, elements := [container]
   - otherwise, elements := all elements which matches the selector
   - if the elements is empty, back to (1) by taking the next rule.
-  - (2) if not, templatize the html and append it into all of these elements. remove the rule from rules. back to (1) by starting from the first rules. 
+  - (2) if not, templatize the html and append it into all of these elements. remove the rule from rules. back to (1) by starting from the first rules.
 
 the loop (1) must end when :
   - there is no rules anymore

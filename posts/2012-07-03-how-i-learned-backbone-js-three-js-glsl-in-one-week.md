@@ -1,6 +1,6 @@
 ---
 title: "How I learned Backbone.js, Three.js, GLSL in one week"
-author: Gaetan
+author: greweb
 description: I learned to use Backbone.js and Three.js (a famous library on top of WebGL) to make a FPS in only one week.
 thumbnail: /images/2012/07/dta1.png
 layout: post

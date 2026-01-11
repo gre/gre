@@ -1,7 +1,7 @@
 ---
 title: "Play Framework – Enumerator.outputStream"
 description: "A few weeks ago, we’ve introduced a new feature in Play Framework: the Enumerator.outputStream method, allowing you to work with Java API requiring an OutputStream to generate content, for instance the java.util.zip API."
-author: Gaetan
+author: greweb
 layout: post
 permalink: /2012/11/play-framework-enumerator-outputstream/
 tags:

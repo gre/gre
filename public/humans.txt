@@ -1,6 +1,6 @@
 /* Hi there :) */
 
-Author: Gaëtan Renaudeau
+Author: greweb
 Twitter: @greweb
 Location: Paris
 Profession: developer

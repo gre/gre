@@ -2,7 +2,7 @@
 title: "Play Painter – how i've improved the 30 minutes prototyped version"
 description: One week ago, I’ve released a web experiment featuring a collaborative Paint-like application made with Play Framework 2 and relying on WebSocket and HTML5 Canvas. Here is how I've improved it.
 thumbnail: /images/2012/03/twitt_playpainter.png
-author: Gaetan
+author: greweb
 layout: post
 permalink: /2012/03/play-painter-how-ive-improved-the-30-minutes-prototyped-version/
 tags:
@@ -28,7 +28,7 @@ The first version of Play Painter has been improved with some optimizations.
 
 Explanation…
 
-<blockquote class="twitter-tweet" lang="fr"><p>Thanks guys for testing playpainter! but you are breaking my server :D <a href="http://t.co/F62qwk1i" title="http://twitter.com/greweb/status/179194592481116160/photo/1">twitter.com/greweb/status/…</a></p>&mdash; Gaëtan Renaudeau (@greweb) <a href="https://twitter.com/greweb/status/179194592481116160">12 mars 2012</a></blockquote>
+<blockquote class="twitter-tweet" lang="fr"><p>Thanks guys for testing playpainter! but you are breaking my server :D <a href="http://t.co/F62qwk1i" title="http://twitter.com/greweb/status/179194592481116160/photo/1">twitter.com/greweb/status/…</a></p>&mdash; greweb (@greweb) <a href="https://twitter.com/greweb/status/179194592481116160">12 mars 2012</a></blockquote>
 
 <!--more-->
 

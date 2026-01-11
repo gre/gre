@@ -2,7 +2,7 @@
 title: "Work in <progress />"
 description: A progress tag will be displayed on recent browsers with a OS-native progress bar representing a loading.
 thumbnail: /images/2012/04/progress_mac.png
-author: Gaetan
+author: greweb
 layout: post
 permalink: /2012/04/work-in-progress/
 tags:

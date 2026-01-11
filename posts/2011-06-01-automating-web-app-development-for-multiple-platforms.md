@@ -2,27 +2,25 @@
 title: Automating Web App development for multiple platforms
 description: In this article, we will explain why we’d choose web technologies to make applications and introduce WebAppBuilder, a tool to easily build different instances of an application. We’ll examine the Same Game Gravity as an example.
 thumbnail: /images/2011/webappmaker.png
-author: Gaetan
+author: greweb
 layout: post
 permalink: /2011/06/automating-web-app-development-for-multiple-platforms/
 tags:
   - linux
 ---
 
- [1]: /2011/06/automating-web-app-development-for-multiple-platforms/#webappbuilder
- [2]: http://gre.github.io/same-game-gravity
- [3]: https://github.com/gre/WebAppBuilder
- [4]: http://diveintohtml5.org/
- [6]: http://www.phonegap.com/
- [8]: http://mustache.github.com/
- [9]: http://sass-lang.com
- [10]: http://compass-style.org
- [12]: http://mrspeaker.net/
- [13]: https://github.com/jquery/jquery/tree/master/build
-
+[1]: /2011/06/automating-web-app-development-for-multiple-platforms/#webappbuilder
+[2]: http://gre.github.io/same-game-gravity
+[3]: https://github.com/gre/WebAppBuilder
+[4]: http://diveintohtml5.org/
+[6]: http://www.phonegap.com/
+[8]: http://mustache.github.com/
+[9]: http://sass-lang.com
+[10]: http://compass-style.org
+[12]: http://mrspeaker.net/
+[13]: https://github.com/jquery/jquery/tree/master/build
 
 In this article, we will explain why we’d choose web technologies to make applications and introduce [**WebAppBuilder**][1], a tool to easily build different instances of an application. We’ll examine the [Same Game Gravity][2] as an example.
-
 
 Using web to develop mobile applications is very **productive** and web technologies are **rich**.
 
@@ -62,7 +60,6 @@ Computers have browsers, mobiles and tablets device have recent browsers.
 
 To make your application development fully independent from the device, firstly you need a great **framework** to bridge your application and the device (like [PhoneGap][6]), secondly you need a great tool to easily **build** all applications from your common source code.
 
-
 First of all, let’s see how to organize a web project.
 
 ### Good practice
@@ -71,8 +68,8 @@ This is how I’ve organize my project :
 
 #### The source code directory
 
-This directory contains all your web app source code. You should keep your application source code (with HTML, CSS, Javascripts, images, sounds, …) in one directory (like */src* ).  
-You should **avoid specific code**, but sometimes you still need some specific behaviors for different devices. If so, I recommend you to put these differences inside different files (for exemple: *mobile.html*, *tablet.html*, *computer.html*,…).
+This directory contains all your web app source code. You should keep your application source code (with HTML, CSS, Javascripts, images, sounds, …) in one directory (like _/src_ ).  
+You should **avoid specific code**, but sometimes you still need some specific behaviors for different devices. If so, I recommend you to put these differences inside different files (for exemple: _mobile.html_, _tablet.html_, _computer.html_,…).
 
 #### Project skeletons
 
@@ -80,7 +77,7 @@ Keep one skeleton directory for each instance of your application.
 A skeleton directory will contains all the specific code related to the platform/device/version.  
 **Frameworks like PhoneGap bring you these skeletons.**
 
-* * *
+---
 
 ## WebAppBuilder
 
@@ -90,16 +87,16 @@ I created **WebAppBuilder : a lightweight Makefile to build your project**. This
 
 ### Features of WebAppBuilder
 
-*   Template easily your HTML files with [Mustache][8].
-*   Copy, concatenate, minimize Javascripts however you want.
-*   Retrieve Javascript files from URLs (useful for libraries).
-*   Compile SASS files into CSS files (if you use [this awesome stylesheets language][9])
-*   Support [Compass][10] if installed (you don’t need to provide it in your source, only an import works)
-*   Merge your CSS files.
-*   Copy and optionally rename resources you want to include (images, fonts, sounds,…).
-*   Error handling and atomicity : if one operation fail, the make fail (javascript syntax error, sass syntax error, …)
+- Template easily your HTML files with [Mustache][8].
+- Copy, concatenate, minimize Javascripts however you want.
+- Retrieve Javascript files from URLs (useful for libraries).
+- Compile SASS files into CSS files (if you use [this awesome stylesheets language][9])
+- Support [Compass][10] if installed (you don’t need to provide it in your source, only an import works)
+- Merge your CSS files.
+- Copy and optionally rename resources you want to include (images, fonts, sounds,…).
+- Error handling and atomicity : if one operation fail, the make fail (javascript syntax error, sass syntax error, …)
 
-You must have one Makefile per project skeleton, so you can easily define what to do with the */src* for the related platform/device/OS.
+You must have one Makefile per project skeleton, so you can easily define what to do with the _/src_ for the related platform/device/OS.
 
 ### Download or Contribute
 
@@ -107,7 +104,7 @@ You must have one Makefile per project skeleton, so you can easily define what t
 
 ### Example with my Same Game Gravity game
 
-I developed these tools during the [Same Game Gravity][2] game development. 
+I developed these tools during the [Same Game Gravity][2] game development.
 
 A **make** inside my android/ skeleton gives me :
 
@@ -119,31 +116,31 @@ And here is the Makefile I use :
 
 ```makefile
 # Same Game Gravity - Android full version #
-        
+
         ###             ~ Web App Builder ~               ###
         #       a Makefile to compile a web project.        #
         #  designed for web project with different devices  #
         #  (mobile, tablet, desktop) but with common code.  #
         ###        by @greweb  -  http://greweb.fr/       ###
- 
+
 # BUILD_DIR : PATH to Web App Builder /build directory (the directory containing all build tools)
 BUILD_DIR = ../build
- 
+
 # SRC_DIR : the source directory
 SRC_DIR = ../app
- 
+
 # DIST_DIR : the dist directory (ex: assets for android, www for iphone)
 DIST_DIR = assets
- 
+
 # RESOURCES : Your assets (images, sounds, fonts... and other static files)
 # You can rename dist file by prefix newname= ( ex: index.html=iphone_version.html )
 RESOURCES = Chewy.ttf logo.png background.jpg pop.mp3 swosh.mp3 gravity_exemple.png
- 
+
 # VIEWS : Views will be interpreted by Mustache.js
 # You can pass arguments with JSON format.
 # Example: index.html:"{key1:value1,key2:value2,...}"  <= no spaces!
 VIEWS = index.html=mobile.html:"{versionType:'',version:'1.0',platform:'mobile',android:true,free:false}"
- 
+
 ### SCRIPTS : all javascripts
 # - You can pass an URL to retrieve
 # - if you want to minimize the JS, prefix with '!'
@@ -152,38 +149,38 @@ VIEWS = index.html=mobile.html:"{versionType:'',version:'1.0',platform:'mobile',
 SCRIPTS = game.min.js=!game.js,!game.mobile.js,!md5.js \
           phonegap.min.js=!phonegap.js,!phonegap.webintent.js \
           jquery.min.js=http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js,jquery.ba-hashchange.min.js,jquery.tmpl.min.js
- 
+
 ### STYLES : all styles : CSS or SASS
 # - For .sass files, we compile them to css
 # - Like before, you can mix styles with ',' and you can name your target by prefixing 'name='
 STYLES = game.css=mobile.sass
- 
+
 ########################################################################
- 
- 
+
+
 all: welcome clean assets_views assets_scripts assets_styles assets_files
- 
+
 welcome:
 	@@${BUILD_DIR}/welcome.sh
- 
-assets_base: 
+
+assets_base:
 	@@mkdir -p ${DIST_DIR}
- 
+
 assets_views: assets_base
 	@@${BUILD_DIR}/compile_views.sh ${SRC_DIR} ${DIST_DIR} ${VIEWS}
- 
+
 assets_scripts: assets_base
 	@@${BUILD_DIR}/compile_scripts.sh ${SRC_DIR} ${DIST_DIR} ${SCRIPTS}
- 
+
 assets_styles: assets_base
 	@@${BUILD_DIR}/compile_styles.sh ${SRC_DIR} ${DIST_DIR} ${STYLES}
- 
+
 assets_files: assets_base
 	@@${BUILD_DIR}/copy_resources.sh ${SRC_DIR} ${DIST_DIR} ${RESOURCES}
- 
-clean: 
+
+clean:
 	@@rm -rf ${DIST_DIR}
- 
+
 .PHONY: welcome clean assets_views assets_scripts assets_styles assets_files
 ```
 
@@ -193,10 +190,9 @@ I use mainly komodo and geany as an IDE. They both have a build system. I recomm
 
 ### Features planned
 
-*   make should build the .apk for Android app
+- make should build the .apk for Android app
 
 ## Special thanks
 
-*   to [mrspeaker][12] for English review.
-*   to [jQuery build system][13] (js minifier)
-
+- to [mrspeaker][12] for English review.
+- to [jQuery build system][13] (js minifier)

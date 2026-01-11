@@ -1,26 +1,25 @@
 ---
-title: 'Cellular Automata in IBEX'
-description: 'IBEX is my game made for js13kgames. This article explains how the game has been implemented with GLSL and cellular automata.'
+title: "Cellular Automata in IBEX"
+description: "IBEX is my game made for js13kgames. This article explains how the game has been implemented with GLSL and cellular automata."
 thumbnail: /images/2014/09/ibex-2.png
-author: Gaetan
+author: greweb
 layout: post
 tags:
- - gamedev
- - js13k
- - GLSL
+  - gamedev
+  - js13k
+  - GLSL
 ---
 
- [gamepost]: /2014/09/ibex
- [js13kgames]: http://js13kgames.com/
- [submission]: http://js13kgames.com/entries/ibex
- [github]: http://github.com/gre/js13k-2014
- [cellular]: http://en.wikipedia.org/wiki/Cellular_automaton
- [wolfram]: http://en.wikipedia.org/wiki/Stephen_Wolfram
- [ankos]: https://www.wolframscience.com/
- [gol]: http://en.wikipedia.org/wiki/Conway's_Game_of_Life
- [cavelikegen]: http://www.roguebasin.com/index.php?title=Cellular_Automata_Method_for_Generating_Random_Cave-Like_Levels
- [logicfrag]: https://github.com/gre/js13k-2014/blob/master/src/shaders/logic.frag
-
+[gamepost]: /2014/09/ibex
+[js13kgames]: http://js13kgames.com/
+[submission]: http://js13kgames.com/entries/ibex
+[github]: http://github.com/gre/js13k-2014
+[cellular]: http://en.wikipedia.org/wiki/Cellular_automaton
+[wolfram]: http://en.wikipedia.org/wiki/Stephen_Wolfram
+[ankos]: https://www.wolframscience.com/
+[gol]: http://en.wikipedia.org/wiki/Conway's_Game_of_Life
+[cavelikegen]: http://www.roguebasin.com/index.php?title=Cellular_Automata_Method_for_Generating_Random_Cave-Like_Levels
+[logicfrag]: https://github.com/gre/js13k-2014/blob/master/src/shaders/logic.frag
 
 <a href="/2014/09/ibex">
   <img src="/images/2014/09/ibex-2.png" alt="" class="thumbnail-right" />
@@ -41,11 +40,10 @@ and computed efficiently in a GLSL shader.
 
 ## Cellular automata ruled world
 
-A **Cellular Automaton** (plurial Cellular Automata) is an **automaton** *(in other words, a state machine)*
+A **Cellular Automaton** (plurial Cellular Automata) is an **automaton** _(in other words, a state machine)_
 based on **a grid (an array) of cells**.
 It has been discovered years ago and popularized by [Stephen Wolfram][wolfram]
 in his interesting book [A new Kind of Science][ankos].
-
 
 <figure class="thumbnail-right">
   <img src="/images/2014/09/elementary-automaton.png" />
@@ -77,7 +75,7 @@ The kind of Cellular Automaton I focused on for my game is **2D cellular automat
 At each generation, the cell value is determined from **the previous value and the 8 adjacent cells**
 using a finite set of rules.
 
-It is important to understand that these rules are applied in parallel for __all__ cells of the world.
+It is important to understand that these rules are applied in parallel for **all** cells of the world.
 
 <br />
 
@@ -158,19 +156,19 @@ void main () {
 }
 ```
 
->**The complete game rules are all implemented in a GLSL fragment shader:
-[logic.frag][logicfrag]**.
-It is important to understand that this fragment shader takes in input
-the previous world state (as an uniform texture)
-and computes a new state by applying the rules.
+> **The complete game rules are all implemented in a GLSL fragment shader:
+> [logic.frag][logicfrag]**.
+> It is important to understand that this fragment shader takes in input
+> the previous world state (as an uniform texture)
+> and computes a new state by applying the rules.
 
 On the JavaScript side, you need to **give an initial state to the texture**
 (so you need to also encode data the same way it is done in the shader).
 Alternatively you can also make a shader to do this job
-*(generating the terrain can be intense to do in JavaScript, like it is the case for my game...)*.
+_(generating the terrain can be intense to do in JavaScript, like it is the case for my game...)_.
 
 Also if you want to **query the world from JavaScript**,
-*(e.g. you want to do physics or collision detection like it is also the case for my game)*,
+_(e.g. you want to do physics or collision detection like it is also the case for my game)_,
 you need to use `gl.readPixels` and then decode data in JavaScript.
 
 I'll explain this a bit later in another article.
@@ -224,7 +222,7 @@ This makes a LOT of possible rules.
 However, the rules involved here remain simple and with just a few rules.
 
 > That is the big thing about cellular automata:
-very simple rules produce an incredible variety of results.
+> very simple rules produce an incredible variety of results.
 
 In general, we can classify my game rules into 2 kind of rules:
 "interaction" rules and "propagation" rules.
@@ -249,7 +247,6 @@ a Fire is created if there was a Fire on bottom.
 
 ![](/images/2014/09/ibex-rule-fire1.png)
 
-
 These rules produce very elementary result, we will now see how we can improve them.
 
 ### Weights in rules
@@ -262,7 +259,7 @@ Let's take a look at a simple example:
 ![](/images/2014/09/ibex-rule-gencave-example.png)
 
 > N.B.: only the "sum" is considered in the rule:
-if an element matches, we sum the weight of the cell, otherwise "zero".
+> if an element matches, we sum the weight of the cell, otherwise "zero".
 
 **This example is actually a weighted version of [the cave rule you can find here][cavelikegen]:**
 
@@ -299,6 +296,7 @@ if (
 ```
 
 #### Randomness in GLSL ???
+
 GLSL is fully stateless and there is **NO WAY** to have a `random()` function in the GPU.
 The trick to do randomness in GLSL is by invoking some math black magic:
 
@@ -339,8 +337,8 @@ Let's now see other examples where randomness can be very powerful.
 ![](/images/2014/09/ibex-rule-fire2.png)
 
 - the "left" and the "right" columns in this rule allows **divergence** in the way fire grows:
-Instead of growing straight up, **the fire can also move a bit left or a bit right**.
-A lower weight for these side columns make the fire diverge a bit less than a "triangle" propagation.
+  Instead of growing straight up, **the fire can also move a bit left or a bit right**.
+  A lower weight for these side columns make the fire diverge a bit less than a "triangle" propagation.
 
 Here is the GLSL code:
 
@@ -367,11 +365,11 @@ if (
 
 - Same as the fire rule, we also have **divergence** in the water.
 - However there is one more important thing in the rule:
-thanks to the **double inequality**,
-Water is created only if there is not already too much Water:
-it **results of creating Air between the Water particules**.
-This make Water elements to be less compact than Fire elements,
-the water does not visually "expand" contrary to the fire.
+  thanks to the **double inequality**,
+  Water is created only if there is not already too much Water:
+  it **results of creating Air between the Water particules**.
+  This make Water elements to be less compact than Fire elements,
+  the water does not visually "expand" contrary to the fire.
 - The **randomness** helps a lot here to give **no visible patterns** in this job.
 
 <br />
@@ -386,7 +384,7 @@ if (
   between(
     0.3 * float(NW==W) +  0.9 * float(NN==W) +  0.3 * float(NE==W) +
     0.1 * float(WW==W) + -0.3 * float(CC==F) +  0.1 * float(EE==W) +
-                         -0.3 * float(SS==F)  
+                         -0.3 * float(SS==F)
     ,
     0.9 - 0.6 * RAND,
     1.4 + 0.3 * RAND
@@ -431,7 +429,6 @@ Note the important usage of randomness.
 
 ![](/images/2014/09/ibex-rule-source.png)
 
-
 ### The grass propagation, Limiting the forest height
 
 To finish, the grass needed a special extension to the so-far-used 2D cellular automaton,
@@ -448,11 +445,9 @@ This extra rule just adds a constraint on the max height that a forest can have.
   <img src="/images/2014/09/ibex-rule-forest-specific.png" />
 </figure>
 
-
 Here is a demo showing the forest propagation randomness:
 
 <iframe width="100%" height="480" src="//www.youtube.com/embed/V_enCKx8XHA" frameborder="0" allowfullscreen="allowfullscreen"></iframe>
-
 
 ### Drawing into the world
 
@@ -507,7 +502,7 @@ void main (void) {
 The world is generated on the fly when the ibex progress to the right. This is done chunk by chunk.
 
 > More precisely, the world height is 256 pixels and a new part of the world is discovered each 128 pixels –
-In other words, the generation is divided into world chunks of `(128 x 256)` pixels.
+> In other words, the generation is divided into world chunks of `(128 x 256)` pixels.
 
 Each world chunk is generated using a cellular automaton (different from the simulation one).
 
@@ -516,23 +511,22 @@ we can easily generate "cave like maps" from [this technique][cavelikegen].
 I've added to this a [few improvments](https://github.com/gre/js13k-2014/blob/master/src/index.js#L842):
 
 - The [initial random conditions](https://github.com/gre/js13k-2014/blob/master/src/index.js#L881) ensure
-that **the bottom of the world is Earth** and that **the top of the world is Air**.
-*(that with gradients of randomness)*
+  that **the bottom of the world is Earth** and that **the top of the world is Air**.
+  _(that with gradients of randomness)_
 - [Randomness](https://github.com/gre/js13k-2014/blob/master/src/index.js#L896-L906)
-has been added to the rules to make the terrain evolving a bit more
-*(otherwise it creates stable but small caves)*.
+  has been added to the rules to make the terrain evolving a bit more
+  _(otherwise it creates stable but small caves)_.
 - The number of generation step is set to 26. the randomness of the rules is decreasing through steps to produce stable results.
 - In an attempt to create **seamless maps**,
-the initial random state for x=0 is set to the values of x=127 of the previous world chunk.
-[(code here)](https://github.com/gre/js13k-2014/blob/master/src/index.js#L878)
-It isn't perfect because you can still notice some edges.
+  the initial random state for x=0 is set to the values of x=127 of the previous world chunk.
+  [(code here)](https://github.com/gre/js13k-2014/blob/master/src/index.js#L878)
+  It isn't perfect because you can still notice some edges.
 - For **more diversity in generated chunks**, here are the parameters that can [randomly vary](https://github.com/gre/js13k-2014/blob/master/src/index.js#L845-L848):
   - The **amount of Earth** (can create dense areas VS floating platform areas)
   - The **chance of Water Source** in the Earth (will creates a lot of forest)
   - The **chance of Volcano** in the Earth (dangerous world chunk)
 
 ![](/images/2014/09/ibex-gen-variety.png)
-
 
 ## More articles to come
 
@@ -543,6 +537,6 @@ I'll try to write more about these subjects:
 - The **"Pixels paradigm"**, Pixel as first class citizen: How to query and analyze the pixels world. How to do simple bitmap collision detection.
 - The **game rendering performed in a GLSL shader** and all the graphics details I've spent hours on.
 - **things I've learned from WebGL**, how to solve the bad approaches I've taken,
-and how I could have made a much more efficient game.
+  and how I could have made a much more efficient game.
 - **what could have made this game even more interesting**,
-and some ideas that was not reachable in a 2 weeks deadline.
+  and some ideas that was not reachable in a 2 weeks deadline.

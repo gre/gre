@@ -1,6 +1,6 @@
 ---
 title: 🎉 There are some OpenGL in the Project September fashion app!
-author: Gaetan
+author: greweb
 layout: post
 tags:
   - react

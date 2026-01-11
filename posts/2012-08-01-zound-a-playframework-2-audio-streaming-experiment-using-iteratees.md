@@ -2,7 +2,7 @@
 title: Zound, a PlayFramework 2 audio streaming experiment using Iteratees
 description: Zound uses an audio generator (JSyn, an audio synthesizer), encode the output and stream it all using Play Iteratees to pipe everything in real-time.
 thumbnail: /images/2012/07/ZOUND.png
-author: Gaetan
+author: greweb
 layout: post
 permalink: /2012/08/zound-a-playframework-2-audio-streaming-experiment-using-iteratees/
 tags:
@@ -16,18 +16,18 @@ tags:
 
 Last Friday was HackDay #7 at [Zenexity][2], and we decided to work on a real-time audio [experiment][3] made with [Play Framework][4]. The plan was to use an audio generator ([JSyn][5], an audio synthesizer), encode the output and stream it all using Play Iteratees to pipe everything in real-time.
 
- [2]: http://zenexity.com
- [3]: http://github.com/gre/zound
- [4]: http://playframework.org
- [5]: http://www.softsynth.com/jsyn/
- [7]: https://twitter.com/mrspeaker
- [12]: http://www.playframework.org/
- [13]: scala-lang.org/
- [14]: http://sadache.tumblr.com/post/26784721867/is-socket-push-bytes-all-what-you-need-to-program
- [15]: http://www.infoq.com/presentations/Play-I-ll-See-Your-Async-and-Raise-You-Reactive
- [16]: https://github.com/playframework/Play20/tree/master/framework/src/play/src/main/scala/play/api/libs/iteratee
- [17]: http://en.wikipedia.org/wiki/WAV
- [19]: http://en.wikipedia.org/wiki/Broadcasting_(networking)
+[2]: http://zenexity.com
+[3]: http://github.com/gre/zound
+[4]: http://playframework.org
+[5]: http://www.softsynth.com/jsyn/
+[7]: https://twitter.com/mrspeaker
+[12]: http://www.playframework.org/
+[13]: scala-lang.org/
+[14]: http://sadache.tumblr.com/post/26784721867/is-socket-push-bytes-all-what-you-need-to-program
+[15]: http://www.infoq.com/presentations/Play-I-ll-See-Your-Async-and-Raise-You-Reactive
+[16]: https://github.com/playframework/Play20/tree/master/framework/src/play/src/main/scala/play/api/libs/iteratee
+[17]: http://en.wikipedia.org/wiki/WAV
+[19]: http://en.wikipedia.org/wiki/Broadcasting_(networking)
 
 <iframe width="640" height="360" src="http://www.youtube.com/embed/taDLKTcNHnQ?feature=player_embedded" frameborder="0" allowfullscreen></iframe>
 
@@ -35,7 +35,7 @@ Last Friday was HackDay #7 at [Zenexity][2], and we decided to work on a real-ti
 
 Thanks to [@Sadache][6] for his Iteratee expertise, we ended up with a simple line of code that does all of the hard work:
 
- [6]: https://twitter.com/Sadache
+[6]: https://twitter.com/Sadache
 
 ```scala
 val chunkedAudioStream = rawStream &> chunker &> audioEncoder
@@ -48,16 +48,16 @@ Now, **rawStream** is the raw stream of audio samples (numbers between -1 and 1)
 We can then make a broadcast of the stream:
 
 ```scala
-val (sharedChunkedAudioStream, _) =   
+val (sharedChunkedAudioStream, _) =
   Concurrent.broadcast(chunkedAudioStream)
 ```
 
 And then the **sharedChunkedAudioStream** is now a shared stream for every consumer (clients). All that’s left to do is to stream it over HTTP:
 
 ```scala
-def stream = Action {  
-  Ok.stream(audioHeader >>> sharedChunkedAudioStream).  
-     withHeaders( ("Content-Type", audio.contentType) )  
+def stream = Action {
+  Ok.stream(audioHeader >>> sharedChunkedAudioStream).
+     withHeaders( ("Content-Type", audio.contentType) )
 }
 ```
 
@@ -67,15 +67,13 @@ Another interesting part of the project is the **multi-user web user interface: 
 
 Using [@mrspeaker][7]‘s audio synthesis expertise, we started creating a synthesizer generator – 3 oscillators, various wave shapes, frequency and volumes, and finally flowing through a high pass filter before entering our “rawStream” above.
 
-
 Thanks to the Play framework goodness, **this audio stream can be both consumed by the web page with an HTML audio tag, and with a stream player such as VLC!** Ok, that’s the project – let’s have a closer look at some of the concepts…
 
 <!--more-->
 
-
 ## What is sound?
 
-> Sound is a mechanical wave that is an oscillation of pressure transmitted through a solid, liquid, or gas, composed of frequencies within the range of hearing and of a level sufficiently strong to be heard, or the sensation stimulated in organs of hearing by such vibrations. ***Wikipedia***
+> Sound is a mechanical wave that is an oscillation of pressure transmitted through a solid, liquid, or gas, composed of frequencies within the range of hearing and of a level sufficiently strong to be heard, or the sensation stimulated in organs of hearing by such vibrations. **_Wikipedia_**
 
 We can represents the sound like any wave as a graphic of the amplitude (the oscillation pressure) as a function of time. Here you see it in Audacity:
 
@@ -89,23 +87,23 @@ There are some patterns – some primitives waves – we can easily generate wit
 
 [![](/images/2012/07/557px-Waveforms.svg_.png)][10]
 
- [10]: http://en.wikipedia.org/wiki/File:Waveforms.svg
+[10]: http://en.wikipedia.org/wiki/File:Waveforms.svg
 
 A sine wave produce a smooth tone, whereas Triangle and Square wave are more aggressive sounds. The shorter a wave period is, the lower the note you hear: it’s called the frequency.
 
 ### How is sound represented by computer?
 
-Whereas analog oscillators generate sounds in an *almost** continuous stream of electricity, computers are not able to generate continuous stream of data. This is why with computers the sound is divided in to discrete **samples**, usually **44100 samples per second** for standard CD quality audio. Each sample is a value (amplitude) for a given time position.
+Whereas analog oscillators generate sounds in an \*almost** continuous stream of electricity, computers are not able to generate continuous stream of data. This is why with computers the sound is divided in to discrete **samples**, usually **44100 samples per second\*\* for standard CD quality audio. Each sample is a value (amplitude) for a given time position.
 
 [See Sampling (wikipedia)][10].
 
- [10]: http://en.wikipedia.org/wiki/Sampling_(signal_processing)
+[10]: http://en.wikipedia.org/wiki/Sampling_(signal_processing)
 
 If you zoom in Audacity, you can actually see each sample:  
 ![audacity-zoom](/images/2012/07/audacity-zoom-ah.png)
 This is an “AH” timbre of my voice. A timbre is unique to everyone, it’s the pattern the sound wave take when you speak. **The amplitude of an audio sample is usually represented as a Real number between -1.0 and 1.0**.
 
-** electricity is not strictly continuous, we have electrons out there!*
+\*_ electricity is not strictly continuous, we have electrons out there!_
 
 Ok, Let’s go back to our experiment now!
 
@@ -113,16 +111,14 @@ Ok, Let’s go back to our experiment now!
 
 Our experiment is using [Play Framework][12] and is written in [Scala language][13]. Specifically, our project takes advantage of Play framework’s powerful **Iteratee**s.
 
-
 > Take the expressivity of UNIX pipes, bring the power of Scala, mix it with Play Framework and you got a powerful framework for handling real-time and web streaming.
 
 The iteratee (and related constructs) can take a bit of getting used to. I recommend checking out [this article on Iteratees in Play][14] and/or [this presentation][15] if you are interested in learning more about Play2 and reactive programming with Iteratees. And if you just want to see how it work – you can read the source code at [Play20 Github source code][16].
 
-
 ### Generating the audio stream
 
 ```scala
-val (rawStream, channel) = Concurrent.broadcast[Array[Double]]  
+val (rawStream, channel) = Concurrent.broadcast[Array[Double]]
 val zound = new ZoundGenerator(channel).start()
 ```
 
@@ -131,26 +127,26 @@ We create an `Array[Double]` broadcast which return two values: the **rawStream*
 Here’s a snippet from the **ZoundGenerator** class showing the connection between **JSyn** and **Channel**:
 
 ```scala
-class ZoundGenerator(output: Channel[Array[Double]]) {  
-  val out = new MonoStreamWriter()  
-  
-  val synth = {  
-    val synth = JSyn.createSynthesizer()  
-    synth.add(out)  
-    out.setOutputStream(new AudioOutputStream(){  
-      def close() {}  
-      def write(value: Double) {  
-        output.push(Array(value))  
-      }  
-      def write(buffer: Array[Double]) {  
-        write(buffer, , buffer.length)  
-      }  
-      def write(buffer: Array[Double], start: Int, count: Int) {  
-        output.push(buffer.slice(start, start count))  
-      }  
-    })  
-    synth  
-  }  
+class ZoundGenerator(output: Channel[Array[Double]]) {
+  val out = new MonoStreamWriter()
+
+  val synth = {
+    val synth = JSyn.createSynthesizer()
+    synth.add(out)
+    out.setOutputStream(new AudioOutputStream(){
+      def close() {}
+      def write(value: Double) {
+        output.push(Array(value))
+      }
+      def write(buffer: Array[Double]) {
+        write(buffer, , buffer.length)
+      }
+      def write(buffer: Array[Double], start: Int, count: Int) {
+        output.push(buffer.slice(start, start count))
+      }
+    })
+    synth
+  }
   // ...
 ```
 
@@ -159,34 +155,33 @@ We have to implement the methods of AudioOutputStream – but it’s just a matt
 ### Encoding the raw audio stream
 
 For now, we have only implemented the [WAVE format][17]. Basically, WAVE has 2 parts; the WAVE header which describes important information (like the framerate and the bits per sample), and the data.  
-The data is encoded in a simple manner I won’t describe here but you can look to the encoder I made here: 
-
+The data is encoded in a simple manner I won’t describe here but you can look to the encoder I made here:
 
 Now more interesting, let’s wrap it with Play Iteratees:
 
 ```scala
-val audio = MonoWaveEncoder() // instanciate the WAV encoder  
-val audioHeader = Enumerator(audio.header)  
+val audio = MonoWaveEncoder() // instanciate the WAV encoder
+val audioHeader = Enumerator(audio.header)
 val audioEncoder = Enumeratee.map[Array[Double]](audio.encodeData)
 ```
 
-***N. B.***: *Remember that Scala is a typed language but where the type declaration is optional because the compiler can infer the type.*
+**_N. B._**: _Remember that Scala is a typed language but where the type declaration is optional because the compiler can infer the type._
 
-**audioHeader** is an `Enumerator` which means it can *produce* data, and here the data is the audio header. More precisely it’s an `Enumerator[Array[Byte]]` because audio.header is an `Array[Byte]`. Note that contained data is not “consumed” like it would be for an `InputStream`. Each time you use this enumerator, it gives you its entire content.
+**audioHeader** is an `Enumerator` which means it can _produce_ data, and here the data is the audio header. More precisely it’s an `Enumerator[Array[Byte]]` because audio.header is an `Array[Byte]`. Note that contained data is not “consumed” like it would be for an `InputStream`. Each time you use this enumerator, it gives you its entire content.
 
 **audioEncoder** is an `Enumeratee[Array[Double], Array[Byte]]`. It takes an `Array[Double]` from input and returns an `Array[Byte]` as output. The input is a raw array of audio samples (double numbers between -1.0 and 1.0). The output is the encoded array of bytes.
 
-More formally, an `Enumeratee[A, B]` is an *adapter* which maps some data of type A to new data of type B. You can implement the way the data is transformed with the map function. Here we just give it the `audio.encodeData` function.
+More formally, an `Enumeratee[A, B]` is an _adapter_ which maps some data of type A to new data of type B. You can implement the way the data is transformed with the map function. Here we just give it the `audio.encodeData` function.
 
 ### Streaming it
 
 We can basically stream the audio stream with Play2 like so:
 
 ```scala
-def stream = Action {  
-  val audioStream = rawStream &> audioEncoder  
-  Ok.stream(audioHeader >>> audioStream).  
-     withHeaders( (CONTENT_TYPE, audio.contentType) )  
+def stream = Action {
+  val audioStream = rawStream &> audioEncoder
+  Ok.stream(audioHeader >>> audioStream).
+     withHeaders( (CONTENT_TYPE, audio.contentType) )
 }
 ```
 
@@ -196,23 +191,23 @@ The `rawStream &> audioEncoder` takes the raw stream and **pipes** it into the e
 
 #### A chunker to reduce HTTP packet numbers
 
-Up to now we’ve been streaming the audio in **very small chunks** because by default JSyn writes out arrays of just 8 audio samples and the `.stream()` function consumes all data as it comes. This means *a lot* of HTTP chunks per second are sent – which is less efficient and take more bandwidth.
+Up to now we’ve been streaming the audio in **very small chunks** because by default JSyn writes out arrays of just 8 audio samples and the `.stream()` function consumes all data as it comes. This means _a lot_ of HTTP chunks per second are sent – which is less efficient and take more bandwidth.
 
 In order to fix this, we need to use a **buffer on the server side**. In other words, instead of sending audio samples as they come we need to **group audio samples**. We have currently grouped audio samples in arrays of 5000 which is quite reasonable (it’s about 10 chunks per second using 44100 samples/s). We can easily change this later. This logic is implemented in an `Enumeratee` we called “chunker”. In that sense, it is reusable and modular:
 
 ```scala
-val chunker = Enumeratee.grouped(  
-  Traversable.take[Array[Double]](5000) &>> Iteratee.consume()  
+val chunker = Enumeratee.grouped(
+  Traversable.take[Array[Double]](5000) &>> Iteratee.consume()
 )
 ```
 
 And now, we can easily plug it in like this:
 
 ```scala
-def stream = Action {  
-  val chunkedAudioStream = rawStream &> chunker &> audioEncoder  
-  Ok.stream(audioHeader >>> chunkedAudioStream).  
-     withHeaders( (CONTENT_TYPE, audio.contentType) )  
+def stream = Action {
+  val chunkedAudioStream = rawStream &> chunker &> audioEncoder
+  Ok.stream(audioHeader >>> chunkedAudioStream).
+     withHeaders( (CONTENT_TYPE, audio.contentType) )
 }
 ```
 
@@ -223,26 +218,26 @@ Now, another improvement we made was to **factorize this chunking and encoding p
 Basically, we move it out of the stream function:
 
 ```scala
-val chunkedAudioStream = rawStream &> chunker &> audioEncoder  
-def stream = Action {  
-  Ok.stream(audioHeader >>> chunkedAudioStream).  
-     withHeaders( (CONTENT_TYPE, audio.contentType) )  
+val chunkedAudioStream = rawStream &> chunker &> audioEncoder
+def stream = Action {
+  Ok.stream(audioHeader >>> chunkedAudioStream).
+     withHeaders( (CONTENT_TYPE, audio.contentType) )
 }
 ```
 
 But to allow broadcasting, we have to use a broadcast:
 
 ```scala
-val chunkedAudioStream = rawStream &> chunker &> audioEncoder  
-val (sharedChunkedAudioStream, _) =  =   
-  Concurrent.broadcast(chunkedAudioStream)  
-def stream = Action {  
-  Ok.stream(audioHeader >>> sharedChunkedAudioStream).  
-     withHeaders( (CONTENT_TYPE, audio.contentType) )  
+val chunkedAudioStream = rawStream &> chunker &> audioEncoder
+val (sharedChunkedAudioStream, _) =  =
+  Concurrent.broadcast(chunkedAudioStream)
+def stream = Action {
+  Ok.stream(audioHeader >>> sharedChunkedAudioStream).
+     withHeaders( (CONTENT_TYPE, audio.contentType) )
 }
 ```
 
-Here we only care about the enumerator (the left argument in the Tuple2), we put the wildcard "_" to ignore the return value.
+Here we only care about the enumerator (the left argument in the Tuple2), we put the wildcard "\_" to ignore the return value.
 
 [![](/images/2012/07/320px-Broadcast.svg_.png)][19]
 
@@ -253,14 +248,14 @@ Using a broadcast, generated audio samples pushed by the audio generator can be 
 The last important fix we made was to **avoid the server load**:
 
 ```scala
-  def stream = Action {  
-    Ok.stream(audioHeader >>> sharedChunkedAudioStream   
-      &> Concurrent.dropInputIfNotReady(50)).  
-       withHeaders( (CONTENT_TYPE, audio.contentType) )  
+  def stream = Action {
+    Ok.stream(audioHeader >>> sharedChunkedAudioStream
+      &> Concurrent.dropInputIfNotReady(50)).
+       withHeaders( (CONTENT_TYPE, audio.contentType) )
   }
 ```
 
-If a client is opening the stream connection but doesn’t consume enough or doesn’t consume it at all (download is paused), the server will fill in memory the chunks to send to the client and the server can reach an *out of memory* exception. To avoid that **we have to drops chunks if the consumer is not ready**. Then the client will just lose messages if it is not ready (in our case, we give them 50 milliseconds).
+If a client is opening the stream connection but doesn’t consume enough or doesn’t consume it at all (download is paused), the server will fill in memory the chunks to send to the client and the server can reach an _out of memory_ exception. To avoid that **we have to drops chunks if the consumer is not ready**. Then the client will just lose messages if it is not ready (in our case, we give them 50 milliseconds).
 
 And this is what `Concurrent.dropInputIfNotReady(50)` is actually doing – with yet another **Enumeratee**! **Dropping old chunks is really what we want in an audio streaming application**: We want the consumer to subscribe to the current audio stream and not to continue from where they stopped.
 
@@ -298,7 +293,7 @@ Our experiment **mixes different oscillators to generator one sound**. The web u
 
 This interface is **multi-users**, so if you use it with other people, **the interface will stay synchronized over multiple browsers** (turn the knobs, change the wave primitive, …). All this is done with WebSockets, and on the server-side it’s using, again, **Iteratees**!
 
-The workflow is simple: When someone does some action on the user interface, events are sent to the server. These events are interpreted by the *ZoundGenerator* resulting in updates to the audio synthesis configuration. These events are then broadcast to each client, and some Javascript handlers are called in order to keep the interface synchronized.
+The workflow is simple: When someone does some action on the user interface, events are sent to the server. These events are interpreted by the _ZoundGenerator_ resulting in updates to the audio synthesis configuration. These events are then broadcast to each client, and some Javascript handlers are called in order to keep the interface synchronized.
 
 ## Source code
 
@@ -309,24 +304,24 @@ The workflow is simple: When someone does some action on the user interface, eve
 This was just a simple demo to show the power and flexibility of Play2′s Iteratee concept. Because of the modular nature, extending the demo is easy. For example, we could plug a new audio encoder such an OGG encoder. The code would be simple and we could even choose on a request-by-request basis which encoder to use:
 
 ```scala
-import Concurrent.broadcast  
-val (chunkedWaveStream, _) =   
-  broadcast(rawStream &> chunker &> waveEncoder)  
-val (chunkedOggStream, _) =   
-  broadcast(rawStream &> chunker &> oggEncoder)  
-  
-def stream(format: String) = Action {  
-  val stream = format match {  
-    case "wav" => waveHeader >>> chunkedWaveStream  
-    case "ogg" => oggHeader >>> chunkedOffStream  
-  }  
-  Ok.stream(stream).  
-     withHeaders( (CONTENT_TYPE, audio.contentType) )  
+import Concurrent.broadcast
+val (chunkedWaveStream, _) =
+  broadcast(rawStream &> chunker &> waveEncoder)
+val (chunkedOggStream, _) =
+  broadcast(rawStream &> chunker &> oggEncoder)
+
+def stream(format: String) = Action {
+  val stream = format match {
+    case "wav" => waveHeader >>> chunkedWaveStream
+    case "ogg" => oggHeader >>> chunkedOffStream
+  }
+  Ok.stream(stream).
+     withHeaders( (CONTENT_TYPE, audio.contentType) )
 }
 ```
 
 **Now it’s up to you!**
 
-Hopefully you get a feel for the possibilities of stream processing and piping with Play. You can now reuse these concepts and make your own stuff: Maybe you don’t need to generate sounds on the fly, but instead you simply want to play a collection of audio files and stream them like radio? **Well you can make a web radio engine now!**. 
+Hopefully you get a feel for the possibilities of stream processing and piping with Play. You can now reuse these concepts and make your own stuff: Maybe you don’t need to generate sounds on the fly, but instead you simply want to play a collection of audio files and stream them like radio? **Well you can make a web radio engine now!**.
 
-But that’s just the beginning – I would love to see someone taking the concept, and running even further… Do you know that in Youtube, during the time you are uploading a video, Youtube is already re-encoding it and can start streaming it *before* the file has finished uploading? Hmm, that’s starting to sound almost simple…
+But that’s just the beginning – I would love to see someone taking the concept, and running even further… Do you know that in Youtube, during the time you are uploading a video, Youtube is already re-encoding it and can start streaming it _before_ the file has finished uploading? Hmm, that’s starting to sound almost simple…

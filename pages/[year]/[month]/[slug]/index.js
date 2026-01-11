@@ -47,7 +47,7 @@ export default function Home({
         <Head>
           <title>{title}</title>
           <link rel="icon" href="/favicon.ico" />
-          <meta name="author" content="Gaëtan Renaudeau" />
+          <meta name="author" content="greweb" />
           <meta name="description" content={description} />
           <meta name="keywords" content={tags?.join(", ")} />
 

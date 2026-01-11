@@ -1,15 +1,15 @@
 ---
-title: 'Making performant React applications'
-description: 'I would like to express here my opinion and feedback on using React and performance optimization you can do.'
-thumbnail: '/images/2015/07/diaporama_3.jpg'
-author: Gaetan
+title: "Making performant React applications"
+description: "I would like to express here my opinion and feedback on using React and performance optimization you can do."
+thumbnail: "/images/2015/07/diaporama_3.jpg"
+author: greweb
 layout: post
 tags:
- - react
- - vdom
+  - react
+  - vdom
 ---
 
-*^ Sorry guys, you may have notice the blog post date is wrong. I won't change the URL, but thanks to how time works, this will be fixed in one month anyway :-D*
+_^ Sorry guys, you may have notice the blog post date is wrong. I won't change the URL, but thanks to how time works, this will be fixed in one month anyway :-D_
 
 [ReactEurope](https://twitter.com/chantastic/status/616608931037646850) conference
 was to me incredibly [inspiring](https://twitter.com/chantastic/status/616670658911715328) and [promising](https://twitter.com/chantastic/status/616995607043903488).
@@ -47,7 +47,7 @@ that I'm going to detail a bit at the end of this article.
 
 I don't think Virtual DOM claims to be faster than doing Vanilla DOM, and that's not really the point. **The point is productivity.**
 You can write very well optimized code in Vanilla DOM but this might require **a lot of expertise**
-and a lot of time even for an experienced team *(time that should be spent focusing on making your product)*.
+and a lot of time even for an experienced team _(time that should be spent focusing on making your product)_.
 
 When it comes to adding new features and refactoring old ones, this goes worse.
 Without a well constrained framework or paradigm, things does not scale far, are time consuming and introduce bugs,...
@@ -70,7 +70,7 @@ React has an incredible Developer eXperience (that people seem to call DX nowada
 You can easily figure out which component is a bottleneck in the Component tree as shown in following screenshot.
 
 > ![](/images/2015/07/diaporama-perfs.png)
-With printWasted() you can see how much time React has wasted to `render()` something that didn't change and how much instances has been created. (there is also printInclusive and printExclusive)
+> With printWasted() you can see how much time React has wasted to `render()` something that didn't change and how much instances has been created. (there is also printInclusive and printExclusive)
 
 This is a bit equivalent of the Web Console Profiler except it emphasis on your application components which is a very relevant approach.
 
@@ -83,7 +83,7 @@ for instance the current `time` is shared and used everywhere in the application
 As a matter of fact, dependencies grow when adding more and more features.
 
 > ![](/images/2015/07/diaporama_configure_kenburns.gif)
-usages of time in 3 independent components.
+> usages of time in 3 independent components.
 
 **The descriptive Virtual DOM approach very simply solves this problem**.
 You just have to pass props in to share data between components:
@@ -94,7 +94,7 @@ there is one source of trust that climb down your component tree via "props".
 With Virtual DOM approach, the cost to add one new dependency to a shared data is small and **does not become more complex as the application grows**.
 
 > ![](/images/2015/07/diaporama_slide_content.gif)
-another more complex showcase of shared states.
+> another more complex showcase of shared states.
 
 Using an Event System like you would do in standard Backbone approach tends to lead to imperative style and spaghetti codes (and when using global events, components are not really reusable).
 
@@ -132,10 +132,9 @@ Here are all the standalone UI components used by Diaporama Maker:
 
 (each one have standalone demos)
 
-
 ## Optimizing performances
 
-<blockquote class="twitter-tweet" lang="fr"><p lang="en" dir="ltr">I&#39;ve been working on crazy projects using React (like <a href="http://t.co/U2oETh5lhZ">http://t.co/U2oETh5lhZ</a> ). most performance issues i&#39;ve met was not because of React</p>&mdash; Gaëtan Renaudeau (@greweb) <a href="https://twitter.com/greweb/status/617210444839809024">4 Juillet 2015</a></blockquote>
+<blockquote class="twitter-tweet" lang="fr"><p lang="en" dir="ltr">I&#39;ve been working on crazy projects using React (like <a href="http://t.co/U2oETh5lhZ">http://t.co/U2oETh5lhZ</a> ). most performance issues i&#39;ve met was not because of React</p>&mdash; greweb (@greweb) <a href="https://twitter.com/greweb/status/617210444839809024">4 Juillet 2015</a></blockquote>
 <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 Here are 2 examples of optimizations I had to do in Diaporama Maker that are not because of React:
@@ -164,7 +163,7 @@ After this step, and for this precise example, I don't think a Vanilla DOM imple
 - React is doing even smarter thing that I would not manually do? Like reusing elements instead of destroying/creating them.
 
 There might still be ways to go more far in optimizing this example. For instance I could chunk my grid into pieces
-and only render the pieces that are visible, like in an infinite scroll system *(I could use something like [sliding-window](https://github.com/gre/sliding-window) for this)*.
+and only render the pieces that are visible, like in an infinite scroll system _(I could use something like [sliding-window](https://github.com/gre/sliding-window) for this)_.
 That would probably be premature optimization for this example.
 
 ## Wrap Up
@@ -176,7 +175,6 @@ but it is one counter-example for such a benchmark.
 
 Each application has its own needs and constraints and we can't really generalize one way to go.
 Also Performance should not be the main concern to choose a technology.
-
 
 It is easy to make Virtual DOM library benchmarks,
 comparing the performance of rendering and Array diffing,

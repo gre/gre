@@ -120,4 +120,4 @@ Who knows what's next! As everything is available on the blockchain, what you mi
 
 See also [CryptoAliens: Genesis, a technical look][tech].
 
-My name is Gaëtan Renaudeau, and I'm a noise explorer. **feel free to ping me on Twitter [@greweb](https://twitter.com/greweb)**
+My name is greweb, and I'm a noise explorer. **feel free to ping me on Twitter [@greweb](https://twitter.com/greweb)**

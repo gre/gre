@@ -94,7 +94,7 @@ export function Plot({ plot }) {
         <a target="_blank">
           <span className="title">
             Plot #{plot.n} {data.title ? <>{" "}<strong>{data.title}</strong></> : ""} {data.date ? <em> ({data.date})</em> : ""}
-            </span>
+          </span>
           <img width="100%" height="100%" src={image} />
           <span className="foot">
             {" "}{data.tags ? <div className="tags">{data.tags.map(t => <span key={t}>
@@ -102,7 +102,7 @@ export function Plot({ plot }) {
                 #{t}
               </a>
             </span>)}</div> : ""}
-            </span>
+          </span>
         </a>
       </Link>
     </div>
@@ -157,7 +157,7 @@ const selection = [
 
 export async function getStaticProps() {
   let plots = await getPlots();
-  plots = selection.map(s=>plots.find(p => s===p.n));
+  plots = selection.map(s => plots.find(p => s === p.n));
   return {
     props: { plots },
   };
@@ -173,7 +173,7 @@ export default function Home({ plots }) {
         <title>greweb.me – {title}</title>
         <link rel="icon" href="/favicon.ico" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="author" content="Gaëtan Renaudeau" />
+        <meta name="author" content="greweb" />
         <meta name="keywords" content={"plotter, plots"} />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@greweb" />
@@ -193,7 +193,7 @@ export default function Home({ plots }) {
           </>
         ) : null}
       </Head>
-      <iframe width="100%" style={{height: "100vh", padding: "10vh", boxSizing: "border-box"}} src="https://www.youtube.com/embed/zaQ0vKgih6Q" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      <iframe width="100%" style={{ height: "100vh", padding: "10vh", boxSizing: "border-box" }} src="https://www.youtube.com/embed/zaQ0vKgih6Q" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       <PlotGrid>
         {plots.map((plot) => (
           <Plot plot={plot} key={plot.n} />

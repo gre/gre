@@ -1,6 +1,6 @@
 ---
 title: "Automatiser l'exportation d'un site statique avec wget"
-author: Gaetan
+author: greweb
 layout: post
 permalink: /2010/04/automatiser-lexportation-dun-site-statique-avec-wget/
 tags:

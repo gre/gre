@@ -2,7 +2,7 @@
 title: "Illuminated.js – 2D lights and shadows rendering engine for HTML5 applications"
 description: Illuminated.js is designed to add some awesome effects to your existing applications. Adding a cool atmosphere for your applications and games can make the difference!
 thumbnail: /images/2012/05/illuminatedjs.jpg
-author: Gaetan
+author: greweb
 layout: post
 permalink: /2012/05/illuminated-js-2d-lights-and-shadows-rendering-engine-for-html5-applications/
 tags:

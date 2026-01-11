@@ -1,10 +1,10 @@
 ---
-title: 'Slides: Web Audio API, Overview'
+title: "Slides: Web Audio API, Overview"
 description: "A presentation overview of the Web Audio API"
-author: Gaetan
+author: greweb
 layout: post
 tags:
- - audio
+  - audio
 ---
 
 <a href="http://greweb.me/webaudioapi-introduction">

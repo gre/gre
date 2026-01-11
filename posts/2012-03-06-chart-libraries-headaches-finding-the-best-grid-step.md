@@ -2,7 +2,7 @@
 title: "Chart libraries headaches – finding the best grid step"
 description: If you have ever made a chart library in your life, you’ve probably asked yourself how to find the best scale for the grid in order to have nice values to display in the axis.
 thumbnail: /images/2012/02/wrong-chart-scale.png
-author: Gaetan
+author: greweb
 layout: post
 permalink: /2012/03/chart-libraries-headaches-finding-the-best-grid-step/
 tags:

@@ -1,7 +1,7 @@
 ---
 title: The same game in HTML5 canvas
 thumbnail: /images/2010/same_game_screenshot.png
-author: Gaetan
+author: greweb
 layout: post
 permalink: /2010/02/the-same-game-in-html5-canvas/
 tags:
@@ -10,8 +10,8 @@ tags:
   - javascript
 ---
 
- [2]: http://gre.github.io/same-game
- [3]: http://github.com/gre/same-game
+[2]: http://gre.github.io/same-game
+[3]: http://github.com/gre/same-game
 
 I've made a simple canvas game in **HTML5 Canvas**.
 
@@ -19,10 +19,9 @@ I've made a simple canvas game in **HTML5 Canvas**.
 
 ![screenshot](/images/2010/same_game_screenshot.png)
 
-You can test the game in a **recent browser** *(canvas-compatible like firefox, chrome, …)* **following [this link][2]**.
+You can test the game in a **recent browser** _(canvas-compatible like firefox, chrome, …)_ **following [this link][2]**.
 
 If you want to **hack the code**, see the javascript [here][3].
-
 
 The game was simple to code, except maybe the animation managment which require some **optimization perspective**. The code source is still not perfect, I may improve soon.
 
@@ -30,5 +29,4 @@ The game was simple to code, except maybe the animation managment which require 
 
 <iframe src="http://player.vimeo.com/video/9606570" width="500" height="375" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 
-*Released with the GNU General Public Licence.*
-
+_Released with the GNU General Public Licence._

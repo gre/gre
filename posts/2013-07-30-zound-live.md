@@ -2,7 +2,7 @@
 title: "ZOUND live project initiated"
 description: 'Last week, I initiated ZOUND live following my previous "ZOUND" experiment but being much more ambitious this time: using both the Audio API, the new MIDI API and electronic music software experience, we start our own web collaborative audio modular tracker.'
 thumbnail: /images/2013/07/nanokontrol.jpg
-author: Gaetan
+author: greweb
 layout: post
 tags:
   - MIDI

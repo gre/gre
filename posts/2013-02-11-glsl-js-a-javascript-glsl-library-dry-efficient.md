@@ -2,7 +2,7 @@
 title: "glsl.js, a Javascript + GLSL library = DRY & efficient"
 description: WebGL is super powerful and efficient. This library abuses this power for efficient 2D.
 thumbnail: /images/2013/02/glsl_mario.jpg
-author: Gaetan
+author: greweb
 layout: post
 permalink: /2013/02/glsl-js-a-javascript-glsl-library-dry-efficient/
 tags:

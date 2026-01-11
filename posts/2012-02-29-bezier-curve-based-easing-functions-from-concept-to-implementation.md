@@ -2,7 +2,7 @@
 title: "Bezier Curve based easing functions – from concept to implementation"
 description: Many animation libraries are today using easing functions – functions of time returning a progression percentage value. We will see how we can generalize them with bezier curves.
 thumbnail: /images/2012/02/bezier_transition_editor.png
-author: Gaetan
+author: greweb
 layout: post
 permalink: /2012/02/bezier-curve-based-easing-functions-from-concept-to-implementation/
 tags:

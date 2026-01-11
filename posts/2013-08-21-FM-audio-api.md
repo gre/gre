@@ -1,17 +1,17 @@
 ---
-title: 'Frequency Modulation (FM) with Web Audio API'
-description: ''
-author: Gaetan
+title: "Frequency Modulation (FM) with Web Audio API"
+description: ""
+author: greweb
 layout: post
 tags:
- - fm
- - audio
+  - fm
+  - audio
 ---
 
- [zoundarticle]: /2013/07/zound-live/
- [zoundrepo]: http://github.com/gre/zound-live/
- [zoundfm]: https://github.com/gre/zound-live/blob/master/app/assets/javascripts/modules/SimpleFM.js
- [fmwiki]: http://en.wikipedia.org/wiki/Frequency_modulation_synthesis
+[zoundarticle]: /2013/07/zound-live/
+[zoundrepo]: http://github.com/gre/zound-live/
+[zoundfm]: https://github.com/gre/zound-live/blob/master/app/assets/javascripts/modules/SimpleFM.js
+[fmwiki]: http://en.wikipedia.org/wiki/Frequency_modulation_synthesis
 
 The main principle of [Frequency Modulation (FM)][fmwiki] is to **pipe an Oscillator (the Modulator)
 into the frequency of another Oscillator (the Carrier)**.
@@ -22,12 +22,11 @@ so feel free to hack the code for your own purpose.
 
 This article will also introduce some Audio concepts like **LFO**, **Envelope** and **Finetuning**.
 
-I've recently implemented a very first FM in [ZOUND live][zoundarticle] - *a HTML5 collaborative audio tracker*,
+I've recently implemented a very first FM in [ZOUND live][zoundarticle] - _a HTML5 collaborative audio tracker_,
 giving much more powerful Synthesizers (see in the following video).
 
 <iframe width="640" height="480" src="//www.youtube.com/embed/El4JvaDWQUM" frameborder="0" allowfullscreen></iframe>
 [*(here is the implementation of that FM)*][zoundfm]
-
 
 <!--more-->
 
@@ -43,10 +42,10 @@ The result of that modulation differs depending on each oscillator **frequency**
 
 [![](/images/2013/08/Frequencymodulationdemo-td.png)](http://en.wikipedia.org/wiki/File:Frequencymodulationdemo-td.png)
 
-***N.B.*** *Our interactive demos in this article will always play a sound and visualize it (waveform / spectrum analyzer).
-You will have different kind of controls depending on each specific aspect I want to illustrate.*
+**_N.B._** _Our interactive demos in this article will always play a sound and visualize it (waveform / spectrum analyzer).
+You will have different kind of controls depending on each specific aspect I want to illustrate._
 
-*The demos should work on Chrome. __However if you get an AudioContext failure, please reload the page__ (you may not be able to start them all in one row).*
+_The demos should work on Chrome. **However if you get an AudioContext failure, please reload the page** (you may not be able to start them all in one row)._
 
 ### LFO
 
@@ -61,14 +60,14 @@ For instance the frequency / the amplitude of an oscillator, or in the following
 
 Now, as a first demo,
 let's see what happens if our **FM Modulator is an LFO**,
-*(i.e. if that Modulator is in low frequency range)*.
+_(i.e. if that Modulator is in low frequency range)_.
 
 <iframe width="100%" height="310" src="http://fiddle.jshell.net/FvnJx/58/show/light/" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
 <a href="http://jsfiddle.net/FvnJx/58/" target="_blank" style="display: block; text-align: right">Open on jsfiddle</a>
 
 Observe in the Carrier graphs how **the waveform is regulary compressed and decompressed**. If you increase the Modulator frequency, it will speed up this effect. A real FM is about speeding up that effect up to the audible range...
 
-***N.B.*** *With _Web Audio API_ (more generally with any modular synthesizers) we can easily control any module parameter with an LFO:*
+**_N.B._** _With *Web Audio API* (more generally with any modular synthesizers) we can easily control any module parameter with an LFO:_
 
 ```javascript
 lfo.connect(carrier.frequency);
@@ -77,19 +76,17 @@ lfo.connect(carrier.frequency);
 #### Modulator in audible range
 
 Now, if we increase the frequency to the hearing range, here is what happens:
-*(in that example you can also change the Carrier frequency)*
+_(in that example you can also change the Carrier frequency)_
 
 <iframe width="100%" height="310" src="http://fiddle.jshell.net/x4CWR/36/show/light/" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
 <a href="http://jsfiddle.net/x4CWR/36/" target="_blank" style="display: block; text-align: right">Open on jsfiddle</a>
-
 
 It's as if that **once the Modulator reaches that audible barrier, it kind of becomes a second audible synthesizer**,
 even if it only modulate the frequency of the actual synthesizer.
 However, it's completely different than playing the two synthesizers directly into the output,
 again the modulator influence the frequency of the carrier and is not directly piped into the output audio signal.
 
-*There is especially cool sound produced when the Modulator frequency is closed to the Carrier frequency. For more infos, see the <u>Finetuning</u> section.*
-
+_There is especially cool sound produced when the Modulator frequency is closed to the Carrier frequency. For more infos, see the <u>Finetuning</u> section._
 
 ### Frequency ratios: harmonic or dissonant sounds
 
@@ -101,15 +98,14 @@ to a **multiple of the carrier frequency**, here is what happens:
 <iframe width="100%" height="310" src="http://fiddle.jshell.net/Euezv/17/show/light/" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
 <a href="http://jsfiddle.net/Euezv/17/" target="_blank" style="display: block; text-align: right">Open on jsfiddle</a>
 
-This harmonic result is due a simple fact in music: **Mutiplying a note frequency by 2 is equivalent to Increasing that note by one octave,** meaning the note has the same tone but is one-octave higher. (and vice versa for the division). *BTW, you may have noticed that fact by repetition of peaks in the previous example Spectrum Visualization.*
+This harmonic result is due a simple fact in music: **Mutiplying a note frequency by 2 is equivalent to Increasing that note by one octave,** meaning the note has the same tone but is one-octave higher. (and vice versa for the division). _BTW, you may have noticed that fact by repetition of peaks in the previous example Spectrum Visualization._
 
 Now we can release some restrictions by also allowing frequencies multiple of `carrier frequency / 4`, which means allowing to increase/decrease by an **octave**, a **semi-octave** or a **quarter-of-octave**.
 
 <iframe width="100%" height="310" src="http://fiddle.jshell.net/DFSwN/13/show/light/" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
 <a href="http://jsfiddle.net/DFSwN/13/" target="_blank" style="display: block; text-align: right">Open on jsfiddle</a>
 
-
-*Eventually you could even allow more freedom using multiple of `carrier freq / 12`, because an octave is equally divided by 12 in the [Chromatic scale](http://en.wikipedia.org/wiki/Chromatic_scale).*
+_Eventually you could even allow more freedom using multiple of `carrier freq / 12`, because an octave is equally divided by 12 in the [Chromatic scale](http://en.wikipedia.org/wiki/Chromatic_scale)._
 
 ### Mixing the power of the Modulator effect
 
@@ -143,8 +139,8 @@ Play, try to hold and release a note (using the Play button or SPACE), and obser
 
 **Two different envelopes** has been used: one for the **Modulator** and one for the **Carrier** which produce **different sound effects in a note lifespan**.
 
-*We won't make an interactive demo for changing these envelope parameters,
-but you can try them in the ZOUND project (or see again the video).*
+_We won't make an interactive demo for changing these envelope parameters,
+but you can try them in the ZOUND project (or see again the video)._
 
 ### Finetuning
 
@@ -188,6 +184,6 @@ Careful! this experiment is a bit crazy! but it shows how different patterns can
 As a last demo example, and in a more readable & simple code, here is a polished example of FM.
 -->
 
-----
+---
 
 Also, **If you are interested by ZOUND live, [fork it on Github][zoundrepo].**

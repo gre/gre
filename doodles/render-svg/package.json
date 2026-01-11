@@ -4,7 +4,7 @@
   "description": "A generative art made by @greweb during Ledger hackathon visualizing Nano S Plus devices in GLSL",
   "main": "index.js",
   "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
-  "author": "@greweb <renaudeau.gaetan@gmail.com>",
+  "author": "@greweb <greweb@protonmail.com>",
   "private": true,
   "dependencies": {
     "canvas": "*",
